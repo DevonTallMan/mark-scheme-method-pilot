@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mark Scheme Method® — Command Centre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #0D1117;
+    --panel: rgba(255,255,255,0.05);
+    --panel-border: rgba(255,255,255,0.08);
+    --green: #39FF14;
+    --green-glow: rgba(57,255,20,0.4);
+    --gold: #FFD700;
+    --gold-glow: rgba(255,215,0,0.4);
+    --red: #FF3B3B;
+    --amber: #FF9500;
+    --text-primary: #E8EDF3;
+    --text-dim: rgba(232,237,243,0.5);
+    --text-ghost: rgba(232,237,243,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--void);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(57,255,20,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(57,255,20,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* SCANLINES */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+    pointer-events: none; z-index: 1;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 56px;
+    background: rgba(13,17,23,0.95); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--panel-border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; z-index: 100;
+  }
+
+  .logo { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 900; letter-spacing: 4px; color: var(--green); text-shadow: 0 0 20px var(--green-glow); }
+  .logo span { color: var(--gold); }
+
+  .topbar-right { display: flex; align-items: center; gap: 20px; }
+
+  .sys-time { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); }
+
+  .live-pill { display: flex; align-items: center; gap: 6px; font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 2px; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green-glow); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* MAIN LAYOUT */
+  .page { position: relative; z-index: 2; padding: 80px 24px 60px; max-width: 1160px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { text-align: center; padding: 60px 0 56px; }
+
+  .hero-eyebrow { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 5px; color: var(--gold); margin-bottom: 20px; display: block; animation: fade-up 0.8s ease 0.1s both; }
+
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 900; line-height: 1.0;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    animation: fade-up 0.8s ease 0.2s both;
+  }
+
+  .hero-title .accent-g { color: var(--green); text-shadow: 0 0 40px var(--green-glow); }
+  .hero-title .accent-gd { color: var(--gold); text-shadow: 0 0 40px var(--gold-glow); }
+
+  .hero-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px; line-height: 1.8;
+    color: var(--text-dim); max-width: 620px;
+    margin: 0 auto 40px;
+    animation: fade-up 0.8s ease 0.35s both;
+  }
+
+  .hero-sub .red { color: var(--red); } .hero-sub .gd { color: var(--gold); } .hero-sub .gn { color: var(--green); }
+
+  .hero-stat-row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; animation: fade-up 0.8s ease 0.5s both; }
+
+  .hero-stat {
+    padding: 14px 24px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--panel-border);
+    text-align: center;
+  }
+
+  .hero-stat-val { font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900; color: var(--gold); display: block; }
+  .hero-stat-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); margin-top: 4px; }
+
+  @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* NEI BANNER */
+  .nei-banner {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px;
+    border: 1px solid var(--panel-border); border-radius: 12px; overflow: hidden;
+    margin-bottom: 56px;
+    animation: fade-up 0.8s ease 0.6s both;
+  }
+
+  @media (max-width: 600px) { .nei-banner { grid-template-columns: 1fr; } }
+
+  .nei-segment { padding: 20px 28px; display: flex; align-items: center; gap: 16px; background: var(--panel); backdrop-filter: blur(12px); }
+  .nei-segment:not(:last-child) { border-right: 1px solid var(--panel-border); }
+
+  .nei-seg-letter { font-family: 'Orbitron', monospace; font-size: 32px; font-weight: 900; flex-shrink: 0; }
+  .nei-seg-n { color: var(--red); text-shadow: 0 0 20px rgba(255,59,59,0.5); }
+  .nei-seg-e { color: var(--amber); text-shadow: 0 0 20px rgba(255,149,0,0.5); }
+  .nei-seg-i { color: var(--green); text-shadow: 0 0 20px var(--green-glow); }
+
+  .nei-seg-info {}
+  .nei-seg-title { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; }
+  .nei-seg-desc { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+  .nei-seg-example { font-family: 'Share Tech Mono', monospace; font-size: 11px; margin-top: 6px; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+  .ex-n { background: rgba(255,59,59,0.1); color: #ffaaaa; }
+  .ex-e { background: rgba(255,149,0,0.1); color: #ffcc88; }
+  .ex-i { background: rgba(57,255,20,0.1); color: #aaff88; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .section-label { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--gold); }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(to right, rgba(255,215,0,0.3), transparent); }
+
+  /* MODULE GRID */
+  .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 56px; }
+  @media (max-width: 760px) { .module-grid { grid-template-columns: 1fr; } }
+
+  /* MODULE CARD */
+  .module-card {
+    background: var(--panel); backdrop-filter: blur(12px);
+    border: 1px solid var(--panel-border); border-radius: 20px;
+    overflow: hidden; position: relative;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    animation: fade-up 0.8s ease 0.4s both;
+    text-decoration: none; color: inherit; display: block;
+    cursor: pointer;
+  }
+
+  .module-card:hover { transform: translateY(-4px); border-color: rgba(57,255,20,0.3); box-shadow: 0 20px 60px rgba(57,255,20,0.08); }
+  .module-card.gold-card:hover { border-color: rgba(255,215,0,0.3); box-shadow: 0 20px 60px rgba(255,215,0,0.08); }
+
+  .module-card-glow {
+    position: absolute; top: 0; left: 0; right: 0; height: 200px;
+    background: radial-gradient(ellipse at 50% -20%, rgba(57,255,20,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .gold-card .module-card-glow { background: radial-gradient(ellipse at 50% -20%, rgba(255,215,0,0.08), transparent 70%); }
+
+  .module-card-header {
+    padding: 28px 28px 0;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+
+  .module-code { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--text-dim); margin-bottom: 8px; }
+
+  .module-title { font-family: 'Orbitron', monospace; font-size: clamp(16px, 2.5vw, 20px); font-weight: 700; line-height: 1.2; margin-bottom: 6px; color: var(--text-primary); }
+
+  .module-sub { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+
+  .status-badge { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 2px; padding: 4px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 5px; }
+  .status-live { background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3); color: var(--green); }
+  .status-live::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green-glow); animation: blink 1.5s ease-in-out infinite; }
+
+  .module-card-body { padding: 20px 28px; }
+
+  .module-scenario {
+    font-family: 'Share Tech Mono', monospace; font-size: 12px;
+    color: var(--text-dim); line-height: 1.7; margin-bottom: 20px;
+    padding: 14px 16px; border-radius: 8px;
+    background: rgba(255,255,255,0.03); border-left: 2px solid var(--green);
+  }
+
+  .gold-card .module-scenario { border-left-color: var(--gold); }
+
+  .module-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+
+  .tag-chip {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 1px;
+    padding: 4px 10px; border-radius: 4px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--panel-border); color: var(--text-dim);
+  }
+
+  .module-nei-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+
+  .nei-mini { padding: 10px 8px; border-radius: 8px; border: 1px solid; text-align: center; }
+  .nei-mini-letter { font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 900; display: block; margin-bottom: 2px; }
+  .nei-mini-label { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 1px; color: var(--text-dim); }
+  .nei-mini-val { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-dim); margin-top: 4px; line-height: 1.3; }
+
+  .nm-n { border-color: rgba(255,59,59,0.2); background: rgba(255,59,59,0.04); }
+  .nm-n .nei-mini-letter { color: var(--red); }
+  .nm-e { border-color: rgba(255,149,0,0.2); background: rgba(255,149,0,0.04); }
+  .nm-e .nei-mini-letter { color: var(--amber); }
+  .nm-i { border-color: rgba(57,255,20,0.2); background: rgba(57,255,20,0.04); }
+  .nm-i .nei-mini-letter { color: var(--green); }
+
+  .module-card-footer {
+    padding: 20px 28px 24px;
+    border-top: 1px solid var(--panel-border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .footer-meta { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); }
+  .footer-meta span { display: block; margin-bottom: 2px; }
+
+  .launch-btn {
+    font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    padding: 12px 24px; border-radius: 4px; cursor: pointer;
+    position: relative; overflow: hidden; transition: all 0.3s;
+    border: 2px solid var(--green); color: var(--green); background: transparent;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .launch-btn::before { content: ''; position: absolute; inset: 0; background: var(--green); transform: translateX(-100%); transition: transform 0.3s ease; }
+  .launch-btn:hover::before { transform: translateX(0); }
+  .launch-btn:hover { color: var(--void); }
+  .launch-btn span { position: relative; z-index: 1; }
+  .launch-btn.gold { border-color: var(--gold); color: var(--gold); }
+  .launch-btn.gold::before { background: var(--gold); }
+  .launch-btn.gold:hover { color: var(--void); }
+
+  /* EXAMINER INTELLIGENCE PANEL */
+  .intel-panel {
+    background: var(--panel); backdrop-filter: blur(12px);
+    border: 1px solid var(--panel-border); border-radius: 20px;
+    overflow: hidden; margin-bottom: 56px;
+    animation: fade-up 0.8s ease 0.6s both;
+  }
+
+  .intel-header { padding: 20px 28px; border-bottom: 1px solid var(--panel-border); display: flex; align-items: center; gap: 12px; }
+  .intel-icon { font-size: 24px; }
+  .intel-title { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--red); }
+  .intel-subtitle { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 2px; letter-spacing: 1px; }
+
+  .intel-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 700px) { .intel-grid { grid-template-columns: 1fr; } }
+
+  .intel-stat { padding: 24px 28px; border-right: 1px solid var(--panel-border); }
+  .intel-stat:last-child { border-right: none; }
+  .intel-stat-val { font-family: 'Orbitron', monospace; font-size: 36px; font-weight: 900; color: var(--red); display: block; margin-bottom: 4px; }
+  .intel-stat-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 8px; display: block; }
+  .intel-stat-detail { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+  /* METHOD EXPLAINER */
+  .method-explainer {
+    background: var(--panel); backdrop-filter: blur(12px);
+    border: 1px solid var(--panel-border); border-radius: 20px;
+    padding: 32px; margin-bottom: 56px;
+    animation: fade-up 0.8s ease 0.7s both;
+  }
+
+  .method-title { font-family: 'Orbitron', monospace; font-size: 14px; font-weight: 700; letter-spacing: 3px; color: var(--gold); margin-bottom: 20px; }
+
+  .method-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  @media (max-width: 700px) { .method-steps { grid-template-columns: 1fr 1fr; } }
+
+  .method-step { text-align: center; }
+  .step-num { font-family: 'Orbitron', monospace; font-size: 10px; color: var(--text-ghost); letter-spacing: 2px; margin-bottom: 8px; }
+  .step-icon { font-size: 28px; display: block; margin-bottom: 10px; }
+  .step-title { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+  .step-desc { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+  .step-arrow { display: flex; align-items: center; justify-content: center; color: var(--text-ghost); font-size: 20px; padding-top: 36px; }
+  @media (max-width: 700px) { .step-arrow { display: none; } }
+
+  /* COMING SOON MODULE */
+  .coming-soon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 56px; }
+  @media (max-width: 760px) { .coming-soon-grid { grid-template-columns: 1fr 1fr; } }
+
+  .cs-card {
+    padding: 20px; border-radius: 12px;
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+    position: relative; overflow: hidden;
+  }
+
+  .cs-lock { position: absolute; top: 12px; right: 12px; font-size: 12px; opacity: 0.3; }
+  .cs-code { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-ghost); letter-spacing: 2px; margin-bottom: 8px; }
+  .cs-title { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; color: rgba(232,237,243,0.25); margin-bottom: 6px; }
+  .cs-tag { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 1px; color: rgba(255,149,0,0.4); }
+
+  /* FOOTER */
+  .page-footer { border-top: 1px solid var(--panel-border); padding-top: 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 16px; }
+  .footer-brand { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; letter-spacing: 3px; color: var(--green); }
+  .footer-brand span { color: var(--gold); }
+  .footer-note { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-ghost); letter-spacing: 1px; }
+
+  /* CORNER DECS */
+  .corner-tl, .corner-br { position: absolute; width: 16px; height: 16px; pointer-events: none; }
+  .corner-tl { top: -1px; left: -1px; border-top: 2px solid var(--green); border-left: 2px solid var(--green); }
+  .corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--green); border-right: 2px solid var(--green); }
+  .corner-tl-gold { top: -1px; left: -1px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+  .corner-br-gold { bottom: -1px; right: -1px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--void); }
+  ::-webkit-scrollbar-thumb { background: rgba(57,255,20,0.3); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="logo">MARK SCHEME <span>METHOD</span>®</div>
+  <div class="topbar-right">
+    <div class="sys-time" id="sys-time">SYS://LOADING</div>
+    <div class="live-pill"><div class="live-dot"></div>PLATFORM LIVE</div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-eyebrow">CONTENT AREA 6 // T-LEVEL DIGITAL // COMMAND CENTRE</span>
+    <h1 class="hero-title">THE <span class="accent-g">N.E.I.</span><br><span class="accent-gd">METHOD</span></h1>
+    <p class="hero-sub">
+      Students fail not from lack of knowledge — but from <span class="red">missing the Impact mark</span>.<br>
+      Every module here trains one skill: thinking like an <span class="gd">examiner</span>.
+    </p>
+    <div class="hero-stat-row">
+      <div class="hero-stat">
+        <span class="hero-stat-val">1.02</span>
+        <div class="hero-stat-label">MEAN MARK / 3<br>TARGETED MARKETING</div>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-val">37%</span>
+        <div class="hero-stat-label">AVG ASSESSMENT SCORE<br>WITHOUT METHOD</div>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-val">3rd</span>
+        <div class="hero-stat-label">MARK ALWAYS REQUIRES<br>BUSINESS IMPACT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEI BANNER -->
+  <div class="nei-banner">
+    <div class="nei-segment">
+      <div class="nei-seg-letter nei-seg-n">N</div>
+      <div class="nei-seg-info">
+        <div class="nei-seg-title" style="color:var(--red)">NAME</div>
+        <div class="nei-seg-desc">Identify the technical term, data use-case, or tool</div>
+        <div class="nei-seg-example ex-n">"Targeted Marketing"</div>
+      </div>
+    </div>
+    <div class="nei-segment">
+      <div class="nei-seg-letter nei-seg-e">E</div>
+      <div class="nei-seg-info">
+        <div class="nei-seg-title" style="color:var(--amber)">EXPLAIN</div>
+        <div class="nei-seg-desc">Describe the mechanism — how the system works</div>
+        <div class="nei-seg-example ex-e">"cross-references past orders with catalogue"</div>
+      </div>
+    </div>
+    <div class="nei-segment">
+      <div class="nei-seg-letter nei-seg-i">I</div>
+      <div class="nei-seg-info">
+        <div class="nei-seg-title" style="color:var(--green)">IMPACT</div>
+        <div class="nei-seg-desc">State the measurable business outcome — THIS earns the 3rd mark</div>
+        <div class="nei-seg-example ex-i">"increases revenue per customer"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE MODULES -->
+  <div class="section-header">
+    <span class="section-label">LIVE MODULES // CONTENT AREA 6</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="module-grid">
+
+    <!-- MODULE 6.1.1 -->
+    <a class="module-card" href="./6-1-1/index.html">
+      <div class="module-card-glow"></div>
+      <div class="corner-tl"></div><div class="corner-br"></div>
+      <div class="module-card-header">
+        <div>
+          <div class="module-code">// MODULE 6.1.1 // DATA HIERARCHY</div>
+          <div class="module-title">Data, Information<br>&amp; Knowledge</div>
+          <div class="module-sub">The GPS Logistics Scenario</div>
+        </div>
+        <div class="status-badge status-live">LIVE</div>
+      </div>
+      <div class="module-card-body">
+        <div class="module-scenario">
+          A logistics vehicle pings three signals. Raw coordinates, a location name, and a navigation instruction. Can you classify which is Data, Information, and Knowledge?
+        </div>
+        <div class="module-tags">
+          <div class="tag-chip">6.1.1</div>
+          <div class="tag-chip">Data Hierarchy</div>
+          <div class="tag-chip">Drag &amp; Drop</div>
+          <div class="tag-chip">3-Mark Technique</div>
+        </div>
+        <div class="module-nei-row">
+          <div class="nei-mini nm-n"><span class="nei-mini-letter">N</span><div class="nei-mini-label">NAME</div><div class="nei-mini-val">Identify the level</div></div>
+          <div class="nei-mini nm-e"><span class="nei-mini-letter">E</span><div class="nei-mini-label">EXPLAIN</div><div class="nei-mini-val">What is processed</div></div>
+          <div class="nei-mini nm-i"><span class="nei-mini-letter">I</span><div class="nei-mini-label">IMPACT</div><div class="nei-mini-val">Business decision made</div></div>
+        </div>
+      </div>
+      <div class="module-card-footer">
+        <div class="footer-meta">
+          <span>5 SCENES</span>
+          <span style="color:var(--green);">● FULLY UNLOCKED</span>
+        </div>
+        <div class="launch-btn"><span>⟶ LAUNCH MODULE</span></div>
+      </div>
+    </a>
+
+    <!-- MODULE 6.1.2 -->
+    <a class="module-card gold-card" href="./6-1-2/index.html">
+      <div class="module-card-glow"></div>
+      <div class="corner-tl corner-tl-gold" style="border-color:var(--gold)"></div>
+      <div class="corner-br corner-br-gold" style="border-color:var(--gold)"></div>
+      <div class="module-card-header">
+        <div>
+          <div class="module-code">// MODULE 6.1.2 // ORGANISATIONAL DATA USE</div>
+          <div class="module-title">Why Organisations<br>Need Data</div>
+          <div class="module-sub">The E-Commerce Recommendation Engine</div>
+        </div>
+        <div class="status-badge status-live">LIVE</div>
+      </div>
+      <div class="module-card-body">
+        <div class="module-scenario" style="border-left-color:var(--gold)">
+          An e-commerce company analyses customer purchase history. Targeted marketing, market trends, system performance — six use-cases, one scenario. Examiner mean: 1.02/3.
+        </div>
+        <div class="module-tags">
+          <div class="tag-chip">6.1.2</div>
+          <div class="tag-chip">Targeted Marketing</div>
+          <div class="tag-chip">Decision Levels</div>
+          <div class="tag-chip">Impact Mark</div>
+        </div>
+        <div class="module-nei-row">
+          <div class="nei-mini nm-n"><span class="nei-mini-letter">N</span><div class="nei-mini-label">NAME</div><div class="nei-mini-val">Targeted marketing</div></div>
+          <div class="nei-mini nm-e"><span class="nei-mini-letter">E</span><div class="nei-mini-label">EXPLAIN</div><div class="nei-mini-val">Cross-references orders</div></div>
+          <div class="nei-mini nm-i"><span class="nei-mini-letter">I</span><div class="nei-mini-label">IMPACT</div><div class="nei-mini-val">Increases revenue</div></div>
+        </div>
+      </div>
+      <div class="module-card-footer">
+        <div class="footer-meta">
+          <span>5 SCENES + TEACHER VIEW</span>
+          <span style="color:var(--gold);">● EXAMINER BENCHMARK INCLUDED</span>
+        </div>
+        <div class="launch-btn gold"><span>⟶ LAUNCH MODULE</span></div>
+      </div>
+    </a>
+  </div>
+
+  <!-- EXAMINER INTELLIGENCE -->
+  <div class="section-header">
+    <span class="section-label">EXAMINER INTELLIGENCE // LEAD REPORT DATA</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="intel-panel">
+    <div class="intel-header">
+      <div class="intel-icon">⚡</div>
+      <div>
+        <div class="intel-title">WHY STUDENTS LOSE MARKS — THE EXAMINER EVIDENCE</div>
+        <div class="intel-subtitle">Source: Lead Examiner Report, Business Environment Paper 2, Summer 2023</div>
+      </div>
+    </div>
+    <div class="intel-grid">
+      <div class="intel-stat">
+        <span class="intel-stat-val">1.02</span>
+        <span class="intel-stat-label">MEAN MARK / 3 — TARGETED MARKETING</span>
+        <div class="intel-stat-detail">Students identified the field to search but could not explain the criteria or state how the data is used to generate business value.</div>
+      </div>
+      <div class="intel-stat">
+        <span class="intel-stat-val" style="color:var(--amber)">N+E</span>
+        <span class="intel-stat-label">MOST COMMON INCOMPLETE ANSWER</span>
+        <div class="intel-stat-detail">Naming the technique and explaining the mechanism earns 2 marks. The Impact statement — the business outcome — is almost always missing.</div>
+      </div>
+      <div class="intel-stat">
+        <span class="intel-stat-val" style="color:var(--green)">+1</span>
+        <span class="intel-stat-label">MARK GAINED BY ADDING ONE SENTENCE</span>
+        <div class="intel-stat-detail">A single Impact sentence — "this increases revenue per customer by reducing wasted spend on irrelevant promotions" — is the difference between 2/3 and 3/3.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-header">
+    <span class="section-label">HOW THE PLATFORM WORKS</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="method-explainer">
+    <div class="method-title">// THE MISSION FLOW — ALL MODULES //</div>
+    <div class="method-steps">
+      <div class="method-step">
+        <div class="step-num">STEP 01</div>
+        <span class="step-icon">📡</span>
+        <div class="step-title">BRIEFING</div>
+        <div class="step-desc">AXIOM-7 delivers the examiner intelligence and mission context</div>
+      </div>
+      <div class="method-step">
+        <div class="step-num">STEP 02</div>
+        <span class="step-icon">🎯</span>
+        <div class="step-title">GATEKEEPER</div>
+        <div class="step-desc">Interactive drag-and-drop lesson — must pass to unlock the terminal</div>
+      </div>
+      <div class="method-step">
+        <div class="step-num">STEP 03</div>
+        <span class="step-icon">💻</span>
+        <div class="step-title">MISSION TERMINAL</div>
+        <div class="step-desc">Live exam question with HUD keyword detection as you type</div>
+      </div>
+      <div class="method-step">
+        <div class="step-num">STEP 04</div>
+        <span class="step-icon">🔬</span>
+        <div class="step-title">SELF-CALIBRATION</div>
+        <div class="step-desc">Highlight your own answer. Miss the [I] Impact? AXIOM-7 flags it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMING SOON -->
+  <div class="section-header">
+    <span class="section-label">COMING SOON // CONTENT AREA 6 ROADMAP</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="coming-soon-grid">
+    <div class="cs-card">
+      <div class="cs-lock">🔒</div>
+      <div class="cs-code">// 6.1.3</div>
+      <div class="cs-title">Big Data &amp; Analytics</div>
+      <div class="cs-tag">COMING SOON</div>
+    </div>
+    <div class="cs-card">
+      <div class="cs-lock">🔒</div>
+      <div class="cs-code">// 6.1.4</div>
+      <div class="cs-title">Data Security &amp; Compliance</div>
+      <div class="cs-tag">COMING SOON</div>
+    </div>
+    <div class="cs-card">
+      <div class="cs-lock">🔒</div>
+      <div class="cs-code">// 6.2.1</div>
+      <div class="cs-title">Database Design</div>
+      <div class="cs-tag">COMING SOON</div>
+    </div>
+    <div class="cs-card">
+      <div class="cs-lock">🔒</div>
+      <div class="cs-code">// 6.2.2</div>
+      <div class="cs-title">SQL Queries</div>
+      <div class="cs-tag">COMING SOON</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <div class="footer-brand">MARK SCHEME <span>METHOD</span>®</div>
+    <div class="footer-note">// T-LEVEL DIGITAL // CONTENT AREA 6 // POWERED BY EXAMINER INTELLIGENCE</div>
+  </div>
+
+</div>
+
+<script>
+  function updateTime() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('sys-time').textContent = `SYS://${h}:${m}:${s}`;
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+</script>
+</body>
+</html>
