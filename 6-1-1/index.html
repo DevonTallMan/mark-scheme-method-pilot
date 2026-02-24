@@ -725,6 +725,28 @@
   .hud-e .hud-letter { color: var(--amber); }
   .hud-i { border-color: rgba(57,255,20,0.2); }
   .hud-i .hud-letter { color: var(--green); }
+  @keyframes hud-glitch { 0%{filter:invert(0) brightness(1)} 20%{filter:invert(1) brightness(2)} 40%{filter:invert(0) brightness(1)} 60%{filter:invert(1) brightness(2)} 80%{filter:invert(0) brightness(1)} 100%{filter:invert(0) brightness(1)} }
+
+  /* ── ACE v2: PROGRESS BAR ── */
+  .energy-bar-wrap { display:flex; align-items:center; gap:10px; margin-top:10px; }
+  .energy-bar-track { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); }
+  .energy-bar-fill { height:100%; width:0%; border-radius:4px; transition:width 0.3s ease, background 0.4s ease; }
+  .energy-bar-fill.eb-red   { background:var(--red);   box-shadow:none; }
+  .energy-bar-fill.eb-amber { background:var(--amber); animation:bar-pulse 1.2s ease infinite; }
+  .energy-bar-fill.eb-green { background:var(--green); animation:bar-flash 0.6s ease forwards; }
+  @keyframes bar-pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+  @keyframes bar-flash { 0%{box-shadow:none} 50%{box-shadow:0 0 18px rgba(57,255,20,0.7)} 100%{box-shadow:0 0 10px rgba(57,255,20,0.4)} }
+  .energy-bar-label { font-family:'Share Tech Mono',monospace; font-size:11px; min-width:160px; transition:color 0.4s; }
+
+  /* ── ACE v2: IMPACT PULSE on [I] HUD panel ── */
+  @keyframes impact-pulse { 0%,100%{box-shadow:0 0 0 rgba(57,255,20,0)} 50%{box-shadow:0 0 14px rgba(57,255,20,0.5)} }
+
+  /* ── ACE v2: REBOOT OVERLAY ── */
+  #reboot-overlay { display:none; position:fixed; inset:0; z-index:9999; background:#0D1117; flex-direction:column; align-items:center; justify-content:center; font-family:'Orbitron',monospace; }
+  #reboot-overlay .rb-line1 { font-size:clamp(11px,2vw,14px); color:var(--red); letter-spacing:4px; opacity:0; transition:opacity 0.3s; text-align:center; padding:0 20px; }
+  #reboot-overlay .rb-line2 { font-size:clamp(16px,3.5vw,30px); font-weight:900; color:var(--green); letter-spacing:5px; margin-top:16px; opacity:0; transition:opacity 0.4s; text-align:center; padding:0 20px; }
+  #reboot-overlay .rb-bar-wrap { max-width:400px; width:90%; margin-top:32px; }
+  #reboot-overlay .rb-bar { height:3px; width:0%; background:var(--green); box-shadow:0 0 12px rgba(57,255,20,0.6); transition:none; }
 
   .hud-label {
     font-family: 'Share Tech Mono', monospace;
@@ -1751,10 +1773,16 @@
           class="answer-textarea"
           id="student-answer"
           placeholder="Identify the raw coordinates, explain how the software processes them, and state the final instruction for the driver..."
-          oninput="updateHUD(this.value); updateCharCount(this.value)"
+          oninput="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
           rows="6"
         ></textarea>
-        <div class="char-count" id="char-count">0 / 250 chars</div>
+        <div class="energy-bar-wrap">
+          <div class="energy-bar-track">
+            <div class="energy-bar-fill" id="energy-bar-fill"></div>
+          </div>
+          <div class="energy-bar-label" id="word-count-display">0 words — aim for 60+</div>
+        </div>
+        <div id="axiom-feedback" style="display:none;margin-top:14px;padding:14px 18px;border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.6;border:1px solid var(--amber);background:rgba(255,149,0,0.06);color:var(--amber);white-space:pre-line;animation:fade-in 0.4s ease both;"></div>
       </div>
 
       <div style="padding:0 20px 20px;">
@@ -2339,13 +2367,111 @@ function checkDragDrop() {
 /* ──────────────────────────────
    SCENE 3: HUD LIVE FEEDBACK
 ────────────────────────────── */
-const N_KEYWORDS = ['coordinates', 'lat', 'lon', 'string', 'numbers'];
-const E_KEYWORDS = ['mapping', 'converts', 'satellite', 'street', 'location', 'database'];
-const I_KEYWORDS = ['route', 'driver', 'directions', 'fastest', 'delivery', 'arrives'];
+const N_KEYWORDS = ['coordinates', 'lat', 'lon', 'string', 'numbers', 'gps', 'data', 'raw', 'digits', 'values'];
+const E_KEYWORDS = ['mapping', 'converts', 'satellite', 'street', 'location', 'database', 'processes', 'calculates', 'translates', 'cross-references', 'matches', 'algorithm', 'software'];
+const I_KEYWORDS = ['route', 'driver', 'directions', 'fastest', 'delivery', 'arrives', 'efficient', 'on time', 'reduces', 'saves', 'increas', 'customer', 'satisfaction', 'profit', 'revenue', 'cost'];
 
 function hasKeyword(text, keywords) {
   const lower = text.toLowerCase();
   return keywords.some(k => lower.includes(k));
+}
+
+function countWords(text) { return text.trim() === '' ? 0 : text.trim().split(/\s+/).length; }
+
+/* ── ACE v2: PROGRESS BAR + IMPACT PULSE + IDLE POKE ── */
+
+const IDLE_DELAY  = 10000;
+const IDLE_PROMPT = 'Specialist — you\'ve identified the data. But so what?\nHow does knowing those coordinates actually help the driver arrive on time?';
+let idleTimer = null;
+
+function updateWordCount(text) {
+  const count = countWords(text);
+  const el    = document.getElementById('word-count-display');
+  const fill  = document.getElementById('energy-bar-fill');
+  if (!el || !fill) return;
+
+  const pct = Math.min(100, Math.round((count / 60) * 100));
+  fill.style.width = pct + '%';
+
+  // Remove all state classes
+  fill.classList.remove('eb-red', 'eb-amber', 'eb-green');
+
+  if (count === 0) {
+    el.textContent = '0 words — aim for 60+';
+    el.style.color = '';
+  } else if (count < 40) {
+    fill.classList.add('eb-red');
+    el.textContent = count + ' words — keep going';
+    el.style.color = 'var(--red)';
+  } else if (count < 60) {
+    fill.classList.add('eb-amber');
+    el.textContent = count + ' words — almost there';
+    el.style.color = 'var(--amber)';
+  } else {
+    fill.classList.add('eb-green');
+    el.textContent = count + ' words ✓';
+    el.style.color = 'var(--green)';
+  }
+
+  // Trigger HUD glitch when impact keyword + 60 words
+  if (hasKeyword(text, I_KEYWORDS) && count >= 60) triggerHUDGlitch();
+
+  // Impact panel pulse — glow [I] softly at 50+ words if not yet detected
+  const hudI = document.getElementById('hud-i');
+  if (hudI) {
+    if (count >= 50 && !hudI.classList.contains('active-i')) {
+      hudI.style.animation = 'impact-pulse 1.8s ease infinite';
+    } else {
+      hudI.style.animation = '';
+    }
+  }
+}
+
+function resetIdleTimer(text) {
+  clearTimeout(idleTimer);
+  if (countWords(text) >= 60) return; // already enough — no poke needed
+  idleTimer = setTimeout(() => {
+    const fb = document.getElementById('axiom-feedback');
+    if (!fb) return;
+    // Only fire if no Tier 1/2 message currently showing AND under 60 words
+    if (fb.style.display !== 'none') return;
+    fb.style.display = 'block';
+    fb.style.borderColor = 'rgba(57,255,20,0.4)';
+    fb.style.background  = 'rgba(57,255,20,0.05)';
+    fb.style.color       = 'var(--green)';
+    fb.textContent       = 'AXIOM-7 // ' + IDLE_PROMPT;
+  }, IDLE_DELAY);
+}
+
+/* ── ACE v2: REBOOT ANIMATION ── */
+function triggerReboot() {
+  const overlay = document.getElementById('reboot-overlay');
+  const line1   = document.getElementById('rb-line1');
+  const line2   = document.getElementById('rb-line2');
+  const bar     = document.getElementById('rb-bar');
+  overlay.style.display = 'flex';
+  setTimeout(() => { line1.style.opacity = '1'; }, 200);
+  setTimeout(() => { line2.style.opacity = '1'; }, 700);
+  setTimeout(() => {
+    bar.style.transition = 'width 1.2s ease-out';
+    bar.style.width = '100%';
+  }, 1000);
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    line1.style.opacity = '0';
+    line2.style.opacity = '0';
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    goScene(4);
+  }, 2400);
+}
+
+function triggerHUDGlitch() {
+  const hudI = document.getElementById('hud-i');
+  if (!hudI || hudI.dataset.glitched) return;
+  hudI.dataset.glitched = '1';
+  hudI.style.animation = 'hud-glitch 0.5s ease';
+  setTimeout(() => { hudI.style.animation = ''; delete hudI.dataset.glitched; }, 600);
 }
 
 function updateHUD(text) {
@@ -2384,24 +2510,45 @@ function updateHUD(text) {
   }
 }
 
-function updateCharCount(val) {
-  document.getElementById('char-count').textContent = val.length + ' / 250 chars';
-}
+const TIER1_MSG = `⚠ AXIOM-7 // INSUFFICIENT SIGNAL DETECTED\n\nYour response is too brief. An examiner needs to see three things: the name of what the data is, how the system processes it, and what instruction or outcome it produces.\n\nExpand your answer — aim for at least 60 words. The third mark is always in your last sentence.`;
+
+const TIER2_TEMPLATE = `Try this structure:\n\n[N] The GPS system uses raw data — specifically [NAME THE DATA TYPE]...\n[E] The software [EXPLAIN HOW IT PROCESSES OR CONVERTS THE DATA]...\n[I] This means the driver can [STATE THE OUTCOME — faster route, on-time delivery, reduced costs]...`;
+
+let submitAttempts = 0;
 
 function submitAnswer() {
   const answer = document.getElementById('student-answer').value.trim();
-  if (!answer) {
-    alert('Please write your answer before submitting.');
+  if (!answer) { alert('Please write your answer before submitting.'); return; }
+  const words = countWords(answer);
+  const fb = document.getElementById('axiom-feedback');
+  submitAttempts++;
+
+  if (words < 60) {
+    fb.style.display = 'block';
+    if (submitAttempts === 1) {
+      fb.style.borderColor = 'var(--amber)';
+      fb.style.background = 'rgba(255,149,0,0.06)';
+      fb.style.color = 'var(--amber)';
+      fb.textContent = TIER1_MSG;
+    } else {
+      fb.style.borderColor = 'var(--red)';
+      fb.style.background = 'rgba(255,59,59,0.06)';
+      fb.style.color = 'var(--text-primary)';
+      fb.textContent = TIER2_TEMPLATE;
+      document.getElementById('student-answer').placeholder = '[N] The GPS system uses raw coordinate data...\n[E] The software processes this by converting it into...\n[I] This means the driver can...';
+    }
+    const btn = document.querySelector('#scene-3 .btn-primary');
+    if (btn) { btn.style.animation = 'tab-reject 0.4s ease'; setTimeout(() => { btn.style.animation = ''; }, 450); }
     return;
   }
-  // Unlock the Calibrate tab now that the user has earned it
+
+  fb.style.display = 'none';
   const btn4 = document.getElementById('navbtn-4');
   btn4.classList.remove('locked');
   btn4.disabled = false;
   btn4.textContent = '04 CALIBRATE';
   btn4.setAttribute('onclick', 'goScene(4)');
-
-  goScene(4);
+  triggerReboot();
 }
 
 /* ──────────────────────────────
@@ -2492,11 +2639,15 @@ function runCalibration() {
     vuln.classList.add('show');
     success.classList.remove('show');
     completeBtn.style.display = 'none';
+    // Track that vulnerability was triggered (for Signal Recovered badge)
+    window._msmVulnTriggered = true;
   } else {
     vuln.classList.remove('show');
     success.classList.add('show');
     calBtn.style.display = 'none';
     completeBtn.style.display = 'inline-flex';
+    // Award badges based on calibration outcome
+    msmCheckBadges_611();
   }
 }
 
@@ -2584,6 +2735,81 @@ function exportReport() {
 
 // Initial build
 buildHeatmap();
+
+/* ── BADGE SYSTEM (Module 6.1.1) ── */
+const MSM_LS = 'msm_badges';
+
+function msmEarnBadge(key) {
+  try {
+    const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
+    if (b[key]) return false;
+    b[key] = { earned: true, ts: Date.now() };
+    localStorage.setItem(MSM_LS, JSON.stringify(b));
+    return true;
+  } catch(e) { return false; }
+}
+
+function msmCheckBadges_611() {
+  // Module completion
+  msmEarnBadge('raw_signal');
+
+  // First Strike — no Tier 1 or 2 prompts shown (submitAttempts stayed at 1 after passing)
+  // We track this by checking if the axiom-feedback div was never shown
+  const fb = document.getElementById('axiom-feedback');
+  if (!fb || fb.style.display === 'none' || fb.style.display === '') {
+    msmEarnBadge('first_strike');
+  }
+
+  // Signal Recovered — vulnerability was triggered and then student fixed it
+  if (window._msmVulnTriggered) {
+    msmEarnBadge('signal_recovered');
+    window._msmVulnTriggered = false;
+  }
+
+  // Impact Specialist — all three HUD panels were lit at some point this session
+  if (window._msmAllHUDActive) {
+    msmEarnBadge('impact_specialist');
+  }
+
+  // Resilient Analyst — submitted 3+ times
+  if (submitAttempts >= 3) {
+    msmEarnBadge('resilient_analyst');
+  }
+
+  // Precision Writer — 60-70 words with all HUD panels
+  if (window._msmPrecisionWriter) {
+    msmEarnBadge('precision_writer');
+  }
+
+  // Full Clearance — both modules complete
+  try {
+    const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
+    if (b['raw_signal'] && b['market_intelligence']) msmEarnBadge('full_clearance');
+    // Method Mastery — impact specialist in both modules
+    if (b['impact_specialist'] && window._msmImpactSpecialist612) msmEarnBadge('method_mastery');
+  } catch(e) {}
+}
+
+// Track all-HUD active state in updateHUD
+const _origUpdateHUD_611 = updateHUD;
+function updateHUD(text) {
+  _origUpdateHUD_611(text);
+  const nA = hasKeyword(text, N_KEYWORDS);
+  const eA = hasKeyword(text, E_KEYWORDS);
+  const iA = hasKeyword(text, I_KEYWORDS);
+  if (nA && eA && iA) window._msmAllHUDActive = true;
+  // Precision Writer: 60-70 words + all panels
+  const wc = countWords(text);
+  if (nA && eA && iA && wc >= 60 && wc <= 70) window._msmPrecisionWriter = true;
+}
 </script>
+
+<!-- ── ACE v2: REBOOT OVERLAY ── -->
+<div id="reboot-overlay">
+  <div class="rb-line1" id="rb-line1">CRITICAL INSIGHT DETECTED</div>
+  <div class="rb-line2" id="rb-line2">CALIBRATING SPECIALIST GRADE</div>
+  <div class="rb-bar-wrap"><div class="rb-bar" id="rb-bar"></div></div>
+</div>
+
 </body>
 </html>
