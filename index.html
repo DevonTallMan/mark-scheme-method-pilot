@@ -6,6 +6,9 @@
 <title>The Mark Scheme Method® — Command Centre</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="./firebase-config.js"></script>
 <style>
   :root {
     --void: #0D1117;
@@ -324,13 +327,127 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--void); }
   ::-webkit-scrollbar-thumb { background: rgba(57,255,20,0.3); border-radius: 2px; }
-</style>
+
+  /* ── RANK CHIP (TOPBAR) ── */
+  .rank-chip {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,215,0,0.06);
+    border: 1px solid rgba(255,215,0,0.25);
+    border-radius: 4px; padding: 4px 10px;
+    transition: all 0.5s;
+  }
+  .rank-chip-label { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--text-dim); }
+  .rank-chip-value { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
+  .rank-chip.rank-max .rank-chip-value { color: var(--green); text-shadow: 0 0 10px rgba(57,255,20,0.6); }
+
+  /* ── RANK JOURNEY ── */
+  .rank-journey { display: flex; align-items: flex-start; gap: 0; margin-bottom: 36px; overflow-x: auto; padding-bottom: 8px; }
+  .rank-node { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 112px; position: relative; flex-shrink: 0; }
+  .rank-node::after { content: ''; position: absolute; top: 19px; left: calc(50% + 21px); width: calc(100% - 42px); height: 1px; background: var(--panel-border); transition: background 0.5s; }
+  .rank-node:last-child::after { display: none; }
+  .rank-node.rn-earned::after { background: rgba(255,215,0,0.35); }
+  .rank-pip { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--panel-border); background: var(--panel); display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; color: var(--text-ghost); transition: all 0.5s; }
+  .rank-node.rn-earned .rank-pip { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.08); box-shadow: 0 0 14px rgba(255,215,0,0.3); }
+  .rank-node.rn-current .rank-pip { border-color: var(--green); color: var(--green); background: rgba(57,255,20,0.08); box-shadow: 0 0 20px rgba(57,255,20,0.4); animation: rpulse 2.2s ease-in-out infinite; }
+  @keyframes rpulse { 0%,100% { box-shadow: 0 0 14px rgba(57,255,20,0.3); } 50% { box-shadow: 0 0 28px rgba(57,255,20,0.7); } }
+  .rank-title-lbl { font-family: 'Share Tech Mono', monospace; font-size: 8.5px; letter-spacing: 1px; color: var(--text-ghost); text-align: center; max-width: 90px; line-height: 1.3; transition: color 0.5s; }
+  .rank-node.rn-earned .rank-title-lbl { color: var(--text-dim); }
+  .rank-node.rn-current .rank-title-lbl { color: var(--green); }
+
+  /* ── BADGE GRID ── */
+  .badge-section-lbl { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--text-dim); margin: 28px 0 14px; display: flex; align-items: center; gap: 12px; }
+  .badge-section-lbl::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+  .badge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 8px; }
+  @media (max-width: 900px) { .badge-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .badge-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .badge-card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 12px; padding: 18px 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; position: relative; overflow: hidden; transition: all 0.4s; }
+  .badge-card.b-locked { opacity: 0.28; filter: grayscale(1); }
+  .badge-card.b-unlocked { border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.04); box-shadow: 0 0 20px rgba(255,215,0,0.07); }
+  .badge-card.b-unlocked:hover { border-color: rgba(255,215,0,0.55); box-shadow: 0 0 32px rgba(255,215,0,0.14); transform: translateY(-3px); }
+  .badge-card.b-green { border-color: rgba(57,255,20,0.3) !important; background: rgba(57,255,20,0.04) !important; box-shadow: 0 0 20px rgba(57,255,20,0.07) !important; }
+  .badge-card.b-green:hover { border-color: rgba(57,255,20,0.55) !important; box-shadow: 0 0 32px rgba(57,255,20,0.14) !important; }
+  .badge-card.b-new { animation: badge-pop 0.65s cubic-bezier(0.34,1.56,0.64,1) both; }
+  @keyframes badge-pop { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+  .b-icon { font-size: 26px; line-height: 1; }
+  .b-unlocked .b-icon { filter: drop-shadow(0 0 8px rgba(255,215,0,0.5)); }
+  .b-green .b-icon { filter: drop-shadow(0 0 8px rgba(57,255,20,0.5)) !important; }
+  .b-locked .b-icon { font-size: 20px; }
+  .b-name { font-family: 'Orbitron', monospace; font-size: 8.5px; font-weight: 700; letter-spacing: 1px; color: var(--text-ghost); line-height: 1.35; }
+  .b-unlocked .b-name { color: var(--gold); }
+  .b-green .b-name { color: var(--green) !important; }
+  .b-desc { font-family: 'Share Tech Mono', monospace; font-size: 8.5px; color: var(--text-ghost); line-height: 1.4; }
+  .b-unlocked .b-desc { color: var(--text-dim); }
+  .b-lock { position: absolute; top: 7px; right: 8px; font-size: 9px; opacity: 0.25; }
+
+  .sr-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 36px; }
+  .sr-stat { background: var(--panel); border: 1px solid var(--panel-border); border-radius: 8px; padding: 14px 20px; }
+  .sr-stat-val { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 700; color: var(--green); }
+  .sr-stat-lbl { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--text-dim); margin-top: 3px; }
+
+  /* ── RANK UPGRADE OVERLAY ── */
+  #rank-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: #0D1117; flex-direction: column; align-items: center; justify-content: center; font-family: 'Orbitron', monospace; }
+  .ro-sub { font-size: clamp(11px,2vw,13px); color: var(--green); letter-spacing: 4px; opacity: 0; transition: opacity 0.3s; text-align: center; padding: 0 20px; }
+  .ro-title { font-size: clamp(18px,4vw,36px); font-weight: 900; color: var(--gold); letter-spacing: 5px; margin-top: 14px; opacity: 0; transition: opacity 0.4s; text-align: center; padding: 0 20px; }
+  .ro-bar-wrap { max-width: 400px; width: 90%; margin-top: 32px; }
+  .ro-bar { height: 3px; width: 0%; background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); transition: none; }
+
+  /* ── ENROLMENT MODAL ── */
+  #enrol-overlay { display:none; position:fixed; inset:0; z-index:8000; background:rgba(13,17,23,0.96); backdrop-filter:blur(16px); align-items:center; justify-content:center; }
+  #enrol-overlay.show { display:flex; }
+  .enrol-panel { max-width:440px; width:90%; background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); border-radius:16px; padding:36px 32px; }
+  .enrol-title { font-family:'Orbitron',monospace; font-size:18px; font-weight:900; color:var(--gold); letter-spacing:3px; margin-bottom:6px; }
+  .enrol-sub { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:1px; margin-bottom:28px; }
+  .enrol-label { font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--text-dim); margin-bottom:7px; display:block; }
+  .enrol-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); border-radius:6px; color:var(--text-primary); font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500; padding:11px 14px; outline:none; transition:border-color 0.2s; margin-bottom:16px; }
+  .enrol-input:focus { border-color:var(--gold); box-shadow:0 0 0 2px rgba(255,215,0,0.08); }
+  .enrol-input::placeholder { color:var(--text-ghost); }
+  .enrol-select { width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--panel-border); border-radius:6px; color:var(--text-primary); font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500; padding:11px 14px; outline:none; transition:border-color 0.2s; margin-bottom:16px; cursor:pointer; }
+  .enrol-select:focus { border-color:var(--gold); }
+  .enrol-select option { background:#1a2030; }
+  .enrol-btn { width:100%; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; padding:13px; background:var(--gold); color:#000; border:none; border-radius:6px; cursor:pointer; transition:all 0.2s; }
+  .enrol-btn:hover { box-shadow:0 0 20px var(--gold-glow); }
+  .enrol-btn:disabled { opacity:0.4; cursor:not-allowed; }
+  .enrol-step { display:none; }
+  .enrol-step.active { display:block; }
+  .enrol-status { font-family:'Share Tech Mono',monospace; font-size:11px; padding:9px 12px; border-radius:6px; margin-bottom:14px; display:none; }
+  .enrol-status.error { display:block; color:var(--red); background:rgba(255,59,59,0.07); border:1px solid rgba(255,59,59,0.2); }
+  .enrol-status.info  { display:block; color:var(--amber); background:rgba(255,149,0,0.07); border:1px solid rgba(255,149,0,0.2); }
+  .enrol-enrolled-banner { background:rgba(57,255,20,0.06); border:1px solid rgba(57,255,20,0.2); border-radius:8px; padding:12px 16px; margin-bottom:20px; display:none; }
+  .enrol-enrolled-name { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; color:var(--green); letter-spacing:2px; }
+  .enrol-enrolled-class { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); margin-top:3px; }
+
+  /* ── CLASS INTEL ── */
+  .class-intel-wrap { margin-bottom:32px; }
+  .class-tabs { display:flex; gap:4px; background:var(--panel); border:1px solid var(--panel-border); border-radius:8px; padding:4px; margin-bottom:20px; max-width:360px; }
+  .class-tab { flex:1; font-family:'Rajdhani',sans-serif; font-size:12px; font-weight:600; letter-spacing:1px; padding:8px; background:transparent; border:none; color:var(--text-dim); border-radius:6px; cursor:pointer; transition:all 0.2s; }
+  .class-tab.active { background:rgba(57,255,20,0.1); color:var(--green); }
+  .class-lb-row { display:flex; align-items:center; gap:14px; background:rgba(255,255,255,0.02); border:1px solid var(--panel-border); border-radius:8px; padding:10px 14px; margin-bottom:6px; transition:border-color 0.2s; }
+  .class-lb-row.is-me { border-color:rgba(57,255,20,0.25); background:rgba(57,255,20,0.04); }
+  .class-lb-pos { font-family:'Orbitron',monospace; font-size:13px; font-weight:900; color:var(--text-ghost); min-width:28px; text-align:center; }
+  .class-lb-pos.top3 { color:var(--gold); }
+  .class-lb-name { font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:600; flex:1; }
+  .class-lb-rank { font-family:'Share Tech Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--text-dim); }
+  .class-lb-badges { display:flex; gap:3px; }
+  .class-lb-badge { font-size:13px; opacity:0.25; }
+  .class-lb-badge.earned { opacity:1; }
+  .class-lb-count { font-family:'Orbitron',monospace; font-size:11px; font-weight:700; color:var(--text-dim); min-width:28px; text-align:right; }
+  .class-lb-count.has { color:var(--green); }</style>
 </head>
 <body>
 
 <nav class="topbar">
   <div class="logo">MARK SCHEME <span>METHOD</span>®</div>
   <div class="topbar-right">
+    <div class="rank-chip" id="topbar-rank">
+      <span class="rank-chip-label">RANK</span>
+      <span class="rank-chip-value" id="rank-value">TRAINEE</span>
+    </div>
+    <div id="enrol-topbar-btn" onclick="openEnrolModal()" style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold);cursor:pointer;padding:5px 12px;border:1px solid rgba(255,215,0,0.3);border-radius:4px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,215,0,0.07)'" onmouseout="this.style.background='transparent'">+ JOIN CLASS</div>
+    <div id="enrolled-topbar-chip" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--green);padding:5px 12px;border:1px solid rgba(57,255,20,0.25);border-radius:4px;">
+      <span id="enrolled-name-chip"></span>
+    </div>
     <div class="sys-time" id="sys-time">SYS://LOADING</div>
     <div class="live-pill"><div class="live-dot"></div>PLATFORM LIVE</div>
   </div>
@@ -543,6 +660,50 @@
     </div>
   </div>
 
+  <!-- RANK UPGRADE OVERLAY -->
+  <div id="rank-overlay">
+    <div class="ro-sub" id="ro-sub">RANK UPGRADE DETECTED</div>
+    <div class="ro-title" id="ro-title">DATA CADET</div>
+    <div class="ro-bar-wrap"><div class="ro-bar" id="ro-bar"></div></div>
+  </div>
+
+  <!-- SPECIALIST RECORD -->
+  <div class="section-header" style="margin-top:16px;">
+    <span class="section-label">SPECIALIST RECORD // BADGES & CLEARANCE LEVEL</span>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- RANK STATS -->
+  <div class="sr-stats" id="sr-stats">
+    <div class="sr-stat">
+      <div class="sr-stat-val" id="sr-rank-val">TRAINEE</div>
+      <div class="sr-stat-lbl">CURRENT RANK</div>
+    </div>
+    <div class="sr-stat">
+      <div class="sr-stat-val" id="sr-badge-count">0 / 9</div>
+      <div class="sr-stat-lbl">BADGES EARNED</div>
+    </div>
+    <div class="sr-stat">
+      <div class="sr-stat-val" id="sr-modules-val">0 / 2</div>
+      <div class="sr-stat-lbl">MODULES COMPLETE</div>
+    </div>
+  </div>
+
+  <!-- RANK JOURNEY -->
+  <div class="rank-journey" id="rank-journey">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- BADGE CATEGORIES -->
+  <div class="badge-section-lbl">COMPLETION</div>
+  <div class="badge-grid" id="badge-grid-completion"></div>
+
+  <div class="badge-section-lbl">PERFORMANCE</div>
+  <div class="badge-grid" id="badge-grid-performance"></div>
+
+  <div class="badge-section-lbl">PERSISTENCE</div>
+  <div class="badge-grid" id="badge-grid-persistence"></div>
+
   <!-- COMING SOON -->
   <div class="section-header">
     <span class="section-label">COMING SOON // CONTENT AREA 6 ROADMAP</span>
@@ -584,16 +745,504 @@
 
 </div>
 
+<!-- ── ENROLMENT MODAL ── -->
+<div id="enrol-overlay">
+  <div class="enrol-panel">
+
+    <!-- Step 1: Enter class code -->
+    <div class="enrol-step active" id="enrol-step-1">
+      <div class="enrol-title">JOIN YOUR CLASS</div>
+      <div class="enrol-sub">// ENTER THE CODE YOUR TEACHER GAVE YOU</div>
+      <div class="enrol-enrolled-banner" id="enrol-already-banner">
+        <div class="enrol-enrolled-name" id="enrol-already-name"></div>
+        <div class="enrol-enrolled-class" id="enrol-already-class"></div>
+      </div>
+      <div class="enrol-status" id="enrol-status-1"></div>
+      <label class="enrol-label">CLASS CODE</label>
+      <input class="enrol-input" id="enrol-code-input" placeholder="6-character code e.g. AB3X7K" maxlength="6" style="text-transform:uppercase;letter-spacing:4px;font-family:'Orbitron',monospace;font-size:18px;font-weight:700;">
+      <button class="enrol-btn" id="enrol-btn-1" onclick="lookupClass()">FIND MY CLASS →</button>
+      <div style="margin-top:12px;text-align:center;">
+        <span onclick="closeEnrolModal()" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);cursor:pointer;letter-spacing:1px;">CANCEL</span>
+      </div>
+    </div>
+
+    <!-- Step 2: Pick your name from roster -->
+    <div class="enrol-step" id="enrol-step-2">
+      <div class="enrol-title">SELECT YOUR NAME</div>
+      <div class="enrol-sub" id="enrol-class-confirm">// CLASS FOUND</div>
+      <div class="enrol-status" id="enrol-status-2"></div>
+      <label class="enrol-label">YOUR NAME</label>
+      <select class="enrol-select" id="enrol-name-select">
+        <option value="">— Select your name —</option>
+      </select>
+      <button class="enrol-btn" id="enrol-btn-2" onclick="confirmEnrolment()">CONFIRM ENROLMENT →</button>
+      <div style="margin-top:12px;text-align:center;">
+        <span onclick="enrolBack()" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);cursor:pointer;letter-spacing:1px;">← BACK</span>
+      </div>
+    </div>
+
+    <!-- Step 3: Success -->
+    <div class="enrol-step" id="enrol-step-3">
+      <div style="text-align:center;padding:16px 0;">
+        <div style="font-size:48px;margin-bottom:16px;">✅</div>
+        <div class="enrol-title" style="justify-content:center;">ENROLLED</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:10px;letter-spacing:1px;">Your progress will now sync to your class.</div>
+        <div style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--green);margin-top:20px;" id="enrol-success-name"></div>
+        <button class="enrol-btn" style="margin-top:24px;" onclick="closeEnrolModal()">START TRAINING →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── CLASS INTEL SECTION (injected after enrolment) ── -->
+<div id="class-intel-section" style="display:none;position:relative;z-index:2;padding:0 24px 40px;max-width:1160px;margin:0 auto;">
+  <div class="section-header">
+    <span class="section-label">CLASS INTEL // LIVE LEADERBOARD</span>
+    <div class="section-line"></div>
+    <span id="class-intel-name" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px;white-space:nowrap;"></span>
+  </div>
+  <div id="class-lb-list" style="margin-bottom:48px;">
+    <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-ghost);text-align:center;padding:24px;">Loading class data...</div>
+  </div>
+</div>
+
 <script>
+  /* ════════════════════════════════════════════════════
+     FIREBASE INIT
+  ════════════════════════════════════════════════════ */
+  let db = null;
+  try {
+    firebase.initializeApp(window.MSM_FIREBASE_CONFIG);
+    db = firebase.firestore();
+  } catch(e) { console.warn('Firebase not configured:', e.message); }
+
+  /* ════════════════════════════════════════════════════
+     CLOCK
+  ════════════════════════════════════════════════════ */
   function updateTime() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    document.getElementById('sys-time').textContent = `SYS://${h}:${m}:${s}`;
+    const n = new Date();
+    document.getElementById('sys-time').textContent =
+      `SYS://${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
   }
-  updateTime();
-  setInterval(updateTime, 1000);
+  updateTime(); setInterval(updateTime, 1000);
+
+  /* ════════════════════════════════════════════════════
+     BADGE & RANK DEFINITIONS
+  ════════════════════════════════════════════════════ */
+  const BADGES = {
+    raw_signal:           { name: 'RAW SIGNAL',        icon: '📶', desc: 'Complete Module 6.1.1',                      cat: 'completion',  green: false },
+    market_intelligence:  { name: 'MARKET INTEL',       icon: '📊', desc: 'Complete Module 6.1.2',                      cat: 'completion',  green: false },
+    full_clearance:       { name: 'FULL CLEARANCE',     icon: '🔓', desc: 'Complete both available modules',            cat: 'completion',  green: true  },
+    first_strike:         { name: 'FIRST STRIKE',       icon: '⚡',  desc: '60+ word answer on first attempt',           cat: 'performance', green: true  },
+    impact_specialist:    { name: 'IMPACT SPECIALIST',  icon: '🎯', desc: 'Trigger all three HUD panels in one answer',  cat: 'performance', green: false },
+    precision_writer:     { name: 'PRECISION WRITER',   icon: '🔬', desc: '60–70 words with all three HUD panels lit',   cat: 'performance', green: false },
+    signal_recovered:     { name: 'SIGNAL RECOVERED',   icon: '🔄', desc: 'Trigger vulnerability alert then fix it',     cat: 'performance', green: true  },
+    resilient_analyst:    { name: 'RESILIENT ANALYST',  icon: '🛡️', desc: 'Submit three or more times in one session',   cat: 'persistence', green: false },
+    method_mastery:       { name: 'METHOD MASTERY',     icon: '⭐',  desc: 'Earn Impact Specialist in both modules',      cat: 'persistence', green: true  },
+  };
+
+  const RANKS = [
+    { id:0, label:'00', title:'TRAINEE',           requires:[] },
+    { id:1, label:'01', title:'DATA CADET',         requires:['raw_signal'] },
+    { id:2, label:'02', title:'SIGNAL ANALYST',     requires:['raw_signal','market_intelligence'] },
+    { id:3, label:'03', title:'SYSTEMS OPERATOR',   requires:['raw_signal','market_intelligence','full_clearance'] },
+    { id:4, label:'04', title:'DATA STRATEGIST',    requires:['raw_signal','market_intelligence','full_clearance','impact_specialist'] },
+    { id:5, label:'05', title:'INSIGHT ARCHITECT',  requires:['raw_signal','market_intelligence','full_clearance','impact_specialist','method_mastery'] },
+  ];
+
+  /* ════════════════════════════════════════════════════
+     LOCAL STORAGE (device-local badge cache)
+  ════════════════════════════════════════════════════ */
+  const LS_KEY      = 'msm_badges';
+  const LS_RANK_KEY = 'msm_rank';
+  const LS_ENROL    = 'msm_enrolment'; // { classCode, studentId, displayName, className }
+
+  function loadBadges()  { try { return JSON.parse(localStorage.getItem(LS_KEY))  || {}; } catch(e) { return {}; } }
+  function saveBadges(b) { localStorage.setItem(LS_KEY, JSON.stringify(b)); }
+  function loadEnrolment() { try { return JSON.parse(localStorage.getItem(LS_ENROL)) || null; } catch(e) { return null; } }
+  function saveEnrolment(e) { localStorage.setItem(LS_ENROL, JSON.stringify(e)); }
+
+  /* ════════════════════════════════════════════════════
+     RANK CALC
+  ════════════════════════════════════════════════════ */
+  function calcRank(earnedMap) {
+    let rank = RANKS[0];
+    for (const r of RANKS) { if (r.requires.every(req => earnedMap[req])) rank = r; }
+    return rank;
+  }
+
+  /* ════════════════════════════════════════════════════
+     FIRESTORE BADGE SYNC
+     Writes badge data for this student into:
+     /classes/{classCode}/students/{studentId}/badges
+  ════════════════════════════════════════════════════ */
+  async function syncBadgesToFirestore(badges) {
+    const enrolment = loadEnrolment();
+    if (!db || !enrolment) return;
+    try {
+      await db.collection('classes').doc(enrolment.classCode)
+        .collection('students').doc(enrolment.studentId)
+        .update({
+          badges,
+          lastActive: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    } catch(e) {
+      // If student doc doesn't exist yet (edge case), create it
+      try {
+        await db.collection('classes').doc(enrolment.classCode)
+          .collection('students').doc(enrolment.studentId)
+          .set({
+            displayName: enrolment.displayName,
+            badges,
+            lastActive: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+      } catch(e2) { console.warn('Firestore sync failed', e2); }
+    }
+  }
+
+  /* ════════════════════════════════════════════════════
+     EARN BADGE — writes locally + syncs to Firestore
+  ════════════════════════════════════════════════════ */
+  async function earnBadge(key) {
+    const b = loadBadges();
+    if (b[key]) return false;
+    b[key] = { earned: true, ts: Date.now() };
+    saveBadges(b);
+    await syncBadgesToFirestore(b);
+    return true;
+  }
+
+  /* ════════════════════════════════════════════════════
+     RANK UPGRADE ANIMATION
+  ════════════════════════════════════════════════════ */
+  function showRankUpgrade(newRank, callback) {
+    const overlay = document.getElementById('rank-overlay');
+    const sub     = document.getElementById('ro-sub');
+    const title   = document.getElementById('ro-title');
+    const bar     = document.getElementById('ro-bar');
+    overlay.style.display = 'flex';
+    title.textContent = newRank.title;
+    setTimeout(() => { sub.style.opacity   = '1'; }, 200);
+    setTimeout(() => { title.style.opacity = '1'; }, 700);
+    setTimeout(() => { bar.style.transition = 'width 1.2s ease-out'; bar.style.width = '100%'; }, 1000);
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      sub.style.opacity = '0'; title.style.opacity = '0';
+      bar.style.transition = 'none'; bar.style.width = '0%';
+      if (callback) callback();
+    }, 2600);
+  }
+
+  /* ════════════════════════════════════════════════════
+     RENDER FUNCTIONS
+  ════════════════════════════════════════════════════ */
+  function renderRankJourney(currentRank) {
+    const el = document.getElementById('rank-journey');
+    el.innerHTML = RANKS.map(r => {
+      const earned  = r.id < currentRank.id;
+      const current = r.id === currentRank.id;
+      const cls = earned ? 'rn-earned' : current ? 'rn-current' : '';
+      return `<div class="rank-node ${cls}">
+        <div class="rank-pip">${r.label}</div>
+        <div class="rank-title-lbl">${r.title}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderBadgeGrid(category, earnedMap, isNew) {
+    const el   = document.getElementById('badge-grid-' + category);
+    const keys = Object.keys(BADGES).filter(k => BADGES[k].cat === category);
+    el.innerHTML = keys.map(key => {
+      const def      = BADGES[key];
+      const unlocked = !!earnedMap[key];
+      const fresh    = isNew && isNew[key];
+      const greenCls = def.green && unlocked ? ' b-green' : '';
+      const lockCls  = unlocked ? 'b-unlocked' : 'b-locked';
+      const newCls   = fresh ? ' b-new' : '';
+      const lock     = !unlocked ? `<div class="b-lock">🔒</div>` : '';
+      return `<div class="badge-card ${lockCls}${greenCls}${newCls}" title="${def.name}">
+        ${lock}
+        <div class="b-icon">${def.icon}</div>
+        <div class="b-name">${def.name}</div>
+        <div class="b-desc">${def.desc}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function updateTopbarRank(rank) {
+    document.getElementById('rank-value').textContent = rank.title;
+    const chip = document.getElementById('topbar-rank');
+    chip.className = 'rank-chip' + (rank.id === 5 ? ' rank-max' : '');
+  }
+
+  function updateStats(earnedMap, rank) {
+    const earned = Object.keys(earnedMap).length;
+    const total  = Object.keys(BADGES).length;
+    const mods   = (earnedMap['raw_signal'] ? 1 : 0) + (earnedMap['market_intelligence'] ? 1 : 0);
+    document.getElementById('sr-rank-val').textContent    = rank.title;
+    document.getElementById('sr-badge-count').textContent = `${earned} / ${total}`;
+    document.getElementById('sr-modules-val').textContent = `${mods} / 2`;
+  }
+
+  function renderAll(newBadges) {
+    const earned  = loadBadges();
+    const rank    = calcRank(earned);
+    updateTopbarRank(rank);
+    updateStats(earned, rank);
+    renderRankJourney(rank);
+    ['completion','performance','persistence'].forEach(cat =>
+      renderBadgeGrid(cat, earned, newBadges)
+    );
+  }
+
+  /* ════════════════════════════════════════════════════
+     AWARD BADGE (called by module pages via localStorage)
+  ════════════════════════════════════════════════════ */
+  async function msmAwardBadge(key) {
+    if (!BADGES[key]) return;
+    const prevEarned = loadBadges();
+    const prevRank   = calcRank(prevEarned);
+    const isNew      = await earnBadge(key);
+    if (!isNew) return;
+    const newEarned = loadBadges();
+    const newRank   = calcRank(newEarned);
+    const rankUp    = newRank.id > prevRank.id;
+    if (rankUp) {
+      localStorage.setItem(LS_RANK_KEY, String(newRank.id));
+      showRankUpgrade(newRank, () => renderAll({ [key]: true }));
+    } else {
+      renderAll({ [key]: true });
+    }
+  }
+  window.msmAwardBadge = msmAwardBadge;
+
+  function checkForNewBadges() {
+    const stored     = loadBadges();
+    const storedRank = parseInt(localStorage.getItem(LS_RANK_KEY) || '0');
+    const currentRank = calcRank(stored);
+    if (currentRank.id > storedRank) {
+      localStorage.setItem(LS_RANK_KEY, String(currentRank.id));
+      showRankUpgrade(currentRank, () => renderAll({}));
+    } else {
+      renderAll({});
+    }
+  }
+
+  /* ════════════════════════════════════════════════════
+     ENROLMENT MODAL
+  ════════════════════════════════════════════════════ */
+  let _foundClassData  = null;
+  let _foundClassCode  = null;
+
+  function openEnrolModal() {
+    document.getElementById('enrol-overlay').classList.add('show');
+    // Show existing enrolment if present
+    const existing = loadEnrolment();
+    if (existing) {
+      document.getElementById('enrol-already-banner').style.display = 'block';
+      document.getElementById('enrol-already-name').textContent  = existing.displayName;
+      document.getElementById('enrol-already-class').textContent = existing.className;
+    }
+  }
+
+  function closeEnrolModal() {
+    document.getElementById('enrol-overlay').classList.remove('show');
+  }
+
+  function enrolSetStatus(id, msg, type) {
+    const el = document.getElementById(id);
+    el.textContent = msg; el.className = 'enrol-status ' + type;
+  }
+
+  function enrolBack() {
+    document.getElementById('enrol-step-2').classList.remove('active');
+    document.getElementById('enrol-step-1').classList.add('active');
+  }
+
+  async function lookupClass() {
+    const code = document.getElementById('enrol-code-input').value.trim().toUpperCase();
+    if (code.length < 6) { enrolSetStatus('enrol-status-1','Please enter the full 6-character code.','error'); return; }
+    if (!db) { enrolSetStatus('enrol-status-1','Platform not connected. Tell your teacher.','error'); return; }
+
+    const btn = document.getElementById('enrol-btn-1');
+    btn.textContent = 'Searching...'; btn.disabled = true;
+
+    try {
+      const snap = await db.collection('classes').doc(code).get();
+      if (!snap.exists) {
+        enrolSetStatus('enrol-status-1', `Code "${code}" not found. Check with your teacher.`, 'error');
+        btn.textContent = 'FIND MY CLASS →'; btn.disabled = false; return;
+      }
+      _foundClassData = snap.data();
+      _foundClassCode = code;
+
+      // Load student roster
+      const studentsSnap = await db.collection('classes').doc(code).collection('students').get();
+      const students = studentsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      const select = document.getElementById('enrol-name-select');
+      select.innerHTML = '<option value="">— Select your name —</option>' +
+        students.map(s => `<option value="${s.id}">${s.displayName}</option>`).join('');
+
+      document.getElementById('enrol-class-confirm').textContent =
+        `// ${_foundClassData.className.toUpperCase()} — ${_foundClassData.teacherName}`;
+
+      document.getElementById('enrol-step-1').classList.remove('active');
+      document.getElementById('enrol-step-2').classList.add('active');
+    } catch(e) {
+      enrolSetStatus('enrol-status-1', 'Connection error. Try again.', 'error');
+    }
+    btn.textContent = 'FIND MY CLASS →'; btn.disabled = false;
+  }
+
+  async function confirmEnrolment() {
+    const select    = document.getElementById('enrol-name-select');
+    const studentId = select.value;
+    const displayName = select.options[select.selectedIndex]?.text;
+    if (!studentId) { enrolSetStatus('enrol-status-2', 'Please select your name.', 'error'); return; }
+
+    const btn = document.getElementById('enrol-btn-2');
+    btn.textContent = 'Enrolling...'; btn.disabled = true;
+
+    try {
+      // Sync any existing local badges up to Firestore
+      const existingBadges = loadBadges();
+      await db.collection('classes').doc(_foundClassCode)
+        .collection('students').doc(studentId)
+        .update({
+          lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+          ...(Object.keys(existingBadges).length ? { badges: existingBadges } : {})
+        });
+
+      const enrolment = {
+        classCode: _foundClassCode,
+        studentId,
+        displayName,
+        className: _foundClassData.className
+      };
+      saveEnrolment(enrolment);
+
+      document.getElementById('enrol-success-name').textContent = displayName.toUpperCase();
+      document.getElementById('enrol-step-2').classList.remove('active');
+      document.getElementById('enrol-step-3').classList.add('active');
+
+      // Update topbar
+      showEnrolledState(enrolment);
+      // Load class leaderboard
+      loadClassLeaderboard();
+    } catch(e) {
+      enrolSetStatus('enrol-status-2', 'Error saving enrolment. Try again.', 'error');
+    }
+    btn.textContent = 'CONFIRM ENROLMENT →'; btn.disabled = false;
+  }
+
+  function showEnrolledState(enrolment) {
+    document.getElementById('enrol-topbar-btn').style.display     = 'none';
+    document.getElementById('enrolled-topbar-chip').style.display = 'flex';
+    document.getElementById('enrolled-name-chip').textContent     = enrolment.displayName;
+  }
+
+  /* ════════════════════════════════════════════════════
+     CLASS LEADERBOARD (student view)
+  ════════════════════════════════════════════════════ */
+  async function loadClassLeaderboard() {
+    const enrolment = loadEnrolment();
+    if (!db || !enrolment) return;
+
+    const section = document.getElementById('class-intel-section');
+    document.getElementById('class-intel-name').textContent = enrolment.className.toUpperCase();
+    section.style.display = 'block';
+    // Scroll it into view header area so student sees it exists
+    // (we don't auto-scroll, just reveal)
+
+    try {
+      const snap = await db.collection('classes').doc(enrolment.classCode)
+        .collection('students').get();
+      const students = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      const sorted = [...students].sort((a, b) => {
+        const ra = calcRank(a.badges||{}).id;
+        const rb = calcRank(b.badges||{}).id;
+        if (rb !== ra) return rb - ra;
+        return Object.keys(b.badges||{}).filter(k=>b.badges[k]?.earned).length -
+               Object.keys(a.badges||{}).filter(k=>a.badges[k]?.earned).length;
+      });
+
+      const list = document.getElementById('class-lb-list');
+      if (!sorted.length) { list.innerHTML = '<div style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--text-ghost);text-align:center;padding:24px;">No classmates enrolled yet.</div>'; return; }
+
+      list.innerHTML = sorted.map((s, i) => {
+        const rank    = calcRank(s.badges || {});
+        const earned  = Object.keys(s.badges||{}).filter(k => s.badges[k]?.earned);
+        const count   = earned.length;
+        const isMe    = s.id === enrolment.studentId;
+        const posCls  = i < 3 ? 'top3' : '';
+        const meCls   = isMe ? ' is-me' : '';
+        const badgeIcons = Object.keys(BADGES).map(k => {
+          const e = earned.includes(k);
+          return `<span class="class-lb-badge${e?' earned':''}" title="${BADGES[k].name}">${BADGES[k].icon}</span>`;
+        }).join('');
+        return `<div class="class-lb-row${meCls}">
+          <div class="class-lb-pos ${posCls}">${i+1}</div>
+          <div style="flex:1;min-width:0;">
+            <div class="class-lb-name">${s.displayName}${isMe?' <span style="font-family:\'Share Tech Mono\',monospace;font-size:9px;color:var(--green);letter-spacing:1px;">YOU</span>':''}</div>
+            <div class="class-lb-rank">${rank.title}</div>
+          </div>
+          <div class="class-lb-badges">${badgeIcons}</div>
+          <div class="class-lb-count${count>0?' has':''}">${count}/9</div>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      console.warn('Leaderboard load error', e);
+    }
+  }
+
+  /* ════════════════════════════════════════════════════
+     INIT
+  ════════════════════════════════════════════════════ */
+  // Check for existing enrolment on load
+  (function init() {
+    const enrolment = loadEnrolment();
+    if (enrolment) {
+      showEnrolledState(enrolment);
+      loadClassLeaderboard();
+      // Refresh leaderboard every 60s while page is open
+      setInterval(loadClassLeaderboard, 60000);
+    }
+    checkForNewBadges();
+  })();
+
+  // Close modal on overlay background click
+  document.getElementById('enrol-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeEnrolModal();
+  });
+
+  // Enter key on code input
+  document.getElementById('enrol-code-input').addEventListener('keydown', e => {
+    if(e.key==='Enter') lookupClass();
+  });
+
+  /* ════════════════════════════════════════════════════
+     DEMO / RESET HELPERS (browser console only)
+  ════════════════════════════════════════════════════ */
+  window.msmDemo = function() {
+    const keys = Object.keys(BADGES); let i = 0;
+    const iv = setInterval(() => {
+      if (i >= keys.length) { clearInterval(iv); return; }
+      msmAwardBadge(keys[i]); i++;
+    }, 800);
+  };
+  window.msmReset = function() {
+    localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(LS_RANK_KEY);
+    renderAll({});
+    console.log('Badge data cleared.');
+  };
+  window.msmResetEnrolment = function() {
+    localStorage.removeItem(LS_ENROL);
+    location.reload();
+  };
 </script>
 </body>
 </html>
