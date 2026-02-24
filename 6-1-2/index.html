@@ -151,6 +151,28 @@
   .hud-n { border-color: rgba(255,59,59,0.2); } .hud-n .hud-letter { color: var(--red); }
   .hud-e { border-color: rgba(255,149,0,0.2); } .hud-e .hud-letter { color: var(--amber); }
   .hud-i { border-color: rgba(57,255,20,0.2); } .hud-i .hud-letter { color: var(--green); }
+  @keyframes hud-glitch { 0%{filter:invert(0) brightness(1)} 20%{filter:invert(1) brightness(2)} 40%{filter:invert(0) brightness(1)} 60%{filter:invert(1) brightness(2)} 80%{filter:invert(0) brightness(1)} 100%{filter:invert(0) brightness(1)} }
+
+  /* ── ACE v2: PROGRESS BAR ── */
+  .energy-bar-wrap { display:flex; align-items:center; gap:10px; margin-top:10px; }
+  .energy-bar-track { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); }
+  .energy-bar-fill { height:100%; width:0%; border-radius:4px; transition:width 0.3s ease, background 0.4s ease; }
+  .energy-bar-fill.eb-red   { background:var(--red);   box-shadow:none; }
+  .energy-bar-fill.eb-amber { background:var(--amber); animation:bar-pulse 1.2s ease infinite; }
+  .energy-bar-fill.eb-green { background:var(--green); animation:bar-flash 0.6s ease forwards; }
+  @keyframes bar-pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+  @keyframes bar-flash { 0%{box-shadow:none} 50%{box-shadow:0 0 18px rgba(57,255,20,0.7)} 100%{box-shadow:0 0 10px rgba(57,255,20,0.4)} }
+  .energy-bar-label { font-family:'Share Tech Mono',monospace; font-size:11px; min-width:160px; transition:color 0.4s; }
+
+  /* ── ACE v2: IMPACT PULSE ── */
+  @keyframes impact-pulse { 0%,100%{box-shadow:0 0 0 rgba(57,255,20,0)} 50%{box-shadow:0 0 14px rgba(57,255,20,0.5)} }
+
+  /* ── ACE v2: REBOOT OVERLAY ── */
+  #reboot-overlay { display:none; position:fixed; inset:0; z-index:9999; background:#0D1117; flex-direction:column; align-items:center; justify-content:center; font-family:'Orbitron',monospace; }
+  #reboot-overlay .rb-line1 { font-size:clamp(11px,2vw,14px); color:var(--red); letter-spacing:4px; opacity:0; transition:opacity 0.3s; text-align:center; padding:0 20px; }
+  #reboot-overlay .rb-line2 { font-size:clamp(16px,3.5vw,30px); font-weight:900; color:var(--green); letter-spacing:5px; margin-top:16px; opacity:0; transition:opacity 0.4s; text-align:center; padding:0 20px; }
+  #reboot-overlay .rb-bar-wrap { max-width:400px; width:90%; margin-top:32px; }
+  #reboot-overlay .rb-bar { height:3px; width:0%; background:var(--green); box-shadow:0 0 12px rgba(57,255,20,0.6); transition:none; }
   .hud-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 6px; }
   .hud-hint { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
 
@@ -428,10 +450,16 @@
       </div>
       <div class="answer-area">
         <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-bottom:12px;">YOUR RESPONSE // USE N.E.I. STRUCTURE</div>
-        <textarea class="answer-textarea" id="student-answer" maxlength="400"
-          oninput="updateHUD(this.value); document.getElementById('char-count').textContent = this.value.length + ' / 400 chars'"
+        <textarea class="answer-textarea" id="student-answer" maxlength="600"
+          oninput="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
           placeholder="Name the targeted marketing technique, explain how the system processes the purchase data, and state the measurable business outcome..."></textarea>
-        <div class="char-count" id="char-count">0 / 400 chars</div>
+        <div class="energy-bar-wrap">
+          <div class="energy-bar-track">
+            <div class="energy-bar-fill" id="energy-bar-fill"></div>
+          </div>
+          <div class="energy-bar-label" id="word-count-display">0 words — aim for 60+</div>
+        </div>
+        <div id="axiom-feedback" style="display:none;margin-top:14px;padding:14px 18px;border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.6;border:1px solid var(--amber);background:rgba(255,149,0,0.06);color:var(--amber);animation:fade-in 0.4s ease both;"></div>
       </div>
       <div style="padding:0 20px 20px;">
         <div class="btn-row" style="margin-top:0;justify-content:flex-start;">
@@ -823,11 +851,106 @@ function checkDragDrop() {
 }
 
 /* ── SCENE 3: HUD LIVE FEEDBACK ── */
-const N_WORDS = ['targeted','marketing','personalised','personalized','recommendation','purchase history','customer data','profiling','segmentation','segment'];
-const E_WORDS = ['analyses','analyzes','cross-references','cross references','filters','algorithm','past orders','browsing','patterns','identifies','processes','database','catalogue','catalog','matches','compares','based on'];
-const I_WORDS = ['revenue','sales','conversion','profit','retention','reduces','waste','increases','click-through','click through','spend','loyalty','repeat','value','income','earnings','growth'];
+const N_WORDS = ['targeted','marketing','personalised','personalized','recommendation','purchase history','customer data','profiling','segmentation','segment','behavioural','behavioral','personaliz','personalise'];
+const E_WORDS = ['analyses','analyzes','cross-references','cross references','filters','algorithm','past orders','browsing','patterns','identifies','processes','database','catalogue','catalog','matches','compares','based on','sorts','ranks','predicts','cross reference','purchase data','history'];
+const I_WORDS = ['revenue','sales','conversion','profit','retention','reduc','waste','increas','click-through','click through','spend','loyalty','repeat','value','income','earnings','growth','turnover','margin','customer lifetime','market share','return','engagement','roi','cost','efficien','competi'];
 
 function hasKeyword(text, words) { const t = text.toLowerCase(); return words.some(w => t.includes(w)); }
+
+function countWords(text) { return text.trim() === '' ? 0 : text.trim().split(/\s+/).length; }
+
+/* ── ACE v2: PROGRESS BAR + IMPACT PULSE + IDLE POKE ── */
+
+const IDLE_DELAY  = 10000;
+const IDLE_PROMPT = 'Specialist — you\'ve named the technique. But so what?\nWhat actually happens to the business when a customer clicks that recommendation?';
+let idleTimer = null;
+
+function updateWordCount(text) {
+  const count = countWords(text);
+  const el    = document.getElementById('word-count-display');
+  const fill  = document.getElementById('energy-bar-fill');
+  if (!el || !fill) return;
+
+  const pct = Math.min(100, Math.round((count / 60) * 100));
+  fill.style.width = pct + '%';
+  fill.classList.remove('eb-red', 'eb-amber', 'eb-green');
+
+  if (count === 0) {
+    el.textContent = '0 words — aim for 60+';
+    el.style.color = '';
+  } else if (count < 40) {
+    fill.classList.add('eb-red');
+    el.textContent = count + ' words — keep going';
+    el.style.color = 'var(--red)';
+  } else if (count < 60) {
+    fill.classList.add('eb-amber');
+    el.textContent = count + ' words — almost there';
+    el.style.color = 'var(--amber)';
+  } else {
+    fill.classList.add('eb-green');
+    el.textContent = count + ' words ✓';
+    el.style.color = 'var(--green)';
+  }
+
+  // HUD glitch when impact keyword + 60 words
+  const iA = hasKeyword(text, I_WORDS);
+  if (iA && count >= 60) triggerHUDGlitch();
+
+  // Impact panel pulse — glow [I] softly at 50+ words if not yet detected
+  const hudI = document.getElementById('hud-i');
+  if (hudI) {
+    if (count >= 50 && !hudI.classList.contains('active-i')) {
+      hudI.style.animation = 'impact-pulse 1.8s ease infinite';
+    } else {
+      hudI.style.animation = '';
+    }
+  }
+}
+
+function resetIdleTimer(text) {
+  clearTimeout(idleTimer);
+  if (countWords(text) >= 60) return;
+  idleTimer = setTimeout(() => {
+    const fb = document.getElementById('axiom-feedback');
+    if (!fb || fb.style.display !== 'none') return;
+    fb.style.display    = 'block';
+    fb.style.borderColor = 'rgba(57,255,20,0.4)';
+    fb.style.background  = 'rgba(57,255,20,0.05)';
+    fb.style.color       = 'var(--green)';
+    fb.textContent       = 'AXIOM-7 // ' + IDLE_PROMPT;
+  }, IDLE_DELAY);
+}
+
+/* ── ACE v2: REBOOT ANIMATION ── */
+function triggerReboot() {
+  const overlay = document.getElementById('reboot-overlay');
+  const line1   = document.getElementById('rb-line1');
+  const line2   = document.getElementById('rb-line2');
+  const bar     = document.getElementById('rb-bar');
+  overlay.style.display = 'flex';
+  setTimeout(() => { line1.style.opacity = '1'; }, 200);
+  setTimeout(() => { line2.style.opacity = '1'; }, 700);
+  setTimeout(() => {
+    bar.style.transition = 'width 1.2s ease-out';
+    bar.style.width = '100%';
+  }, 1000);
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    line1.style.opacity = '0';
+    line2.style.opacity = '0';
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    goScene(4);
+  }, 2400);
+}
+
+function triggerHUDGlitch() {
+  const hudI = document.getElementById('hud-i');
+  if (hudI.dataset.glitched) return;
+  hudI.dataset.glitched = '1';
+  hudI.style.animation = 'hud-glitch 0.5s ease';
+  setTimeout(() => { hudI.style.animation = ''; delete hudI.dataset.glitched; }, 600);
+}
 
 function updateHUD(text) {
   const nA = hasKeyword(text, N_WORDS);
@@ -838,13 +961,48 @@ function updateHUD(text) {
   document.getElementById('hud-i').className = 'nei-hud-item hud-i' + (iA ? ' active-i' : '');
 }
 
+let submitAttempts = 0;
+
+const TIER1_MSG = `⚠ AXIOM-7 // INSUFFICIENT SIGNAL DETECTED\n\nYour response is too brief. An examiner needs to see three things: the name of the technique, how it works with the data, and what it does to the business.\n\nExpand your answer — aim for at least 60 words. The third mark is always in your last sentence.`;
+
+const TIER2_TEMPLATE = `Try this structure:\n\n[N] The business uses targeted marketing — specifically [NAME THE TECHNIQUE]...\n[E] The system [EXPLAIN HOW IT WORKS WITH THE PURCHASE DATA]...\n[I] This means the business [STATE THE MEASURABLE OUTCOME — revenue, conversions, reduced waste]...`;
+
 function submitAnswer() {
   const answer = document.getElementById('student-answer').value.trim();
   if (!answer) { alert('Please write your answer before submitting.'); return; }
+  const words = countWords(answer);
+  const fb = document.getElementById('axiom-feedback');
+  submitAttempts++;
+
+  if (words < 60) {
+    fb.style.display = 'block';
+    if (submitAttempts === 1) {
+      fb.style.borderColor = 'var(--amber)';
+      fb.style.background = 'rgba(255,149,0,0.06)';
+      fb.style.color = 'var(--amber)';
+      fb.style.whiteSpace = 'pre-line';
+      fb.textContent = TIER1_MSG;
+    } else {
+      fb.style.borderColor = 'var(--red)';
+      fb.style.background = 'rgba(255,59,59,0.06)';
+      fb.style.color = 'var(--text-primary)';
+      fb.style.whiteSpace = 'pre-line';
+      fb.textContent = TIER2_TEMPLATE;
+      // Ghost template into placeholder
+      document.getElementById('student-answer').placeholder = '[N] The business uses targeted marketing...\n[E] The system analyses purchase history to...\n[I] This means the business can increase...';
+    }
+    // Shake the submit button
+    const btn = document.querySelector('#scene-3 .btn-primary');
+    if (btn) { btn.style.animation = 'tab-reject 0.4s ease'; setTimeout(() => { btn.style.animation = ''; }, 450); }
+    return;
+  }
+
+  // 60+ words — proceed
+  fb.style.display = 'none';
   const btn4 = document.getElementById('navbtn-4');
   btn4.classList.remove('locked'); btn4.disabled = false;
   btn4.textContent = '04 CALIBRATE'; btn4.setAttribute('onclick', 'goScene(4)');
-  goScene(4);
+  triggerReboot();
 }
 
 /* ── SCENE 4: CALIBRATION ── */
@@ -892,9 +1050,11 @@ function runCalibration() {
   vuln.classList.remove('show'); succ.classList.remove('show'); btn.style.display = 'none';
   if (!taggedI) {
     vuln.classList.add('show'); vuln.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window._msmVulnTriggered = true;
   } else {
     succ.classList.add('show'); btn.style.display = 'inline-flex';
     succ.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    msmCheckBadges_612();
   }
 }
 
@@ -964,6 +1124,75 @@ function pushModule(btn) {
   btn.classList.add('pushed');
   btn.disabled = true;
 }
+
+/* ── BADGE SYSTEM (Module 6.1.2) ── */
+const MSM_LS = 'msm_badges';
+
+function msmEarnBadge(key) {
+  try {
+    const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
+    if (b[key]) return false;
+    b[key] = { earned: true, ts: Date.now() };
+    localStorage.setItem(MSM_LS, JSON.stringify(b));
+    return true;
+  } catch(e) { return false; }
+}
+
+function msmCheckBadges_612() {
+  // Module completion
+  msmEarnBadge('market_intelligence');
+
+  // First Strike
+  const fb = document.getElementById('axiom-feedback');
+  if (!fb || fb.style.display === 'none' || fb.style.display === '') {
+    msmEarnBadge('first_strike');
+  }
+
+  // Signal Recovered
+  if (window._msmVulnTriggered) {
+    msmEarnBadge('signal_recovered');
+    window._msmVulnTriggered = false;
+  }
+
+  // Impact Specialist
+  if (window._msmAllHUDActive) {
+    msmEarnBadge('impact_specialist');
+    window._msmImpactSpecialist612 = true;
+  }
+
+  // Resilient Analyst
+  if (submitAttempts >= 3) msmEarnBadge('resilient_analyst');
+
+  // Precision Writer
+  if (window._msmPrecisionWriter) msmEarnBadge('precision_writer');
+
+  // Full Clearance
+  try {
+    const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
+    if (b['raw_signal'] && b['market_intelligence']) msmEarnBadge('full_clearance');
+    if (b['impact_specialist'] && window._msmImpactSpecialist612) msmEarnBadge('method_mastery');
+  } catch(e) {}
+}
+
+// Wrap updateHUD to track all-panel state
+const _origUpdateHUD_612 = updateHUD;
+function updateHUD(text) {
+  _origUpdateHUD_612(text);
+  const nA = hasKeyword(text, N_WORDS);
+  const eA = hasKeyword(text, E_WORDS);
+  const iA = hasKeyword(text, I_WORDS);
+  if (nA && eA && iA) window._msmAllHUDActive = true;
+  const wc = countWords(text);
+  if (nA && eA && iA && wc >= 60 && wc <= 70) window._msmPrecisionWriter = true;
+}
 </script>
+
+<!-- ── ACE v2: REBOOT OVERLAY ── -->
+<div id="reboot-overlay">
+  <div class="rb-line1" id="rb-line1">CRITICAL INSIGHT DETECTED</div>
+  <div class="rb-line2" id="rb-line2">CALIBRATING SPECIALIST GRADE</div>
+  <div class="rb-bar-wrap"><div class="rb-bar" id="rb-bar"></div></div>
+</div>
+
 </body>
 </html>
