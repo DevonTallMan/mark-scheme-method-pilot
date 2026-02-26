@@ -1596,6 +1596,29 @@
     .glitch-block, .glitch-scanlines,
     .glitch-text::before, .glitch-text::after { display: none; }
   }
+
+  /* ── AXIOM-7 NEI API DECONSTRUCTION PANEL ── */
+  #axiom-deconstruction { display:none; margin-top:20px; }
+  .axd-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .axd-title { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; color:var(--green); letter-spacing:3px; }
+  .axd-sub { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:1px; }
+  .axd-badges { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+  .axd-badge { font-family:'Share Tech Mono',monospace; font-size:11px; padding:6px 12px; border-radius:4px; border:1px solid; letter-spacing:1px; }
+  .axd-badge.hit  { color:var(--green); border-color:rgba(57,255,20,0.35); background:rgba(57,255,20,0.06); }
+  .axd-badge.miss { color:var(--text-dim); border-color:rgba(255,255,255,0.1); background:transparent; }
+  .axd-badge.hit::before { content:'✓  '; }
+  .axd-badge.miss::before { content:'○  '; }
+  .axd-text-wrap { background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:8px; padding:16px 18px; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500; line-height:1.8; color:var(--text-primary); }
+  .axd-text-wrap .nei-n { background:rgba(255,59,59,0.25); color:#ffcccc; border-radius:3px; padding:1px 4px; }
+  .axd-text-wrap .nei-e { background:rgba(255,149,0,0.25); color:#ffe0aa; border-radius:3px; padding:1px 4px; }
+  .axd-text-wrap .nei-i { background:rgba(57,255,20,0.2); color:#bbffaa; border-radius:3px; padding:1px 4px; }
+  .axd-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
+  .axd-legend-item { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); display:flex; align-items:center; gap:6px; }
+  .axd-dot { width:10px; height:10px; border-radius:2px; display:inline-block; }
+  .axd-loading { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:2px; padding:16px 0; display:flex; align-items:center; gap:10px; }
+  .axd-spinner { width:14px; height:14px; border:2px solid rgba(57,255,20,0.2); border-top-color:var(--green); border-radius:50%; animation:spin-axd 0.8s linear infinite; }
+  @keyframes spin-axd { to { transform:rotate(360deg); } }
+  .axd-error { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--amber); letter-spacing:1px; padding:12px 0; }
 </style>
 </head>
 <body>
@@ -1859,6 +1882,19 @@
       <div class="glass student-answer-area">
         <div class="sa-title">// YOUR ANSWER // SELECT TEXT AND TAG WITH THE TOOLBAR →</div>
         <div id="student-display"></div>
+      </div>
+
+      <!-- AXIOM-7 API DECONSTRUCTION -->
+      <div class="glass" id="axiom-deconstruction" style="padding:20px;">
+        <div class="axd-header">
+          <div>
+            <div class="axd-title">AXIOM-7 // NEI DECONSTRUCTION</div>
+            <div class="axd-sub">// AI-ASSISTED ANALYSIS — COMPARE WITH YOUR OWN TAGGING ABOVE</div>
+          </div>
+        </div>
+        <div id="axd-content">
+          <div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div>
+        </div>
       </div>
 
       <!-- TALLY + ALERTS -->
@@ -2464,6 +2500,58 @@ function triggerReboot() {
     bar.style.width = '0%';
     goScene(4);
   }, 2400);
+
+  // Fire API call in parallel — result will be ready by the time Scene 4 loads
+  const answer = document.getElementById('student-answer').value.trim();
+  window._neiApiPromise = analyzeWithNEIChecker(
+    answer,
+    'Focus on GPS logistics, coordinate data, data vs information vs knowledge hierarchy, and delivery outcomes'
+  );
+}
+
+/* ── NEI CHECKER API ── */
+async function analyzeWithNEIChecker(studentText, customPrompt = '') {
+  const API_URL = 'https://neichecker.toolsforteaching.co.uk/nei-checker.php';
+  const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ studentText, prompt: customPrompt })
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const data = await response.json();
+  if (!data.success) throw new Error(data.error || 'Analysis failed');
+  return data;
+}
+
+function renderAxiomDeconstruction(result) {
+  const panel = document.getElementById('axiom-deconstruction');
+  const content = document.getElementById('axd-content');
+  panel.style.display = 'block';
+
+  const { hasName, hasExplain, hasImpact } = result.analysis;
+
+  // Build colour-coded text from details arrays if highlightedHtml isn't usable
+  // Use the API's highlightedHtml but restyle spans to match platform
+  let html = result.highlightedHtml || result.originalText || '';
+  // Remap any inline-styled spans to our CSS classes
+  html = html.replace(/style=['"][^'"]*color\s*:\s*#ff6b6b[^'"]*['"]/gi, 'class="nei-n"');
+  html = html.replace(/style=['"][^'"]*color\s*:\s*#ffa500[^'"]*['"]/gi, 'class="nei-e"');
+  html = html.replace(/style=['"][^'"]*color\s*:\s*#51cf66[^'"]*['"]/gi, 'class="nei-i"');
+
+  content.innerHTML = `
+    <div class="axd-badges">
+      <div class="axd-badge ${hasName    ? 'hit' : 'miss'}">[N] NAME</div>
+      <div class="axd-badge ${hasExplain ? 'hit' : 'miss'}">[E] EXPLAIN</div>
+      <div class="axd-badge ${hasImpact  ? 'hit' : 'miss'}">[I] IMPACT</div>
+    </div>
+    ${!hasImpact ? `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);letter-spacing:1px;margin-bottom:12px;padding:10px 12px;border:1px solid rgba(255,59,59,0.25);border-radius:6px;background:rgba(255,59,59,0.05);">⚠ AXIOM-7 // NO IMPACT COMPONENT DETECTED — THIRD MARK AT RISK</div>` : ''}
+    <div class="axd-text-wrap">${html}</div>
+    <div class="axd-legend">
+      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,59,59,0.5);"></div>[N] NAME</div>
+      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,149,0,0.5);"></div>[E] EXPLAIN</div>
+      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(57,255,20,0.4);"></div>[I] IMPACT</div>
+    </div>
+  `;
 }
 
 function triggerHUDGlitch() {
@@ -2582,6 +2670,31 @@ function prepCalibration() {
   document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('mode-display').textContent = '— SELECT —';
   document.getElementById('mode-display').style.color = 'var(--text-dim)';
+
+  // Resolve AXIOM-7 API result
+  const panel = document.getElementById('axiom-deconstruction');
+  const content = document.getElementById('axd-content');
+  panel.style.display = 'block';
+  content.innerHTML = '<div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div>';
+
+  if (window._neiApiPromise) {
+    window._neiApiPromise
+      .then(result => renderAxiomDeconstruction(result))
+      .catch(() => {
+        content.innerHTML = '<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>';
+      });
+  } else {
+    // No promise yet (e.g. navigated directly) — fire now
+    if (answer) {
+      analyzeWithNEIChecker(answer, 'Focus on GPS logistics, coordinate data, data vs information vs knowledge hierarchy, and delivery outcomes')
+        .then(result => renderAxiomDeconstruction(result))
+        .catch(() => {
+          content.innerHTML = '<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>';
+        });
+    } else {
+      panel.style.display = 'none';
+    }
+  }
 }
 
 // Text selection highlighting
