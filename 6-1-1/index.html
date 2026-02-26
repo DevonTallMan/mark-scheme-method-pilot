@@ -1797,6 +1797,8 @@
           id="student-answer"
           placeholder="Identify the raw coordinates, explain how the software processes them, and state the final instruction for the driver..."
           oninput="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
+          onkeyup="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
+          onpaste="setTimeout(()=>{ const v=this.value; updateHUD(v); updateWordCount(v); resetIdleTimer(v); },10)"
           rows="6"
         ></textarea>
         <div class="energy-bar-wrap">
@@ -2254,6 +2256,22 @@ function goScene(n) {
   currentScene = n;
   window.scrollTo(0, 0);
 
+  if (n === 3) {
+    // Polling fallback — catches browsers where oninput/onkeyup don't fire reliably
+    clearInterval(window._textPoll);
+    window._textPoll = setInterval(() => {
+      const ta = document.getElementById('student-answer');
+      if (!ta) return;
+      const v = ta.value;
+      if (v !== (window._lastPolledValue || '')) {
+        window._lastPolledValue = v;
+        updateHUD(v);
+        updateWordCount(v);
+      }
+    }, 400);
+  } else {
+    clearInterval(window._textPoll);
+  }
   if (n === 4) prepCalibration();
   if (n === 6) buildHeatmap();
 }
