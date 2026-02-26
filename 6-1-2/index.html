@@ -475,6 +475,8 @@
         <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-bottom:12px;">YOUR RESPONSE // USE N.E.I. STRUCTURE</div>
         <textarea class="answer-textarea" id="student-answer" maxlength="600"
           oninput="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
+          onkeyup="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
+          onpaste="setTimeout(()=>{ const v=this.value; updateHUD(v); updateWordCount(v); resetIdleTimer(v); },10)"
           placeholder="Name the targeted marketing technique, explain how the system processes the purchase data, and state the measurable business outcome..."></textarea>
         <div class="energy-bar-wrap">
           <div class="energy-bar-track">
@@ -792,6 +794,21 @@ function goScene(n) {
   document.getElementById('floating-nav').style.display = n === 6 ? 'none' : 'flex';
   currentScene = n;
   window.scrollTo(0, 0);
+  if (n === 3) {
+    clearInterval(window._textPoll);
+    window._textPoll = setInterval(() => {
+      const ta = document.getElementById('student-answer');
+      if (!ta) return;
+      const v = ta.value;
+      if (v !== (window._lastPolledValue || '')) {
+        window._lastPolledValue = v;
+        updateHUD(v);
+        updateWordCount(v);
+      }
+    }, 400);
+  } else {
+    clearInterval(window._textPoll);
+  }
   if (n === 4) prepCalibration();
   if (n === 6) buildHeatmap();
 }
