@@ -2621,6 +2621,7 @@ const TIER1_MSG = `⚠ AXIOM-7 // INSUFFICIENT SIGNAL DETECTED\n\nYour response 
 const TIER2_TEMPLATE = `Try this structure:\n\n[N] The GPS system uses raw data — specifically [NAME THE DATA TYPE]...\n[E] The software [EXPLAIN HOW IT PROCESSES OR CONVERTS THE DATA]...\n[I] This means the driver can [STATE THE OUTCOME — faster route, on-time delivery, reduced costs]...`;
 
 let submitAttempts = 0;
+let _tierWarningShown = false;
 
 function submitAnswer() {
   const answer = document.getElementById('student-answer').value.trim();
@@ -2643,6 +2644,7 @@ function submitAnswer() {
       fb.textContent = TIER2_TEMPLATE;
       document.getElementById('student-answer').placeholder = '[N] The GPS system uses raw coordinate data...\n[E] The software processes this by converting it into...\n[I] This means the driver can...';
     }
+    _tierWarningShown = true;
     const btn = document.querySelector('#scene-3 .btn-primary');
     if (btn) { btn.style.animation = 'tab-reject 0.4s ease'; setTimeout(() => { btn.style.animation = ''; }, 450); }
     return;
@@ -2884,10 +2886,8 @@ function msmCheckBadges_611() {
   // Module completion
   msmEarnBadge('raw_signal');
 
-  // First Strike — no Tier 1 or 2 prompts shown (submitAttempts stayed at 1 after passing)
-  // We track this by checking if the axiom-feedback div was never shown
-  const fb = document.getElementById('axiom-feedback');
-  if (!fb || fb.style.display === 'none' || fb.style.display === '') {
+  // First Strike — no Tier 1 or 2 prompts shown (submitted 60+ words on first valid attempt)
+  if (!_tierWarningShown) {
     msmEarnBadge('first_strike');
   }
 
@@ -2915,7 +2915,7 @@ function msmCheckBadges_611() {
   // Full Clearance — both modules complete
   try {
     const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
-    if (b['raw_signal'] && b['market_intelligence']) msmEarnBadge('full_clearance');
+    if (b['raw_signal'] && b['market_intelligence'] && b['signal_mapper']) msmEarnBadge('full_clearance');
     // Method Mastery — impact specialist in both modules
     if (b['impact_specialist'] && window._msmImpactSpecialist612) msmEarnBadge('method_mastery');
   } catch(e) {}
