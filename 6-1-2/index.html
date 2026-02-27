@@ -709,6 +709,7 @@
       <button class="btn-ghost" onclick="goScene(1)">← STUDENT VIEW</button>
       <a href="../index.html" style="text-decoration:none;"><button class="btn-ghost">⌂ COMMAND CENTRE</button></a>
       <a href="../6-1-1/index.html" style="text-decoration:none;"><button class="btn-ghost">← MODULE 6.1.1</button></a>
+      <a href="../6-1-3/index.html" style="text-decoration:none;"><button class="btn-ghost">MODULE 6.1.3 →</button></a>
     </div>
   </div>
 </section>
@@ -1064,6 +1065,7 @@ function updateHUD(text) {
 }
 
 let submitAttempts = 0;
+let _tierWarningShown = false;
 
 const TIER1_MSG = `⚠ AXIOM-7 // INSUFFICIENT SIGNAL DETECTED\n\nYour response is too brief. An examiner needs to see three things: the name of the technique, how it works with the data, and what it does to the business.\n\nExpand your answer — aim for at least 60 words. The third mark is always in your last sentence.`;
 
@@ -1096,6 +1098,7 @@ function submitAnswer() {
     // Shake the submit button
     const btn = document.querySelector('#scene-3 .btn-primary');
     if (btn) { btn.style.animation = 'tab-reject 0.4s ease'; setTimeout(() => { btn.style.animation = ''; }, 450); }
+    _tierWarningShown = true;
     return;
   }
 
@@ -1268,9 +1271,8 @@ function msmCheckBadges_612() {
   // Module completion
   msmEarnBadge('market_intelligence');
 
-  // First Strike
-  const fb = document.getElementById('axiom-feedback');
-  if (!fb || fb.style.display === 'none' || fb.style.display === '') {
+  // First Strike — no Tier warnings shown (submitted 60+ words on first valid attempt)
+  if (!_tierWarningShown) {
     msmEarnBadge('first_strike');
   }
 
@@ -1295,7 +1297,7 @@ function msmCheckBadges_612() {
   // Full Clearance
   try {
     const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
-    if (b['raw_signal'] && b['market_intelligence']) msmEarnBadge('full_clearance');
+    if (b['raw_signal'] && b['market_intelligence'] && b['signal_mapper']) msmEarnBadge('full_clearance');
     if (b['impact_specialist'] && window._msmImpactSpecialist612) msmEarnBadge('method_mastery');
   } catch(e) {}
 }
