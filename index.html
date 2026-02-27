@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <script src="./firebase-config.js"></script>
 <style>
   :root {
@@ -552,45 +553,6 @@
       </div>
     </a>
 
-    <!-- MODULE 6.1.3 -->
-    <a class="module-card" href="./6-1-3/index.html">
-      <div class="module-card-glow"></div>
-      <div class="corner-tl"></div>
-      <div class="corner-br"></div>
-      <div class="module-card-header">
-        <div>
-          <div class="module-code">// MODULE 6.1.3 // DATA ORIGIN PROTOCOL</div>
-          <div class="module-title">How Data Is<br>Generated</div>
-          <div class="module-sub">The Smart Warehouse IoT Scenario</div>
-        </div>
-        <div class="status-badge status-live">LIVE</div>
-      </div>
-      <div class="module-card-body">
-        <div class="module-scenario" style="border-left-color:var(--green)">
-          A logistics company fits IoT sensors to warehouse shelving. Five data generation types — human, AI/ML, sensors, IoT, transactional — one scenario. Master the origin, earn the Impact mark.
-        </div>
-        <div class="module-tags">
-          <div class="tag-chip">6.1.3</div>
-          <div class="tag-chip">IoT</div>
-          <div class="tag-chip">Sensors</div>
-          <div class="tag-chip">Data Sources</div>
-          <div class="tag-chip">Impact Mark</div>
-        </div>
-        <div class="module-nei-row">
-          <div class="nei-mini nm-n"><span class="nei-mini-letter">N</span><div class="nei-mini-label">NAME</div><div class="nei-mini-val">IoT sensors</div></div>
-          <div class="nei-mini nm-e"><span class="nei-mini-letter">E</span><div class="nei-mini-label">EXPLAIN</div><div class="nei-mini-val">Captures &amp; transmits data</div></div>
-          <div class="nei-mini nm-i"><span class="nei-mini-letter">I</span><div class="nei-mini-label">IMPACT</div><div class="nei-mini-val">Prevents waste &amp; loss</div></div>
-        </div>
-      </div>
-      <div class="module-card-footer">
-        <div class="footer-meta">
-          <span>5 SCENES + AXIOM-7 AI ANALYSIS</span>
-          <span style="color:var(--green);">● FULLY UNLOCKED</span>
-        </div>
-        <div class="launch-btn"><span>⟶ LAUNCH MODULE</span></div>
-      </div>
-    </a>
-
     <!-- MODULE 6.1.2 -->
     <a class="module-card gold-card" href="./6-1-2/index.html">
       <div class="module-card-glow"></div>
@@ -631,6 +593,45 @@
   </div>
 
   <!-- EXAMINER INTELLIGENCE -->
+    <!-- MODULE 6.1.3 -->
+    <a class="module-card" href="./6-1-3/index.html">
+      <div class="module-card-glow"></div>
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="module-card-header">
+        <div>
+          <div class="module-code">// MODULE 6.1.3 // DATA ORIGIN PROTOCOL</div>
+          <div class="module-title">How Data Is<br>Generated</div>
+          <div class="module-sub">The Smart Warehouse IoT Scenario</div>
+        </div>
+        <div class="status-badge status-live">LIVE</div>
+      </div>
+      <div class="module-card-body">
+        <div class="module-scenario" style="border-left-color:var(--green)">
+          A logistics company fits IoT sensors to warehouse shelving. Five data generation types — human, AI/ML, sensors, IoT, transactional — one scenario. Master the origin, earn the Impact mark.
+        </div>
+        <div class="module-tags">
+          <div class="tag-chip">6.1.3</div>
+          <div class="tag-chip">IoT</div>
+          <div class="tag-chip">Sensors</div>
+          <div class="tag-chip">Data Sources</div>
+          <div class="tag-chip">Impact Mark</div>
+        </div>
+        <div class="module-nei-row">
+          <div class="nei-mini nm-n"><span class="nei-mini-letter">N</span><div class="nei-mini-label">NAME</div><div class="nei-mini-val">IoT sensors</div></div>
+          <div class="nei-mini nm-e"><span class="nei-mini-letter">E</span><div class="nei-mini-label">EXPLAIN</div><div class="nei-mini-val">Captures &amp; transmits data</div></div>
+          <div class="nei-mini nm-i"><span class="nei-mini-letter">I</span><div class="nei-mini-label">IMPACT</div><div class="nei-mini-val">Prevents waste &amp; loss</div></div>
+        </div>
+      </div>
+      <div class="module-card-footer">
+        <div class="footer-meta">
+          <span>5 SCENES + AXIOM-7 AI ANALYSIS</span>
+          <span style="color:var(--green);">● FULLY UNLOCKED</span>
+        </div>
+        <div class="launch-btn"><span>⟶ LAUNCH MODULE</span></div>
+      </div>
+    </a>
+
   <div class="section-header">
     <span class="section-label">EXAMINER INTELLIGENCE // LEAD REPORT DATA</span>
     <div class="section-line"></div>
@@ -879,6 +880,7 @@
     precision_writer:     { name: 'PRECISION WRITER',   icon: '🔬', desc: '60–70 words with all three HUD panels lit',   cat: 'performance', green: false },
     signal_recovered:     { name: 'SIGNAL RECOVERED',   icon: '🔄', desc: 'Trigger vulnerability alert then fix it',     cat: 'performance', green: true  },
     resilient_analyst:    { name: 'RESILIENT ANALYST',  icon: '🛡️', desc: 'Submit three or more times in one session',   cat: 'persistence', green: false },
+    double_certified:     { name: 'DOUBLE CERTIFIED',   icon: '🏅', desc: 'Complete all three core modules in sequence', cat: 'persistence', green: false },
     method_mastery:       { name: 'METHOD MASTERY',     icon: '⭐',  desc: 'Earn Impact Specialist in both modules',      cat: 'persistence', green: true  },
   };
 
