@@ -475,6 +475,8 @@
         <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-bottom:12px;">YOUR RESPONSE // USE N.E.I. STRUCTURE</div>
         <textarea class="answer-textarea" id="student-answer" maxlength="600"
           oninput="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
+          onkeyup="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
+          onpaste="setTimeout(()=>{ const v=this.value; updateHUD(v); updateWordCount(v); resetIdleTimer(v); },10)"
           placeholder="Name the targeted marketing technique, explain how the system processes the purchase data, and state the measurable business outcome..."></textarea>
         <div class="energy-bar-wrap">
           <div class="energy-bar-track">
@@ -562,9 +564,9 @@
       <div class="vulnerability-alert" id="vuln-alert">
         <div class="vuln-header"><div class="vuln-icon">⚠</div>AXIOM-7 // TECHNIQUE GAP DETECTED</div>
         <div class="vuln-msg">
-          Specialist, you've identified the technique and described the system — but you haven't told the examiner <strong>what the business gains from it</strong>.<br><br>
-          The Impact mark is always a business outcome: more revenue, less waste, higher retention, lower cost. Without it, you cannot achieve the 3rd mark.<br><br>
-          <strong>Add your Impact statement.</strong> N + E alone = 2/3.
+          <strong>Specialist — AXIOM-7 has detected an Impact statement in your answer, but you haven't tagged it yet.</strong><br><br>
+          Scroll up to your answer, select the sentence that states the business outcome — revenue, retention, conversion, or cost reduction — and tag it [I] using the toolbar on the right.<br><br>
+          No [I] tag = no third mark confirmed.
         </div>
       </div>
       <!-- SUCCESS -->
@@ -707,6 +709,7 @@
       <button class="btn-ghost" onclick="goScene(1)">← STUDENT VIEW</button>
       <a href="../index.html" style="text-decoration:none;"><button class="btn-ghost">⌂ COMMAND CENTRE</button></a>
       <a href="../6-1-1/index.html" style="text-decoration:none;"><button class="btn-ghost">← MODULE 6.1.1</button></a>
+      <a href="../6-1-3/index.html" style="text-decoration:none;"><button class="btn-ghost">MODULE 6.1.3 →</button></a>
     </div>
   </div>
 </section>
@@ -792,6 +795,21 @@ function goScene(n) {
   document.getElementById('floating-nav').style.display = n === 6 ? 'none' : 'flex';
   currentScene = n;
   window.scrollTo(0, 0);
+  if (n === 3) {
+    clearInterval(window._textPoll);
+    window._textPoll = setInterval(() => {
+      const ta = document.getElementById('student-answer');
+      if (!ta) return;
+      const v = ta.value;
+      if (v !== (window._lastPolledValue || '')) {
+        window._lastPolledValue = v;
+        updateHUD(v);
+        updateWordCount(v);
+      }
+    }, 400);
+  } else {
+    clearInterval(window._textPoll);
+  }
   if (n === 4) prepCalibration();
   if (n === 6) buildHeatmap();
 }
