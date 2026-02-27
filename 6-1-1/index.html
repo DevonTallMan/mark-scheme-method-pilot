@@ -748,6 +748,194 @@
   #reboot-overlay .rb-bar-wrap { max-width:400px; width:90%; margin-top:32px; }
   #reboot-overlay .rb-bar { height:3px; width:0%; background:var(--green); box-shadow:0 0 12px rgba(57,255,20,0.6); transition:none; }
 
+  /* ═══════════════════════════════════════════════════
+     KNOWLEDGE CHECK OVERLAY
+  ═══════════════════════════════════════════════════ */
+  #kc-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(13,17,23,0.96);
+    backdrop-filter: blur(16px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-y: auto;
+  }
+  #kc-overlay.active { display: flex; }
+
+  .kc-panel {
+    width: 100%; max-width: 680px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(57,255,20,0.2);
+    border-radius: 12px;
+    padding: 36px 40px;
+    position: relative;
+    box-shadow: 0 0 60px rgba(57,255,20,0.06);
+  }
+  .kc-panel .corner-tl {
+    position:absolute; top:0; left:0; width:18px; height:18px;
+    border-top:2px solid var(--green); border-left:2px solid var(--green); border-radius:12px 0 0 0;
+  }
+  .kc-panel .corner-br {
+    position:absolute; bottom:0; right:0; width:18px; height:18px;
+    border-bottom:2px solid var(--green); border-right:2px solid var(--green); border-radius:0 0 12px 0;
+  }
+  .kc-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 6px;
+  }
+  .kc-avatar { font-size: 28px; }
+  .kc-header-text {}
+  .kc-title {
+    font-family: 'Orbitron', monospace; font-size: 13px;
+    font-weight: 700; color: var(--green); letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .kc-sub {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 1px; margin-top: 3px;
+  }
+  .kc-divider {
+    border: none; border-top: 1px solid rgba(255,255,255,0.06);
+    margin: 18px 0 24px;
+  }
+  .kc-progress-row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+  }
+  .kc-pips { display: flex; gap: 6px; }
+  .kc-pip {
+    width: 28px; height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .kc-pip.done  { background: var(--green); box-shadow: 0 0 8px rgba(57,255,20,0.5); }
+  .kc-pip.active { background: var(--gold); box-shadow: 0 0 8px rgba(255,215,0,0.5); animation: pulse-dot 1.2s ease infinite; }
+  .kc-pip.wrong  { background: var(--red); box-shadow: 0 0 8px rgba(255,59,59,0.5); }
+  .kc-q-counter {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--text-dim); letter-spacing: 1px; margin-left: auto;
+  }
+
+  .kc-question {
+    font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 600;
+    color: var(--text-primary); line-height: 1.5; margin-bottom: 20px;
+  }
+  .kc-question .kc-q-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--gold); letter-spacing: 2px; display: block; margin-bottom: 8px;
+  }
+
+  .kc-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .kc-option {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 13px 16px;
+    cursor: pointer; display: flex; align-items: center; gap: 12px;
+    font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 500;
+    color: var(--text-primary); transition: all 0.15s ease;
+    user-select: none;
+  }
+  .kc-option:hover:not(.kc-answered) {
+    border-color: rgba(255,215,0,0.35);
+    background: rgba(255,215,0,0.04);
+    color: var(--gold);
+  }
+  .kc-option .kc-opt-letter {
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
+    letter-spacing: 1px; color: var(--text-dim); min-width: 18px;
+  }
+  .kc-option.correct {
+    border-color: rgba(57,255,20,0.5); background: rgba(57,255,20,0.07);
+    color: var(--green);
+  }
+  .kc-option.correct .kc-opt-letter { color: var(--green); }
+  .kc-option.wrong {
+    border-color: rgba(255,59,59,0.5); background: rgba(255,59,59,0.07);
+    color: var(--red);
+  }
+  .kc-option.wrong .kc-opt-letter { color: var(--red); }
+  .kc-option.reveal-correct {
+    border-color: rgba(57,255,20,0.3); background: rgba(57,255,20,0.04);
+    color: rgba(57,255,20,0.6);
+  }
+  .kc-option.kc-answered { cursor: default; pointer-events: none; }
+
+  .kc-instant-feedback {
+    font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 500;
+    line-height: 1.5; padding: 12px 16px; border-radius: 6px;
+    margin-bottom: 20px; display: none;
+    animation: fade-in 0.3s ease;
+  }
+  .kc-instant-feedback.correct-fb {
+    background: rgba(57,255,20,0.07); border: 1px solid rgba(57,255,20,0.25);
+    color: var(--green); display: block;
+  }
+  .kc-instant-feedback.wrong-fb {
+    background: rgba(255,59,59,0.07); border: 1px solid rgba(255,59,59,0.25);
+    color: var(--text-primary); display: block;
+  }
+
+  .kc-next-btn {
+    font-family: 'Share Tech Mono', monospace; font-size: 11px;
+    letter-spacing: 2px; background: transparent;
+    border: 1px solid rgba(57,255,20,0.4); color: var(--green);
+    border-radius: 6px; padding: 10px 24px; cursor: pointer;
+    transition: all 0.2s ease; display: none;
+  }
+  .kc-next-btn.visible { display: inline-block; }
+  .kc-next-btn:hover { background: rgba(57,255,20,0.08); border-color: var(--green); }
+
+  /* RESULT SCREEN */
+  .kc-result { display: none; text-align: center; }
+  .kc-result.active { display: block; }
+  .kc-result-icon { font-size: 52px; margin-bottom: 16px; }
+  .kc-result-title {
+    font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 900;
+    letter-spacing: 3px; margin-bottom: 8px;
+  }
+  .kc-result-title.pass { color: var(--green); text-shadow: 0 0 20px rgba(57,255,20,0.5); }
+  .kc-result-title.fail { color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,0.4); }
+  .kc-result-score {
+    font-family: 'Share Tech Mono', monospace; font-size: 12px;
+    color: var(--text-dim); letter-spacing: 2px; margin-bottom: 24px;
+  }
+  .kc-result-score span { color: var(--text-primary); }
+
+  /* Targeted explanation cards */
+  .kc-remediation { margin-bottom: 28px; }
+  .kc-remediation-title {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    letter-spacing: 2px; color: var(--gold); margin-bottom: 14px;
+  }
+  .kc-remedy-card {
+    background: rgba(255,215,0,0.04); border: 1px solid rgba(255,215,0,0.2);
+    border-radius: 8px; padding: 16px 18px; margin-bottom: 10px;
+    text-align: left;
+  }
+  .kc-remedy-card .remedy-q {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    color: var(--gold); letter-spacing: 1px; margin-bottom: 8px;
+  }
+  .kc-remedy-card .remedy-text {
+    font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 500;
+    color: var(--text-primary); line-height: 1.6;
+  }
+  .kc-remedy-card .remedy-text strong { color: var(--green); }
+
+  .kc-proceed-btn {
+    font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; background: var(--green); color: #0D1117;
+    border: none; border-radius: 6px; padding: 14px 32px;
+    cursor: pointer; transition: all 0.2s ease;
+    box-shadow: 0 0 20px rgba(57,255,20,0.3);
+  }
+  .kc-proceed-btn:hover { box-shadow: 0 0 32px rgba(57,255,20,0.5); transform: translateY(-1px); }
+  .kc-proceed-btn.gold-btn {
+    background: var(--gold); color: #0D1117;
+    box-shadow: 0 0 20px rgba(255,215,0,0.3);
+  }
+  .kc-proceed-btn.gold-btn:hover { box-shadow: 0 0 32px rgba(255,215,0,0.5); }
+
   .hud-label {
     font-family: 'Share Tech Mono', monospace;
     font-size: 10px;
@@ -1703,7 +1891,7 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn-primary" onclick="goScene(2)"><span>⟶ BEGIN MISSION</span></button>
+      <button class="btn-primary" onclick="openKnowledgeCheck()"><span>⟶ BEGIN MISSION</span></button>
       <button class="nav-tab-btn" onclick="goScene(6)" style="position:static;">🏫 TEACHER VIEW</button>
     </div>
   </div>
@@ -2940,6 +3128,347 @@ function updateHUD(text) {
   <div class="rb-line1" id="rb-line1">CRITICAL INSIGHT DETECTED</div>
   <div class="rb-line2" id="rb-line2">CALIBRATING SPECIALIST GRADE</div>
   <div class="rb-bar-wrap"><div class="rb-bar" id="rb-bar"></div></div>
+</div>
+
+<!-- ================================================================ -->
+<!-- KNOWLEDGE CHECK ENGINE                                            -->
+<!-- ================================================================ -->
+<script>
+/* ─────────────────────────────────────────────────────────────────
+   QUESTION BANK — 4 questions on Data / Information / Knowledge
+   Each question has:
+     q        — question text
+     options  — array of {letter, text}
+     correct  — 0-indexed correct option index
+     remedy   — targeted micro-explanation shown only on wrong answer
+───────────────────────────────────────────────────────────────────*/
+const KC_QUESTIONS = [
+  {
+    q: 'A GPS sensor records the value <code style="color:var(--gold);font-family:monospace;">51.5074, -0.1278</code>. What type of value is this?',
+    options: [
+      { letter:'A', text:'Information — it tells us where the driver is' },
+      { letter:'B', text:'Knowledge — the system can act on it immediately' },
+      { letter:'C', text:'Data — raw coordinates with no context or meaning yet' },
+      { letter:'D', text:'A report generated by the GPS software' },
+    ],
+    correct: 2,
+    remedy: {
+      q: 'Q1 — Data, Information or Knowledge?',
+      text: '<strong>Data</strong> is raw, unprocessed facts — numbers or values with no context attached. The coordinates <em>51.5074, -0.1278</em> mean nothing on their own until software processes them into a readable location. That processed result (e.g. "Oxford Circus, London") becomes <strong>Information</strong>.'
+    }
+  },
+  {
+    q: 'The GPS app displays <code style="color:var(--gold);font-family:monospace;">"Oxford Circus, London"</code> on screen. Which term best describes this output?',
+    options: [
+      { letter:'A', text:'Data — it is still just a number in the system' },
+      { letter:'B', text:'Information — data has been processed and given context' },
+      { letter:'C', text:'Knowledge — the driver can now make a decision' },
+      { letter:'D', text:'A database record stored server-side' },
+    ],
+    correct: 1,
+    remedy: {
+      q: 'Q2 — When does data become information?',
+      text: '<strong>Information</strong> is data that has been processed, organised, or given context so it carries meaning. The raw coordinates become information when the software converts them into a human-readable location. The key word is <em>context</em> — information answers "what does this mean?"'
+    }
+  },
+  {
+    q: 'Based on the driver\'s location, the app announces: <code style="color:var(--gold);font-family:monospace;">"Turn left in 200m to reach your destination 4 minutes faster."</code> What is this an example of?',
+    options: [
+      { letter:'A', text:'Data — the system is recording a new value' },
+      { letter:'B', text:'Information — it describes where the driver is' },
+      { letter:'C', text:'Knowledge — actionable instruction derived from processed information' },
+      { letter:'D', text:'A sensor reading from the vehicle' },
+    ],
+    correct: 2,
+    remedy: {
+      q: 'Q3 — What makes something Knowledge?',
+      text: '<strong>Knowledge</strong> is information that has been analysed and turned into an <em>actionable decision or instruction</em>. The sat-nav does not just tell you where you are (information) — it tells you what to <em>do</em> and what the <em>business outcome</em> is (save 4 minutes). This is the move. In exam answers, the Knowledge layer is always your Impact statement.'
+    }
+  },
+  {
+    q: 'In the N.E.I. Method, the <strong style="color:var(--green);">[I] Impact</strong> mark corresponds to which layer of the data hierarchy?',
+    options: [
+      { letter:'A', text:'Data — identifying the raw input' },
+      { letter:'B', text:'Information — explaining what the data means' },
+      { letter:'C', text:'Knowledge — stating the business outcome or decision made' },
+      { letter:'D', text:'The [E] Explain layer — describing the mechanism' },
+    ],
+    correct: 2,
+    remedy: {
+      q: 'Q4 — NEI and the data hierarchy',
+      text: 'The [I] Impact mark is always the <strong>Knowledge layer</strong> — it answers "so what does the business gain?" Examiners award the third mark for a stated business outcome: saved time, reduced cost, increased revenue, prevented loss. Without it you have N+E (Data + Information) but no Knowledge, and you lose the mark that most students drop.'
+    }
+  }
+];
+
+/* ─── STATE ──────────────────────────────────────────────────────── */
+let kcCurrentQ    = 0;
+let kcScore       = 0;
+let kcWrongQs     = [];   // indices of questions answered incorrectly
+let kcAnswered    = false;
+
+/* ─── OPEN / CLOSE ───────────────────────────────────────────────── */
+function openKnowledgeCheck() {
+  kcCurrentQ  = 0;
+  kcScore     = 0;
+  kcWrongQs   = [];
+  kcAnswered  = false;
+
+  document.getElementById('kc-question-screen').style.display = 'block';
+  document.getElementById('kc-result-screen').classList.remove('active');
+  document.getElementById('kc-overlay').classList.add('active');
+  kcRenderQuestion();
+}
+
+function closeKnowledgeCheck() {
+  document.getElementById('kc-overlay').classList.remove('active');
+}
+
+/* ─── RENDER QUESTION ────────────────────────────────────────────── */
+function kcRenderQuestion() {
+  const q   = KC_QUESTIONS[kcCurrentQ];
+  kcAnswered = false;
+
+  // Counter label
+  document.getElementById('kc-q-counter').textContent = `QUESTION ${kcCurrentQ + 1} / 4`;
+
+  // Question label + text
+  document.getElementById('kc-question-text').innerHTML =
+    `<span class="kc-q-label">Q${kcCurrentQ + 1} //</span>${q.q}`;
+
+  // Pip states
+  for (let i = 0; i < 4; i++) {
+    const pip = document.getElementById(`kc-pip-${i}`);
+    pip.className = 'kc-pip';
+    if      (i < kcCurrentQ)  pip.classList.add('done');
+    else if (i === kcCurrentQ) pip.classList.add('active');
+  }
+
+  // Options
+  const container = document.getElementById('kc-options');
+  container.innerHTML = '';
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('div');
+    btn.className = 'kc-option';
+    btn.innerHTML = `<span class="kc-opt-letter">${opt.letter}</span>${opt.text}`;
+    btn.onclick = () => kcSelectAnswer(idx);
+    container.appendChild(btn);
+  });
+
+  // Reset feedback + next btn
+  const fb = document.getElementById('kc-instant-feedback');
+  fb.className = 'kc-instant-feedback';
+  fb.style.display = 'none';
+  fb.textContent = '';
+
+  const nextBtn = document.getElementById('kc-next-btn');
+  nextBtn.classList.remove('visible');
+  nextBtn.textContent = kcCurrentQ < 3 ? 'NEXT QUESTION ⟶' : 'SEE RESULTS ⟶';
+}
+
+/* ─── SELECT ANSWER ──────────────────────────────────────────────── */
+function kcSelectAnswer(selectedIdx) {
+  if (kcAnswered) return;
+  kcAnswered = true;
+
+  const q       = KC_QUESTIONS[kcCurrentQ];
+  const isRight = selectedIdx === q.correct;
+  const options = document.querySelectorAll('.kc-option');
+  const fb      = document.getElementById('kc-instant-feedback');
+  const pip     = document.getElementById(`kc-pip-${kcCurrentQ}`);
+
+  // Lock all options
+  options.forEach(o => o.classList.add('kc-answered'));
+
+  // Highlight selected and correct
+  options[selectedIdx].classList.add(isRight ? 'correct' : 'wrong');
+  if (!isRight) {
+    options[q.correct].classList.add('reveal-correct');
+    kcWrongQs.push(kcCurrentQ);
+    pip.classList.remove('active');
+    pip.classList.add('wrong');
+  } else {
+    kcScore++;
+    pip.classList.remove('active');
+    pip.classList.add('done');
+  }
+
+  // Instant feedback
+  fb.style.display = 'block';
+  if (isRight) {
+    fb.className = 'kc-instant-feedback correct-fb';
+    const confirmations = [
+      '✓ Correct — that\'s the examiner\'s definition.',
+      '✓ Correct — you understand the distinction.',
+      '✓ Correct — that\'s exactly how examiners frame it.',
+      '✓ Correct — and that\'s your Impact mark secured.'
+    ];
+    fb.textContent = confirmations[kcCurrentQ];
+  } else {
+    fb.className = 'kc-instant-feedback wrong-fb';
+    fb.innerHTML = `✗ Not quite — the correct answer was <strong style="color:var(--green);">${q.options[q.correct].letter}: ${q.options[q.correct].text}</strong>. AXIOM-7 will debrief you after all four questions.`;
+  }
+
+  // Show next / results button
+  document.getElementById('kc-next-btn').classList.add('visible');
+}
+
+/* ─── NEXT QUESTION ──────────────────────────────────────────────── */
+function kcNextQuestion() {
+  kcCurrentQ++;
+  if (kcCurrentQ < KC_QUESTIONS.length) {
+    kcRenderQuestion();
+  } else {
+    kcShowResult();
+  }
+}
+
+/* ─── SHOW RESULT ────────────────────────────────────────────────── */
+function kcShowResult() {
+  document.getElementById('kc-question-screen').style.display = 'none';
+  const resultScreen = document.getElementById('kc-result-screen');
+  resultScreen.classList.add('active');
+
+  const passed = kcScore >= 3;  // 3 or 4 correct = pass
+
+  // Icon + title
+  document.getElementById('kc-result-icon').textContent = passed ? '✅' : '⚠️';
+  const titleEl = document.getElementById('kc-result-title');
+  titleEl.textContent = passed ? 'PRIOR KNOWLEDGE CONFIRMED' : 'KNOWLEDGE GAP DETECTED';
+  titleEl.className = `kc-result-title ${passed ? 'pass' : 'fail'}`;
+
+  // Score line
+  document.getElementById('kc-result-score').innerHTML =
+    `SCORE: <span>${kcScore} / 4</span> — ${passed ? 'Proceeding to mission.' : 'AXIOM-7 has identified ' + kcWrongQs.length + ' gap' + (kcWrongQs.length > 1 ? 's' : '') + ' to address before you proceed.'}`;
+
+  // Remediation cards (only if failed)
+  const remDiv = document.getElementById('kc-remediation');
+  const cardsDiv = document.getElementById('kc-remedy-cards');
+  if (!passed && kcWrongQs.length > 0) {
+    remDiv.style.display = 'block';
+    cardsDiv.innerHTML = '';
+    kcWrongQs.forEach(idx => {
+      const r = KC_QUESTIONS[idx].remedy;
+      const card = document.createElement('div');
+      card.className = 'kc-remedy-card';
+      card.innerHTML = `<div class="remedy-q">▸ ${r.q}</div><div class="remedy-text">${r.text}</div>`;
+      cardsDiv.appendChild(card);
+    });
+  } else {
+    remDiv.style.display = 'none';
+  }
+
+  // Proceed button
+  const proceedBtn = document.getElementById('kc-proceed-btn');
+  if (passed) {
+    proceedBtn.textContent = '⟶ ENTER THE MISSION';
+    proceedBtn.className = 'kc-proceed-btn';
+  } else {
+    proceedBtn.textContent = '⟶ UNDERSTOOD — PROCEED TO MISSION';
+    proceedBtn.className = 'kc-proceed-btn gold-btn';
+  }
+}
+
+/* ─── PROCEED ─────────────────────────────────────────────────────── */
+function kcProceed() {
+  const passed = kcScore >= 3;
+  closeKnowledgeCheck();
+
+  if (passed) {
+    // Fast green flash then straight to Scene 2
+    const overlay = document.getElementById('reboot-overlay');
+    const line1   = document.getElementById('rb-line1');
+    const line2   = document.getElementById('rb-line2');
+    const bar     = document.getElementById('rb-bar');
+    line1.textContent = 'PRIOR KNOWLEDGE CONFIRMED';
+    line2.textContent = 'CLEARANCE GRANTED — ENTERING MISSION';
+    overlay.style.display = 'flex';
+    setTimeout(() => { line1.style.opacity = '1'; }, 100);
+    setTimeout(() => { line2.style.opacity = '1'; }, 500);
+    setTimeout(() => { bar.style.transition = 'width 0.8s ease'; bar.style.width = '100%'; }, 700);
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      line1.style.opacity = '0'; line2.style.opacity = '0';
+      bar.style.transition = 'none'; bar.style.width = '0%';
+      goScene(2);
+    }, 1600);
+  } else {
+    // Brief AXIOM-7 transition then Scene 2
+    const overlay = document.getElementById('reboot-overlay');
+    const line1   = document.getElementById('rb-line1');
+    const line2   = document.getElementById('rb-line2');
+    const bar     = document.getElementById('rb-bar');
+    line1.textContent = 'GAPS ADDRESSED — KNOWLEDGE UPDATED';
+    line2.textContent = 'PROCEEDING TO MISSION TERMINAL';
+    overlay.style.display = 'flex';
+    setTimeout(() => { line1.style.opacity = '1'; }, 100);
+    setTimeout(() => { line2.style.opacity = '1'; }, 500);
+    setTimeout(() => { bar.style.transition = 'width 1.0s ease'; bar.style.width = '100%'; }, 700);
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      line1.style.opacity = '0'; line2.style.opacity = '0';
+      bar.style.transition = 'none'; bar.style.width = '0%';
+      goScene(2);
+    }, 1900);
+  }
+}
+</script>
+
+<!-- ================================================================ -->
+<div id="kc-overlay">
+  <div class="kc-panel">
+    <div class="corner-tl"></div>
+    <div class="corner-br"></div>
+
+    <!-- HEADER -->
+    <div class="kc-header">
+      <div class="kc-avatar">🤖</div>
+      <div class="kc-header-text">
+        <div class="kc-title">AXIOM-7 // DIAGNOSTIC CHECK</div>
+        <div class="kc-sub">▸ CONTENT AREA 6.1.1 // PRIOR KNOWLEDGE SCAN // 4 QUESTIONS</div>
+      </div>
+    </div>
+    <hr class="kc-divider">
+
+    <!-- QUESTION SCREEN -->
+    <div id="kc-question-screen">
+      <div class="kc-progress-row">
+        <div class="kc-pips">
+          <div class="kc-pip active" id="kc-pip-0"></div>
+          <div class="kc-pip" id="kc-pip-1"></div>
+          <div class="kc-pip" id="kc-pip-2"></div>
+          <div class="kc-pip" id="kc-pip-3"></div>
+        </div>
+        <div class="kc-q-counter" id="kc-q-counter">QUESTION 1 / 4</div>
+      </div>
+
+      <div class="kc-question" id="kc-question-text">
+        <span class="kc-q-label" id="kc-q-label">Q1</span>
+        Question loads here
+      </div>
+
+      <div class="kc-options" id="kc-options"></div>
+
+      <div class="kc-instant-feedback" id="kc-instant-feedback"></div>
+
+      <button class="kc-next-btn" id="kc-next-btn" onclick="kcNextQuestion()">
+        NEXT QUESTION ⟶
+      </button>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="kc-result" id="kc-result-screen">
+      <div class="kc-result-icon" id="kc-result-icon"></div>
+      <div class="kc-result-title" id="kc-result-title"></div>
+      <div class="kc-result-score" id="kc-result-score"></div>
+      <div class="kc-remediation" id="kc-remediation" style="display:none;">
+        <div class="kc-remediation-title">▸ AXIOM-7 // TARGETED BRIEFING — GAPS IDENTIFIED</div>
+        <div id="kc-remedy-cards"></div>
+      </div>
+      <button class="kc-proceed-btn" id="kc-proceed-btn" onclick="kcProceed()"></button>
+    </div>
+
+  </div>
 </div>
 
 </body>
