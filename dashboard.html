@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — The Mark Scheme Method®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="./firebase-config.js"></script>
+<style>
+:root {
+  --void:         #0D1117;
+  --panel:        rgba(255,255,255,0.05);
+  --panel-border: rgba(255,255,255,0.08);
+  --green:        #39FF14;
+  --green-glow:   rgba(57,255,20,0.4);
+  --gold:         #FFD700;
+  --gold-glow:    rgba(255,215,0,0.4);
+  --red:          #FF3B3B;
+  --amber:        #FF9500;
+  --blue:         #38BDF8;
+  --text-primary: #E8EDF3;
+  --text-dim:     rgba(232,237,243,0.5);
+  --text-ghost:   rgba(232,237,243,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(57,255,20,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+  pointer-events: none; z-index: 1;
+}
+
+/* ── TOPBAR ─────────────────────────────────────────── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: rgba(13,17,23,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--panel-border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; z-index: 100;
+}
+.logo {
+  font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 900;
+  letter-spacing: 4px; color: var(--green);
+  text-shadow: 0 0 20px var(--green-glow);
+}
+.logo span { color: var(--gold); }
+.topbar-nav { display: flex; align-items: center; gap: 6px; }
+.nav-btn {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 1px;
+  color: var(--text-dim); padding: 5px 14px; border-radius: 4px;
+  text-decoration: none; transition: all 0.2s;
+}
+.nav-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+.nav-btn.active { color: var(--green); background: rgba(57,255,20,0.07); }
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.sys-time { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); }
+
+/* ── LAYOUT ──────────────────────────────────────────── */
+.page {
+  position: relative; z-index: 2;
+  padding: 80px 24px 60px;
+  max-width: 1160px; margin: 0 auto;
+}
+
+/* ── PAGE HEADER ─────────────────────────────────────── */
+.page-header { margin-bottom: 36px; }
+.page-eyebrow {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 4px; color: var(--gold); margin-bottom: 8px; display: block;
+}
+.page-title {
+  font-family: 'Orbitron', monospace; font-size: clamp(22px,3.5vw,34px);
+  font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 6px;
+}
+.page-title .accent { color: var(--green); text-shadow: 0 0 24px var(--green-glow); }
+.page-sub { font-family: 'Rajdhani', sans-serif; font-size: 15px; color: var(--text-dim); }
+
+/* ── SECTION HEADERS ─────────────────────────────────── */
+.section-header {
+  display: flex; align-items: center; gap: 16px;
+  margin: 40px 0 18px;
+}
+.section-label {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 3px; color: var(--text-dim); white-space: nowrap;
+}
+.section-line { flex: 1; height: 1px; background: var(--panel-border); }
+
+/* ── STAT ROW ────────────────────────────────────────── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px; margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: 12px; padding: 20px 24px;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: rgba(57,255,20,0.2); }
+.stat-label {
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--text-dim); margin-bottom: 8px;
+}
+.stat-val {
+  font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900;
+  color: var(--green); text-shadow: 0 0 16px var(--green-glow);
+}
+.stat-val.gold { color: var(--gold); text-shadow: 0 0 16px var(--gold-glow); }
+.stat-val.amber { color: var(--amber); }
+.stat-sub { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 1px; color: var(--text-ghost); margin-top: 4px; }
+
+/* ── XP HISTORY CHART ────────────────────────────────── */
+.chart-wrap {
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: 16px; padding: 24px 28px; margin-bottom: 8px;
+}
+.chart-title {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; color: var(--text-dim); margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.chart-area { position: relative; height: 140px; }
+.chart-svg { width: 100%; height: 100%; overflow: visible; }
+.chart-grid-line { stroke: rgba(255,255,255,0.05); stroke-width: 1; }
+.chart-area-fill { fill: url(#xpGradient); opacity: 0.3; }
+.chart-line { fill: none; stroke: var(--green); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chart-dot { fill: var(--green); }
+.chart-dot-label {
+  font-family: 'Share Tech Mono', monospace; font-size: 8px; fill: var(--text-dim);
+}
+.chart-x-labels {
+  display: flex; justify-content: space-between;
+  margin-top: 8px; padding: 0 2px;
+}
+.chart-x-lbl {
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  color: var(--text-ghost); letter-spacing: 1px;
+}
+.chart-no-data {
+  display: flex; align-items: center; justify-content: center; height: 140px;
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; color: var(--text-ghost);
+}
+
+/* ── NEI PROFICIENCY MAP ─────────────────────────────── */
+.nei-map {
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: 16px; padding: 24px 28px;
+}
+.nei-map-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.nei-map-title {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 2px; color: var(--text-dim);
+}
+.nei-legend { display: flex; gap: 16px; }
+.nei-legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--text-dim);
+}
+.nei-legend-dot {
+  width: 8px; height: 8px; border-radius: 2px;
+}
+.nei-rows { display: flex; flex-direction: column; gap: 12px; }
+.nei-row {
+  display: grid; grid-template-columns: 160px 1fr 1fr 1fr;
+  gap: 8px; align-items: center;
+}
+.nei-row-topic {
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--text-dim); line-height: 1.3;
+}
+.nei-cell {
+  height: 36px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700;
+  transition: all 0.3s;
+}
+.nei-cell.n  { background: rgba(255,59,59,0.08);  border: 1px solid rgba(255,59,59,0.2);  color: var(--red); }
+.nei-cell.e  { background: rgba(255,149,0,0.08);  border: 1px solid rgba(255,149,0,0.2);  color: var(--amber); }
+.nei-cell.i  { background: rgba(57,255,20,0.08);  border: 1px solid rgba(57,255,20,0.2);  color: var(--green); }
+.nei-cell.hit.n  { background: rgba(255,59,59,0.22);  border-color: rgba(255,59,59,0.5);  }
+.nei-cell.hit.e  { background: rgba(255,149,0,0.22);  border-color: rgba(255,149,0,0.5);  }
+.nei-cell.hit.i  { background: rgba(57,255,20,0.22);  border-color: rgba(57,255,20,0.5);  box-shadow: 0 0 12px rgba(57,255,20,0.2); }
+.nei-cell.miss { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); color: var(--text-ghost); }
+.nei-cell-pct { font-size: 11px; }
+.nei-header-row {
+  display: grid; grid-template-columns: 160px 1fr 1fr 1fr;
+  gap: 8px; margin-bottom: 4px;
+}
+.nei-col-header {
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 2px; color: var(--text-ghost);
+}
+.nei-flag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--amber);
+  background: rgba(255,149,0,0.1); border: 1px solid rgba(255,149,0,0.25);
+  padding: 3px 8px; border-radius: 4px; margin-top: 4px;
+}
+
+/* ── RANK JOURNEY ────────────────────────────────────── */
+.rank-panel {
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: 16px; padding: 24px 28px;
+}
+.rank-journey {
+  display: flex; align-items: flex-start; gap: 0;
+  overflow-x: auto; padding-bottom: 8px;
+}
+.rank-node {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; min-width: 120px; position: relative; flex-shrink: 0;
+}
+.rank-node::after {
+  content: ''; position: absolute; top: 19px;
+  left: calc(50% + 21px); width: calc(100% - 42px); height: 1px;
+  background: var(--panel-border); transition: background 0.5s;
+}
+.rank-node:last-child::after { display: none; }
+.rank-node.rn-earned::after { background: rgba(255,215,0,0.35); }
+.rank-pip {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid var(--panel-border); background: var(--panel);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700;
+  color: var(--text-ghost); transition: all 0.5s;
+}
+.rank-node.rn-earned .rank-pip {
+  border-color: var(--gold); color: var(--gold);
+  background: rgba(255,215,0,0.08); box-shadow: 0 0 14px rgba(255,215,0,0.3);
+}
+.rank-node.rn-current .rank-pip {
+  border-color: var(--green); color: var(--green);
+  background: rgba(57,255,20,0.08); box-shadow: 0 0 20px rgba(57,255,20,0.4);
+  animation: rpulse 2.2s ease-in-out infinite;
+}
+@keyframes rpulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(57,255,20,0.4); }
+  50% { box-shadow: 0 0 36px rgba(57,255,20,0.7); }
+}
+.rank-title-lbl {
+  font-family: 'Share Tech Mono', monospace; font-size: 8.5px;
+  letter-spacing: 1px; color: var(--text-ghost); text-align: center;
+  max-width: 90px; line-height: 1.3; transition: color 0.5s;
+}
+.rank-node.rn-earned .rank-title-lbl { color: var(--text-dim); }
+.rank-node.rn-current .rank-title-lbl { color: var(--green); }
+.rank-xp-bar-wrap { margin-top: 20px; }
+.rank-xp-label {
+  display: flex; justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px;
+}
+.rank-xp-track {
+  height: 6px; background: rgba(255,255,255,0.06);
+  border-radius: 3px; overflow: hidden;
+}
+.rank-xp-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--green), rgba(57,255,20,0.6));
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 8px var(--green-glow);
+}
+.rank-next-req {
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--text-ghost); margin-top: 10px;
+}
+.rank-next-req span { color: var(--amber); }
+
+/* ── BADGE CABINET ───────────────────────────────────── */
+.badge-section-lbl {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 3px; color: var(--text-dim);
+  margin: 28px 0 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.badge-section-lbl::after { content: ''; flex: 1; height: 1px; background: var(--panel-border); }
+.badge-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 8px;
+}
+@media (max-width: 900px) { .badge-grid { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 560px) { .badge-grid { grid-template-columns: repeat(2,1fr); } }
+.badge-card {
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: 12px; padding: 18px 10px 14px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 7px; text-align: center; position: relative;
+  overflow: hidden; transition: all 0.4s;
+}
+.badge-card.b-locked { opacity: 0.28; filter: grayscale(1); }
+.badge-card.b-unlocked {
+  border-color: rgba(255,215,0,0.3);
+  background: rgba(255,215,0,0.04);
+  box-shadow: 0 0 20px rgba(255,215,0,0.07);
+}
+.badge-card.b-unlocked:hover {
+  border-color: rgba(255,215,0,0.55);
+  box-shadow: 0 0 32px rgba(255,215,0,0.14);
+  transform: translateY(-3px);
+}
+.badge-card.b-green {
+  border-color: rgba(57,255,20,0.3) !important;
+  background: rgba(57,255,20,0.04) !important;
+  box-shadow: 0 0 20px rgba(57,255,20,0.07) !important;
+}
+.badge-card.b-green:hover {
+  border-color: rgba(57,255,20,0.55) !important;
+  box-shadow: 0 0 32px rgba(57,255,20,0.14) !important;
+}
+.b-icon { font-size: 28px; }
+.b-name {
+  font-family: 'Share Tech Mono', monospace; font-size: 8.5px;
+  letter-spacing: 1px; color: var(--text-dim); line-height: 1.3;
+}
+.b-desc { font-family: 'Rajdhani', sans-serif; font-size: 11px; color: var(--text-ghost); line-height: 1.3; }
+.b-lock {
+  position: absolute; bottom: 6px; right: 6px;
+  font-size: 11px; opacity: 0.4;
+}
+.b-ts {
+  font-family: 'Share Tech Mono', monospace; font-size: 8px;
+  letter-spacing: 0.5px; color: var(--text-ghost);
+}
+
+/* ── MODULE COMPLETION GRID ──────────────────────────── */
+.module-completion-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.mc-row {
+  background: var(--panel); border: 1px solid var(--panel-border);
+  border-radius: 10px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px;
+  transition: border-color 0.2s;
+}
+.mc-row:hover { border-color: rgba(57,255,20,0.2); }
+.mc-ca {
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--text-ghost); min-width: 56px;
+}
+.mc-name { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600; flex: 1; }
+.mc-pct {
+  font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700;
+  min-width: 44px; text-align: right;
+}
+.mc-pct.done { color: var(--green); text-shadow: 0 0 8px var(--green-glow); }
+.mc-pct.some { color: var(--amber); }
+.mc-pct.none { color: var(--text-ghost); }
+.mc-bar-wrap {
+  width: 60px; height: 4px;
+  background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;
+}
+.mc-bar {
+  height: 100%; border-radius: 2px;
+  background: var(--green);
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── EXAM COUNTDOWN ──────────────────────────────────── */
+.countdown-panel {
+  background: rgba(255,59,59,0.05); border: 1px solid rgba(255,59,59,0.2);
+  border-radius: 16px; padding: 24px 28px;
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+}
+.countdown-number {
+  font-family: 'Orbitron', monospace; font-size: 52px; font-weight: 900;
+  color: var(--red); text-shadow: 0 0 30px rgba(255,59,59,0.5);
+  line-height: 1;
+}
+.countdown-label {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 3px; color: var(--text-dim); margin-top: 4px;
+}
+.countdown-body { flex: 1; }
+.countdown-msg {
+  font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 600;
+  color: var(--text-primary); line-height: 1.4;
+}
+.countdown-sub { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 1px; color: var(--text-dim); margin-top: 6px; }
+.countdown-cta {
+  font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; color: var(--void); background: var(--red);
+  padding: 10px 24px; border-radius: 6px; text-decoration: none;
+  box-shadow: 0 0 16px rgba(255,59,59,0.35);
+  transition: box-shadow 0.2s;
+}
+.countdown-cta:hover { box-shadow: 0 0 28px rgba(255,59,59,0.6); }
+.countdown-set {
+  font-family: 'Share Tech Mono', monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--text-dim); display: flex; align-items: center; gap: 10px;
+}
+.exam-date-input {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--panel-border);
+  border-radius: 4px; color: var(--text-primary); padding: 5px 8px; cursor: pointer;
+  outline: none;
+}
+
+/* ── SCROLLBAR ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ──────────────────────────────────────────── -->
+<nav class="topbar">
+  <div class="logo">MARK SCHEME <span>METHOD</span>®</div>
+  <div class="topbar-nav">
+    <a href="./index.html"   class="nav-btn">Hub</a>
+    <a href="./topics.html"  class="nav-btn">Topics</a>
+    <a href="./dashboard.html" class="nav-btn active">Dashboard</a>
+  </div>
+  <div class="topbar-right">
+    <div class="sys-time" id="sys-time">SYS://00:00:00</div>
+  </div>
+</nav>
+
+<!-- ── PAGE ─────────────────────────────────────────────── -->
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <span class="page-eyebrow">SPECIALIST ANALYTICS // YOUR PERFORMANCE DATA</span>
+    <h1 class="page-title">Specialist <span class="accent">Dashboard</span></h1>
+    <p class="page-sub" id="dash-sub">Loading your data...</p>
+  </div>
+
+  <!-- Exam countdown (shown if exam date is set and within 180 days) -->
+  <div id="countdown-section" style="display:none;margin-bottom:8px;">
+    <div class="countdown-panel">
+      <div>
+        <div class="countdown-number" id="countdown-days">—</div>
+        <div class="countdown-label">DAYS TO EXAM</div>
+      </div>
+      <div class="countdown-body">
+        <div class="countdown-msg" id="countdown-msg">Exam approaching.</div>
+        <div class="countdown-sub" id="countdown-sub"></div>
+      </div>
+      <a href="./topics.html" class="countdown-cta">⟶ PRACTISE NOW</a>
+    </div>
+  </div>
+
+  <div class="countdown-set" style="margin-bottom:32px;">
+    <span>EXAM DATE:</span>
+    <input type="date" class="exam-date-input" id="exam-date-input" onchange="saveExamDate(this.value)">
+    <span id="exam-date-saved" style="color:var(--green);display:none;">SAVED</span>
+  </div>
+
+  <!-- Stat row -->
+  <div class="stat-row" id="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">CURRENT RANK</div>
+      <div class="stat-val gold" id="stat-rank">TRAINEE</div>
+      <div class="stat-sub" id="stat-rank-sub">0 / 6 ranks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">TOTAL XP</div>
+      <div class="stat-val" id="stat-xp">0</div>
+      <div class="stat-sub" id="stat-xp-sub">0 sessions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">BADGES EARNED</div>
+      <div class="stat-val amber" id="stat-badges">0 / 10</div>
+      <div class="stat-sub">across all categories</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">MODULES DONE</div>
+      <div class="stat-val" id="stat-modules">0 / 6</div>
+      <div class="stat-sub">Content Area 6 coverage</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">IMPACT RATE</div>
+      <div class="stat-val" id="stat-impact">—</div>
+      <div class="stat-sub">[I] mark hit rate</div>
+    </div>
+  </div>
+
+  <!-- XP History -->
+  <div class="section-header">
+    <span class="section-label">XP HISTORY // SESSION PERFORMANCE</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">
+      <span>XP EARNED PER SESSION</span>
+      <span id="chart-total-xp" style="color:var(--green);">0 XP TOTAL</span>
+    </div>
+    <div class="chart-area" id="chart-area">
+      <div class="chart-no-data" id="chart-no-data">
+        // NO SESSION DATA YET — COMPLETE A MODULE TO SEE YOUR HISTORY //
+      </div>
+    </div>
+    <div class="chart-x-labels" id="chart-x-labels"></div>
+  </div>
+
+  <!-- NEI Proficiency Map -->
+  <div class="section-header">
+    <span class="section-label">NEI PROFICIENCY MAP // WHERE YOU'RE WINNING AND WHERE YOU'RE NOT</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="nei-map">
+    <div class="nei-map-header">
+      <div class="nei-map-title">// HIT RATE PER NEI COMPONENT PER CONTENT AREA</div>
+      <div class="nei-legend">
+        <div class="nei-legend-item"><div class="nei-legend-dot" style="background:var(--red)"></div>NAME</div>
+        <div class="nei-legend-item"><div class="nei-legend-dot" style="background:var(--amber)"></div>EXPLAIN</div>
+        <div class="nei-legend-item"><div class="nei-legend-dot" style="background:var(--green)"></div>IMPACT</div>
+      </div>
+    </div>
+    <div class="nei-header-row">
+      <div class="nei-col-header"></div>
+      <div class="nei-col-header">N — NAME</div>
+      <div class="nei-col-header">E — EXPLAIN</div>
+      <div class="nei-col-header">I — IMPACT</div>
+    </div>
+    <div class="nei-rows" id="nei-rows">
+      <!-- populated by JS -->
+    </div>
+    <div id="impact-alert" style="display:none;margin-top:16px;">
+      <div class="nei-flag">⚠ LOW IMPACT RATE DETECTED — Focus on adding business outcomes to your answers</div>
+    </div>
+  </div>
+
+  <!-- Rank Progression -->
+  <div class="section-header">
+    <span class="section-label">CLEARANCE LEVEL // RANK PROGRESSION</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="rank-panel">
+    <div class="rank-journey" id="rank-journey"></div>
+    <div class="rank-xp-bar-wrap">
+      <div class="rank-xp-label">
+        <span id="rank-xp-cur-label">Current rank</span>
+        <span id="rank-xp-next-label">Next rank</span>
+      </div>
+      <div class="rank-xp-track">
+        <div class="rank-xp-fill" id="rank-xp-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="rank-next-req" id="rank-next-req"></div>
+  </div>
+
+  <!-- Module completion -->
+  <div class="section-header">
+    <span class="section-label">CONTENT AREA COVERAGE // MODULE COMPLETION</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="module-completion-grid" id="module-completion-grid">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- Badge Cabinet -->
+  <div class="section-header" style="margin-top:48px;">
+    <span class="section-label">BADGE CABINET // ALL EARNED CREDENTIALS</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="badge-section-lbl">COMPLETION</div>
+  <div class="badge-grid" id="badge-grid-completion"></div>
+
+  <div class="badge-section-lbl">PERFORMANCE</div>
+  <div class="badge-grid" id="badge-grid-performance"></div>
+
+  <div class="badge-section-lbl">PERSISTENCE</div>
+  <div class="badge-grid" id="badge-grid-persistence"></div>
+
+</div><!-- /page -->
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+let db = null;
+try {
+  firebase.initializeApp(window.MSM_FIREBASE_CONFIG);
+  db = firebase.firestore();
+} catch(e) { console.warn('Firebase not configured:', e.message); }
+
+// Clock
+(function tick() {
+  const n = new Date();
+  document.getElementById('sys-time').textContent =
+    `SYS://${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
+  setTimeout(tick, 1000);
+})();
+
+/* ══════════════════════════════════════════════════════════
+   CONSTANTS
+══════════════════════════════════════════════════════════ */
+const BADGES = {
+  raw_signal:          { name:'RAW SIGNAL',       icon:'📶', desc:'Complete Module 6.1.1',                      cat:'completion', green:false },
+  market_intelligence: { name:'MARKET INTEL',      icon:'📊', desc:'Complete Module 6.1.2',                      cat:'completion', green:false },
+  signal_mapper:       { name:'SIGNAL MAPPER',     icon:'📡', desc:'Complete Module 6.1.3',                      cat:'completion', green:false },
+  full_clearance:      { name:'FULL CLEARANCE',    icon:'🔓', desc:'Complete all available modules',             cat:'completion', green:true  },
+  first_strike:        { name:'FIRST STRIKE',      icon:'⚡', desc:'60+ word answer on first attempt',           cat:'performance',green:true  },
+  impact_specialist:   { name:'IMPACT SPECIALIST', icon:'🎯', desc:'Trigger all three HUD panels in one answer', cat:'performance',green:false },
+  precision_writer:    { name:'PRECISION WRITER',  icon:'🔬', desc:'60-70 words with all three HUD panels lit',  cat:'performance',green:false },
+  signal_recovered:    { name:'SIGNAL RECOVERED',  icon:'🔄', desc:'Trigger vulnerability alert then fix it',    cat:'performance',green:true  },
+  resilient_analyst:   { name:'RESILIENT ANALYST', icon:'🛡️',desc:'Submit three or more times in one session',   cat:'persistence',green:false },
+  method_mastery:      { name:'METHOD MASTERY',    icon:'⭐', desc:'Earn Impact Specialist in both modules',      cat:'persistence',green:true  },
+};
+
+const RANKS = [
+  { id:0, label:'00', title:'TRAINEE',          xpReq:0,    requires:[] },
+  { id:1, label:'01', title:'DATA CADET',        xpReq:300,  requires:['raw_signal'] },
+  { id:2, label:'02', title:'SIGNAL ANALYST',    xpReq:600,  requires:['raw_signal','market_intelligence','signal_mapper'] },
+  { id:3, label:'03', title:'SYSTEMS OPERATOR',  xpReq:1000, requires:['raw_signal','market_intelligence','signal_mapper','full_clearance'] },
+  { id:4, label:'04', title:'DATA STRATEGIST',   xpReq:1500, requires:['raw_signal','market_intelligence','signal_mapper','full_clearance','impact_specialist'] },
+  { id:5, label:'05', title:'INSIGHT ARCHITECT', xpReq:2500, requires:['raw_signal','market_intelligence','signal_mapper','full_clearance','impact_specialist','method_mastery'] },
+];
+
+const MODULES = [
+  { id:'611', ca:'CA 6.1.1', name:'Data, Information & Knowledge',  badge:'raw_signal' },
+  { id:'612', ca:'CA 6.1.2', name:'Why Organisations Need Data',     badge:'market_intelligence' },
+  { id:'613', ca:'CA 6.1.3', name:'How Data is Generated',           badge:'signal_mapper' },
+  { id:'62',  ca:'CA 6.2',   name:'Data Formats',                   badge:null },
+  { id:'63',  ca:'CA 6.3',   name:'Data Systems',                   badge:null },
+  { id:'64',  ca:'CA 6.4',   name:'Data Management',                badge:null },
+];
+
+const NEI_TOPICS = [
+  { label:'6.1.1 Data Hierarchy',  id:'611' },
+  { label:'6.1.2 Org Data Use',    id:'612' },
+  { label:'6.1.3 Data Generation', id:'613' },
+];
+
+const LS_KEY      = 'msm_badges';
+const LS_RANK_KEY = 'msm_rank';
+const LS_ENROL    = 'msm_enrolment';
+const LS_EXAM     = 'msm_exam_date';
+const LS_SESSIONS = 'msm_sessions';  // [{moduleId, xp, nHit, eHit, iHit, ts}]
+const LS_NEI      = 'msm_nei_stats'; // {611:{n:pct,e:pct,i:pct}, ...}
+
+function loadBadges()  { try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch(e) { return {}; } }
+function loadEnrolment(){ try { return JSON.parse(localStorage.getItem(LS_ENROL)) || null; } catch(e) { return null; } }
+
+/* ══════════════════════════════════════════════════════════
+   RANK CALC
+══════════════════════════════════════════════════════════ */
+function calcRank(earnedMap) {
+  let rank = RANKS[0];
+  for (const r of RANKS) { if (r.requires.every(req => earnedMap[req])) rank = r; }
+  return rank;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SESSIONS (read from localStorage, optionally Firestore)
+══════════════════════════════════════════════════════════ */
+function loadSessions() {
+  try { return JSON.parse(localStorage.getItem(LS_SESSIONS)) || []; } catch(e) { return []; }
+}
+function loadNEIStats() {
+  try { return JSON.parse(localStorage.getItem(LS_NEI)) || {}; } catch(e) { return {}; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   EXAM DATE
+══════════════════════════════════════════════════════════ */
+function saveExamDate(val) {
+  localStorage.setItem(LS_EXAM, val);
+  document.getElementById('exam-date-saved').style.display = 'inline';
+  setTimeout(() => { document.getElementById('exam-date-saved').style.display = 'none'; }, 2000);
+  renderCountdown(val);
+}
+
+function renderCountdown(dateStr) {
+  if (!dateStr) return;
+  const days = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+  const section = document.getElementById('countdown-section');
+  if (days > 0 && days <= 180) {
+    document.getElementById('countdown-days').textContent = days;
+    const urgency = days <= 14 ? 'CRITICAL — high priority sessions now.' :
+                    days <= 30 ? 'Final phase — focus on weak NEI components.' :
+                    'Build consistent habits. Aim for one module per week.';
+    document.getElementById('countdown-msg').textContent = `${days} days until your T-Level Digital exam.`;
+    document.getElementById('countdown-sub').textContent = urgency.toUpperCase();
+    section.style.display = 'block';
+  } else if (days <= 0) {
+    section.style.display = 'none';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   XP CHART
+══════════════════════════════════════════════════════════ */
+function renderChart(sessions) {
+  const area = document.getElementById('chart-area');
+  const noData = document.getElementById('chart-no-data');
+  const labels = document.getElementById('chart-x-labels');
+  const totalEl = document.getElementById('chart-total-xp');
+
+  if (!sessions.length) {
+    noData.style.display = 'flex';
+    return;
+  }
+  noData.style.display = 'none';
+
+  // Take last 8 sessions
+  const recent = sessions.slice(-8);
+  const vals = recent.map(s => s.xp || 0);
+  const total = sessions.reduce((sum, s) => sum + (s.xp||0), 0);
+  totalEl.textContent = total.toLocaleString() + ' XP TOTAL';
+
+  const W = 960, H = 140;
+  const maxVal = Math.max(...vals, 100);
+  const pad = { t: 20, r: 10, b: 5, l: 10 };
+  const innerW = W - pad.l - pad.r;
+  const innerH = H - pad.t - pad.b;
+  const step = innerW / Math.max(vals.length - 1, 1);
+
+  function x(i) { return pad.l + (vals.length === 1 ? innerW/2 : i * step); }
+  function y(v) { return pad.t + innerH - (v / maxVal) * innerH; }
+
+  let pathD = vals.map((v,i) => `${i===0?'M':'L'}${x(i)},${y(v)}`).join(' ');
+  let areaD = pathD + ` L${x(vals.length-1)},${H} L${x(0)},${H} Z`;
+
+  const dots = vals.map((v,i) =>
+    `<circle class="chart-dot" cx="${x(i)}" cy="${y(v)}" r="4"/>
+     <text class="chart-dot-label" x="${x(i)}" y="${y(v)-10}" text-anchor="middle">${v}</text>`
+  ).join('');
+
+  const grids = [0,0.25,0.5,0.75,1].map(f => {
+    const yy = pad.t + innerH - f * innerH;
+    return `<line class="chart-grid-line" x1="${pad.l}" y1="${yy}" x2="${W-pad.r}" y2="${yy}"/>`;
+  }).join('');
+
+  area.innerHTML = `
+    <svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="xpGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#39FF14" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#39FF14" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      ${grids}
+      <path class="chart-area-fill" d="${areaD}"/>
+      <path class="chart-line" d="${pathD}"/>
+      ${dots}
+    </svg>`;
+
+  // X labels
+  labels.innerHTML = recent.map(s => {
+    const d = new Date(s.ts);
+    return `<div class="chart-x-lbl">${d.getDate()}/${d.getMonth()+1}</div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   NEI PROFICIENCY MAP
+══════════════════════════════════════════════════════════ */
+function renderNEIMap(neiStats) {
+  const container = document.getElementById('nei-rows');
+  let lowImpact = false;
+
+  container.innerHTML = NEI_TOPICS.map(topic => {
+    const s = neiStats[topic.id] || null;
+
+    function cell(type, pct) {
+      if (s === null) {
+        return `<div class="nei-cell ${type} miss"><div class="nei-cell-pct">—</div></div>`;
+      }
+      const hit = pct >= 50;
+      if (type === 'i' && pct < 50) lowImpact = true;
+      return `<div class="nei-cell ${type}${hit?' hit':''}">
+        <div class="nei-cell-pct">${Math.round(pct)}%</div>
+      </div>`;
+    }
+
+    const n = s ? (s.n || 0) : 0;
+    const e = s ? (s.e || 0) : 0;
+    const im = s ? (s.i || 0) : 0;
+
+    return `<div class="nei-row">
+      <div class="nei-row-topic">${topic.label}</div>
+      ${cell('n', n)}
+      ${cell('e', e)}
+      ${cell('i', im)}
+    </div>`;
+  }).join('');
+
+  if (lowImpact) {
+    document.getElementById('impact-alert').style.display = 'block';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RANK JOURNEY
+══════════════════════════════════════════════════════════ */
+function renderRankJourney(earned) {
+  const currentRank = calcRank(earned);
+  const container = document.getElementById('rank-journey');
+
+  container.innerHTML = RANKS.map(r => {
+    const isEarned  = r.id < currentRank.id;
+    const isCurrent = r.id === currentRank.id;
+    const cls = isEarned ? 'rn-earned' : isCurrent ? 'rn-current' : '';
+    return `<div class="rank-node ${cls}">
+      <div class="rank-pip">${r.label}</div>
+      <div class="rank-title-lbl">${r.title}</div>
+    </div>`;
+  }).join('');
+
+  // XP progress bar toward next rank
+  const nextRank = RANKS[Math.min(currentRank.id + 1, RANKS.length - 1)];
+  const totalXP  = parseInt(localStorage.getItem('xpTotal') || '0');
+  const curXP    = currentRank.xpReq;
+  const nextXP   = nextRank.xpReq;
+  const pct = currentRank.id >= RANKS.length - 1 ? 100 :
+    Math.min(100, Math.round(((totalXP - curXP) / (nextXP - curXP)) * 100));
+
+  document.getElementById('rank-xp-fill').style.width = pct + '%';
+  document.getElementById('rank-xp-cur-label').textContent = currentRank.title;
+  document.getElementById('rank-xp-next-label').textContent = nextRank.title;
+
+  // Next rank requirements
+  const missing = nextRank.requires.filter(r => !earned[r]);
+  if (missing.length && currentRank.id < RANKS.length - 1) {
+    document.getElementById('rank-next-req').innerHTML =
+      `NEXT RANK NEEDS: ${missing.map(k => `<span>${BADGES[k]?.name || k}</span>`).join(', ')}`;
+  } else if (currentRank.id === RANKS.length - 1) {
+    document.getElementById('rank-next-req').innerHTML = `<span>MAX RANK ACHIEVED — INSIGHT ARCHITECT</span>`;
+  }
+
+  // Update topbar stat
+  document.getElementById('stat-rank').textContent = currentRank.title;
+  document.getElementById('stat-rank-sub').textContent = `${currentRank.id} / ${RANKS.length - 1} ranks`;
+}
+
+/* ══════════════════════════════════════════════════════════
+   MODULE COMPLETION
+══════════════════════════════════════════════════════════ */
+function renderModuleCompletion(earned, sessions) {
+  const container = document.getElementById('module-completion-grid');
+  const moduleXP = {};
+  sessions.forEach(s => {
+    if (!moduleXP[s.moduleId]) moduleXP[s.moduleId] = 0;
+    moduleXP[s.moduleId] += (s.xp || 0);
+  });
+
+  let done = 0;
+  container.innerHTML = MODULES.map(m => {
+    const hasCompletion = m.badge && earned[m.badge];
+    const xp = moduleXP[m.id] || 0;
+    const pct = hasCompletion ? 100 : (xp > 0 ? Math.min(99, Math.round((xp / 600) * 100)) : 0);
+    if (pct === 100) done++;
+    const cls = pct >= 100 ? 'done' : pct > 0 ? 'some' : 'none';
+    const label = pct >= 100 ? '100%' : pct > 0 ? `${pct}%` : 'NOT STARTED';
+    return `<div class="mc-row">
+      <div class="mc-ca">${m.ca}</div>
+      <div class="mc-name">${m.name}</div>
+      <div class="mc-bar-wrap"><div class="mc-bar" style="width:${pct}%;background:${pct>=100?'var(--green)':pct>0?'var(--amber)':'rgba(255,255,255,0.1)'}"></div></div>
+      <div class="mc-pct ${cls}">${label}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('stat-modules').textContent = `${done} / ${MODULES.length}`;
+}
+
+/* ══════════════════════════════════════════════════════════
+   BADGE CABINET
+══════════════════════════════════════════════════════════ */
+function renderBadges(earned) {
+  const earnedCount = Object.keys(earned).length;
+  const total = Object.keys(BADGES).length;
+  document.getElementById('stat-badges').textContent = `${earnedCount} / ${total}`;
+
+  ['completion','performance','persistence'].forEach(cat => {
+    const el = document.getElementById('badge-grid-' + cat);
+    const keys = Object.keys(BADGES).filter(k => BADGES[k].cat === cat);
+    el.innerHTML = keys.map(key => {
+      const def      = BADGES[key];
+      const unlocked = !!earned[key];
+      const greenCls = def.green && unlocked ? ' b-green' : '';
+      const lockCls  = unlocked ? 'b-unlocked' : 'b-locked';
+      const tsRaw    = earned[key]?.ts;
+      const tsStr    = tsRaw ? new Date(tsRaw).toLocaleDateString('en-GB') : '';
+      return `<div class="badge-card ${lockCls}${greenCls}" title="${def.name}">
+        ${!unlocked ? '<div class="b-lock">🔒</div>' : ''}
+        <div class="b-icon">${def.icon}</div>
+        <div class="b-name">${def.name}</div>
+        <div class="b-desc">${def.desc}</div>
+        ${tsStr ? `<div class="b-ts">${tsStr}</div>` : ''}
+      </div>`;
+    }).join('');
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   STATS
+══════════════════════════════════════════════════════════ */
+function renderStats(sessions) {
+  const totalXP = sessions.reduce((s, r) => s + (r.xp||0), 0);
+  document.getElementById('stat-xp').textContent    = totalXP.toLocaleString();
+  document.getElementById('stat-xp-sub').textContent = `${sessions.length} session${sessions.length !== 1 ? 's' : ''}`;
+  document.getElementById('chart-total-xp').textContent = totalXP.toLocaleString() + ' XP TOTAL';
+  localStorage.setItem('xpTotal', totalXP);
+
+  // Impact rate
+  const iSessions = sessions.filter(s => typeof s.iHit !== 'undefined');
+  if (iSessions.length) {
+    const iRate = Math.round((iSessions.filter(s => s.iHit).length / iSessions.length) * 100);
+    const el = document.getElementById('stat-impact');
+    el.textContent = iRate + '%';
+    el.className   = 'stat-val ' + (iRate >= 70 ? '' : iRate >= 40 ? 'amber' : '');
+    if (iRate < 50) el.style.color = 'var(--red)';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+(function init() {
+  const earned   = loadBadges();
+  const sessions = loadSessions();
+  const neiStats = loadNEIStats();
+
+  const enrolment = loadEnrolment();
+  const name = enrolment ? enrolment.displayName : 'Specialist';
+  document.getElementById('dash-sub').textContent =
+    `${name.toUpperCase()} // ${new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}`;
+
+  // Exam date
+  const savedDate = localStorage.getItem(LS_EXAM);
+  if (savedDate) {
+    document.getElementById('exam-date-input').value = savedDate;
+    renderCountdown(savedDate);
+  }
+
+  renderStats(sessions);
+  renderChart(sessions);
+  renderNEIMap(neiStats);
+  renderRankJourney(earned);
+  renderModuleCompletion(earned, sessions);
+  renderBadges(earned);
+})();
+
+window.saveExamDate = saveExamDate;
+</script>
+</body>
+</html>
