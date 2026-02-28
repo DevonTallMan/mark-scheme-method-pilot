@@ -725,216 +725,6 @@
   .hud-e .hud-letter { color: var(--amber); }
   .hud-i { border-color: rgba(57,255,20,0.2); }
   .hud-i .hud-letter { color: var(--green); }
-  @keyframes hud-glitch { 0%{filter:invert(0) brightness(1)} 20%{filter:invert(1) brightness(2)} 40%{filter:invert(0) brightness(1)} 60%{filter:invert(1) brightness(2)} 80%{filter:invert(0) brightness(1)} 100%{filter:invert(0) brightness(1)} }
-
-  /* ── ACE v2: PROGRESS BAR ── */
-  .energy-bar-wrap { display:flex; align-items:center; gap:10px; margin-top:10px; }
-  .energy-bar-track { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); }
-  .energy-bar-fill { height:100%; width:0%; border-radius:4px; transition:width 0.3s ease, background 0.4s ease; }
-  .energy-bar-fill.eb-red   { background:var(--red);   box-shadow:none; }
-  .energy-bar-fill.eb-amber { background:var(--amber); animation:bar-pulse 1.2s ease infinite; }
-  .energy-bar-fill.eb-green { background:var(--green); animation:bar-flash 0.6s ease forwards; }
-  @keyframes bar-pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
-  @keyframes bar-flash { 0%{box-shadow:none} 50%{box-shadow:0 0 18px rgba(57,255,20,0.7)} 100%{box-shadow:0 0 10px rgba(57,255,20,0.4)} }
-  .energy-bar-label { font-family:'Share Tech Mono',monospace; font-size:11px; min-width:160px; transition:color 0.4s; }
-
-  /* ── ACE v2: IMPACT PULSE on [I] HUD panel ── */
-  @keyframes impact-pulse { 0%,100%{box-shadow:0 0 0 rgba(57,255,20,0)} 50%{box-shadow:0 0 14px rgba(57,255,20,0.5)} }
-
-  /* ── ACE v2: REBOOT OVERLAY ── */
-  #reboot-overlay { display:none; position:fixed; inset:0; z-index:9999; background:#0D1117; flex-direction:column; align-items:center; justify-content:center; font-family:'Orbitron',monospace; }
-  #reboot-overlay .rb-line1 { font-size:clamp(11px,2vw,14px); color:var(--red); letter-spacing:4px; opacity:0; transition:opacity 0.3s; text-align:center; padding:0 20px; }
-  #reboot-overlay .rb-line2 { font-size:clamp(16px,3.5vw,30px); font-weight:900; color:var(--green); letter-spacing:5px; margin-top:16px; opacity:0; transition:opacity 0.4s; text-align:center; padding:0 20px; }
-  #reboot-overlay .rb-bar-wrap { max-width:400px; width:90%; margin-top:32px; }
-  #reboot-overlay .rb-bar { height:3px; width:0%; background:var(--green); box-shadow:0 0 12px rgba(57,255,20,0.6); transition:none; }
-
-  /* ═══════════════════════════════════════════════════
-     KNOWLEDGE CHECK OVERLAY
-  ═══════════════════════════════════════════════════ */
-  #kc-overlay {
-    position: fixed; inset: 0; z-index: 2000;
-    background: rgba(13,17,23,0.96);
-    backdrop-filter: blur(16px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    overflow-y: auto;
-  }
-  #kc-overlay.active { display: flex; }
-
-  .kc-panel {
-    width: 100%; max-width: 680px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(57,255,20,0.2);
-    border-radius: 12px;
-    padding: 36px 40px;
-    position: relative;
-    box-shadow: 0 0 60px rgba(57,255,20,0.06);
-  }
-  .kc-panel .corner-tl {
-    position:absolute; top:0; left:0; width:18px; height:18px;
-    border-top:2px solid var(--green); border-left:2px solid var(--green); border-radius:12px 0 0 0;
-  }
-  .kc-panel .corner-br {
-    position:absolute; bottom:0; right:0; width:18px; height:18px;
-    border-bottom:2px solid var(--green); border-right:2px solid var(--green); border-radius:0 0 12px 0;
-  }
-  .kc-header {
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 6px;
-  }
-  .kc-avatar { font-size: 28px; }
-  .kc-header-text {}
-  .kc-title {
-    font-family: 'Orbitron', monospace; font-size: 13px;
-    font-weight: 700; color: var(--green); letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  .kc-sub {
-    font-family: 'Share Tech Mono', monospace; font-size: 10px;
-    color: var(--text-dim); letter-spacing: 1px; margin-top: 3px;
-  }
-  .kc-divider {
-    border: none; border-top: 1px solid rgba(255,255,255,0.06);
-    margin: 18px 0 24px;
-  }
-  .kc-progress-row {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
-  }
-  .kc-pips { display: flex; gap: 6px; }
-  .kc-pip {
-    width: 28px; height: 4px; border-radius: 2px;
-    background: rgba(255,255,255,0.1);
-    transition: background 0.3s ease, box-shadow 0.3s ease;
-  }
-  .kc-pip.done  { background: var(--green); box-shadow: 0 0 8px rgba(57,255,20,0.5); }
-  .kc-pip.active { background: var(--gold); box-shadow: 0 0 8px rgba(255,215,0,0.5); animation: pulse-dot 1.2s ease infinite; }
-  .kc-pip.wrong  { background: var(--red); box-shadow: 0 0 8px rgba(255,59,59,0.5); }
-  .kc-q-counter {
-    font-family: 'Share Tech Mono', monospace; font-size: 10px;
-    color: var(--text-dim); letter-spacing: 1px; margin-left: auto;
-  }
-
-  .kc-question {
-    font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 600;
-    color: var(--text-primary); line-height: 1.5; margin-bottom: 20px;
-  }
-  .kc-question .kc-q-label {
-    font-family: 'Share Tech Mono', monospace; font-size: 10px;
-    color: var(--gold); letter-spacing: 2px; display: block; margin-bottom: 8px;
-  }
-
-  .kc-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
-  .kc-option {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px; padding: 13px 16px;
-    cursor: pointer; display: flex; align-items: center; gap: 12px;
-    font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 500;
-    color: var(--text-primary); transition: all 0.15s ease;
-    user-select: none;
-  }
-  .kc-option:hover:not(.kc-answered) {
-    border-color: rgba(255,215,0,0.35);
-    background: rgba(255,215,0,0.04);
-    color: var(--gold);
-  }
-  .kc-option .kc-opt-letter {
-    font-family: 'Share Tech Mono', monospace; font-size: 11px;
-    letter-spacing: 1px; color: var(--text-dim); min-width: 18px;
-  }
-  .kc-option.correct {
-    border-color: rgba(57,255,20,0.5); background: rgba(57,255,20,0.07);
-    color: var(--green);
-  }
-  .kc-option.correct .kc-opt-letter { color: var(--green); }
-  .kc-option.wrong {
-    border-color: rgba(255,59,59,0.5); background: rgba(255,59,59,0.07);
-    color: var(--red);
-  }
-  .kc-option.wrong .kc-opt-letter { color: var(--red); }
-  .kc-option.reveal-correct {
-    border-color: rgba(57,255,20,0.3); background: rgba(57,255,20,0.04);
-    color: rgba(57,255,20,0.6);
-  }
-  .kc-option.kc-answered { cursor: default; pointer-events: none; }
-
-  .kc-instant-feedback {
-    font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 500;
-    line-height: 1.5; padding: 12px 16px; border-radius: 6px;
-    margin-bottom: 20px; display: none;
-    animation: fade-in 0.3s ease;
-  }
-  .kc-instant-feedback.correct-fb {
-    background: rgba(57,255,20,0.07); border: 1px solid rgba(57,255,20,0.25);
-    color: var(--green); display: block;
-  }
-  .kc-instant-feedback.wrong-fb {
-    background: rgba(255,59,59,0.07); border: 1px solid rgba(255,59,59,0.25);
-    color: var(--text-primary); display: block;
-  }
-
-  .kc-next-btn {
-    font-family: 'Share Tech Mono', monospace; font-size: 11px;
-    letter-spacing: 2px; background: transparent;
-    border: 1px solid rgba(57,255,20,0.4); color: var(--green);
-    border-radius: 6px; padding: 10px 24px; cursor: pointer;
-    transition: all 0.2s ease; display: none;
-  }
-  .kc-next-btn.visible { display: inline-block; }
-  .kc-next-btn:hover { background: rgba(57,255,20,0.08); border-color: var(--green); }
-
-  /* RESULT SCREEN */
-  .kc-result { display: none; text-align: center; }
-  .kc-result.active { display: block; }
-  .kc-result-icon { font-size: 52px; margin-bottom: 16px; }
-  .kc-result-title {
-    font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 900;
-    letter-spacing: 3px; margin-bottom: 8px;
-  }
-  .kc-result-title.pass { color: var(--green); text-shadow: 0 0 20px rgba(57,255,20,0.5); }
-  .kc-result-title.fail { color: var(--gold); text-shadow: 0 0 20px rgba(255,215,0,0.4); }
-  .kc-result-score {
-    font-family: 'Share Tech Mono', monospace; font-size: 12px;
-    color: var(--text-dim); letter-spacing: 2px; margin-bottom: 24px;
-  }
-  .kc-result-score span { color: var(--text-primary); }
-
-  /* Targeted explanation cards */
-  .kc-remediation { margin-bottom: 28px; }
-  .kc-remediation-title {
-    font-family: 'Share Tech Mono', monospace; font-size: 10px;
-    letter-spacing: 2px; color: var(--gold); margin-bottom: 14px;
-  }
-  .kc-remedy-card {
-    background: rgba(255,215,0,0.04); border: 1px solid rgba(255,215,0,0.2);
-    border-radius: 8px; padding: 16px 18px; margin-bottom: 10px;
-    text-align: left;
-  }
-  .kc-remedy-card .remedy-q {
-    font-family: 'Share Tech Mono', monospace; font-size: 10px;
-    color: var(--gold); letter-spacing: 1px; margin-bottom: 8px;
-  }
-  .kc-remedy-card .remedy-text {
-    font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 500;
-    color: var(--text-primary); line-height: 1.6;
-  }
-  .kc-remedy-card .remedy-text strong { color: var(--green); }
-
-  .kc-proceed-btn {
-    font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700;
-    letter-spacing: 2px; background: var(--green); color: #0D1117;
-    border: none; border-radius: 6px; padding: 14px 32px;
-    cursor: pointer; transition: all 0.2s ease;
-    box-shadow: 0 0 20px rgba(57,255,20,0.3);
-  }
-  .kc-proceed-btn:hover { box-shadow: 0 0 32px rgba(57,255,20,0.5); transform: translateY(-1px); }
-  .kc-proceed-btn.gold-btn {
-    background: var(--gold); color: #0D1117;
-    box-shadow: 0 0 20px rgba(255,215,0,0.3);
-  }
-  .kc-proceed-btn.gold-btn:hover { box-shadow: 0 0 32px rgba(255,215,0,0.5); }
 
   .hud-label {
     font-family: 'Share Tech Mono', monospace;
@@ -1784,29 +1574,6 @@
     .glitch-block, .glitch-scanlines,
     .glitch-text::before, .glitch-text::after { display: none; }
   }
-
-  /* ── AXIOM-7 NEI API DECONSTRUCTION PANEL ── */
-  #axiom-deconstruction { display:none; margin-top:20px; }
-  .axd-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-  .axd-title { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; color:var(--green); letter-spacing:3px; }
-  .axd-sub { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:1px; }
-  .axd-badges { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
-  .axd-badge { font-family:'Share Tech Mono',monospace; font-size:11px; padding:6px 12px; border-radius:4px; border:1px solid; letter-spacing:1px; }
-  .axd-badge.hit  { color:var(--green); border-color:rgba(57,255,20,0.35); background:rgba(57,255,20,0.06); }
-  .axd-badge.miss { color:var(--text-dim); border-color:rgba(255,255,255,0.1); background:transparent; }
-  .axd-badge.hit::before { content:'✓  '; }
-  .axd-badge.miss::before { content:'○  '; }
-  .axd-text-wrap { background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:8px; padding:16px 18px; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500; line-height:1.8; color:var(--text-primary); }
-  .axd-text-wrap .nei-n { background:rgba(255,59,59,0.25); color:#ffcccc; border-radius:3px; padding:1px 4px; }
-  .axd-text-wrap .nei-e { background:rgba(255,149,0,0.25); color:#ffe0aa; border-radius:3px; padding:1px 4px; }
-  .axd-text-wrap .nei-i { background:rgba(57,255,20,0.2); color:#bbffaa; border-radius:3px; padding:1px 4px; }
-  .axd-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
-  .axd-legend-item { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); display:flex; align-items:center; gap:6px; }
-  .axd-dot { width:10px; height:10px; border-radius:2px; display:inline-block; }
-  .axd-loading { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:2px; padding:16px 0; display:flex; align-items:center; gap:10px; }
-  .axd-spinner { width:14px; height:14px; border:2px solid rgba(57,255,20,0.2); border-top-color:var(--green); border-radius:50%; animation:spin-axd 0.8s linear infinite; }
-  @keyframes spin-axd { to { transform:rotate(360deg); } }
-  .axd-error { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--amber); letter-spacing:1px; padding:12px 0; }
 </style>
 </head>
 <body>
@@ -1891,7 +1658,7 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn-primary" onclick="openKnowledgeCheck()"><span>⟶ BEGIN MISSION</span></button>
+      <button class="btn-primary" onclick="goScene(2)"><span>⟶ BEGIN MISSION</span></button>
       <button class="nav-tab-btn" onclick="goScene(6)" style="position:static;">🏫 TEACHER VIEW</button>
     </div>
   </div>
@@ -1984,18 +1751,10 @@
           class="answer-textarea"
           id="student-answer"
           placeholder="Identify the raw coordinates, explain how the software processes them, and state the final instruction for the driver..."
-          oninput="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
-          onkeyup="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
-          onpaste="setTimeout(()=>{ const v=this.value; updateHUD(v); updateWordCount(v); resetIdleTimer(v); },10)"
+          oninput="updateHUD(this.value); updateCharCount(this.value)"
           rows="6"
         ></textarea>
-        <div class="energy-bar-wrap">
-          <div class="energy-bar-track">
-            <div class="energy-bar-fill" id="energy-bar-fill"></div>
-          </div>
-          <div class="energy-bar-label" id="word-count-display">0 words — aim for 60+</div>
-        </div>
-        <div id="axiom-feedback" style="display:none;margin-top:14px;padding:14px 18px;border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.6;border:1px solid var(--amber);background:rgba(255,149,0,0.06);color:var(--amber);white-space:pre-line;animation:fade-in 0.4s ease both;"></div>
+        <div class="char-count" id="char-count">0 / 250 chars</div>
       </div>
 
       <div style="padding:0 20px 20px;">
@@ -2074,19 +1833,6 @@
         <div id="student-display"></div>
       </div>
 
-      <!-- AXIOM-7 API DECONSTRUCTION -->
-      <div class="glass" id="axiom-deconstruction" style="padding:20px;">
-        <div class="axd-header">
-          <div>
-            <div class="axd-title">AXIOM-7 // NEI DECONSTRUCTION</div>
-            <div class="axd-sub">// AI-ASSISTED ANALYSIS — COMPARE WITH YOUR OWN TAGGING ABOVE</div>
-          </div>
-        </div>
-        <div id="axd-content">
-          <div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div>
-        </div>
-      </div>
-
       <!-- TALLY + ALERTS -->
       <div id="nei-tally-display" style="display:none;" class="glass" style="padding:20px;">
         <div style="padding:16px 20px;">
@@ -2101,9 +1847,9 @@
           VULNERABILITY DETECTED
         </div>
         <div class="vuln-msg">
-          <strong>Specialist — AXIOM-7 has detected an Impact statement in your answer, but you haven't tagged it yet.</strong><br><br>
-          Scroll up to your answer, select the sentence that states what the driver can <em>do</em> or what the business <em>gains</em>, and tag it [I] using the toolbar on the right.<br><br>
-          No [I] tag = no third mark confirmed.
+          <strong>Specialist, you've located the vehicle but haven't given an instruction.</strong><br><br>
+          Knowledge requires action. You've provided the Data (coordinates) and the Information (location), but missed the Knowledge — the actionable instruction the driver receives.<br><br>
+          Add the Impact statement: what does the system <em>tell the driver to do</em>?
         </div>
       </div>
 
@@ -2444,22 +2190,6 @@ function goScene(n) {
   currentScene = n;
   window.scrollTo(0, 0);
 
-  if (n === 3) {
-    // Polling fallback — catches browsers where oninput/onkeyup don't fire reliably
-    clearInterval(window._textPoll);
-    window._textPoll = setInterval(() => {
-      const ta = document.getElementById('student-answer');
-      if (!ta) return;
-      const v = ta.value;
-      if (v !== (window._lastPolledValue || '')) {
-        window._lastPolledValue = v;
-        updateHUD(v);
-        updateWordCount(v);
-      }
-    }, 400);
-  } else {
-    clearInterval(window._textPoll);
-  }
   if (n === 4) prepCalibration();
   if (n === 6) buildHeatmap();
 }
@@ -2609,163 +2339,13 @@ function checkDragDrop() {
 /* ──────────────────────────────
    SCENE 3: HUD LIVE FEEDBACK
 ────────────────────────────── */
-const N_KEYWORDS = ['coordinates', 'lat', 'lon', 'string', 'numbers', 'gps', 'data', 'raw', 'digits', 'values'];
-const E_KEYWORDS = ['mapping', 'converts', 'satellite', 'street', 'location', 'database', 'processes', 'calculates', 'translates', 'cross-references', 'matches', 'algorithm', 'software'];
-const I_KEYWORDS = ['route', 'driver', 'directions', 'fastest', 'delivery', 'arrives', 'efficient', 'on time', 'reduces', 'saves', 'increas', 'customer', 'satisfaction', 'profit', 'revenue', 'cost'];
+const N_KEYWORDS = ['coordinates', 'lat', 'lon', 'string', 'numbers'];
+const E_KEYWORDS = ['mapping', 'converts', 'satellite', 'street', 'location', 'database'];
+const I_KEYWORDS = ['route', 'driver', 'directions', 'fastest', 'delivery', 'arrives'];
 
 function hasKeyword(text, keywords) {
   const lower = text.toLowerCase();
   return keywords.some(k => lower.includes(k));
-}
-
-function countWords(text) { return text.trim() === '' ? 0 : text.trim().split(/\s+/).length; }
-
-/* ── ACE v2: PROGRESS BAR + IMPACT PULSE + IDLE POKE ── */
-
-const IDLE_DELAY  = 10000;
-const IDLE_PROMPT = 'Specialist — you\'ve identified the data. But so what?\nHow does knowing those coordinates actually help the driver arrive on time?';
-let idleTimer = null;
-
-function updateWordCount(text) {
-  const count = countWords(text);
-  const el    = document.getElementById('word-count-display');
-  const fill  = document.getElementById('energy-bar-fill');
-  if (!el || !fill) return;
-
-  const pct = Math.min(100, Math.round((count / 60) * 100));
-  fill.style.width = pct + '%';
-
-  // Remove all state classes
-  fill.classList.remove('eb-red', 'eb-amber', 'eb-green');
-
-  if (count === 0) {
-    el.textContent = '0 words — aim for 60+';
-    el.style.color = '';
-  } else if (count < 40) {
-    fill.classList.add('eb-red');
-    el.textContent = count + ' words — keep going';
-    el.style.color = 'var(--red)';
-  } else if (count < 60) {
-    fill.classList.add('eb-amber');
-    el.textContent = count + ' words — almost there';
-    el.style.color = 'var(--amber)';
-  } else {
-    fill.classList.add('eb-green');
-    el.textContent = count + ' words ✓';
-    el.style.color = 'var(--green)';
-  }
-
-  // Trigger HUD glitch when impact keyword + 60 words
-  if (hasKeyword(text, I_KEYWORDS) && count >= 60) triggerHUDGlitch();
-
-  // Impact panel pulse — glow [I] softly at 50+ words if not yet detected
-  const hudI = document.getElementById('hud-i');
-  if (hudI) {
-    if (count >= 50 && !hudI.classList.contains('active-i')) {
-      hudI.style.animation = 'impact-pulse 1.8s ease infinite';
-    } else {
-      hudI.style.animation = '';
-    }
-  }
-}
-
-function resetIdleTimer(text) {
-  clearTimeout(idleTimer);
-  if (countWords(text) >= 60) return; // already enough — no poke needed
-  idleTimer = setTimeout(() => {
-    const fb = document.getElementById('axiom-feedback');
-    if (!fb) return;
-    // Only fire if no Tier 1/2 message currently showing AND under 60 words
-    if (fb.style.display !== 'none') return;
-    fb.style.display = 'block';
-    fb.style.borderColor = 'rgba(57,255,20,0.4)';
-    fb.style.background  = 'rgba(57,255,20,0.05)';
-    fb.style.color       = 'var(--green)';
-    fb.textContent       = 'AXIOM-7 // ' + IDLE_PROMPT;
-  }, IDLE_DELAY);
-}
-
-/* ── ACE v2: REBOOT ANIMATION ── */
-function triggerReboot() {
-  const overlay = document.getElementById('reboot-overlay');
-  const line1   = document.getElementById('rb-line1');
-  const line2   = document.getElementById('rb-line2');
-  const bar     = document.getElementById('rb-bar');
-  overlay.style.display = 'flex';
-  setTimeout(() => { line1.style.opacity = '1'; }, 200);
-  setTimeout(() => { line2.style.opacity = '1'; }, 700);
-  setTimeout(() => {
-    bar.style.transition = 'width 1.2s ease-out';
-    bar.style.width = '100%';
-  }, 1000);
-  setTimeout(() => {
-    overlay.style.display = 'none';
-    line1.style.opacity = '0';
-    line2.style.opacity = '0';
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
-    goScene(4);
-  }, 2400);
-
-  // Fire API call in parallel — result will be ready by the time Scene 4 loads
-  const answer = document.getElementById('student-answer').value.trim();
-  window._neiApiPromise = analyzeWithNEIChecker(
-    answer,
-    'Focus on GPS logistics, coordinate data, data vs information vs knowledge hierarchy, and delivery outcomes'
-  );
-}
-
-/* ── NEI CHECKER API ── */
-async function analyzeWithNEIChecker(studentText, customPrompt = '') {
-  const API_URL = 'https://neichecker.toolsforteaching.co.uk/nei-checker.php';
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ studentText, prompt: customPrompt })
-  });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  if (!data.success) throw new Error(data.error || 'Analysis failed');
-  return data;
-}
-
-function renderAxiomDeconstruction(result) {
-  const panel = document.getElementById('axiom-deconstruction');
-  const content = document.getElementById('axd-content');
-  panel.style.display = 'block';
-
-  const { hasName, hasExplain, hasImpact } = result.analysis;
-
-  // Build colour-coded text from details arrays if highlightedHtml isn't usable
-  // Use the API's highlightedHtml but restyle spans to match platform
-  let html = result.highlightedHtml || result.originalText || '';
-  // Remap any inline-styled spans to our CSS classes
-  html = html.replace(/style=['"][^'"]*color\s*:\s*#ff6b6b[^'"]*['"]/gi, 'class="nei-n"');
-  html = html.replace(/style=['"][^'"]*color\s*:\s*#ffa500[^'"]*['"]/gi, 'class="nei-e"');
-  html = html.replace(/style=['"][^'"]*color\s*:\s*#51cf66[^'"]*['"]/gi, 'class="nei-i"');
-
-  content.innerHTML = `
-    <div class="axd-badges">
-      <div class="axd-badge ${hasName    ? 'hit' : 'miss'}">[N] NAME</div>
-      <div class="axd-badge ${hasExplain ? 'hit' : 'miss'}">[E] EXPLAIN</div>
-      <div class="axd-badge ${hasImpact  ? 'hit' : 'miss'}">[I] IMPACT</div>
-    </div>
-    ${!hasImpact ? `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);letter-spacing:1px;margin-bottom:12px;padding:10px 12px;border:1px solid rgba(255,59,59,0.25);border-radius:6px;background:rgba(255,59,59,0.05);">⚠ AXIOM-7 // NO IMPACT COMPONENT DETECTED — THIRD MARK AT RISK</div>` : ''}
-    <div class="axd-text-wrap">${html}</div>
-    <div class="axd-legend">
-      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,59,59,0.5);"></div>[N] NAME</div>
-      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,149,0,0.5);"></div>[E] EXPLAIN</div>
-      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(57,255,20,0.4);"></div>[I] IMPACT</div>
-    </div>
-  `;
-}
-
-function triggerHUDGlitch() {
-  const hudI = document.getElementById('hud-i');
-  if (!hudI || hudI.dataset.glitched) return;
-  hudI.dataset.glitched = '1';
-  hudI.style.animation = 'hud-glitch 0.5s ease';
-  setTimeout(() => { hudI.style.animation = ''; delete hudI.dataset.glitched; }, 600);
 }
 
 function updateHUD(text) {
@@ -2804,47 +2384,24 @@ function updateHUD(text) {
   }
 }
 
-const TIER1_MSG = `⚠ AXIOM-7 // INSUFFICIENT SIGNAL DETECTED\n\nYour response is too brief. An examiner needs to see three things: the name of what the data is, how the system processes it, and what instruction or outcome it produces.\n\nExpand your answer — aim for at least 60 words. The third mark is always in your last sentence.`;
-
-const TIER2_TEMPLATE = `Try this structure:\n\n[N] The GPS system uses raw data — specifically [NAME THE DATA TYPE]...\n[E] The software [EXPLAIN HOW IT PROCESSES OR CONVERTS THE DATA]...\n[I] This means the driver can [STATE THE OUTCOME — faster route, on-time delivery, reduced costs]...`;
-
-let submitAttempts = 0;
-let _tierWarningShown = false;
+function updateCharCount(val) {
+  document.getElementById('char-count').textContent = val.length + ' / 250 chars';
+}
 
 function submitAnswer() {
   const answer = document.getElementById('student-answer').value.trim();
-  if (!answer) { alert('Please write your answer before submitting.'); return; }
-  const words = countWords(answer);
-  const fb = document.getElementById('axiom-feedback');
-  submitAttempts++;
-
-  if (words < 60) {
-    fb.style.display = 'block';
-    if (submitAttempts === 1) {
-      fb.style.borderColor = 'var(--amber)';
-      fb.style.background = 'rgba(255,149,0,0.06)';
-      fb.style.color = 'var(--amber)';
-      fb.textContent = TIER1_MSG;
-    } else {
-      fb.style.borderColor = 'var(--red)';
-      fb.style.background = 'rgba(255,59,59,0.06)';
-      fb.style.color = 'var(--text-primary)';
-      fb.textContent = TIER2_TEMPLATE;
-      document.getElementById('student-answer').placeholder = '[N] The GPS system uses raw coordinate data...\n[E] The software processes this by converting it into...\n[I] This means the driver can...';
-    }
-    _tierWarningShown = true;
-    const btn = document.querySelector('#scene-3 .btn-primary');
-    if (btn) { btn.style.animation = 'tab-reject 0.4s ease'; setTimeout(() => { btn.style.animation = ''; }, 450); }
+  if (!answer) {
+    alert('Please write your answer before submitting.');
     return;
   }
-
-  fb.style.display = 'none';
+  // Unlock the Calibrate tab now that the user has earned it
   const btn4 = document.getElementById('navbtn-4');
   btn4.classList.remove('locked');
   btn4.disabled = false;
   btn4.textContent = '04 CALIBRATE';
   btn4.setAttribute('onclick', 'goScene(4)');
-  triggerReboot();
+
+  goScene(4);
 }
 
 /* ──────────────────────────────
@@ -2878,31 +2435,6 @@ function prepCalibration() {
   document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('mode-display').textContent = '— SELECT —';
   document.getElementById('mode-display').style.color = 'var(--text-dim)';
-
-  // Resolve AXIOM-7 API result
-  const panel = document.getElementById('axiom-deconstruction');
-  const content = document.getElementById('axd-content');
-  panel.style.display = 'block';
-  content.innerHTML = '<div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div>';
-
-  if (window._neiApiPromise) {
-    window._neiApiPromise
-      .then(result => renderAxiomDeconstruction(result))
-      .catch(() => {
-        content.innerHTML = '<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>';
-      });
-  } else {
-    // No promise yet (e.g. navigated directly) — fire now
-    if (answer) {
-      analyzeWithNEIChecker(answer, 'Focus on GPS logistics, coordinate data, data vs information vs knowledge hierarchy, and delivery outcomes')
-        .then(result => renderAxiomDeconstruction(result))
-        .catch(() => {
-          content.innerHTML = '<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>';
-        });
-    } else {
-      panel.style.display = 'none';
-    }
-  }
 }
 
 // Text selection highlighting
@@ -2960,15 +2492,11 @@ function runCalibration() {
     vuln.classList.add('show');
     success.classList.remove('show');
     completeBtn.style.display = 'none';
-    // Track that vulnerability was triggered (for Signal Recovered badge)
-    window._msmVulnTriggered = true;
   } else {
     vuln.classList.remove('show');
     success.classList.add('show');
     calBtn.style.display = 'none';
     completeBtn.style.display = 'inline-flex';
-    // Award badges based on calibration outcome
-    msmCheckBadges_611();
   }
 }
 
@@ -3056,354 +2584,6 @@ function exportReport() {
 
 // Initial build
 buildHeatmap();
-
-/* ── BADGE SYSTEM (Module 6.1.1) ── */
-const MSM_LS = 'msm_badges';
-
-function msmEarnBadge(key) {
-  try {
-    const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
-    if (b[key]) return false;
-    b[key] = { earned: true, ts: Date.now() };
-    localStorage.setItem(MSM_LS, JSON.stringify(b));
-    return true;
-  } catch(e) { return false; }
-}
-
-function msmCheckBadges_611() {
-  // Module completion
-  msmEarnBadge('raw_signal');
-
-  // First Strike — no Tier 1 or 2 prompts shown (submitted 60+ words on first valid attempt)
-  if (!_tierWarningShown) {
-    msmEarnBadge('first_strike');
-  }
-
-  // Signal Recovered — vulnerability was triggered and then student fixed it
-  if (window._msmVulnTriggered) {
-    msmEarnBadge('signal_recovered');
-    window._msmVulnTriggered = false;
-  }
-
-  // Impact Specialist — all three HUD panels were lit at some point this session
-  if (window._msmAllHUDActive) {
-    msmEarnBadge('impact_specialist');
-  }
-
-  // Resilient Analyst — submitted 3+ times
-  if (submitAttempts >= 3) {
-    msmEarnBadge('resilient_analyst');
-  }
-
-  // Precision Writer — 60-70 words with all HUD panels
-  if (window._msmPrecisionWriter) {
-    msmEarnBadge('precision_writer');
-  }
-
-  // Full Clearance — both modules complete
-  try {
-    const b = JSON.parse(localStorage.getItem(MSM_LS)) || {};
-    if (b['raw_signal'] && b['market_intelligence'] && b['signal_mapper']) msmEarnBadge('full_clearance');
-    // Method Mastery — impact specialist in both modules
-    if (b['impact_specialist'] && window._msmImpactSpecialist612) msmEarnBadge('method_mastery');
-  } catch(e) {}
-}
-
-// Track all-HUD active state in updateHUD
-const _origUpdateHUD_611 = updateHUD;
-function updateHUD(text) {
-  _origUpdateHUD_611(text);
-  const nA = hasKeyword(text, N_KEYWORDS);
-  const eA = hasKeyword(text, E_KEYWORDS);
-  const iA = hasKeyword(text, I_KEYWORDS);
-  if (nA && eA && iA) window._msmAllHUDActive = true;
-  // Precision Writer: 60-70 words + all panels
-  const wc = countWords(text);
-  if (nA && eA && iA && wc >= 60 && wc <= 70) window._msmPrecisionWriter = true;
-}
 </script>
-
-<!-- ── ACE v2: REBOOT OVERLAY ── -->
-<div id="reboot-overlay">
-  <div class="rb-line1" id="rb-line1">CRITICAL INSIGHT DETECTED</div>
-  <div class="rb-line2" id="rb-line2">CALIBRATING SPECIALIST GRADE</div>
-  <div class="rb-bar-wrap"><div class="rb-bar" id="rb-bar"></div></div>
-</div>
-
-<!-- ================================================================ -->
-<!-- KNOWLEDGE CHECK ENGINE                                            -->
-<!-- ================================================================ -->
-<script>
-/* ─────────────────────────────────────────────────────────────────
-   KNOWLEDGE CHECK ENGINE — renders entire body HTML fresh each call
-───────────────────────────────────────────────────────────────────*/
-const KC_QUESTIONS = [
-  {
-    q: 'A GPS sensor records the value <code style="color:var(--gold);font-family:monospace;">51.5074, -0.1278</code>. What type of value is this?',
-    options: [
-      'Information — it tells us where the driver is',
-      'Knowledge — the system can act on it immediately',
-      'Data — raw coordinates with no context or meaning yet',
-      'A report generated by the GPS software',
-    ],
-    correct: 2,
-    remedy: {
-      label: 'Q1 — Data, Information or Knowledge?',
-      text: '<strong>Data</strong> is raw, unprocessed facts — numbers or values with no context attached. The coordinates <em>51.5074, -0.1278</em> mean nothing on their own until software processes them into a readable location. That processed result (e.g. "Oxford Circus, London") becomes <strong>Information</strong>.'
-    }
-  },
-  {
-    q: 'The GPS app displays <code style="color:var(--gold);font-family:monospace;">"Oxford Circus, London"</code> on screen. Which term best describes this output?',
-    options: [
-      'Data — it is still just a number in the system',
-      'Information — data has been processed and given context',
-      'Knowledge — the driver can now make a decision',
-      'A database record stored server-side',
-    ],
-    correct: 1,
-    remedy: {
-      label: 'Q2 — When does data become information?',
-      text: '<strong>Information</strong> is data that has been processed, organised, or given context so it carries meaning. The raw coordinates become information when the software converts them into a human-readable location. The key word is <em>context</em> — information answers "what does this mean?"'
-    }
-  },
-  {
-    q: 'Based on the location, the app announces: <code style="color:var(--gold);font-family:monospace;">"Turn left in 200m to reach your destination 4 minutes faster."</code> What is this?',
-    options: [
-      'Data — the system is recording a new value',
-      'Information — it describes where the driver is',
-      'Knowledge — actionable instruction derived from processed information',
-      'A sensor reading from the vehicle',
-    ],
-    correct: 2,
-    remedy: {
-      label: 'Q3 — What makes something Knowledge?',
-      text: '<strong>Knowledge</strong> is information that has been analysed and turned into an <em>actionable decision or instruction</em>. The sat-nav tells you what to <em>do</em> and what the <em>outcome</em> is (save 4 minutes). In exam answers, the Knowledge layer is always your Impact statement.'
-    }
-  },
-  {
-    q: 'In the N.E.I. Method, the <strong style="color:var(--green);">[I] Impact</strong> mark corresponds to which layer of the data hierarchy?',
-    options: [
-      'Data — identifying the raw input',
-      'Information — explaining what the data means',
-      'Knowledge — stating the business outcome or decision made',
-      'The [E] Explain layer — describing the mechanism',
-    ],
-    correct: 2,
-    remedy: {
-      label: 'Q4 — NEI and the data hierarchy',
-      text: 'The [I] Impact mark is always the <strong>Knowledge layer</strong> — it answers "what does the business gain?" Examiners award the third mark for a stated business outcome: saved time, reduced cost, increased revenue, prevented loss. Without it you have N+E but no Knowledge, and you lose the mark most students drop.'
-    }
-  }
-];
-
-let kcCurrentQ = 0;
-let kcScore    = 0;
-let kcWrongQs  = [];
-let kcPipState = ['active','','','']; // 'active' | 'done' | 'wrong' | ''
-
-/* ─── OPEN ───────────────────────────────────────────────────────── */
-function openKnowledgeCheck() {
-  kcCurrentQ  = 0;
-  kcScore     = 0;
-  kcWrongQs   = [];
-  kcPipState  = ['active','','',''];
-  document.getElementById('kc-overlay').classList.add('active');
-  kcRenderQuestion();
-}
-
-function closeKnowledgeCheck() {
-  document.getElementById('kc-overlay').classList.remove('active');
-}
-
-/* ─── RENDER QUESTION (full innerHTML rebuild) ───────────────────── */
-function kcRenderQuestion() {
-  const q      = KC_QUESTIONS[kcCurrentQ];
-  const letters = ['A','B','C','D'];
-
-  const pipsHtml = kcPipState.map((state, i) =>
-    `<div class="kc-pip ${state}" id="kc-pip-${i}"></div>`
-  ).join('');
-
-  const optionsHtml = q.options.map((text, idx) =>
-    `<div class="kc-option" onclick="kcSelectAnswer(${idx})">
-       <span class="kc-opt-letter">${letters[idx]}</span>${text}
-     </div>`
-  ).join('');
-
-  document.getElementById('kc-body').innerHTML = `
-    <div class="kc-progress-row">
-      <div class="kc-pips">${pipsHtml}</div>
-      <div class="kc-q-counter">QUESTION ${kcCurrentQ + 1} / 4</div>
-    </div>
-    <div class="kc-question">
-      <span class="kc-q-label">Q${kcCurrentQ + 1} //</span>
-      ${q.q}
-    </div>
-    <div class="kc-options" id="kc-options-wrap">
-      ${optionsHtml}
-    </div>
-    <div id="kc-fb" style="display:none;" class="kc-instant-feedback"></div>
-    <button class="kc-next-btn" id="kc-next-btn" style="display:none;" onclick="kcNextQuestion()">
-      ${kcCurrentQ < 3 ? 'NEXT QUESTION ⟶' : 'SEE RESULTS ⟶'}
-    </button>
-  `;
-}
-
-/* ─── SELECT ANSWER ──────────────────────────────────────────────── */
-function kcSelectAnswer(selectedIdx) {
-  const q      = KC_QUESTIONS[kcCurrentQ];
-  const isRight = selectedIdx === q.correct;
-  const letters = ['A','B','C','D'];
-
-  // Lock all options + style them
-  const opts = document.querySelectorAll('#kc-options-wrap .kc-option');
-  opts.forEach((el, i) => {
-    el.onclick = null;
-    el.style.cursor = 'default';
-    if (i === selectedIdx)   el.classList.add(isRight ? 'correct' : 'wrong');
-    if (!isRight && i === q.correct) el.classList.add('reveal-correct');
-  });
-
-  // Update pip state
-  kcPipState[kcCurrentQ] = isRight ? 'done' : 'wrong';
-  const pip = document.getElementById(`kc-pip-${kcCurrentQ}`);
-  if (pip) { pip.className = `kc-pip ${kcPipState[kcCurrentQ]}`; }
-
-  // Score tracking
-  if (isRight) {
-    kcScore++;
-  } else {
-    kcWrongQs.push(kcCurrentQ);
-  }
-
-  // Feedback
-  const fb = document.getElementById('kc-fb');
-  const correct_confirmations = [
-    '✓ Correct — that\'s the examiner\'s definition.',
-    '✓ Correct — you understand the distinction.',
-    '✓ Correct — that\'s exactly how examiners frame it.',
-    '✓ Correct — and that\'s your Impact mark secured.'
-  ];
-  fb.style.display = 'block';
-  if (isRight) {
-    fb.className = 'kc-instant-feedback correct-fb';
-    fb.textContent = correct_confirmations[kcCurrentQ];
-  } else {
-    fb.className = 'kc-instant-feedback wrong-fb';
-    fb.innerHTML = `✗ Not quite. The correct answer was <strong style="color:var(--green);">${letters[q.correct]}: ${q.options[q.correct]}</strong>. AXIOM-7 will debrief you after all four questions.`;
-  }
-
-  // Show next button
-  document.getElementById('kc-next-btn').style.display = 'inline-block';
-}
-
-/* ─── NEXT QUESTION ──────────────────────────────────────────────── */
-function kcNextQuestion() {
-  kcCurrentQ++;
-  if (kcCurrentQ < KC_QUESTIONS.length) {
-    kcPipState[kcCurrentQ] = 'active';
-    kcRenderQuestion();
-  } else {
-    kcShowResult();
-  }
-}
-
-/* ─── SHOW RESULT ────────────────────────────────────────────────── */
-function kcShowResult() {
-  const passed = kcScore >= 3;
-
-  let remediationHtml = '';
-  if (!passed && kcWrongQs.length > 0) {
-    const cards = kcWrongQs.map(idx => {
-      const r = KC_QUESTIONS[idx].remedy;
-      return `<div class="kc-remedy-card">
-        <div class="remedy-q">▸ ${r.label}</div>
-        <div class="remedy-text">${r.text}</div>
-      </div>`;
-    }).join('');
-    remediationHtml = `
-      <div class="kc-remediation">
-        <div class="kc-remediation-title">▸ AXIOM-7 // TARGETED BRIEFING — GAPS IDENTIFIED</div>
-        ${cards}
-      </div>`;
-  }
-
-  document.getElementById('kc-body').innerHTML = `
-    <div class="kc-result active">
-      <div class="kc-result-icon">${passed ? '✅' : '⚠️'}</div>
-      <div class="kc-result-title ${passed ? 'pass' : 'fail'}">
-        ${passed ? 'PRIOR KNOWLEDGE CONFIRMED' : 'KNOWLEDGE GAP DETECTED'}
-      </div>
-      <div class="kc-result-score">
-        SCORE: <span>${kcScore} / 4</span> — ${passed
-          ? 'Proceeding to mission.'
-          : `AXIOM-7 has identified ${kcWrongQs.length} gap${kcWrongQs.length > 1 ? 's' : ''} to address.`}
-      </div>
-      ${remediationHtml}
-      <button class="kc-proceed-btn ${passed ? '' : 'gold-btn'}" onclick="kcProceed()">
-        ${passed ? '⟶ ENTER THE MISSION' : '⟶ UNDERSTOOD — PROCEED TO MISSION'}
-      </button>
-    </div>
-  `;
-}
-
-/* ─── PROCEED ────────────────────────────────────────────────────── */
-function kcProceed() {
-  const passed = kcScore >= 3;
-  closeKnowledgeCheck();
-
-  const overlay = document.getElementById('reboot-overlay');
-  const line1   = document.getElementById('rb-line1');
-  const line2   = document.getElementById('rb-line2');
-  const bar     = document.getElementById('rb-bar');
-
-  line1.style.opacity = '0';
-  line2.style.opacity = '0';
-  bar.style.transition = 'none';
-  bar.style.width = '0%';
-
-  line1.textContent = passed ? 'PRIOR KNOWLEDGE CONFIRMED' : 'GAPS ADDRESSED — KNOWLEDGE UPDATED';
-  line2.textContent = passed ? 'CLEARANCE GRANTED — ENTERING MISSION' : 'PROCEEDING TO MISSION TERMINAL';
-
-  overlay.style.display = 'flex';
-  setTimeout(() => { line1.style.opacity = '1'; }, 100);
-  setTimeout(() => { line2.style.opacity = '1'; }, 500);
-  setTimeout(() => {
-    bar.style.transition = `width ${passed ? '0.8s' : '1.0s'} ease`;
-    bar.style.width = '100%';
-  }, 700);
-  setTimeout(() => {
-    overlay.style.display = 'none';
-    line1.style.opacity = '0';
-    line2.style.opacity = '0';
-    bar.style.transition = 'none';
-    bar.style.width = '0%';
-    goScene(2);
-  }, passed ? 1600 : 1900);
-}
-</script>
-
-<!-- ================================================================ -->
-<div id="kc-overlay">
-  <div class="kc-panel">
-    <div class="corner-tl"></div>
-    <div class="corner-br"></div>
-
-    <!-- HEADER -->
-    <div class="kc-header">
-      <div class="kc-avatar">🤖</div>
-      <div class="kc-header-text">
-        <div class="kc-title">AXIOM-7 // DIAGNOSTIC CHECK</div>
-        <div class="kc-sub">▸ CONTENT AREA 6.1.1 // PRIOR KNOWLEDGE SCAN // 4 QUESTIONS</div>
-      </div>
-    </div>
-    <hr class="kc-divider">
-
-    <!-- JS renders everything inside here -->
-    <div id="kc-body"></div>
-
-  </div>
-</div>
-
 </body>
 </html>
