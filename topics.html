@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Index — The Mark Scheme Method®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="./firebase-config.js"></script>
+<style>
+:root {
+  --void:#0D1117; --panel:rgba(255,255,255,0.04); --border:rgba(255,255,255,0.08);
+  --green:#39FF14; --green-glow:rgba(57,255,20,0.4); --green-bg:rgba(57,255,20,0.06);
+  --gold:#FFD700;  --gold-glow:rgba(255,215,0,0.4);  --gold-bg:rgba(255,215,0,0.06);
+  --red:#FF3B3B; --amber:#FF9500; --blue:#38BDF8;
+  --ink:#E8EDF3; --dim:rgba(232,237,243,0.45); --ghost:rgba(232,237,243,0.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Rajdhani',sans-serif;background:var(--void);color:var(--ink);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(57,255,20,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,0.018) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.05) 2px,rgba(0,0,0,0.05) 4px);pointer-events:none;z-index:1;}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:56px;z-index:100;background:rgba(13,17,23,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;}
+.logo{font-family:'Orbitron',monospace;font-size:12px;font-weight:900;letter-spacing:3px;color:var(--green);text-shadow:0 0 20px var(--green-glow);}
+.logo span{color:var(--gold);}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.rank-chip{display:flex;flex-direction:column;align-items:flex-end;}
+.rank-lbl{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--dim);}
+.rank-val{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--gold);text-shadow:0 0 10px var(--gold-glow);}
+.sys-time{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);}
+.live-pill{display:flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green);letter-spacing:2px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green-glow);animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.nav-links{display:flex;gap:2px;}
+.nav-link{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--dim);padding:5px 12px;border-radius:4px;text-decoration:none;transition:all 0.2s;}
+.nav-link:hover{color:var(--ink);background:var(--panel);}
+.nav-link.active{color:var(--green);background:var(--green-bg);border:1px solid rgba(57,255,20,0.22);}
+
+/* PAGE */
+.page{position:relative;z-index:2;padding:74px 28px 90px;max-width:1200px;margin:0 auto;}
+
+/* RECOMMENDATION BANNER */
+.rec-banner{display:none;margin-bottom:20px;background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:14px 18px;align-items:center;gap:12px;}
+.rec-banner.on{display:flex;}
+.rec-icon{font-size:20px;flex-shrink:0;}
+.rec-body{flex:1;}
+.rec-tag{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#C084FC;margin-bottom:3px;}
+.rec-msg{font-size:14px;font-weight:500;}
+.rec-actions{display:flex;gap:8px;flex-shrink:0;}
+.rbtn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;padding:6px 14px;border-radius:5px;cursor:pointer;border:1px solid;transition:all 0.2s;}
+.rbtn-go{color:#C084FC;border-color:rgba(168,85,247,0.3);background:rgba(168,85,247,0.08);}
+.rbtn-go:hover{background:rgba(168,85,247,0.18);}
+.rbtn-close{color:var(--dim);border-color:var(--border);background:transparent;}
+.rbtn-close:hover{color:var(--ink);}
+
+/* PAGE HEADER */
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:28px;}
+.hdr-left{}
+.eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--dim);margin-bottom:10px;}
+.page-title{font-family:'Orbitron',monospace;font-size:clamp(22px,3.5vw,32px);font-weight:900;line-height:1.1;margin-bottom:8px;}
+.page-title .g{color:var(--green);text-shadow:0 0 30px var(--green-glow);}
+.page-sub{font-size:15px;color:var(--dim);max-width:600px;line-height:1.5;}
+.exam-chip{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--red);background:rgba(255,59,59,0.07);border:1px solid rgba(255,59,59,0.22);border-radius:20px;padding:6px 14px;display:none;align-items:center;gap:6px;margin-top:76px;}
+.exam-chip.on{display:flex;}
+.pulse{width:5px;height:5px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red);animation:blink 1.5s infinite;}
+
+/* CONTROLS */
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+.flt{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;padding:6px 14px;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:var(--panel);color:var(--dim);transition:all 0.2s;}
+.flt:hover{border-color:rgba(57,255,20,0.25);color:var(--ink);}
+.flt.on{background:var(--green-bg);border-color:rgba(57,255,20,0.35);color:var(--green);}
+.ctrl-sep{flex:1;}
+.sort-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);}
+.sort-sel{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ink);background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:5px 10px;cursor:pointer;outline:none;}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;}
+@media(max-width:760px){.grid{grid-template-columns:1fr;}}
+
+/* CARD */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:border-color 0.25s,box-shadow 0.25s,transform 0.2s;}
+.card:hover{border-color:rgba(57,255,20,0.18);box-shadow:0 20px 60px rgba(57,255,20,0.06),0 4px 20px rgba(0,0,0,0.4);transform:translateY(-3px);}
+.card.done{border-color:rgba(57,255,20,0.12);}
+.card.done:hover{border-color:rgba(57,255,20,0.3);box-shadow:0 20px 60px rgba(57,255,20,0.09),0 4px 20px rgba(0,0,0,0.4);}
+.card.locked .c-title,.card.locked .c-sub{opacity:0.3;}
+
+.c-bar{height:2px;background:linear-gradient(90deg,var(--green),rgba(57,255,20,0));opacity:0;transition:opacity 0.3s;}
+.card:hover .c-bar,.card.done .c-bar{opacity:0.5;}
+
+.c-body{padding:22px 22px 18px;}
+.c-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px;}
+.c-info{}
+.c-code{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:5px;}
+.c-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;line-height:1.25;margin-bottom:5px;}
+.c-sub{font-size:13px;color:var(--dim);line-height:1.45;max-width:240px;}
+.c-locked-tag{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:3px 8px;}
+
+/* RING */
+.ring-wrap{flex-shrink:0;position:relative;width:56px;height:56px;}
+.ring-wrap svg{display:block;transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:4;}
+.ring-fg{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);}
+.ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--ink);}
+
+/* STATS */
+.c-stats{display:flex;gap:16px;padding-top:12px;border-top:1px solid var(--border);margin-bottom:16px;}
+.st{display:flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:10px;}
+.st.xp{color:rgba(255,215,0,0.8);}
+.st.diff{color:rgba(255,149,0,0.8);}
+.st.done{color:rgba(57,255,20,0.8);}
+.pips{display:flex;gap:3px;}
+.pip{width:11px;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);}
+.pip.easy{background:var(--green);}
+.pip.medium{background:var(--amber);}
+.pip.hard{background:var(--red);}
+
+/* ACTIONS */
+.c-actions{display:flex;gap:8px;}
+.btn-launch{flex:1;position:relative;overflow:hidden;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--green);background:transparent;border:1px solid rgba(57,255,20,0.35);border-radius:6px;padding:10px 14px;cursor:pointer;transition:color 0.25s;}
+.btn-launch::before{content:'';position:absolute;inset:0;background:var(--green);transform:translateX(-100%);transition:transform 0.3s ease;}
+.btn-launch:hover::before{transform:translateX(0);}
+.btn-launch:hover{color:var(--void);}
+.btn-launch span{position:relative;z-index:1;}
+.btn-launch.repeat{color:var(--green);}
+.btn-launch.soon{color:var(--dim);border-color:var(--border);cursor:not-allowed;}
+.btn-launch.soon::before{display:none;}
+.btn-extra{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);background:transparent;border:1px solid var(--border);border-radius:6px;padding:10px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all 0.2s;white-space:nowrap;}
+.btn-extra .sup{font-size:8px;color:var(--amber);}
+.btn-extra:hover:not([disabled]){color:var(--amber);border-color:rgba(255,149,0,0.3);background:rgba(255,149,0,0.05);}
+.btn-extra[disabled]{opacity:0.3;cursor:not-allowed;}
+
+/* PROGRESS HUD */
+.prog-hud{position:fixed;bottom:26px;right:26px;z-index:50;background:rgba(10,16,26,0.97);border:1px solid var(--border);border-radius:10px;padding:14px 18px;min-width:195px;box-shadow:0 4px 32px rgba(0,0,0,0.5);}
+.hud-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--green);margin-bottom:10px;}
+.hud-track{height:4px;border-radius:2px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:8px;}
+.hud-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+.hud-row{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);}
+.hud-pct{color:var(--green);font-weight:600;}
+
+/* FOOTER */
+.footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.footer-brand{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:3px;color:var(--ghost);}
+.footer-brand span{color:rgba(255,215,0,0.25);}
+.footer-note{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ghost);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="logo">MARK SCHEME <span>METHOD</span>®</div>
+  <div class="topbar-right">
+    <div class="rank-chip">
+      <span class="rank-lbl">RANK</span>
+      <span class="rank-val" id="topRank">TRAINEE</span>
+    </div>
+    <div class="sys-time" id="sysTime">SYS://LOADING</div>
+    <div class="live-pill"><div class="live-dot"></div>PLATFORM LIVE</div>
+    <nav class="nav-links">
+      <a href="./topics.html" class="nav-link active">TOPICS</a>
+      <a href="./index.html" class="nav-link">HUB</a>
+      <a href="./dashboard.html" class="nav-link">DASHBOARD</a>
+      <a href="./mark-schemes.html" class="nav-link">MARK SCHEMES</a>
+    </nav>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- TEACHER RECOMMENDATION -->
+  <div class="rec-banner" id="recBanner">
+    <div class="rec-icon">🎯</div>
+    <div class="rec-body">
+      <div class="rec-tag">// TEACHER SUGGESTION</div>
+      <div class="rec-msg" id="recMsg">Your teacher has suggested a topic.</div>
+    </div>
+    <div class="rec-actions">
+      <button class="rbtn rbtn-go" id="recGo">VIEW TOPIC →</button>
+      <button class="rbtn rbtn-close" id="recClose">DISMISS</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="eyebrow">CONTENT AREA 6 // T-LEVEL DIGITAL // TOPIC INDEX</div>
+      <h1 class="page-title">CHOOSE YOUR <span class="g">MISSION</span></h1>
+      <p class="page-sub">No queue. No assigned order. Pick a content area, open the module, and start practising. Your progress saves automatically.</p>
+    </div>
+    <div class="exam-chip" id="examChip"><span class="pulse"></span><span id="daysLeft">—</span> DAYS TO EXAM</div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="flt on" data-f="all">ALL TOPICS</button>
+    <button class="flt" data-f="in-progress">IN PROGRESS</button>
+    <button class="flt" data-f="complete">COMPLETE</button>
+    <button class="flt" data-f="not-started">NOT STARTED</button>
+    <span class="ctrl-sep"></span>
+    <span class="sort-lbl">SORT //</span>
+    <select class="sort-sel" id="sortSel">
+      <option value="default">DEFAULT</option>
+      <option value="recent">LAST ACCESSED</option>
+      <option value="completion">COMPLETION %</option>
+      <option value="xp">XP EARNED</option>
+    </select>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid" id="topicGrid"></div>
+
+  <div class="footer">
+    <div class="footer-brand">MARK SCHEME <span>METHOD</span>®</div>
+    <div class="footer-note">// T-LEVEL DIGITAL // CONTENT AREA 6 // LEARNER-LED</div>
+  </div>
+
+</div>
+
+<!-- PROGRESS HUD -->
+<div class="prog-hud">
+  <div class="hud-lbl">// CA6 COVERAGE</div>
+  <div class="hud-track"><div class="hud-fill" id="hudFill" style="width:0%"></div></div>
+  <div class="hud-row">
+    <span id="hudFrac">0 / 6 MODULES</span>
+    <span class="hud-pct" id="hudPct">0%</span>
+  </div>
+</div>
+
+<script>
+// ── FIREBASE ─────────────────────────────────────────────
+var db = null;
+try { firebase.initializeApp(window.MSM_FIREBASE_CONFIG); db = firebase.firestore(); }
+catch(e) { try { db = firebase.firestore(); } catch(e2){} }
+
+// ── CLOCK ─────────────────────────────────────────────────
+function tick() {
+  var n = new Date();
+  document.getElementById('sysTime').textContent =
+    'SYS://' + pad(n.getHours()) + ':' + pad(n.getMinutes()) + ':' + pad(n.getSeconds());
+}
+function pad(v) { return String(v).padStart(2,'0'); }
+tick(); setInterval(tick, 1000);
+
+// ── DATA ──────────────────────────────────────────────────
+var TOPICS = [
+  { id:'6-1-1', code:'CA 6.1.1', title:'Data, Information & Knowledge',
+    sub:'GPS Logistics scenario. DIK hierarchy, drag-and-drop, 3-mark technique.',
+    module:'./6-1-1/index.html', extra:'./content-areas/6-1-1/classroom.html',
+    diff:'easy', built:true, extraBuilt:true },
+  { id:'6-1-2', code:'CA 6.1.2', title:'Why Organisations Need Data',
+    sub:'E-Commerce Recommendation Engine. Targeted marketing, predictive modelling, business value.',
+    module:'./6-1-2/index.html', extra:'./content-areas/6-1-2/classroom.html',
+    diff:'medium', built:true, extraBuilt:true },
+  { id:'6-1-3', code:'CA 6.1.3', title:'How Data is Generated',
+    sub:'Smart Warehouse IoT scenario. Sensors, IoT, transactional, human, AI/ML sources.',
+    module:'./6-1-3/index.html', extra:'./content-areas/6-1-3/classroom.html',
+    diff:'medium', built:true, extraBuilt:true },
+  { id:'6-2', code:'CA 6.2', title:'Data Formats',
+    sub:'CSV, JSON, XML, fixed-width. ASCII vs binary. Compression. Data types.',
+    module:'./6-2/index.html', extra:'./content-areas/6-2/classroom.html',
+    diff:'medium', built:false, extraBuilt:false },
+  { id:'6-3', code:'CA 6.3', title:'Data Systems',
+    sub:'Wrangling, validation vs verification, GIGO, BIS, CRM, ERDs, visualisation.',
+    module:'./6-3/index.html', extra:'./content-areas/6-3/classroom.html',
+    diff:'hard', built:false, extraBuilt:false },
+  { id:'6-4', code:'CA 6.4', title:'Data Management',
+    sub:'Big data six Vs, warehousing, metadata, APIs, DPA/GDPR, access permissions.',
+    module:'./6-4/index.html', extra:'./content-areas/6-4/classroom.html',
+    diff:'hard', built:false, extraBuilt:false },
+];
+
+var RANKS = ['TRAINEE','DATA CADET','SIGNAL ANALYST','SYSTEMS OPERATOR','DATA STRATEGIST','INSIGHT ARCHITECT'];
+var DIFF_PIPS = { easy:1, medium:2, hard:3 };
+var CIRC = 2 * Math.PI * 24;
+
+// ── STATE ─────────────────────────────────────────────────
+var state = { sessions:{}, rec:null, filter:'all', sort:'default', enrol:null };
+
+// ── INIT ──────────────────────────────────────────────────
+(function() {
+  // Load localStorage progress (written by modules on completion)
+  TOPICS.forEach(function(t) {
+    state.sessions[t.id] = {
+      xp:  parseInt(localStorage.getItem('xp_'  + t.id) || '0'),
+      pct: parseInt(localStorage.getItem('pct_' + t.id) || '0'),
+      ts:  parseInt(localStorage.getItem('ts_'  + t.id) || '0')
+    };
+  });
+
+  // Rank
+  var rankIdx = parseInt(localStorage.getItem('msm_rank') || '0');
+  document.getElementById('topRank').textContent = RANKS[Math.min(rankIdx, RANKS.length - 1)];
+
+  // Enrolment
+  try { state.enrol = JSON.parse(localStorage.getItem('msm_enrolment') || 'null'); } catch(e){}
+
+  // Exam countdown
+  var examDate = localStorage.getItem('msm_exam_date');
+  if (examDate) {
+    var days = Math.ceil((new Date(examDate) - new Date()) / 86400000);
+    if (days > 0 && days < 200) {
+      document.getElementById('daysLeft').textContent = days;
+      document.getElementById('examChip').classList.add('on');
+    }
+  }
+
+  // Recommendation from Firebase
+  if (db && state.enrol && state.enrol.studentId) {
+    db.collection('recommendations').doc(state.enrol.studentId).get()
+      .then(function(snap) {
+        if (snap.exists && !snap.data().dismissed) {
+          state.rec = snap.data();
+          showRec();
+        }
+      }).catch(function(){});
+  }
+
+  render();
+})();
+
+// ── RECOMMENDATION ────────────────────────────────────────
+function showRec() {
+  var rec = state.rec;
+  if (!rec) return;
+  var topic = TOPICS.find(function(t) { return t.id === rec.moduleId; });
+  if (!topic) return;
+  var banner = document.getElementById('recBanner');
+  document.getElementById('recMsg').textContent =
+    (rec.message ? rec.message + ' — ' : 'Your teacher suggests: ') + topic.title;
+  banner.classList.add('on');
+  document.getElementById('recGo').onclick = function() { location.href = topic.module; };
+  document.getElementById('recClose').onclick = function() {
+    banner.classList.remove('on');
+    if (db && state.enrol && state.enrol.studentId) {
+      db.collection('recommendations').doc(state.enrol.studentId)
+        .update({ dismissed: true }).catch(function(){});
+    }
+  };
+}
+
+// ── CARD STATUS ───────────────────────────────────────────
+function status(t) {
+  var s = state.sessions[t.id];
+  if (!s || !s.pct) return 'not-started';
+  if (s.pct >= 80) return 'complete';
+  return 'in-progress';
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function render() {
+  renderCards();
+  renderHUD();
+}
+
+function renderCards() {
+  var list = TOPICS.slice();
+
+  if (state.sort === 'recent') {
+    list.sort(function(a,b) { return (state.sessions[b.id].ts||0) - (state.sessions[a.id].ts||0); });
+  } else if (state.sort === 'completion') {
+    list.sort(function(a,b) { return (state.sessions[b.id].pct||0) - (state.sessions[a.id].pct||0); });
+  } else if (state.sort === 'xp') {
+    list.sort(function(a,b) { return (state.sessions[b.id].xp||0) - (state.sessions[a.id].xp||0); });
+  }
+
+  var filtered = state.filter === 'all'
+    ? list
+    : list.filter(function(t) { return status(t) === state.filter; });
+
+  var grid = document.getElementById('topicGrid');
+  grid.innerHTML = '';
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;font-family:\'Share Tech Mono\',monospace;font-size:12px;color:var(--dim);">NO TOPICS MATCH THIS FILTER</div>';
+    return;
+  }
+
+  filtered.forEach(function(t) { grid.appendChild(buildCard(t)); });
+
+  setTimeout(function() {
+    filtered.forEach(function(t) { animateRing(t.id, state.sessions[t.id].pct || 0); });
+  }, 80);
+}
+
+function buildCard(t) {
+  var sess = state.sessions[t.id] || {};
+  var pct  = sess.pct || 0;
+  var xp   = sess.xp  || 0;
+  var done = pct >= 80;
+  var pipN = DIFF_PIPS[t.diff] || 1;
+
+  var pips = [1,2,3].map(function(n) {
+    return '<div class="pip' + (n <= pipN ? ' ' + t.diff : '') + '"></div>';
+  }).join('');
+
+  var launchTxt = !t.built ? '🔒 COMING SOON' : done ? '✓ PRACTISE AGAIN' : '⟶ LAUNCH MODULE';
+  var launchCls = !t.built ? ' soon' : done ? ' repeat' : '';
+  var launchAct = t.built ? 'onclick="location.href=\'' + t.module + '\'"' : 'disabled';
+
+  var extraAct = t.extraBuilt ? 'onclick="location.href=\'' + t.extra + '\'"' : 'disabled';
+
+  var card = document.createElement('div');
+  card.className = 'card' + (done ? ' done' : '') + (!t.built ? ' locked' : '');
+  card.innerHTML =
+    '<div class="c-bar"></div>' +
+    '<div class="c-body">' +
+      '<div class="c-head">' +
+        '<div class="c-info">' +
+          '<div class="c-code">// ' + t.code + ' // ' + t.diff.toUpperCase() + '</div>' +
+          '<div class="c-title">' + t.title + '</div>' +
+          '<div class="c-sub">' + t.sub + '</div>' +
+          (!t.built ? '<div class="c-locked-tag">🔒 COMING SOON</div>' : '') +
+        '</div>' +
+        '<div class="ring-wrap">' +
+          '<svg width="56" height="56" viewBox="0 0 56 56">' +
+            '<circle class="ring-bg" cx="28" cy="28" r="24"/>' +
+            '<circle class="ring-fg" id="rf-' + t.id + '" cx="28" cy="28" r="24"' +
+              ' stroke="' + (done ? 'var(--green)' : 'rgba(57,255,20,0.55)') + '"' +
+              ' stroke-dasharray="' + CIRC + '" stroke-dashoffset="' + CIRC + '"/>' +
+          '</svg>' +
+          '<div class="ring-pct" id="rp-' + t.id + '">0%</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="c-stats">' +
+        '<div class="st xp">⚡ ' + xp.toLocaleString() + ' XP</div>' +
+        '<div class="st diff"><div class="pips">' + pips + '</div>&nbsp;' + t.diff.toUpperCase() + '</div>' +
+        (done ? '<div class="st done">✓ COMPLETE</div>' : '') +
+      '</div>' +
+      '<div class="c-actions">' +
+        '<button class="btn-launch' + launchCls + '" ' + launchAct + '><span>' + launchTxt + '</span></button>' +
+        '<button class="btn-extra" ' + extraAct + '><span class="sup">EXTRA</span>LESSON</button>' +
+      '</div>' +
+    '</div>';
+
+  return card;
+}
+
+function animateRing(id, targetPct) {
+  var el  = document.getElementById('rf-' + id);
+  var pel = document.getElementById('rp-' + id);
+  if (!el) return;
+  el.style.strokeDashoffset = CIRC - (CIRC * Math.min(targetPct, 100) / 100);
+  if (!targetPct) return;
+  var count = 0, tgt = Math.round(targetPct), step = tgt / 28;
+  var iv = setInterval(function() {
+    count = Math.min(count + step, tgt);
+    if (pel) pel.textContent = Math.round(count) + '%';
+    if (count >= tgt) clearInterval(iv);
+  }, 20);
+}
+
+function renderHUD() {
+  var builtList = TOPICS.filter(function(t) { return t.built; });
+  var done = builtList.filter(function(t) { return (state.sessions[t.id] || {}).pct >= 80; }).length;
+  var pct  = Math.round((done / builtList.length) * 100) || 0;
+  document.getElementById('hudFill').style.width = pct + '%';
+  document.getElementById('hudFrac').textContent = done + ' / ' + TOPICS.length + ' MODULES';
+  document.getElementById('hudPct').textContent  = pct + '%';
+}
+
+// ── FILTER ────────────────────────────────────────────────
+document.querySelectorAll('.flt').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.flt').forEach(function(b) { b.classList.remove('on'); });
+    btn.classList.add('on');
+    state.filter = btn.dataset.f;
+    renderCards();
+  });
+});
+
+// ── SORT ──────────────────────────────────────────────────
+document.getElementById('sortSel').addEventListener('change', function() {
+  state.sort = this.value;
+  renderCards();
+});
+</script>
+</body>
+</html>
