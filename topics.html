@@ -119,16 +119,40 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .pip.off{background:rgba(255,255,255,0.07);}
 .xp-pill{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);color:var(--gold);padding:3px 10px;border-radius:99px;}
 
-/* Card footer */
-.card-footer{padding:14px 20px 20px;display:flex;gap:8px;}
-.btn-launch{flex:1;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--accent,var(--green));border:none;border-radius:8px;padding:10px 16px;cursor:pointer;text-align:center;text-decoration:none;display:block;transition:opacity .2s,box-shadow .2s,transform .15s;box-shadow:0 0 20px rgba(57,255,20,0.25);position:relative;overflow:hidden;}
-.btn-launch::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%);}
-.btn-launch:hover{opacity:.9;transform:translateY(-1px);}
-.btn-learn{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap;}
-.btn-learn:hover{color:var(--accent,var(--green));border-color:rgba(57,255,20,0.3);}
+/* Card footer — two-path chooser */
+.card-divider{height:1px;background:var(--border);margin:12px 0 0;}
+.card-paths{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.path{padding:14px 16px 18px;display:flex;flex-direction:column;gap:8px;position:relative;}
+.path-learn{border-right:1px solid var(--border);}
+.path-header{display:flex;align-items:center;gap:6px;}
+.path-icon{font-size:14px;}
+.path-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);}
+.path-status{font-family:'Share Tech Mono',monospace;font-size:9px;margin-top:1px;}
+.path-status.ft-done{color:var(--green);}
+.path-status.ft-partial{color:var(--gold);}
+.path-status.ft-none{color:var(--muted);}
+.path-status.mission-done{color:var(--green);}
+.path-status.mission-ready{color:var(--accent,var(--green));}
+.path-status.mission-skip{color:var(--amber);}
 
-@keyframes fieldReady{0%,100%{box-shadow:0 0 20px rgba(57,255,20,0.3);}50%{box-shadow:0 0 40px rgba(57,255,20,0.7),0 0 60px rgba(57,255,20,0.3);}}
-.btn-launch.pulse{animation:fieldReady 2s ease-in-out infinite;}
+/* Path buttons */
+.btn-path{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:1px;border-radius:7px;padding:9px 10px;text-align:center;text-decoration:none;display:block;cursor:pointer;border:none;transition:all .2s;position:relative;overflow:hidden;margin-top:2px;}
+.btn-path::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,transparent 60%);}
+
+/* Learn button — cyan tinted */
+.btn-path-learn{color:#fff;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3);}
+.btn-path-learn:hover{background:rgba(56,189,248,0.2);border-color:rgba(56,189,248,0.5);box-shadow:0 0 14px rgba(56,189,248,0.2);}
+.btn-path-learn.ft-complete{background:rgba(57,255,20,0.08);border-color:rgba(57,255,20,0.3);color:var(--green);}
+.btn-path-learn.ft-complete:hover{background:rgba(57,255,20,0.14);}
+
+/* Mission button — accent filled */
+.btn-path-mission{color:var(--void);background:var(--accent,var(--green));box-shadow:0 0 16px rgba(57,255,20,0.2);}
+.btn-path-mission:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 0 24px rgba(57,255,20,0.35);}
+@keyframes missionPulse{0%,100%{box-shadow:0 0 16px rgba(57,255,20,0.3);}50%{box-shadow:0 0 32px rgba(57,255,20,0.65),0 0 48px rgba(57,255,20,0.2);}}
+.btn-path-mission.pulse{animation:missionPulse 2s ease-in-out infinite;}
+
+/* "Skip ahead" nudge label */
+.skip-nudge{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;color:var(--amber);opacity:0.8;margin-top:2px;text-align:center;}
 
 /* FOOTER */
 .footer-bar{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(13,17,23,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);height:44px;display:flex;align-items:center;padding:0 40px;gap:28px;}
@@ -166,7 +190,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div>
       <div class="hero-eyebrow">CONTENT AREA 6 — DATA IN ORGANISATIONS</div>
       <h1>TOPIC <span>INDEX</span></h1>
-      <p class="hero-sub">Select a content area to begin your mission. Progress is tracked automatically. Examiners reward structure — learn the N.E.I. method and every answer earns its marks.</p>
+      <p class="hero-sub">Choose your path for each topic — build knowledge with Field Training first, or jump straight into the Exam Mission if you're confident. Your call.</p>
     </div>
     <div class="hero-right">
       <div class="countdown-card">
@@ -239,9 +263,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="xp-pill">+150 XP</div>
       </div>
     </div>
-    <div class="card-footer">
-      <a href="6-1-1/index.html" class="btn-launch pulse">⟶ CONTINUE MODULE</a>
-      <a href="learn/6-1-1/" class="btn-learn">📖 LEARN</a>
+    <div class="card-divider"></div>
+    <div class="card-paths">
+      <div class="path path-learn">
+        <div class="path-header"><span class="path-icon">📖</span><span class="path-label">FIELD TRAINING</span></div>
+        <div class="path-status ft-partial" id="ft-status-611">3 / 6 stations</div>
+        <a href="learn/6-1-1/" class="btn-path btn-path-learn">CONTINUE TRAINING</a>
+      </div>
+      <div class="path path-mission">
+        <div class="path-header"><span class="path-icon">⚡</span><span class="path-label">EXAM MISSION</span></div>
+        <div class="path-status mission-ready" id="ms-status-611">65% complete</div>
+        <a href="6-1-1/index.html" class="btn-path btn-path-mission pulse">⟶ MISSION</a>
+      </div>
     </div>
   </div>
 
@@ -270,9 +303,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="xp-pill">+150 XP</div>
       </div>
     </div>
-    <div class="card-footer">
-      <a href="6-1-2/index.html" class="btn-launch">⟶ START MODULE</a>
-      <a href="learn/6-1-2/" class="btn-learn">📖 LEARN</a>
+    <div class="card-divider"></div>
+    <div class="card-paths">
+      <div class="path path-learn">
+        <div class="path-header"><span class="path-icon">📖</span><span class="path-label">FIELD TRAINING</span></div>
+        <div class="path-status ft-none" id="ft-status-612">Not started</div>
+        <a href="learn/6-1-2/" class="btn-path btn-path-learn">START TRAINING</a>
+      </div>
+      <div class="path path-mission">
+        <div class="path-header"><span class="path-icon">⚡</span><span class="path-label">EXAM MISSION</span></div>
+        <div class="path-status mission-skip" id="ms-status-612">Skip ahead</div>
+        <a href="6-1-2/index.html" class="btn-path btn-path-mission">⟶ MISSION</a>
+        <div class="skip-nudge">RECOMMENDED: DO FIELD TRAINING FIRST</div>
+      </div>
     </div>
   </div>
 
@@ -301,9 +344,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="xp-pill">+150 XP</div>
       </div>
     </div>
-    <div class="card-footer">
-      <a href="6-1-3/index.html" class="btn-launch">⟶ START MODULE</a>
-      <a href="learn/6-1-3/" class="btn-learn">📖 LEARN</a>
+    <div class="card-divider"></div>
+    <div class="card-paths">
+      <div class="path path-learn">
+        <div class="path-header"><span class="path-icon">📖</span><span class="path-label">FIELD TRAINING</span></div>
+        <div class="path-status ft-none" id="ft-status-613">Not started</div>
+        <a href="learn/6-1-3/" class="btn-path btn-path-learn">START TRAINING</a>
+      </div>
+      <div class="path path-mission">
+        <div class="path-header"><span class="path-icon">⚡</span><span class="path-label">EXAM MISSION</span></div>
+        <div class="path-status mission-skip" id="ms-status-613">Skip ahead</div>
+        <a href="6-1-3/index.html" class="btn-path btn-path-mission">⟶ MISSION</a>
+        <div class="skip-nudge">RECOMMENDED: DO FIELD TRAINING FIRST</div>
+      </div>
     </div>
   </div>
 
@@ -332,9 +385,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="xp-pill">+150 XP</div>
       </div>
     </div>
-    <div class="card-footer">
-      <a href="6-2/index.html" class="btn-launch">⟶ START MODULE</a>
-      <a href="learn/6-2/" class="btn-learn">📖 LEARN</a>
+    <div class="card-divider"></div>
+    <div class="card-paths">
+      <div class="path path-learn">
+        <div class="path-header"><span class="path-icon">📖</span><span class="path-label">FIELD TRAINING</span></div>
+        <div class="path-status ft-none" id="ft-status-62">Not started</div>
+        <a href="learn/6-2/" class="btn-path btn-path-learn">START TRAINING</a>
+      </div>
+      <div class="path path-mission">
+        <div class="path-header"><span class="path-icon">⚡</span><span class="path-label">EXAM MISSION</span></div>
+        <div class="path-status mission-skip" id="ms-status-62">Skip ahead</div>
+        <a href="6-2/index.html" class="btn-path btn-path-mission">⟶ MISSION</a>
+        <div class="skip-nudge">RECOMMENDED: DO FIELD TRAINING FIRST</div>
+      </div>
     </div>
   </div>
 
@@ -363,9 +426,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="xp-pill">+175 XP</div>
       </div>
     </div>
-    <div class="card-footer">
-      <a href="6-3/index.html" class="btn-launch">⟶ START MODULE</a>
-      <a href="learn/6-3/" class="btn-learn">📖 LEARN</a>
+    <div class="card-divider"></div>
+    <div class="card-paths">
+      <div class="path path-learn">
+        <div class="path-header"><span class="path-icon">📖</span><span class="path-label">FIELD TRAINING</span></div>
+        <div class="path-status ft-none" id="ft-status-63">Not started</div>
+        <a href="learn/6-3/" class="btn-path btn-path-learn">START TRAINING</a>
+      </div>
+      <div class="path path-mission">
+        <div class="path-header"><span class="path-icon">⚡</span><span class="path-label">EXAM MISSION</span></div>
+        <div class="path-status mission-skip" id="ms-status-63">Skip ahead</div>
+        <a href="6-3/index.html" class="btn-path btn-path-mission">⟶ MISSION</a>
+        <div class="skip-nudge">RECOMMENDED: DO FIELD TRAINING FIRST</div>
+      </div>
     </div>
   </div>
 
@@ -394,9 +467,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="xp-pill">+200 XP</div>
       </div>
     </div>
-    <div class="card-footer">
-      <a href="6-4/index.html" class="btn-launch">⟶ START MODULE</a>
-      <a href="learn/6-4/" class="btn-learn">📖 LEARN</a>
+    <div class="card-divider"></div>
+    <div class="card-paths">
+      <div class="path path-learn">
+        <div class="path-header"><span class="path-icon">📖</span><span class="path-label">FIELD TRAINING</span></div>
+        <div class="path-status ft-none" id="ft-status-64">Not started</div>
+        <a href="learn/6-4/" class="btn-path btn-path-learn">START TRAINING</a>
+      </div>
+      <div class="path path-mission">
+        <div class="path-header"><span class="path-icon">⚡</span><span class="path-label">EXAM MISSION</span></div>
+        <div class="path-status mission-skip" id="ms-status-64">Skip ahead</div>
+        <a href="6-4/index.html" class="btn-path btn-path-mission">⟶ MISSION</a>
+        <div class="skip-nudge">RECOMMENDED: DO FIELD TRAINING FIRST</div>
+      </div>
     </div>
   </div>
 
@@ -458,6 +541,59 @@ function initFilters(){
   });
 }
 
+function initPathStatuses(){
+  const MODULES={
+    '611':{ftKey:'msm_ft_611',mBadge:'raw_signal'},
+    '612':{ftKey:'msm_ft_612',mBadge:'market_intelligence'},
+    '613':{ftKey:'msm_ft_613',mBadge:'signal_mapper'},
+    '62' :{ftKey:'msm_ft_62', mBadge:'data_architect'},
+    '63' :{ftKey:'msm_ft_63', mBadge:'systems_analyst'},
+    '64' :{ftKey:'msm_ft_64', mBadge:'compliance_officer'},
+  };
+  const badges=JSON.parse(localStorage.getItem('msm_badges')||'[]');
+  Object.entries(MODULES).forEach(([id,cfg])=>{
+    const ftData=JSON.parse(localStorage.getItem(cfg.ftKey)||'{"stations":[]}');
+    const ftDone=ftData.stations.filter(Boolean).length;
+    const ftEl=document.getElementById('ft-status-'+id);
+    const msEl=document.getElementById('ms-status-'+id);
+    const skipNudge=msEl&&msEl.closest('.path-mission')&&msEl.closest('.path-mission').querySelector('.skip-nudge');
+    const missionBtn=msEl&&msEl.closest('.path-mission')&&msEl.closest('.path-mission').querySelector('.btn-path-mission');
+    const learnBtn=ftEl&&ftEl.closest('.path-learn')&&ftEl.closest('.path-learn').querySelector('.btn-path-learn');
+    const missionDone=badges.includes(cfg.mBadge);
+    // Field Training status
+    if(ftEl){
+      if(ftDone===6){
+        ftEl.className='path-status ft-done';
+        ftEl.textContent='✓ All 6 stations complete';
+        if(learnBtn){learnBtn.className='btn-path btn-path-learn ft-complete';learnBtn.textContent='REVIEW TRAINING';}
+      }else if(ftDone>0){
+        ftEl.className='path-status ft-partial';
+        ftEl.textContent=ftDone+' / 6 stations done';
+        if(learnBtn)learnBtn.textContent='CONTINUE TRAINING';
+      }else{
+        ftEl.className='path-status ft-none';
+        ftEl.textContent='Not started';
+      }
+    }
+    // Mission status
+    if(msEl){
+      if(missionDone){
+        msEl.className='path-status mission-done';
+        msEl.textContent='✓ Complete';
+        if(skipNudge)skipNudge.style.display='none';
+      }else if(ftDone===6){
+        msEl.className='path-status mission-ready';
+        msEl.textContent='Field Ready — go!';
+        if(skipNudge)skipNudge.style.display='none';
+        if(missionBtn)missionBtn.classList.add('pulse');
+      }else if(ftDone>0){
+        msEl.className='path-status mission-skip';
+        msEl.textContent='Training in progress';
+      }
+    }
+  });
+}
+
 function initRec(){
   if(localStorage.getItem('msm_rec_dis'))document.getElementById('recBanner').style.display='none';
   document.getElementById('recDismiss').addEventListener('click',()=>{
@@ -467,7 +603,7 @@ function initRec(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  initTopBar();initRings();initCoverage();initCountdown();initFilters();initRec();
+  initTopBar();initRings();initCoverage();initCountdown();initFilters();initRec();initPathStatuses();
 });
 </script>
 </body>
