@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Navigation Chart — The Mark Scheme Method®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #0D1117;
+  --green: #39FF14;
+  --gold: #FFD700;
+  --red: #FF3B3B;
+  --amber: #FF9500;
+  --cyan: #38BDF8;
+  --purple: #A855F7;
+  --teal: #00D4B8;
+  --ink: #E8EDF3;
+  --dim: rgba(232,237,243,0.45);
+  --panel: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+
+  --z1: #F59E0B;
+  --z2: #6366F1;
+  --z3: #39FF14;
+  --z4: #A855F7;
+  --z5: #64748B;
+
+  --built-bg: rgba(57,255,20,0.07);
+  --built-border: rgba(57,255,20,0.35);
+  --planned-bg: rgba(251,191,36,0.07);
+  --planned-border: rgba(251,191,36,0.35);
+  --future-bg: rgba(100,116,139,0.07);
+  --future-border: rgba(100,116,139,0.25);
+  --blocker-bg: rgba(255,59,59,0.07);
+  --blocker-border: rgba(255,59,59,0.35);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--void);
+  color: var(--ink);
+  font-family: 'Rajdhani', sans-serif;
+  min-height: 100vh;
+  overflow-x: auto;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(57,255,20,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.012) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── TOPBAR ─────────────────────────────────────────────── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,17,23,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px; font-weight: 900; letter-spacing: 3px;
+  color: var(--green);
+  text-shadow: 0 0 20px rgba(57,255,20,0.5);
+}
+.logo span { color: var(--gold); }
+.topbar-right { display: flex; align-items: center; gap: 24px; }
+.live { display: flex; align-items: center; gap: 6px; font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 2px; }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── LEGEND ─────────────────────────────────────────────── */
+.legend {
+  display: flex; align-items: center; gap: 18px;
+  font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 1px;
+}
+.leg { display: flex; align-items: center; gap: 6px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 2px; }
+.leg-dot.built   { background: var(--green); box-shadow: 0 0 6px rgba(57,255,20,0.6); }
+.leg-dot.planned { background: var(--amber); }
+.leg-dot.future  { background: var(--z5); }
+.leg-dot.blocker { background: var(--red); }
+
+/* ── CANVAS ─────────────────────────────────────────────── */
+.canvas-wrap {
+  position: relative; z-index: 1;
+  padding: 40px 48px 80px;
+  min-width: 1400px;
+}
+
+/* ── CHART TITLE ────────────────────────────────────────── */
+.chart-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px; font-weight: 700; letter-spacing: 4px;
+  color: var(--dim);
+  margin-bottom: 36px;
+  display: flex; align-items: center; gap: 12px;
+}
+.chart-title::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+/* ── ZONE ROWS ──────────────────────────────────────────── */
+.zone-row {
+  display: flex; align-items: flex-start; gap: 0;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.zone-label {
+  width: 120px;
+  flex-shrink: 0;
+  padding-top: 18px;
+  padding-right: 16px;
+}
+.zone-tag {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px; font-weight: 700; letter-spacing: 2px;
+  writing-mode: horizontal-lr;
+  white-space: nowrap;
+}
+.zone-name {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px; letter-spacing: 1px; color: var(--dim);
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+.zone-content {
+  flex: 1;
+  border-left: 2px solid;
+  padding: 16px 0 16px 24px;
+  margin-bottom: 32px;
+}
+
+/* ── GROUP ROWS (sub-sections) ──────────────────────────── */
+.group {
+  margin-bottom: 20px;
+}
+.group-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; color: var(--dim);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.group-label::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--border);
+}
+
+.nodes { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+
+/* ── NODE ────────────────────────────────────────────────── */
+.node {
+  position: relative;
+  border-radius: 8px;
+  border: 1px solid;
+  padding: 10px 13px;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  min-width: 150px;
+  max-width: 190px;
+}
+.node:hover { transform: translateY(-2px); }
+
+.node.built   { background: var(--built-bg);   border-color: var(--built-border); }
+.node.planned { background: var(--planned-bg);  border-color: var(--planned-border); }
+.node.future  { background: var(--future-bg);   border-color: var(--future-border); }
+.node.blocker { background: var(--blocker-bg);  border-color: var(--blocker-border); }
+
+.node.built:hover   { box-shadow: 0 8px 32px rgba(57,255,20,0.15); }
+.node.planned:hover { box-shadow: 0 8px 32px rgba(255,149,0,0.15); }
+.node.future:hover  { box-shadow: 0 8px 32px rgba(100,116,139,0.15); }
+.node.blocker:hover { box-shadow: 0 8px 32px rgba(255,59,59,0.18); }
+
+.node-status {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px; letter-spacing: 1.5px;
+  margin-bottom: 5px;
+}
+.node.built   .node-status { color: var(--green); }
+.node.planned .node-status { color: var(--amber); }
+.node.future  .node-status { color: var(--z5); }
+.node.blocker .node-status { color: var(--red); }
+
+.node-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px; font-weight: 700; line-height: 1.3;
+  color: var(--ink);
+}
+.node-url {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px; color: var(--dim);
+  margin-top: 5px;
+}
+.node-desc {
+  font-size: 11px; color: var(--dim);
+  margin-top: 6px; line-height: 1.35;
+  display: none;
+}
+
+/* accent borders for modules */
+.node.m611 { border-color: rgba(57,255,20,0.45); }
+.node.m612 { border-color: rgba(255,215,0,0.45); }
+.node.m613 { border-color: rgba(57,255,20,0.45); }
+.node.m62  { border-color: rgba(56,189,248,0.45); }
+.node.m63  { border-color: rgba(168,85,247,0.45); }
+.node.m64  { border-color: rgba(0,212,184,0.45); }
+
+.node-badge {
+  display: inline-flex; align-items: center;
+  margin-top: 6px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px; letter-spacing: 1px;
+  padding: 2px 6px; border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  color: var(--dim);
+}
+
+/* ── MODULE ACCENT TAGS ─────────────────────────────────── */
+.accent-tag {
+  display: inline-block; width: 8px; height: 8px; border-radius: 2px;
+  margin-right: 5px; vertical-align: middle;
+}
+
+/* ── TOOLTIP ─────────────────────────────────────────────── */
+.tooltip {
+  position: fixed;
+  background: rgba(13,17,23,0.98);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 15px;
+  max-width: 280px;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.15s;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+}
+.tooltip.on { opacity: 1; }
+.tt-status { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 2px; margin-bottom: 5px; }
+.tt-title  { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+.tt-url    { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--dim); margin-bottom: 8px; }
+.tt-desc   { font-size: 12px; color: var(--dim); line-height: 1.45; }
+
+/* ── CONNECTORS (SVG) ───────────────────────────────────── */
+.connector-layer {
+  position: absolute;
+  inset: 0; pointer-events: none; z-index: 0;
+}
+
+/* ── FLOW ARROWS ─────────────────────────────────────────── */
+.flow-row {
+  display: flex; align-items: center;
+  gap: 0; margin-bottom: 32px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+.flow-arrow {
+  display: flex; align-items: center; flex-shrink: 0;
+}
+.arrow-line {
+  width: 32px; height: 2px;
+  background: linear-gradient(90deg, var(--border), rgba(57,255,20,0.3));
+  position: relative;
+}
+.arrow-line::after {
+  content: '';
+  position: absolute; right: -5px; top: -3px;
+  border: 4px solid transparent;
+  border-left: 6px solid rgba(57,255,20,0.5);
+}
+
+/* ── SECTION CONNECTOR VISUAL ───────────────────────────── */
+.tree-connector {
+  display: flex; align-items: flex-start; gap: 0; margin-bottom: 24px;
+}
+.tree-trunk {
+  width: 2px; background: var(--border); margin-right: 16px;
+  align-self: stretch; flex-shrink: 0;
+  border-radius: 1px;
+}
+.tree-branches { flex: 1; }
+
+/* ── MAIN FLOW DIAGRAM (top horizontal) ─────────────────── */
+.main-flow {
+  display: flex; align-items: center;
+  gap: 0; margin-bottom: 48px; flex-wrap: nowrap;
+  position: relative; z-index: 1;
+}
+.flow-node {
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; flex-shrink: 0;
+}
+.flow-box {
+  border-radius: 8px; border: 1px solid;
+  padding: 8px 14px;
+  font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700;
+  text-align: center; white-space: nowrap;
+}
+.flow-sub {
+  font-family: 'Share Tech Mono', monospace; font-size: 8px;
+  color: var(--dim); margin-top: 4px; text-align: center;
+  letter-spacing: 1px;
+}
+.flow-conn {
+  width: 40px; height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(57,255,20,0.3));
+  position: relative; flex-shrink: 0; align-self: center; margin-top: -10px;
+}
+.flow-conn::after {
+  content: ''; position: absolute; right: -5px; top: -4px;
+  border: 5px solid transparent;
+  border-left: 7px solid rgba(57,255,20,0.4);
+}
+.flow-conn.dotted {
+  background: none;
+  border-top: 2px dashed rgba(255,255,255,0.12);
+}
+.flow-conn.dotted::after { border-left-color: rgba(255,255,255,0.2); }
+
+/* ── ZONE COLORS ─────────────────────────────────────────── */
+.z1-color { color: var(--z1); }  .z1-border { border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.06); }
+.z2-color { color: var(--z2); }  .z2-border { border-color: rgba(99,102,241,0.35); background: rgba(99,102,241,0.06); }
+.z3-color { color: var(--z3); }  .z3-border { border-color: rgba(57,255,20,0.35);  background: rgba(57,255,20,0.06); }
+.z4-color { color: var(--purple); } .z4-border { border-color: rgba(168,85,247,0.35); background: rgba(168,85,247,0.06); }
+.z5-color { color: var(--z5); }  .z5-border { border-color: rgba(100,116,139,0.25); background: rgba(100,116,139,0.05); }
+
+/* ── STATS BAR ───────────────────────────────────────────── */
+.stats-bar {
+  display: flex; gap: 20px; margin-bottom: 40px; flex-wrap: wrap;
+}
+.stat-pill {
+  font-family: 'Share Tech Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; padding: 6px 14px; border-radius: 20px;
+  border: 1px solid; display: flex; align-items: center; gap: 6px;
+}
+.stat-pill.built   { color: var(--green); border-color: rgba(57,255,20,0.3);  background: rgba(57,255,20,0.05); }
+.stat-pill.planned { color: var(--amber); border-color: rgba(255,149,0,0.3);  background: rgba(255,149,0,0.05); }
+.stat-pill.future  { color: var(--z5);   border-color: rgba(100,116,139,0.3); background: rgba(100,116,139,0.05); }
+.stat-pill.total   { color: var(--ink);  border-color: var(--border);          background: var(--panel); }
+.stat-n { font-size: 14px; font-weight: 700; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .canvas-wrap { min-width: 900px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="logo">MARK SCHEME <span>METHOD</span>® &nbsp;// SITE MAP</div>
+  <div class="topbar-right">
+    <div class="legend">
+      <div class="leg"><div class="leg-dot built"></div><span>✓ BUILT</span></div>
+      <div class="leg"><div class="leg-dot planned"></div><span>▷ PLANNED</span></div>
+      <div class="leg"><div class="leg-dot future"></div><span>◇ FUTURE</span></div>
+      <div class="leg"><div class="leg-dot blocker"></div><span>⚠ BLOCKER</span></div>
+    </div>
+    <div class="live"><div class="live-dot"></div>v4.0</div>
+  </div>
+</nav>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tt">
+  <div class="tt-status" id="tt-status"></div>
+  <div class="tt-title"  id="tt-title"></div>
+  <div class="tt-url"    id="tt-url"></div>
+  <div class="tt-desc"   id="tt-desc"></div>
+</div>
+
+<div class="canvas-wrap">
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-pill built">  <span class="stat-n">16</span> PAGES BUILT</div>
+    <div class="stat-pill planned"><span class="stat-n">19</span> PAGES PLANNED</div>
+    <div class="stat-pill future"> <span class="stat-n">11</span> PAGES FUTURE</div>
+    <div class="stat-pill total">  <span class="stat-n">46</span> TOTAL PAGES</div>
+  </div>
+
+  <!-- PRIMARY USER FLOW -->
+  <div class="chart-title">// PRIMARY USER FLOW</div>
+  <div class="main-flow">
+    <div class="flow-node">
+      <div class="flow-box z1-border z1-color">HOMEPAGE</div>
+      <div class="flow-sub">/ · Zone 1</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-node">
+      <div class="flow-box z2-border z2-color">LOGIN / SIGNUP</div>
+      <div class="flow-sub">/login · Zone 2</div>
+    </div>
+    <div class="flow-conn dotted"></div>
+    <div class="flow-node">
+      <div class="flow-box z2-border z2-color">ONBOARDING</div>
+      <div class="flow-sub">/onboarding · Zone 2</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-node">
+      <div class="flow-box z3-border z3-color" style="border-color:rgba(57,255,20,0.6); box-shadow: 0 0 16px rgba(57,255,20,0.12);">TOPIC INDEX</div>
+      <div class="flow-sub">/topics.html · PRIMARY HUB</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-node">
+      <div class="flow-box" style="border-color:rgba(56,189,248,0.45);background:rgba(56,189,248,0.06);color:#38BDF8;">FIELD TRAINING</div>
+      <div class="flow-sub">/learn/6-X/ · 6 STATIONS</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-node">
+      <div class="flow-box z3-border z3-color">EXAM MODULE</div>
+      <div class="flow-sub">/6-X/index.html</div>
+    </div>
+    <div class="flow-conn"></div>
+    <div class="flow-node">
+      <div class="flow-box z3-border z3-color">DASHBOARD</div>
+      <div class="flow-sub">/dashboard.html</div>
+    </div>
+  </div>
+
+  <!-- ZONE 1: PUBLIC -->
+  <div class="chart-title">// ZONE 1 — PUBLIC MARKETING</div>
+  <div class="zone-row">
+    <div class="zone-label">
+      <div class="zone-tag z1-color">Z1</div>
+      <div class="zone-name">PUBLIC</div>
+    </div>
+    <div class="zone-content" style="border-color: rgba(245,158,11,0.25);">
+      <div class="nodes">
+        <div class="node planned" data-status="▷ PLANNED" data-title="Homepage" data-url="/" data-desc="Hero positions platform as student-led revision tool. NEI explainer, before/after 3-mark demo, exam countdown. Primary CTA → Topic Index.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">HOMEPAGE</div>
+          <div class="node-url">/</div>
+        </div>
+        <div class="node planned" data-status="▷ PLANNED" data-title="Pricing" data-url="/pricing.html" data-desc="Three tiers: Free / Student Pro / College Licence. Stripe integration. Must link to legal pages before activation.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">PRICING</div>
+          <div class="node-url">/pricing.html</div>
+        </div>
+        <div class="node planned" data-status="▷ PLANNED" data-title="For Educators" data-url="/for-educators.html" data-desc="Visibility and insight pitch — not control. Teacher dashboard screenshots. College licence pricing link.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">FOR EDUCATORS</div>
+          <div class="node-url">/for-educators.html</div>
+        </div>
+        <div class="node planned" data-status="▷ PLANNED" data-title="Mark Schemes Hub (Public)" data-url="/mark-schemes.html" data-desc="Public-facing mark scheme library. Free samples ungated for SEO credibility. Full access requires login.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">MARK SCHEMES HUB</div>
+          <div class="node-url">/mark-schemes.html</div>
+        </div>
+        <div class="node blocker" data-status="⚠ BLOCKER" data-title="Privacy Policy" data-url="/privacy.html" data-desc="REQUIRED before any data collection. Under-18 users — legal requirement. Use iubenda or Termly.">
+          <div class="node-status">⚠ BLOCKER</div>
+          <div class="node-title">PRIVACY POLICY</div>
+          <div class="node-url">/privacy.html</div>
+        </div>
+        <div class="node blocker" data-status="⚠ BLOCKER" data-title="Terms of Service" data-url="/terms.html" data-desc="REQUIRED before Stripe activation.">
+          <div class="node-status">⚠ BLOCKER</div>
+          <div class="node-title">TERMS OF SERVICE</div>
+          <div class="node-url">/terms.html</div>
+        </div>
+        <div class="node blocker" data-status="⚠ BLOCKER" data-title="Cookie Policy" data-url="/cookies.html" data-desc="REQUIRED before analytics or Firebase tracking. Cookie banner must be implemented.">
+          <div class="node-status">⚠ BLOCKER</div>
+          <div class="node-title">COOKIE POLICY</div>
+          <div class="node-url">/cookies.html</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE 2: AUTH -->
+  <div class="chart-title">// ZONE 2 — AUTHENTICATION</div>
+  <div class="zone-row">
+    <div class="zone-label">
+      <div class="zone-tag z2-color">Z2</div>
+      <div class="zone-name">AUTH</div>
+    </div>
+    <div class="zone-content" style="border-color: rgba(99,102,241,0.25);">
+      <div class="nodes">
+        <div class="node planned" data-status="▷ PLANNED" data-title="Login" data-url="/login.html" data-desc="Firebase Auth. 'Continue without account' option clearly shown. Redirects to Topic Index on success.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">LOGIN</div>
+          <div class="node-url">/login.html</div>
+        </div>
+        <div class="node planned" data-status="▷ PLANNED" data-title="Signup" data-url="/signup.html" data-desc="Email, password, optional class code. Class code connects student to teacher Firebase instance. Under-18 consent checkbox.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">SIGNUP</div>
+          <div class="node-url">/signup.html</div>
+        </div>
+        <div class="node planned" data-status="▷ PLANNED" data-title="Onboarding" data-url="/onboarding.html" data-desc="Post-signup AXIOM-7 briefing. Routes to Topic Index. Sets initial rank (TRAINEE), awards welcome badge. NEI animated explainer.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">ONBOARDING</div>
+          <div class="node-url">/onboarding.html</div>
+        </div>
+        <div class="node future" data-status="◇ FUTURE" data-title="Forgot Password" data-url="/reset.html" data-desc="Firebase Auth password reset. Standard flow. Low priority — implement when full auth is live.">
+          <div class="node-status">◇ FUTURE</div>
+          <div class="node-title">FORGOT PASSWORD</div>
+          <div class="node-url">/reset.html</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE 3: STUDENT -->
+  <div class="chart-title">// ZONE 3 — STUDENT PLATFORM (PRIMARY)</div>
+  <div class="zone-row">
+    <div class="zone-label">
+      <div class="zone-tag z3-color">Z3</div>
+      <div class="zone-name">STUDENT</div>
+    </div>
+    <div class="zone-content" style="border-color: rgba(57,255,20,0.2);">
+
+      <!-- 3.1 Hub + Dashboard -->
+      <div class="group">
+        <div class="group-label">3.1 // STUDENT HUB + DASHBOARD</div>
+        <div class="nodes">
+          <div class="node built" data-status="✓ BUILT" data-title="Topic Index" data-url="/topics.html" data-desc="PRIMARY ENTRY POINT. Filter/sort 6 CA6 content area cards. Completion rings, XP, difficulty pips, launch CTA. Teacher recommendation banner. Exam countdown. CA6 Coverage HUD. All 6 modules now built:true.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title">TOPIC INDEX</div>
+            <div class="node-url">/topics.html</div>
+            <div class="node-badge">🎯 PRIMARY HUB</div>
+          </div>
+          <div class="node built" data-status="✓ BUILT" data-title="Student Hub" data-url="/index.html" data-desc="Post-login home. XP rank, badge count, class leaderboard, recent activity. Topic Index CTA panel. NEI Banner. Module grid removed.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title">STUDENT HUB</div>
+            <div class="node-url">/index.html</div>
+          </div>
+          <div class="node built" data-status="✓ BUILT" data-title="Student Dashboard" data-url="/dashboard.html" data-desc="Personal analytics. Exam countdown, 5 stat cards, XP History Chart, NEI Proficiency Map, Rank Progression, Module Completion Grid, Badge Cabinet.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title">DASHBOARD</div>
+            <div class="node-url">/dashboard.html</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.2 Exam Modules -->
+      <div class="group">
+        <div class="group-label">3.2 // EXAM PRACTICE MODULES (ACE v2 ENGINE)</div>
+        <div class="nodes">
+          <div class="node built m611" data-status="✓ BUILT" data-title="Module 6.1.1 — Data, Info & Knowledge" data-url="/6-1-1/index.html" data-desc="GPS Logistics scenario. Drag-drop DIK hierarchy. HUD keyword detection. Self-tagging calibration. Badge: raw_signal. Accent: Green.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title"><span class="accent-tag" style="background:#39FF14"></span>MODULE 6.1.1</div>
+            <div class="node-url">/6-1-1/index.html</div>
+            <div class="node-badge">🟢 raw_signal</div>
+          </div>
+          <div class="node built m612" data-status="✓ BUILT" data-title="Module 6.1.2 — Why Organisations Need Data" data-url="/6-1-2/index.html" data-desc="E-Commerce Recommendation Engine. Decision sorter (operational/tactical/strategic). Vulnerability alert for missing Impact. Badge: market_intelligence.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title"><span class="accent-tag" style="background:#FFD700"></span>MODULE 6.1.2</div>
+            <div class="node-url">/6-1-2/index.html</div>
+            <div class="node-badge">🟡 market_intelligence</div>
+          </div>
+          <div class="node built m613" data-status="✓ BUILT" data-title="Module 6.1.3 — How Data is Generated" data-url="/6-1-3/index.html" data-desc="Smart Warehouse IoT scenario. IoT source classifier. Progressive model answer reveal. Badge: signal_mapper.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title"><span class="accent-tag" style="background:#39FF14"></span>MODULE 6.1.3</div>
+            <div class="node-url">/6-1-3/index.html</div>
+            <div class="node-badge">🟢 signal_mapper</div>
+          </div>
+          <div class="node built m62" data-status="✓ BUILT" data-title="Module 6.2 — Data Formats" data-url="/6-2/index.html" data-desc="Retail logistics scenario. Drag-drop format classifier (CSV/JSON/XML). 3-mark advantage question. Badge: data_architect.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title"><span class="accent-tag" style="background:#38BDF8"></span>MODULE 6.2</div>
+            <div class="node-url">/6-2/index.html</div>
+            <div class="node-badge">🔵 data_architect</div>
+          </div>
+          <div class="node built m63" data-status="✓ BUILT" data-title="Module 6.3 — Data Systems" data-url="/6-3/index.html" data-desc="Hospital trust merging 14,000 patient records. Drag-drop quality classifier. Patient safety impact question. Badge: systems_analyst.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title"><span class="accent-tag" style="background:#A855F7"></span>MODULE 6.3</div>
+            <div class="node-url">/6-3/index.html</div>
+            <div class="node-badge">🟣 systems_analyst</div>
+          </div>
+          <div class="node built m64" data-status="✓ BUILT" data-title="Module 6.4 — Big Data & GDPR" data-url="/6-4/index.html" data-desc="Global retailer, 4PB behavioural data. 4-question MCQ. GDPR Right to Erasure exam question. CA6 completion → full_clearance badge. Badge: compliance_officer.">
+            <div class="node-status">✓ BUILT</div>
+            <div class="node-title"><span class="accent-tag" style="background:#00D4B8"></span>MODULE 6.4</div>
+            <div class="node-url">/6-4/index.html</div>
+            <div class="node-badge">🩵 compliance_officer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.3 Mark Schemes -->
+      <div class="group">
+        <div class="group-label">3.3 // MARK SCHEMES (NEI-ANNOTATED LIBRARY)</div>
+        <div class="nodes">
+          <div class="node planned" data-status="▷ PLANNED" data-title="Mark Schemes Hub" data-url="/mark-schemes.html" data-desc="Browse all mark schemes by content area. Free samples ungated. NEI colour-coded throughout. Links to relevant practice modules.">
+            <div class="node-status">▷ PLANNED</div>
+            <div class="node-title">MARK SCHEMES HUB</div>
+            <div class="node-url">/mark-schemes.html</div>
+          </div>
+          <div class="node planned" data-status="▷ PLANNED" data-title="Mark Scheme — CA6" data-url="/mark-schemes/ca6.html" data-desc="Content Area 6 mark schemes with NEI colour-coding. Examiner commentary on common errors. Links to practice modules.">
+            <div class="node-status">▷ PLANNED</div>
+            <div class="node-title">MARK SCHEME CA6</div>
+            <div class="node-url">/mark-schemes/ca6.html</div>
+          </div>
+          <div class="node future" data-status="◇ FUTURE" data-title="Mark Schemes — CA1–5" data-url="/mark-schemes/[ca].html" data-desc="Additional content areas. One page per CA. Expanded as question bank grows.">
+            <div class="node-status">◇ FUTURE</div>
+            <div class="node-title">MARK SCHEMES CA1–5</div>
+            <div class="node-url">/mark-schemes/[ca].html</div>
+          </div>
+          <div class="node future" data-status="◇ FUTURE" data-title="Examiner Insights" data-url="/mark-schemes/insights.html" data-desc="Lead Examiner Report analysis. The 37/100 average gap data. Most commonly missed Impact statements. High SEO value.">
+            <div class="node-status">◇ FUTURE</div>
+            <div class="node-title">EXAMINER INSIGHTS</div>
+            <div class="node-url">/mark-schemes/insights.html</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3.4 Field Training -->
+      <div class="group">
+        <div class="group-label" style="color:rgba(56,189,248,0.8);">3.4 // FIELD TRAINING — THEORY-FIRST LEARNING LAYER (6 STATIONS PER MODULE)</div>
+
+        <!-- Station legend -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);padding:3px 9px;border:1px solid var(--border);border-radius:4px;background:var(--panel);">① INTEL BRIEF — Theory</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);padding:3px 9px;border:1px solid var(--border);border-radius:4px;background:var(--panel);">② BRIEFING ROOM — Video</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);padding:3px 9px;border:1px solid var(--border);border-radius:4px;background:var(--panel);">③ RAPID RECALL — Flashcards</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);padding:3px 9px;border:1px solid var(--border);border-radius:4px;background:var(--panel);">④ KNOWLEDGE CHECK — Quiz</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);padding:3px 9px;border:1px solid var(--border);border-radius:4px;background:var(--panel);">⑤ TEAM DEBRIEF — Discussion</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);padding:3px 9px;border:1px solid var(--border);border-radius:4px;background:var(--panel);">⑥ SOLO OP — Practice Task</div>
+        </div>
+
+        <!-- Field Training index -->
+        <div class="nodes" style="margin-bottom:12px;">
+          <div class="node planned" style="border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.05);max-width:220px;"
+               data-status="▷ PLANNED" data-title="Field Training Hub" data-url="/learn/index.html"
+               data-desc="Entry point listing all 6 Field Training modules. Shows completion status per CA, stations completed, Field Ready badge earned. Links to each /learn/6-X/ module. Student arrives here from Topic Index 'LEARN FIRST' button.">
+            <div class="node-status" style="color:#38BDF8;">▷ PLANNED</div>
+            <div class="node-title" style="color:#38BDF8;">FIELD TRAINING HUB</div>
+            <div class="node-url">/learn/index.html</div>
+            <div class="node-badge">🎓 FEATURE INDEX</div>
+          </div>
+        </div>
+
+        <!-- 6 field training modules -->
+        <div class="nodes">
+          <div class="node planned" style="border-color:rgba(56,189,248,0.35);background:rgba(56,189,248,0.04);"
+               data-status="▷ PLANNED" data-title="Field Training — 6.1.1 Data, Info & Knowledge" data-url="/learn/6-1-1/"
+               data-desc="6 stations: ① Theory panels on DIK hierarchy ② Explainer video ③ Flashcards (term→definition) ④ 5-question quiz with instant feedback ⑤ 3 classroom discussion prompts ⑥ Solo task: classify 10 real-world examples into Data/Info/Knowledge. Completing all 6 → Field Ready badge → unlocks exam module CTA on Topic Index.">
+            <div class="node-status" style="color:#38BDF8;">▷ PLANNED</div>
+            <div class="node-title"><span class="accent-tag" style="background:#39FF14"></span>FIELD TRAINING 6.1.1</div>
+            <div class="node-url">/learn/6-1-1/</div>
+            <div class="node-badge">6 STATIONS · field_ready_611</div>
+          </div>
+          <div class="node planned" style="border-color:rgba(56,189,248,0.35);background:rgba(56,189,248,0.04);"
+               data-status="▷ PLANNED" data-title="Field Training — 6.1.2 Why Organisations Need Data" data-url="/learn/6-1-2/"
+               data-desc="6 stations: ① Theory — operational/tactical/strategic value of data ② Explainer video ③ Flashcards: use cases ④ Quiz ⑤ Discussion: 'What decisions would be impossible without data?' ⑥ Solo task: map a business's data needs onto 3 tiers.">
+            <div class="node-status" style="color:#38BDF8;">▷ PLANNED</div>
+            <div class="node-title"><span class="accent-tag" style="background:#FFD700"></span>FIELD TRAINING 6.1.2</div>
+            <div class="node-url">/learn/6-1-2/</div>
+            <div class="node-badge">6 STATIONS · field_ready_612</div>
+          </div>
+          <div class="node planned" style="border-color:rgba(56,189,248,0.35);background:rgba(56,189,248,0.04);"
+               data-status="▷ PLANNED" data-title="Field Training — 6.1.3 How Data is Generated" data-url="/learn/6-1-3/"
+               data-desc="6 stations: ① Theory — D2D, H2D, machine/sensor sources ② Video ③ Flashcards: data source types ④ Quiz ⑤ Discussion: 'Where does your school generate data?' ⑥ Solo task: sketch a data generation map for a business scenario.">
+            <div class="node-status" style="color:#38BDF8;">▷ PLANNED</div>
+            <div class="node-title"><span class="accent-tag" style="background:#39FF14"></span>FIELD TRAINING 6.1.3</div>
+            <div class="node-url">/learn/6-1-3/</div>
+            <div class="node-badge">6 STATIONS · field_ready_613</div>
+          </div>
+          <div class="node planned" style="border-color:rgba(56,189,248,0.35);background:rgba(56,189,248,0.04);"
+               data-status="▷ PLANNED" data-title="Field Training — 6.2 Data Formats" data-url="/learn/6-2/"
+               data-desc="6 stations: ① Theory — CSV, JSON, XML, binary, fixed-width ② Video ③ Flashcards: format characteristics ④ Quiz: identify the right format for a scenario ⑤ Discussion: 'Why does format choice matter in a business?' ⑥ Solo task: convert a sample dataset between formats.">
+            <div class="node-status" style="color:#38BDF8;">▷ PLANNED</div>
+            <div class="node-title"><span class="accent-tag" style="background:#38BDF8"></span>FIELD TRAINING 6.2</div>
+            <div class="node-url">/learn/6-2/</div>
+            <div class="node-badge">6 STATIONS · field_ready_62</div>
+          </div>
+          <div class="node planned" style="border-color:rgba(56,189,248,0.35);background:rgba(56,189,248,0.04);"
+               data-status="▷ PLANNED" data-title="Field Training — 6.3 Data Systems" data-url="/learn/6-3/"
+               data-desc="6 stations: ① Theory — validation vs verification, wrangling, GIGO, BIS, CRM, ERDs ② Video ③ Flashcards ④ Quiz ⑤ Discussion: 'What happens when dirty data enters a system?' ⑥ Solo task: identify 5 data quality errors in a sample dataset.">
+            <div class="node-status" style="color:#38BDF8;">▷ PLANNED</div>
+            <div class="node-title"><span class="accent-tag" style="background:#A855F7"></span>FIELD TRAINING 6.3</div>
+            <div class="node-url">/learn/6-3/</div>
+            <div class="node-badge">6 STATIONS · field_ready_63</div>
+          </div>
+          <div class="node planned" style="border-color:rgba(56,189,248,0.35);background:rgba(56,189,248,0.04);"
+               data-status="▷ PLANNED" data-title="Field Training — 6.4 Big Data & GDPR" data-url="/learn/6-4/"
+               data-desc="6 stations: ① Theory — Six Vs, data warehouse vs lake, metadata, GDPR rights and duties ② Video ③ Flashcards: GDPR rights ④ Quiz: GDPR scenario questions ⑤ Discussion: 'Should all data be kept forever?' ⑥ Solo task: write a GDPR compliance checklist for a fictional company.">
+            <div class="node-status" style="color:#38BDF8;">▷ PLANNED</div>
+            <div class="node-title"><span class="accent-tag" style="background:#00D4B8"></span>FIELD TRAINING 6.4</div>
+            <div class="node-url">/learn/6-4/</div>
+            <div class="node-badge">6 STATIONS · field_ready_64</div>
+          </div>
+        </div>
+
+        <!-- progression note -->
+        <div style="margin-top:14px;padding:10px 14px;border:1px solid rgba(56,189,248,0.2);border-radius:6px;background:rgba(56,189,248,0.03);">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:#38BDF8;">// PROGRESSION LOGIC</span>
+          <p style="font-size:12px;color:var(--dim);margin-top:5px;line-height:1.5;">Complete all 6 stations → earn <strong style="color:var(--ink);">Field Ready</strong> badge → Topic Index card CTA upgrades from grey lock to green pulse <strong style="color:var(--green);">⟶ LAUNCH MODULE</strong>. Works in classroom or at home — no mode switching required.</p>
+        </div>
+      </div>
+
+      <!-- 3.5 Practice + Achievement -->
+      <div class="group">
+        <div class="group-label">3.5 // PRACTICE + ACHIEVEMENT</div>
+        <div class="nodes">
+          <div class="node planned" data-status="▷ PLANNED" data-title="Practice Arena" data-url="/practice.html" data-desc="Standalone question bank. Filter by CA, difficulty, mark value. NEI Checker API. Timed exam simulation. Fully self-directed. Needs question bank content first.">
+            <div class="node-status">▷ PLANNED</div>
+            <div class="node-title">PRACTICE ARENA</div>
+            <div class="node-url">/practice.html</div>
+          </div>
+          <div class="node planned" data-status="▷ PLANNED" data-title="Badge Collection" data-url="/badges.html" data-desc="Full badge cabinet. Locked silhouettes for unearned badges, rarity tiers, unlock criteria on hover. Student-owned achievement screen.">
+            <div class="node-status">▷ PLANNED</div>
+            <div class="node-title">BADGE COLLECTION</div>
+            <div class="node-url">/badges.html</div>
+          </div>
+          <div class="node future" data-status="◇ FUTURE" data-title="Mock Exam Mode" data-url="/mock-exam.html" data-desc="Full timed exam simulation. Needs complete question bank. High value, high effort — post-launch.">
+            <div class="node-status">◇ FUTURE</div>
+            <div class="node-title">MOCK EXAM MODE</div>
+            <div class="node-url">/mock-exam.html</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ZONE 4: TEACHER -->
+  <div class="chart-title">// ZONE 4 — TEACHER LAYER (OBSERVATIONAL)</div>
+  <div class="zone-row">
+    <div class="zone-label">
+      <div class="zone-tag z4-color">Z4</div>
+      <div class="zone-name">TEACHER</div>
+    </div>
+    <div class="zone-content" style="border-color: rgba(168,85,247,0.25);">
+      <div class="nodes">
+        <div class="node built" data-status="✓ BUILT" data-title="Teacher Dashboard" data-url="/teacher.html" data-desc="Class overview. NEI Proficiency Map. Friction Alerts (topics where >50% miss [I] marker). Engagement timeline. Class leaderboard. Needs refactor to remove assignment language.">
+          <div class="node-status">✓ BUILT</div>
+          <div class="node-title">TEACHER DASHBOARD</div>
+          <div class="node-url">/teacher.html</div>
+        </div>
+        <div class="node planned" data-status="▷ PLANNED" data-title="Recommendation Tool" data-url="/teacher.html#recommend" data-desc="Soft suggestion system. Teacher selects student + module → dismissible banner on student's Topic Index. Firebase recommendations collection.">
+          <div class="node-status">▷ PLANNED</div>
+          <div class="node-title">RECOMMENDATION TOOL</div>
+          <div class="node-url">/teacher.html#recommend</div>
+        </div>
+        <div class="node future" data-status="◇ FUTURE" data-title="Teacher Certification" data-url="/certification.html" data-desc="High-ticket revenue stream. CPD hours + methodology badge. Build after student base is established.">
+          <div class="node-status">◇ FUTURE</div>
+          <div class="node-title">CERTIFICATION</div>
+          <div class="node-url">/certification.html</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZONE 5: FUTURE / ADMIN -->
+  <div class="chart-title">// ZONE 5 — FUTURE + ADMIN</div>
+  <div class="zone-row">
+    <div class="zone-label">
+      <div class="zone-tag z5-color">Z5</div>
+      <div class="zone-name">POST-LAUNCH</div>
+    </div>
+    <div class="zone-content" style="border-color: rgba(100,116,139,0.2);">
+      <div class="nodes">
+        <div class="node future" data-status="◇ FUTURE" data-title="Admin Panel" data-url="/admin.html" data-desc="User management, platform health monitoring. Needed at scale — not required at launch day.">
+          <div class="node-status">◇ FUTURE</div>
+          <div class="node-title">ADMIN PANEL</div>
+          <div class="node-url">/admin.html</div>
+        </div>
+        <div class="node future" data-status="◇ FUTURE" data-title="Blog + SEO Content" data-url="/blog/" data-desc="Compound traffic returns. T-Level Digital student tone throughout. Start after platform is stable.">
+          <div class="node-status">◇ FUTURE</div>
+          <div class="node-title">BLOG + SEO</div>
+          <div class="node-url">/blog/</div>
+        </div>
+        <div class="node future" data-status="◇ FUTURE" data-title="API Documentation" data-url="/docs/" data-desc="If opening NEI Checker API to third parties. Post-launch consideration.">
+          <div class="node-status">◇ FUTURE</div>
+          <div class="node-title">API DOCS</div>
+          <div class="node-url">/docs/</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── TOOLTIP ───────────────────────────────────────────────
+const tt = document.getElementById('tt');
+const nodes = document.querySelectorAll('.node');
+
+const statusColor = {
+  '✓ BUILT':   '#39FF14',
+  '▷ PLANNED': '#FF9500',
+  '◇ FUTURE':  '#64748B',
+  '⚠ BLOCKER': '#FF3B3B',
+};
+
+nodes.forEach(node => {
+  node.addEventListener('mouseenter', e => {
+    document.getElementById('tt-status').textContent = node.dataset.status;
+    document.getElementById('tt-status').style.color = statusColor[node.dataset.status] || '#aaa';
+    document.getElementById('tt-title').textContent  = node.dataset.title;
+    document.getElementById('tt-url').textContent    = node.dataset.url;
+    document.getElementById('tt-desc').textContent   = node.dataset.desc;
+    tt.classList.add('on');
+    move(e);
+  });
+  node.addEventListener('mousemove', move);
+  node.addEventListener('mouseleave', () => tt.classList.remove('on'));
+});
+
+function move(e) {
+  const x = e.clientX + 18;
+  const y = e.clientY + 18;
+  tt.style.left = Math.min(x, window.innerWidth  - 300) + 'px';
+  tt.style.top  = Math.min(y, window.innerHeight - 200) + 'px';
+}
+
+// ── CLOCK ─────────────────────────────────────────────────
+</script>
+</body>
+</html>
