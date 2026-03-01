@@ -3,2207 +3,767 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Field Training 6.1.1 — Data, Information & Knowledge | The Mark Scheme Method®</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Field Training 6.1.1 — Data, Information & Knowledge</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --void:#0D1117;
-  --void2:#0A0E14;
-  --panel-bg:rgba(255,255,255,0.04);
-  --panel-border:rgba(255,255,255,0.08);
-  --green:#39FF14;
-  --green-dim:rgba(57,255,20,0.12);
-  --gold:#FFD700;
-  --gold-dim:rgba(255,215,0,0.12);
-  --red:#FF4444;
-  --amber:#FF9900;
-  --blue:#00D4FF;
-  --ink:#D4DDE8;
-  --muted:#556070;
-  --mono:'Share Tech Mono',monospace;
-  --display:'Orbitron',monospace;
-  --body:'Rajdhani',sans-serif;
+:root{
+  --void:#0D1117;--panel:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+  --green:#39FF14;--gold:#FFD700;--red:#FF3B3B;--amber:#FF9500;
+  --cyan:#38BDF8;--purple:#A855F7;--teal:#00D4B8;
+  --ink:#E8EDF3;--dim:rgba(232,237,243,0.5);--muted:rgba(232,237,243,0.25);
+  --acc:#39FF14; /* 6.1.1 accent */
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  background:var(--void);
-  background-image:
-    radial-gradient(ellipse at 20% 10%, rgba(57,255,20,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 90%, rgba(255,215,0,0.04) 0%, transparent 50%),
-    linear-gradient(rgba(57,255,20,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(57,255,20,0.015) 1px, transparent 1px);
-  background-size: auto, auto, 60px 60px, 60px 60px;
-  font-family:var(--body);
-  color:var(--ink);
-  overflow-x:hidden;
-  min-height:100vh;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--void);color:var(--ink);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(57,255,20,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,0.012) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);pointer-events:none;z-index:0;}
 
-/* ─── SCANLINES OVERLAY ─────────────────────────────── */
-body::after{
-  content:'';position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
-  pointer-events:none;z-index:9999;
-}
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(13,17,23,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;}
+.logo{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:3px;color:var(--green);text-shadow:0 0 20px rgba(57,255,20,0.5);}
+.logo span{color:var(--gold);}
+.topnav{display:flex;gap:4px;}
+.navlink{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--dim);text-decoration:none;padding:6px 14px;border-radius:4px;transition:color .2s;}
+.navlink:hover{color:var(--green);}
+.navlink.active{color:var(--green);background:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.2);}
 
-/* ─── HEADER ─────────────────────────────────────────── */
-.header{
-  position:sticky;top:0;z-index:100;
-  background:rgba(13,17,23,0.92);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--panel-border);
-  padding:0.75rem 2rem;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.header-brand{
-  font-family:var(--display);font-size:0.62rem;
-  letter-spacing:0.15em;color:var(--green);
-  text-shadow:0 0 10px var(--green);
-  text-transform:uppercase;
-}
-.header-status{
-  display:flex;align-items:center;gap:1.5rem;
-}
-.status-item{
-  font-family:var(--mono);font-size:0.6rem;
-  color:var(--muted);display:flex;align-items:center;gap:0.4rem;
-}
-.status-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--green);box-shadow:0 0 8px var(--green);
-  animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.progress-bar{
-  width:160px;height:4px;
-  background:rgba(255,255,255,0.06);
-  border-radius:2px;overflow:hidden;
-}
-.progress-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--green),var(--gold));
-  border-radius:2px;
-  transition:width 0.6s ease;
-}
+/* STATION RAIL */
+.station-rail{position:sticky;top:56px;z-index:150;background:rgba(13,17,23,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;gap:0;}
+.st-tab{flex:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-right:1px solid var(--border);cursor:pointer;transition:background .2s;position:relative;overflow:hidden;}
+.st-tab:last-child{border-right:none;}
+.st-tab:hover{background:rgba(255,255,255,0.03);}
+.st-tab.active{background:rgba(57,255,20,0.06);}
+.st-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--green);box-shadow:0 0 8px rgba(57,255,20,0.6);}
+.st-tab.done .st-icon::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:8px;color:var(--green);font-weight:900;}
+.st-tab.locked{opacity:0.4;cursor:not-allowed;}
+.st-icon{font-size:18px;position:relative;}
+.st-name{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--dim);}
+.st-tab.active .st-name{color:var(--green);}
+.st-num{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--muted);}
 
-/* ─── SCENE WRAPPER ──────────────────────────────────── */
-.scene{display:none;}
-.scene.active{display:block;}
+/* PAGE HEADER */
+.page-header{position:relative;z-index:1;padding:36px 40px 24px;border-bottom:1px solid var(--border);}
+.pg-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.pg-eyebrow::before{content:'';width:24px;height:2px;background:var(--green);box-shadow:0 0 8px var(--green);}
+.pg-title{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;color:#fff;}
+.pg-sub{font-size:14px;color:var(--dim);margin-top:4px;}
 
-/* ═══════════════════════════════════════════════════════
-   SCENE A — OPERATIONAL BRIEFING
-═══════════════════════════════════════════════════════ */
-#scene-a{
-  min-height:calc(100vh - 52px);
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:3rem 2rem;
-  position:relative;
-  overflow:hidden;
-}
-#scene-a.active{display:flex;}
+/* STATION WRAPPER */
+.station-wrap{position:relative;z-index:1;display:none;padding:32px 40px 80px;max-width:1100px;}
+.station-wrap.active{display:block;animation:stIn .4s cubic-bezier(.22,1,.36,1);}
+@keyframes stIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:translateX(0);}}
 
-.briefing-bg-fx{
-  position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(57,255,20,0.04) 0%, transparent 65%);
-}
-.briefing-bg-fx::before{
-  content:'';position:absolute;inset:0;
-  background:repeating-conic-gradient(rgba(57,255,20,0.02) 0deg 1deg, transparent 1deg 30deg);
-  animation:rotate 60s linear infinite;
-  transform-origin:center;
-}
-@keyframes rotate{to{transform:rotate(360deg);}}
+.station-header{margin-bottom:28px;}
+.st-h-tag{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--green);margin-bottom:6px;}
+.st-h-title{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:#fff;}
+.st-h-sub{font-size:14px;color:var(--dim);margin-top:4px;line-height:1.6;}
 
-.briefing-container{
-  position:relative;z-index:2;
-  max-width:860px;width:100%;
-  text-align:center;
-}
-.mission-badge{
-  display:inline-flex;align-items:center;gap:0.6rem;
-  background:rgba(57,255,20,0.07);
-  border:1px solid rgba(57,255,20,0.25);
-  padding:0.4rem 1.2rem;
-  border-radius:4px;
-  font-family:var(--mono);font-size:0.62rem;
-  color:var(--green);letter-spacing:0.15em;
-  margin-bottom:2rem;
-  animation:fadeIn 0.5s ease both;
-}
-.mission-badge::before{
-  content:'';width:8px;height:8px;border-radius:50%;
-  background:var(--green);box-shadow:0 0 10px var(--green);
-  animation:pulse 1.5s ease-in-out infinite;
-}
+/* ── PANEL BLOCKS ── */
+.panel-block{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.pb-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.pb-icon{font-size:18px;}
+.pb-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:#fff;}
+.pb-body{padding:20px;}
 
-/* Data Architect Avatar */
-.avatar-frame{
-  width:160px;height:160px;
-  margin:0 auto 2rem;
-  position:relative;
-  animation:fadeIn 0.6s 0.1s ease both;
-}
-.avatar-hex{
-  width:160px;height:160px;
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  background:linear-gradient(135deg,rgba(57,255,20,0.15),rgba(255,215,0,0.1));
-  border:2px solid transparent;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;
-}
-.avatar-hex::before{
-  content:'';position:absolute;inset:-2px;
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  background:linear-gradient(135deg,var(--green),var(--gold));
-  z-index:-1;
-}
-.avatar-inner{
-  font-size:5rem;line-height:1;
-  filter:drop-shadow(0 0 20px rgba(57,255,20,0.6));
-}
-.avatar-ring{
-  position:absolute;inset:-12px;
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  border:1px solid rgba(57,255,20,0.2);
-  animation:ringPulse 3s ease-in-out infinite;
-}
-@keyframes ringPulse{
-  0%,100%{transform:scale(1);opacity:0.2;}
-  50%{transform:scale(1.08);opacity:0.6;}
-}
+/* theory panels */
+.theory-chunk{font-size:15px;color:var(--ink);line-height:1.75;margin-bottom:16px;}
+.theory-chunk:last-child{margin-bottom:0;}
+.hl{color:var(--green);font-weight:700;}
+.hl-gold{color:var(--gold);font-weight:700;}
+.hl-amber{color:var(--amber);font-weight:700;}
+.callout{background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.2);border-radius:8px;padding:14px 16px;margin:12px 0;font-size:13px;color:var(--dim);}
+.callout strong{color:var(--green);}
+.def-table{width:100%;border-collapse:collapse;}
+.def-table th{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);}
+.def-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:14px;color:var(--dim);vertical-align:top;}
+.def-table tr:last-child td{border-bottom:none;}
+.def-table td:first-child{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;}
+.dik-accent-data{color:var(--green);}
+.dik-accent-info{color:var(--gold);}
+.dik-accent-know{color:var(--amber);}
 
-.briefing-title{
-  font-family:var(--display);font-size:2rem;font-weight:900;
-  color:#fff;line-height:1.1;
-  letter-spacing:-0.02em;
-  margin-bottom:0.5rem;
-  animation:fadeIn 0.6s 0.2s ease both;
-}
-.briefing-title span{
-  background:linear-gradient(135deg,var(--green),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.briefing-sub{
-  font-size:0.9rem;color:var(--muted);
-  letter-spacing:0.05em;margin-bottom:2.5rem;
-  animation:fadeIn 0.6s 0.3s ease both;
-}
+/* video station */
+.video-placeholder{background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:10px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;transition:border-color .2s;}
+.video-placeholder:hover{border-color:rgba(57,255,20,0.3);}
+.vp-play{width:64px;height:64px;border-radius:50%;background:rgba(57,255,20,0.1);border:2px solid rgba(57,255,20,0.3);display:flex;align-items:center;justify-content:center;font-size:24px;}
+.vp-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--dim);}
+.vp-sub{font-size:13px;color:var(--muted);}
+.video-note{margin-top:12px;padding:10px 14px;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.15);border-radius:6px;font-size:13px;color:var(--dim);}
+.video-note strong{color:var(--green);}
 
-/* Terminal transcript */
-.terminal{
-  background:rgba(0,0,0,0.6);
-  border:1px solid rgba(57,255,20,0.2);
-  border-radius:12px;
-  overflow:hidden;
-  margin-bottom:2rem;
-  text-align:left;
-  animation:fadeIn 0.6s 0.4s ease both;
-  box-shadow:0 0 40px rgba(57,255,20,0.08),0 20px 60px rgba(0,0,0,0.6);
-}
-.terminal-bar{
-  background:rgba(57,255,20,0.06);
-  border-bottom:1px solid rgba(57,255,20,0.15);
-  padding:0.6rem 1rem;
-  display:flex;align-items:center;gap:0.5rem;
-}
-.t-dot{width:8px;height:8px;border-radius:50%;}
-.t-red{background:#FF5F57;}.t-amber{background:#FEBC2E;}.t-green{background:#28C840;}
-.terminal-label{
-  margin-left:auto;font-family:var(--mono);
-  font-size:0.55rem;color:var(--green);letter-spacing:0.1em;
-}
-.terminal-body{padding:1.5rem 1.5rem 1.8rem;}
-.terminal-line{
-  font-family:var(--mono);font-size:0.82rem;
-  line-height:1.7;color:rgba(255,255,255,0.75);
-  margin-bottom:0.3rem;
-}
-.terminal-line .prompt{color:var(--green);margin-right:0.6rem;}
-.terminal-line .hl-gold{color:var(--gold);font-weight:600;}
-.terminal-line .hl-green{color:var(--green);}
-.terminal-line .hl-dim{color:var(--muted);}
-.terminal-cursor{
-  display:inline-block;width:8px;height:14px;
-  background:var(--green);vertical-align:middle;
-  animation:blink 1s step-end infinite;
-  margin-left:2px;
-}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-.briefing-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
-  margin-bottom:2rem;
-  animation:fadeIn 0.6s 0.5s ease both;
-}
-.stat-card{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:10px;padding:1rem;
-  backdrop-filter:blur(10px);
-  text-align:center;
-}
-.stat-num{
-  font-family:var(--display);font-size:1.4rem;
-  font-weight:700;color:var(--gold);
-  text-shadow:0 0 15px rgba(255,215,0,0.4);
-}
-.stat-label{font-size:0.72rem;color:var(--muted);margin-top:0.25rem;letter-spacing:0.05em;}
-
-.btn-primary{
-  display:inline-flex;align-items:center;gap:0.75rem;
-  background:linear-gradient(135deg,var(--green),#2DD60F);
-  color:#000;
-  font-family:var(--display);font-size:0.72rem;font-weight:700;
-  letter-spacing:0.12em;text-transform:uppercase;
-  padding:0.9rem 2.5rem;border-radius:6px;border:none;cursor:pointer;
-  box-shadow:0 0 30px rgba(57,255,20,0.3),0 4px 20px rgba(0,0,0,0.5);
-  transition:all 0.2s;
-  animation:fadeIn 0.6s 0.6s ease both;
-}
-.btn-primary:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 50px rgba(57,255,20,0.5),0 8px 30px rgba(0,0,0,0.6);
-}
-.btn-primary .btn-arrow{font-size:1rem;}
-
-@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-
-/* ═══════════════════════════════════════════════════════
-   SCENE B — THEORY PANELS + DRAG & DROP
-═══════════════════════════════════════════════════════ */
-#scene-b{
-  min-height:calc(100vh - 52px);
-  display:none;
-  padding:2.5rem 2rem;
-}
-#scene-b.active{display:block;}
-
-.scene-header{
-  text-align:center;margin-bottom:2.5rem;
-}
-.scene-badge{
-  display:inline-flex;align-items:center;gap:0.5rem;
-  background:var(--gold-dim);border:1px solid rgba(255,215,0,0.25);
-  color:var(--gold);font-family:var(--mono);font-size:0.58rem;
-  letter-spacing:0.15em;padding:0.3rem 1rem;border-radius:4px;
-  margin-bottom:1rem;
-}
-.scene-title{
-  font-family:var(--display);font-size:1.6rem;font-weight:700;
-  color:#fff;margin-bottom:0.3rem;
-}
-.scene-sub{font-size:0.9rem;color:var(--muted);}
-
-/* Theory cards */
-.theory-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
-  max-width:1100px;margin:0 auto 3rem;
-}
-.theory-card{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:14px;padding:1.5rem;
-  backdrop-filter:blur(12px);
-  position:relative;overflow:hidden;
-  transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;
-}
-.theory-card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(57,255,20,0.2);
-  box-shadow:0 0 30px rgba(57,255,20,0.08);
-}
-.theory-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;
-  height:2px;
-}
-.theory-card.t-data::before{background:linear-gradient(90deg,var(--blue),transparent);}
-.theory-card.t-info::before{background:linear-gradient(90deg,var(--gold),transparent);}
-.theory-card.t-know::before{background:linear-gradient(90deg,var(--green),transparent);}
-
-.card-tier{
-  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;
-  text-transform:uppercase;margin-bottom:0.8rem;
-  display:flex;align-items:center;gap:0.4rem;
-}
-.t-data .card-tier{color:var(--blue);}
-.t-info .card-tier{color:var(--gold);}
-.t-know .card-tier{color:var(--green);}
-.tier-dot{width:6px;height:6px;border-radius:50%;}
-.t-data .tier-dot{background:var(--blue);}
-.t-info .tier-dot{background:var(--gold);}
-.t-know .tier-dot{background:var(--green);}
-
-.card-icon{font-size:2.2rem;margin-bottom:0.8rem;display:block;}
-.card-heading{
-  font-family:var(--display);font-size:1rem;font-weight:700;
-  color:#fff;margin-bottom:0.6rem;
-}
-.card-def{font-size:0.83rem;color:var(--muted);line-height:1.6;}
-.card-example{
-  margin-top:1rem;
-  background:rgba(0,0,0,0.3);
-  border-radius:8px;padding:0.75rem;
-  border-left:2px solid var(--panel-border);
-}
-.example-label{font-family:var(--mono);font-size:0.55rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.4rem;}
-.example-text{font-size:0.78rem;color:rgba(255,255,255,0.6);}
-.t-data .card-example{border-left-color:var(--blue);}
-.t-info .card-example{border-left-color:var(--gold);}
-.t-know .card-example{border-left-color:var(--green);}
-
-/* Hierarchy drag section */
-.dnd-section{
-  max-width:900px;margin:0 auto;
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:16px;padding:2rem;
-  backdrop-filter:blur(12px);
-}
-.dnd-intro{
-  text-align:center;margin-bottom:2rem;
-}
-.dnd-intro h3{
-  font-family:var(--display);font-size:1rem;color:#fff;margin-bottom:0.5rem;
-}
-.dnd-intro p{font-size:0.82rem;color:var(--muted);}
-
-.dnd-layout{
-  display:grid;grid-template-columns:1fr auto 1fr;
-  gap:2rem;align-items:start;
-}
-.dnd-pool-label,
-.dnd-targets-label{
-  font-family:var(--mono);font-size:0.58rem;
-  letter-spacing:0.12em;color:var(--muted);
-  text-transform:uppercase;margin-bottom:1rem;
-  text-align:center;
-}
-.drag-item{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:8px;
-  padding:0.65rem 1rem;
-  margin-bottom:0.6rem;
-  font-size:0.82rem;font-family:var(--mono);
-  color:rgba(255,255,255,0.8);
-  cursor:grab;
-  transition:all 0.2s;
-  user-select:none;
-  display:flex;align-items:center;gap:0.5rem;
-}
-.drag-item:active{cursor:grabbing;}
-.drag-item:hover{
-  background:rgba(57,255,20,0.08);
-  border-color:rgba(57,255,20,0.3);
-  color:#fff;
-  transform:translateX(3px);
-}
-.drag-item.dragging{
-  opacity:0.4;cursor:grabbing;
-}
-.drag-item.placed{
-  background:rgba(57,255,20,0.1);
-  border-color:rgba(57,255,20,0.3);
-  color:var(--green);
-  cursor:default;
-}
-.drag-handle{color:var(--muted);font-size:0.7rem;}
-
-.dnd-arrow{
-  display:flex;align-items:center;
-  font-family:var(--mono);font-size:1.2rem;
-  color:rgba(255,255,255,0.15);padding-top:2rem;
-}
-
-.drop-zone{
-  border:1px dashed rgba(255,255,255,0.12);
-  border-radius:10px;
-  padding:1.2rem;
-  margin-bottom:1rem;
-  min-height:64px;
-  transition:all 0.2s;
-  position:relative;
-}
-.drop-zone:hover,.drop-zone.drag-over{
-  border-color:rgba(57,255,20,0.4);
-  background:rgba(57,255,20,0.04);
-}
-.drop-label{
-  font-family:var(--mono);font-size:0.58rem;
-  color:var(--muted);letter-spacing:0.1em;
-  display:block;margin-bottom:0.5rem;
-}
-.drop-value-hint{
-  font-size:0.72rem;color:rgba(255,255,255,0.25);
-  font-style:italic;
-}
-.drop-zone.correct{
-  border-color:rgba(57,255,20,0.5);
-  background:rgba(57,255,20,0.06);
-}
-.drop-zone.incorrect{
-  border-color:rgba(255,68,68,0.5);
-  background:rgba(255,68,68,0.06);
-  animation:shake 0.3s ease;
-}
-@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}};
-
-.dnd-submit-row{
-  text-align:center;margin-top:2rem;
-}
-
-/* ═══════════════════════════════════════════════════════
-   SCENE C — HUD PRACTICE MODE
-═══════════════════════════════════════════════════════ */
-#scene-c{
-  min-height:calc(100vh - 52px);
-  display:none;
-  padding:2.5rem 2rem;
-}
-#scene-c.active{display:block;}
-
-.hud-layout{
-  max-width:1100px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 280px;gap:1.5rem;
-  align-items:start;
-}
-
-/* NEI Method Ribbon */
-.nei-ribbon{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:14px;
-  padding:1.5rem;
-  backdrop-filter:blur(12px);
-  position:sticky;top:70px;
-}
-.ribbon-header{
-  font-family:var(--mono);font-size:0.58rem;
-  letter-spacing:0.15em;color:var(--gold);
-  text-transform:uppercase;margin-bottom:1.5rem;
-  display:flex;align-items:center;gap:0.5rem;
-}
-.ribbon-header::before{
-  content:'';width:12px;height:1px;background:var(--gold);
-}
-
-.nei-block{
-  display:flex;align-items:flex-start;gap:1rem;
-  margin-bottom:1.2rem;padding-bottom:1.2rem;
-  border-bottom:1px solid var(--panel-border);
-  opacity:0.4;transition:opacity 0.3s,transform 0.3s;
-}
-.nei-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
-.nei-block.detected{opacity:1;transform:translateX(3px);}
-.nei-block.detected .nei-icon{box-shadow:0 0 20px rgba(57,255,20,0.4);}
-
-.nei-icon{
-  width:40px;height:40px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);font-size:0.9rem;font-weight:900;
-  flex-shrink:0;
-  border:1px solid rgba(255,255,255,0.1);
-  background:rgba(255,255,255,0.04);
-  transition:all 0.3s;
-}
-.nei-block.n-block.detected .nei-icon{background:rgba(0,212,255,0.15);border-color:var(--blue);color:var(--blue);}
-.nei-block.e-block.detected .nei-icon{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold);}
-.nei-block.i-block.detected .nei-icon{background:rgba(57,255,20,0.15);border-color:var(--green);color:var(--green);}
-.nei-icon-default{color:var(--muted);}
-
-.nei-content{}
-.nei-letter{
-  font-family:var(--display);font-size:0.65rem;font-weight:700;
-  color:var(--muted);letter-spacing:0.1em;margin-bottom:0.2rem;
-}
-.nei-desc{font-size:0.75rem;color:var(--muted);line-height:1.4;}
-.nei-keyword{
-  margin-top:0.5rem;
-  font-family:var(--mono);font-size:0.62rem;
-  color:var(--muted);
-}
-
-.marks-indicator{
-  margin-top:1.5rem;padding-top:1.5rem;
-  border-top:1px solid var(--panel-border);
-  text-align:center;
-}
-.marks-label{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.5rem;}
-.marks-display{
-  font-family:var(--display);font-size:2rem;font-weight:900;
-  color:var(--gold);
-  text-shadow:0 0 20px rgba(255,215,0,0.3);
-}
-.marks-max{font-size:1rem;color:var(--muted);}
-
-/* Main Editor */
-.editor-panel{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:14px;overflow:hidden;
-  backdrop-filter:blur(12px);
-}
-.editor-header{
-  background:rgba(0,0,0,0.3);
-  border-bottom:1px solid var(--panel-border);
-  padding:1rem 1.5rem;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
-}
-.question-block{}
-.q-label{
-  font-family:var(--mono);font-size:0.55rem;
-  letter-spacing:0.15em;color:var(--gold);
-  text-transform:uppercase;margin-bottom:0.4rem;
-  display:flex;align-items:center;gap:0.4rem;
-}
-.q-label::before{content:'';width:8px;height:1px;background:var(--gold);}
-.q-text{
-  font-size:0.9rem;color:rgba(255,255,255,0.85);
-  line-height:1.5;max-width:560px;
-}
-.q-marks{
-  background:rgba(255,215,0,0.1);
-  border:1px solid rgba(255,215,0,0.25);
-  color:var(--gold);
-  font-family:var(--display);font-size:0.62rem;font-weight:700;
-  padding:0.3rem 0.75rem;border-radius:6px;
-  white-space:nowrap;flex-shrink:0;
-}
-
-.editor-body{padding:1.5rem;}
-.editor-label{
-  font-family:var(--mono);font-size:0.55rem;
-  letter-spacing:0.12em;color:var(--muted);
-  text-transform:uppercase;margin-bottom:0.75rem;
-  display:flex;align-items:center;gap:0.6rem;
-}
-.editor-label::before{
-  content:'›';color:var(--green);font-size:0.8rem;
-}
-
-#answer-input{
-  width:100%;
-  min-height:160px;
-  background:rgba(0,0,0,0.4);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:10px;
-  padding:1.2rem;
-  color:rgba(255,255,255,0.85);
-  font-family:var(--mono);font-size:0.82rem;
-  line-height:1.7;
-  resize:vertical;
-  outline:none;
-  transition:border-color 0.2s;
-}
-#answer-input:focus{
-  border-color:rgba(57,255,20,0.3);
-  box-shadow:0 0 0 2px rgba(57,255,20,0.05);
-}
-#answer-input::placeholder{color:var(--muted);}
-
-.word-counter{
-  font-family:var(--mono);font-size:0.6rem;
-  color:var(--muted);margin-top:0.5rem;
-  display:flex;justify-content:flex-end;
-  gap:1rem;
-}
-
-.nei-hints{
-  margin-top:1.5rem;
-  background:rgba(255,215,0,0.04);
-  border:1px solid rgba(255,215,0,0.12);
-  border-radius:10px;
-  padding:1rem 1.2rem;
-}
-.hints-label{
-  font-family:var(--mono);font-size:0.58rem;
-  color:var(--gold);letter-spacing:0.1em;
-  margin-bottom:0.75rem;
-}
-.hint-row{
-  display:flex;gap:0.5rem;margin-bottom:0.5rem;
-  align-items:flex-start;
-  font-size:0.78rem;color:rgba(255,255,255,0.5);
-}
-.hint-row:last-child{margin-bottom:0;}
-.hint-chip{
-  font-family:var(--display);font-size:0.55rem;font-weight:700;
-  padding:0.1rem 0.4rem;border-radius:3px;
-  flex-shrink:0;margin-top:1px;
-}
-.hint-n{background:rgba(0,212,255,0.15);color:var(--blue);}
-.hint-e{background:rgba(255,215,0,0.15);color:var(--gold);}
-.hint-i{background:rgba(57,255,20,0.15);color:var(--green);}
-
-.submit-row{
-  margin-top:1.5rem;
-  display:flex;justify-content:flex-end;gap:1rem;
-}
-
-.btn-secondary{
-  display:inline-flex;align-items:center;gap:0.5rem;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  color:var(--muted);
-  font-family:var(--display);font-size:0.65rem;font-weight:600;
-  letter-spacing:0.1em;
-  padding:0.75rem 1.5rem;border-radius:6px;cursor:pointer;
-  transition:all 0.2s;
-}
-.btn-secondary:hover{background:rgba(255,255,255,0.08);color:var(--ink);}
-
-.btn-submit{
-  display:inline-flex;align-items:center;gap:0.5rem;
-  background:linear-gradient(135deg,rgba(57,255,20,0.15),rgba(57,255,20,0.08));
-  border:1px solid rgba(57,255,20,0.4);
-  color:var(--green);
-  font-family:var(--display);font-size:0.65rem;font-weight:700;
-  letter-spacing:0.12em;
-  padding:0.75rem 1.8rem;border-radius:6px;cursor:pointer;
-  transition:all 0.2s;
-}
-.btn-submit:hover{
-  background:linear-gradient(135deg,rgba(57,255,20,0.25),rgba(57,255,20,0.12));
-  box-shadow:0 0 20px rgba(57,255,20,0.2);
-}
-
-/* ═══════════════════════════════════════════════════════
-   SCENE D — SELF CALIBRATION
-═══════════════════════════════════════════════════════ */
-#scene-d{
-  min-height:calc(100vh - 52px);
-  display:none;
-  padding:2.5rem 2rem;
-}
-#scene-d.active{display:block;}
-
-.calibration-layout{
-  max-width:1100px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
-  align-items:start;
-}
-
-.panel-card{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:14px;
-  backdrop-filter:blur(12px);
-  overflow:hidden;
-}
-.panel-top{
-  border-bottom:1px solid var(--panel-border);
-  padding:1rem 1.5rem;
-}
-.panel-label{
-  font-family:var(--mono);font-size:0.58rem;
-  letter-spacing:0.15em;color:var(--muted);
-  text-transform:uppercase;margin-bottom:0.25rem;
-}
-.panel-title{
-  font-family:var(--display);font-size:0.9rem;font-weight:700;color:#fff;
-}
-.panel-body-inner{padding:1.5rem;}
-
-/* Model Answer */
-.model-answer{
-  background:rgba(0,0,0,0.3);
-  border-radius:10px;
-  padding:1.2rem;
-  margin-bottom:1rem;
-  font-size:0.85rem;line-height:1.7;
-  color:rgba(255,255,255,0.8);
-}
-.ma-segment{
-  display:inline;
-}
-.ma-n{
-  background:rgba(0,212,255,0.15);
-  color:#7DD3FC;
-  padding:1px 3px;border-radius:3px;
-}
-.ma-e{
-  background:rgba(255,215,0,0.15);
-  color:#FFE07A;
-  padding:1px 3px;border-radius:3px;
-}
-.ma-i{
-  background:rgba(57,255,20,0.15);
-  color:#86EFAC;
-  padding:1px 3px;border-radius:3px;
-}
-
-.ma-legend{
-  display:flex;gap:1rem;
-  font-family:var(--mono);font-size:0.6rem;
-}
-.leg-item{display:flex;align-items:center;gap:0.35rem;}
-.leg-swatch{
-  width:10px;height:10px;border-radius:2px;
-}
-.leg-n{background:rgba(0,212,255,0.3);}
-.leg-e{background:rgba(255,215,0,0.3);}
-.leg-i{background:rgba(57,255,20,0.3);}
-
-/* Student answer highlight */
-.highlighter-toolbar{
-  display:flex;gap:0.5rem;
-  margin-bottom:1rem;
-}
-.hl-btn{
-  display:inline-flex;align-items:center;gap:0.4rem;
-  padding:0.4rem 0.85rem;
-  border-radius:6px;
-  font-family:var(--mono);font-size:0.6rem;
-  font-weight:600;letter-spacing:0.05em;
-  cursor:pointer;border:1px solid transparent;
-  transition:all 0.2s;
-}
-.hl-btn.hl-green{
-  background:rgba(57,255,20,0.12);border-color:rgba(57,255,20,0.3);color:var(--green);
-}
-.hl-btn.hl-amber-btn{
-  background:rgba(255,153,0,0.12);border-color:rgba(255,153,0,0.3);color:var(--amber);
-}
-.hl-btn.hl-red-btn{
-  background:rgba(255,68,68,0.12);border-color:rgba(255,68,68,0.3);color:var(--red);
-}
-.hl-btn.active,.hl-btn:hover{filter:brightness(1.3);transform:scale(1.05);}
-.hl-btn .hl-dot{
-  width:8px;height:8px;border-radius:50%;
-}
-.hl-g-dot{background:var(--green);}
-.hl-a-dot{background:var(--amber);}
-.hl-r-dot{background:var(--red);}
-
-.student-response-area{
-  background:rgba(0,0,0,0.3);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:10px;
-  padding:1.2rem;
-  font-size:0.85rem;line-height:1.8;
-  color:rgba(255,255,255,0.8);
-  cursor:text;
-  user-select:text;
-  min-height:100px;
-}
-
-.highlight-green{background:rgba(57,255,20,0.25);border-radius:2px;padding:1px 2px;}
-.highlight-amber{background:rgba(255,153,0,0.25);border-radius:2px;padding:1px 2px;}
-.highlight-red{background:rgba(255,68,68,0.2);border-radius:2px;padding:1px 2px;}
-
-.tagging-legend{
-  margin-top:1rem;
-  display:flex;gap:0.8rem;flex-wrap:wrap;
-}
-.tag-explain{font-family:var(--mono);font-size:0.6rem;color:var(--muted);}
-.tag-green-ex{
-  display:inline-flex;align-items:center;gap:0.3rem;
-  background:rgba(57,255,20,0.1);color:var(--green);
-  padding:0.15rem 0.4rem;border-radius:3px;
-  font-family:var(--mono);font-size:0.58rem;
-}
-.tag-amber-ex{
-  display:inline-flex;align-items:center;gap:0.3rem;
-  background:rgba(255,153,0,0.1);color:var(--amber);
-  padding:0.15rem 0.4rem;border-radius:3px;
-  font-family:var(--mono);font-size:0.58rem;
-}
-.tag-red-ex{
-  display:inline-flex;align-items:center;gap:0.3rem;
-  background:rgba(255,68,68,0.1);color:var(--red);
-  padding:0.15rem 0.4rem;border-radius:3px;
-  font-family:var(--mono);font-size:0.58rem;
-}
-
-/* Vulnerability Alert */
-.vuln-alert{
-  display:none;
-  background:rgba(255,68,68,0.08);
-  border:1px solid rgba(255,68,68,0.3);
-  border-radius:10px;padding:1.2rem;
-  margin-top:1rem;
-  animation:fadeIn 0.4s ease;
-}
-.vuln-alert.visible{display:block;}
-.vuln-header{
-  display:flex;align-items:center;gap:0.6rem;
-  margin-bottom:0.5rem;
-}
-.vuln-icon{font-size:1.2rem;}
-.vuln-title{
-  font-family:var(--display);font-size:0.72rem;font-weight:700;
-  color:var(--red);letter-spacing:0.05em;
-}
-.vuln-msg{font-size:0.8rem;color:rgba(255,255,255,0.6);line-height:1.5;}
-.vuln-tip{
-  margin-top:0.75rem;
-  background:rgba(255,215,0,0.06);
-  border-left:2px solid var(--gold);
-  padding:0.75rem;border-radius:4px;
-  font-size:0.78rem;color:rgba(255,255,255,0.55);
-  font-style:italic;
-}
-
-/* Score breakdown */
-.score-panel{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:14px;padding:1.5rem;
-  backdrop-filter:blur(12px);
-  margin-top:1.5rem;
-  grid-column:span 2;
-}
-.score-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:1.5rem;
-}
-.score-title{
-  font-family:var(--display);font-size:1rem;font-weight:700;color:#fff;
-}
-.score-chips{display:flex;gap:0.75rem;}
-.score-chip{
-  font-family:var(--display);font-size:0.65rem;font-weight:700;
-  padding:0.3rem 0.75rem;border-radius:20px;
-  display:flex;align-items:center;gap:0.35rem;
-}
-.chip-n{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--blue);}
-.chip-e{background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);color:var(--gold);}
-.chip-i{background:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.3);color:var(--green);}
-.chip-dot{width:6px;height:6px;border-radius:50%;}
-.chip-n .chip-dot{background:var(--blue);}
-.chip-e .chip-dot{background:var(--gold);}
-.chip-i .chip-dot{background:var(--green);}
-
-.score-bar-row{
-  display:flex;align-items:center;gap:1rem;margin-bottom:0.9rem;
-}
-.bar-label{
-  font-family:var(--mono);font-size:0.6rem;
-  color:var(--muted);width:80px;flex-shrink:0;
-}
-.bar-track{
-  flex:1;height:8px;background:rgba(255,255,255,0.05);
-  border-radius:4px;overflow:hidden;
-}
-.bar-fill{
-  height:100%;border-radius:4px;
-  transition:width 1s cubic-bezier(.22,1,.36,1);
-  width:0%;
-}
-.bar-fill.n-fill{background:linear-gradient(90deg,var(--blue),#7DD3FC);}
-.bar-fill.e-fill{background:linear-gradient(90deg,var(--gold),#FFE07A);}
-.bar-fill.i-fill{background:linear-gradient(90deg,var(--green),#86EFAC);}
-.bar-pct{
-  font-family:var(--mono);font-size:0.6rem;
-  color:var(--muted);width:35px;text-align:right;flex-shrink:0;
-}
-
-/* ═══════════════════════════════════════════════════════
-   SCENE E — BADGE + COMPLETION
-═══════════════════════════════════════════════════════ */
-#scene-e{
-  min-height:calc(100vh - 52px);
-  display:none;
-  align-items:center;justify-content:center;
-  padding:3rem 2rem;text-align:center;
-}
-#scene-e.active{display:flex;flex-direction:column;}
-
-.completion-header{
-  font-family:var(--display);font-size:0.6rem;
-  letter-spacing:0.2em;color:var(--green);
-  text-transform:uppercase;margin-bottom:2rem;
-  animation:fadeIn 0.5s ease both;
-}
-
-/* 3D rotating badge */
-.badge-3d{
-  width:200px;height:200px;
-  margin:0 auto 2.5rem;
-  animation:fadeIn 0.6s 0.2s ease both,badgeSpin 8s linear infinite;
-  perspective:600px;
-}
-@keyframes badgeSpin{
-  0%{filter:drop-shadow(0 0 20px rgba(57,255,20,0.4));}
-  25%{filter:drop-shadow(0 0 40px rgba(255,215,0,0.6));}
-  50%{filter:drop-shadow(0 0 20px rgba(57,255,20,0.4));}
-  75%{filter:drop-shadow(0 0 40px rgba(0,212,255,0.5));}
-  100%{filter:drop-shadow(0 0 20px rgba(57,255,20,0.4));}
-}
-.badge-hex{
-  width:200px;height:200px;
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  background:linear-gradient(135deg,#1a3a1a,#0D2B0D);
-  border:3px solid var(--green);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  position:relative;
-  animation:badgeRotate3d 6s ease-in-out infinite;
-}
-@keyframes badgeRotate3d{
-  0%,100%{transform:rotateY(0deg);}
-  25%{transform:rotateY(15deg) rotateX(5deg);}
-  50%{transform:rotateY(0deg);}
-  75%{transform:rotateY(-15deg) rotateX(-5deg);}
-}
-.badge-hex::before{
-  content:'';position:absolute;inset:-3px;
-  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  background:linear-gradient(135deg,var(--green),var(--gold),var(--green));
-  z-index:-1;
-  animation:borderGlow 3s ease-in-out infinite;
-}
-@keyframes borderGlow{
-  0%,100%{opacity:1;}50%{opacity:0.6;}
-}
-.badge-icon{font-size:4rem;line-height:1;margin-bottom:0.4rem;}
-.badge-text-top{font-family:var(--display);font-size:0.5rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
-.badge-text-main{font-family:var(--display);font-size:0.65rem;font-weight:700;color:var(--green);letter-spacing:0.05em;text-shadow:0 0 10px var(--green);}
-
-.completion-title{
-  font-family:var(--display);font-size:2.2rem;font-weight:900;
-  color:#fff;margin-bottom:0.5rem;
-  animation:fadeIn 0.6s 0.4s ease both;
-}
-.completion-title span{
-  background:linear-gradient(135deg,var(--green),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.completion-sub{
-  font-size:0.9rem;color:var(--muted);margin-bottom:2.5rem;
-  animation:fadeIn 0.6s 0.5s ease both;
-}
-
-.score-final{
-  display:flex;gap:1.5rem;justify-content:center;
-  margin-bottom:2.5rem;
-  animation:fadeIn 0.6s 0.6s ease both;
-}
-.sf-item{
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:12px;padding:1.2rem 2rem;
-  backdrop-filter:blur(12px);text-align:center;
-}
-.sf-num{
-  font-family:var(--display);font-size:2rem;font-weight:900;
-  color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.4);
-}
-.sf-label{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;letter-spacing:0.05em;}
-
-.export-btn{
-  display:inline-flex;align-items:center;gap:0.75rem;
-  background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,215,0,0.06));
-  border:1px solid rgba(255,215,0,0.35);color:var(--gold);
-  font-family:var(--display);font-size:0.65rem;font-weight:700;
-  letter-spacing:0.1em;padding:0.85rem 2rem;border-radius:6px;cursor:pointer;
-  transition:all 0.2s;
-  animation:fadeIn 0.6s 0.8s ease both;
-}
-.export-btn:hover{
-  box-shadow:0 0 20px rgba(255,215,0,0.2);
-  background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,215,0,0.1));
-}
-
-/* ═══════════════════════════════════════════════════════
-   SCENE NAV (bottom nav)
-═══════════════════════════════════════════════════════ */
-.scene-nav{
-  position:fixed;bottom:1.5rem;right:1.5rem;
-  display:flex;gap:0.5rem;z-index:200;
-}
-.nav-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.15);
-  cursor:pointer;transition:all 0.2s;
-}
-.nav-dot.active{
-  background:var(--green);border-color:var(--green);
-  box-shadow:0 0 10px var(--green);
-  width:24px;border-radius:5px;
-}
-
-/* ═══════════════════════════════════════════════════════
-   MISC QUIZ / FLASHCARD / DISCUSSION — Scene B extras
-═══════════════════════════════════════════════════════ */
-.quiz-section{
-  max-width:900px;margin:2rem auto 0;
-}
-.quiz-title{
-  font-family:var(--display);font-size:0.9rem;font-weight:700;color:#fff;
-  margin-bottom:1.2rem;
-  display:flex;align-items:center;gap:0.7rem;
-}
-.quiz-title::before{
-  content:'';display:inline-block;width:4px;height:20px;
-  background:linear-gradient(var(--green),var(--gold));border-radius:2px;
-}
-.quiz-card{
-  background:var(--panel-bg);border:1px solid var(--panel-border);
-  border-radius:12px;padding:1.2rem 1.5rem;
-  margin-bottom:0.75rem;
-  backdrop-filter:blur(12px);
-  transition:border-color 0.2s;
-}
-.quiz-q{font-size:0.88rem;color:rgba(255,255,255,0.8);margin-bottom:0.75rem;}
-.quiz-options{display:flex;flex-direction:column;gap:0.5rem;}
-.q-opt{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:7px;padding:0.6rem 1rem;
-  font-size:0.82rem;color:var(--muted);
-  cursor:pointer;transition:all 0.15s;
-  display:flex;align-items:center;gap:0.6rem;
-}
-.q-opt:hover{
-  background:rgba(57,255,20,0.06);
-  border-color:rgba(57,255,20,0.2);color:var(--ink);
-}
-.q-opt.correct{
-  background:rgba(57,255,20,0.1);
-  border-color:rgba(57,255,20,0.4);color:var(--green);
-}
-.q-opt.incorrect{
-  background:rgba(255,68,68,0.08);
-  border-color:rgba(255,68,68,0.3);color:var(--red);
-}
-.q-opt.disabled{cursor:default;pointer-events:none;}
-.opt-letter{
-  width:22px;height:22px;border-radius:5px;
-  background:rgba(255,255,255,0.05);
-  font-family:var(--mono);font-size:0.65rem;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-}
-.q-feedback{
-  margin-top:0.6rem;padding:0.6rem 0.9rem;
-  border-radius:7px;font-size:0.78rem;line-height:1.5;
-  display:none;
-}
-.q-feedback.correct-fb{
-  display:block;background:rgba(57,255,20,0.07);
-  border:1px solid rgba(57,255,20,0.2);color:var(--green);
-}
-.q-feedback.incorrect-fb{
-  display:block;background:rgba(255,68,68,0.07);
-  border:1px solid rgba(255,68,68,0.2);color:var(--red);
-}
-
-/* scene tabs within B */
-.sub-tabs{
-  display:flex;gap:0.5rem;
-  max-width:1100px;margin:0 auto 2rem;
-  background:rgba(0,0,0,0.2);
-  border-radius:10px;padding:0.4rem;
-  border:1px solid var(--panel-border);
-}
-.sub-tab{
-  flex:1;padding:0.6rem;border-radius:7px;
-  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;
-  color:var(--muted);cursor:pointer;text-align:center;
-  transition:all 0.2s;background:transparent;border:none;
-  text-transform:uppercase;
-}
-.sub-tab.active{
-  background:rgba(57,255,20,0.1);
-  color:var(--green);
-  border:1px solid rgba(57,255,20,0.25);
-  box-shadow:0 0 10px rgba(57,255,20,0.1);
-}
-.sub-content{display:none;}
-.sub-content.active{display:block;}
-
-/* Flashcards */
-.flashcard-grid{
-  max-width:900px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
-}
-.flashcard{
-  perspective:600px;cursor:pointer;height:140px;
-}
-.fc-inner{
-  position:relative;width:100%;height:100%;
-  transform-style:preserve-3d;
-  transition:transform 0.5s cubic-bezier(.22,1,.36,1);
-}
+/* flashcards */
+.fc-container{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.fc-counter{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--dim);}
+.flashcard{width:100%;max-width:560px;aspect-ratio:16/9;perspective:1000px;cursor:pointer;}
+.fc-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.22,1,.36,1);}
 .flashcard.flipped .fc-inner{transform:rotateY(180deg);}
-.fc-front,.fc-back{
-  position:absolute;inset:0;
-  background:var(--panel-bg);
-  border:1px solid var(--panel-border);
-  border-radius:12px;
-  backface-visibility:hidden;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:1rem;text-align:center;
-}
-.fc-back{transform:rotateY(180deg);}
-.fc-front-label{
-  font-family:var(--mono);font-size:0.55rem;
-  color:var(--gold);letter-spacing:0.12em;
-  margin-bottom:0.5rem;
-}
-.fc-front-q{font-size:0.85rem;color:rgba(255,255,255,0.8);}
-.fc-back-label{
-  font-family:var(--mono);font-size:0.55rem;
-  color:var(--green);letter-spacing:0.12em;
-  margin-bottom:0.5rem;
-}
-.fc-back-a{font-size:0.8rem;color:rgba(255,255,255,0.75);}
+.fc-face{position:absolute;inset:0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;backface-visibility:hidden;text-align:center;}
+.fc-front{background:rgba(255,255,255,0.04);border:1px solid var(--border);}
+.fc-back{background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.25);transform:rotateY(180deg);}
+.fc-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px;}
+.fc-term{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;color:#fff;}
+.fc-def{font-size:15px;color:var(--ink);line-height:1.65;}
+.fc-hint{font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;}
+.fc-nav{display:flex;gap:12px;}
+.fc-btn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;background:var(--panel);border:1px solid var(--border);color:var(--dim);padding:8px 20px;border-radius:6px;cursor:pointer;transition:all .2s;}
+.fc-btn:hover,.fc-btn.primary{color:var(--green);border-color:rgba(57,255,20,0.35);background:rgba(57,255,20,0.07);}
+.fc-progress-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+.fc-pip{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.07);transition:background .3s;}
+.fc-pip.seen{background:rgba(57,255,20,0.3);}
+.fc-pip.done{background:var(--green);box-shadow:0 0 4px rgba(57,255,20,0.5);}
 
-/* Solo classify task */
-.classify-task{
-  max-width:900px;margin:0 auto;
-}
-.classify-items-grid{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
-  margin-bottom:2rem;
-}
-.classify-item{
-  background:var(--panel-bg);border:1px solid var(--panel-border);
-  border-radius:10px;padding:1rem;
-  display:flex;align-items:center;gap:0.75rem;
-}
-.ci-text{flex:1;font-size:0.82rem;color:rgba(255,255,255,0.7);}
-.ci-select{
-  background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);
-  border-radius:6px;padding:0.35rem 0.6rem;
-  color:var(--ink);font-family:var(--mono);font-size:0.62rem;
-  outline:none;cursor:pointer;min-width:120px;
-}
-.ci-select:focus{border-color:rgba(57,255,20,0.3);}
+/* quiz */
+.quiz-q{font-size:16px;color:var(--ink);line-height:1.65;margin-bottom:20px;}
+.quiz-options{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.quiz-opt{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:12px 16px;cursor:pointer;font-size:14px;color:var(--dim);transition:all .2s;display:flex;align-items:center;gap:10px;}
+.quiz-opt:hover:not(.disabled){border-color:rgba(255,255,255,0.15);color:var(--ink);}
+.quiz-opt.selected{border-color:rgba(57,255,20,0.4);background:rgba(57,255,20,0.07);color:var(--green);}
+.quiz-opt.correct{border-color:rgba(57,255,20,0.6);background:rgba(57,255,20,0.12);color:var(--green);}
+.quiz-opt.wrong{border-color:rgba(255,59,59,0.5);background:rgba(255,59,59,0.07);color:var(--red);}
+.quiz-opt.disabled{cursor:not-allowed;}
+.opt-marker{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:9px;flex-shrink:0;}
+.quiz-feedback{padding:12px 16px;border-radius:8px;font-size:13px;line-height:1.5;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.correct{background:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.25);color:var(--dim);}
+.quiz-feedback.wrong{background:rgba(255,59,59,0.07);border:1px solid rgba(255,59,59,0.25);color:var(--dim);}
+.quiz-feedback strong{color:var(--green);}
+.quiz-feedback.wrong strong{color:var(--red);}
+.quiz-score{font-family:'Orbitron',monospace;font-size:28px;font-weight:700;text-align:center;margin:16px 0;color:var(--green);}
+.q-progress{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:16px;}
 
-.classify-check-row{text-align:center;}
-.classify-result-item{
-  display:inline-flex;align-items:center;gap:0.5rem;
-  margin:0.3rem;padding:0.3rem 0.75rem;border-radius:20px;
-  font-family:var(--mono);font-size:0.65rem;
-}
-.cr-correct{background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.3);}
-.cr-incorrect{background:rgba(255,68,68,0.1);color:var(--red);border:1px solid rgba(255,68,68,0.3);}
+/* discussion */
+.disc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.disc-card{background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);border-radius:10px;padding:16px;transition:border-color .2s;}
+.disc-card:hover{border-color:rgba(255,215,0,0.3);}
+.disc-num{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;color:rgba(255,215,0,0.2);margin-bottom:6px;}
+.disc-prompt{font-size:14px;color:var(--dim);line-height:1.65;}
+.disc-tag{margin-top:10px;display:inline-block;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--gold);background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);padding:2px 8px;border-radius:4px;}
+.disc-note{margin-top:14px;padding:10px 14px;background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.15);border-radius:6px;font-size:12px;color:var(--muted);}
 
-/* Discussion prompts */
-.discussion-grid{
-  max-width:900px;margin:0 auto;
-  display:flex;flex-direction:column;gap:1rem;
-}
-.dp-card{
-  background:var(--panel-bg);border:1px solid var(--panel-border);
-  border-radius:12px;padding:1.2rem 1.5rem;
-  display:flex;gap:1rem;align-items:flex-start;
-}
-.dp-num{
-  width:32px;height:32px;border-radius:7px;
-  background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);
-  font-family:var(--display);font-size:0.7rem;font-weight:700;
-  color:var(--gold);flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.dp-prompt{font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.55;}
+/* solo op */
+.solo-task{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;}
+.solo-task h3{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:#fff;margin-bottom:8px;}
+.solo-task p{font-size:14px;color:var(--dim);line-height:1.65;margin-bottom:14px;}
+.sort-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px;}
+.sort-item{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:10px 8px;text-align:center;cursor:grab;font-size:13px;color:var(--dim);transition:all .2s;user-select:none;}
+.sort-item:hover{border-color:rgba(255,255,255,0.2);color:var(--ink);}
+.sort-item.dragging{opacity:0.4;cursor:grabbing;}
+.sort-zones{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.sort-zone{background:rgba(255,255,255,0.02);border:2px dashed var(--border);border-radius:10px;padding:12px;min-height:100px;transition:border-color .2s;}
+.sort-zone.drag-over{border-color:rgba(57,255,20,0.4);background:rgba(57,255,20,0.04);}
+.sort-zone-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:8px;}
+.sort-zone-label.data-lbl{color:var(--green);}
+.sort-zone-label.info-lbl{color:var(--gold);}
+.sort-zone-label.know-lbl{color:var(--amber);}
+.sort-zone .sort-item{margin-bottom:6px;}
+.solo-check-btn{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--green);border:none;border-radius:8px;padding:10px 24px;cursor:pointer;transition:all .2s;}
+.solo-check-btn:hover{opacity:.85;}
+.solo-result{margin-top:12px;padding:12px 16px;border-radius:8px;font-size:13px;display:none;}
+.solo-result.show{display:block;}
+.solo-result.pass{background:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.25);color:var(--dim);}
+.solo-result.partial{background:rgba(255,149,0,0.07);border:1px solid rgba(255,149,0,0.25);color:var(--dim);}
 
-/* ─── TOOLTIPS ─── */
-.tooltip-trigger{
-  border-bottom:1px dashed var(--muted);cursor:help;position:relative;
-}
+/* CTA button row */
+.station-cta{display:flex;gap:12px;align-items:center;margin-top:24px;}
+.btn-complete{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--green);border:none;border-radius:8px;padding:12px 28px;cursor:pointer;transition:all .2s;box-shadow:0 0 20px rgba(57,255,20,0.25);}
+.btn-complete:hover{opacity:.88;transform:translateY(-1px);}
+.btn-complete.done-state{background:rgba(57,255,20,0.15);color:var(--green);border:1px solid rgba(57,255,20,0.4);cursor:default;box-shadow:none;}
+.btn-complete.done-state:hover{transform:none;opacity:1;}
+.btn-back{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--dim);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 20px;cursor:pointer;transition:all .2s;}
+.btn-back:hover{color:var(--ink);}
 
-/* ─── SCREEN LOCK OVERLAY ─── */
-.lock-overlay{
-  position:fixed;inset:0;
-  background:rgba(13,17,23,0.95);backdrop-filter:blur(20px);
-  z-index:500;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  animation:fadeIn 0.3s ease;
-}
-.lock-overlay.hidden{display:none;}
-.lock-icon{font-size:3rem;margin-bottom:1rem;}
-.lock-title{
-  font-family:var(--display);font-size:1.2rem;font-weight:700;
-  color:#fff;margin-bottom:0.5rem;
-}
-.lock-msg{font-size:0.85rem;color:var(--muted);max-width:380px;text-align:center;}
+/* completion overlay */
+.complete-overlay{position:fixed;inset:0;z-index:500;background:rgba(13,17,23,0.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+.complete-overlay.show{display:flex;}
+.badge-3d{width:120px;height:120px;position:relative;animation:badgeSpin 4s linear infinite;}
+@keyframes badgeSpin{from{transform:rotateY(0deg);}to{transform:rotateY(360deg);}}
+.badge-inner{width:120px;height:120px;border-radius:50%;background:conic-gradient(from 0deg,var(--green),var(--gold),var(--green));display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(57,255,20,0.4);}
+.badge-emoji-big{font-size:48px;}
+.co-title{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;color:#fff;text-align:center;}
+.co-sub{font-size:15px;color:var(--dim);text-align:center;max-width:400px;line-height:1.65;}
+.co-badge-name{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--green);margin-top:4px;}
+.co-btns{display:flex;gap:12px;margin-top:8px;}
+.co-btn-primary{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--green);border:none;border-radius:8px;padding:12px 28px;cursor:pointer;text-decoration:none;box-shadow:0 0 24px rgba(57,255,20,0.3);}
+.co-btn-secondary{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--dim);background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 20px;cursor:pointer;text-decoration:none;}
+
+/* FOOTER */
+.footer-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(13,17,23,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);height:44px;display:flex;align-items:center;padding:0 40px;gap:20px;}
+.f-item{display:flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;}
+.f-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.f-lbl{color:var(--muted);}.f-val{color:var(--ink);}
+.f-progress{flex:1;display:flex;align-items:center;gap:10px;justify-content:flex-end;}
+.fp-bar{width:140px;height:4px;border-radius:2px;background:rgba(255,255,255,0.07);overflow:hidden;}
+.fp-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .5s;}
+.fp-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--void);}::-webkit-scrollbar-thumb{background:rgba(57,255,20,0.2);border-radius:3px;}
 </style>
 </head>
 <body>
 
-<!-- ─── HEADER ─────────────────────────────────────────── -->
-<header class="header">
-  <div class="header-brand">The Mark Scheme Method® // Field Training 6.1.1</div>
-  <div class="header-status">
-    <div class="status-item">
-      <span class="status-dot"></span>SYSTEM ONLINE
-    </div>
-    <div class="status-item">
-      STATION: <span id="station-label" style="color:var(--gold);margin-left:4px;">BRIEFING</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:3px;">
-      <div class="status-item">PROGRESS</div>
-      <div class="progress-bar"><div class="progress-fill" id="main-progress" style="width:0%"></div></div>
-    </div>
+<nav class="topbar">
+  <div class="logo">MSM<span>®</span></div>
+  <div class="topnav">
+    <a href="../../index.html" class="navlink">HUB</a>
+    <a href="../index.html" class="navlink active">FIELD TRAINING</a>
+    <a href="../../topics.html" class="navlink">TOPICS</a>
   </div>
-</header>
+</nav>
 
-<!-- ─── SCENE A: OPERATIONAL BRIEFING ─────────────────── -->
-<section id="scene-a" class="scene active">
-  <div class="briefing-bg-fx"></div>
-  <div class="briefing-container">
-    <div class="mission-badge">⬡ FIELD TRAINING 6.1.1 — OPERATIONAL BRIEFING ⬡</div>
-    
-    <div class="avatar-frame">
-      <div class="avatar-hex">
-        <div class="avatar-inner">🤖</div>
-      </div>
-      <div class="avatar-ring"></div>
-    </div>
-
-    <h1 class="briefing-title">DATA, INFORMATION<br>& <span>KNOWLEDGE</span></h1>
-    <p class="briefing-sub">AXIOM-7 TACTICAL BRIEF // CONTENT AREA 6.1.1 // CLEARANCE: STANDARD</p>
-
-    <div class="terminal">
-      <div class="terminal-bar">
-        <span class="t-dot t-red"></span>
-        <span class="t-dot t-amber"></span>
-        <span class="t-dot t-green"></span>
-        <span class="terminal-label">AXIOM-7 // LIVE CHANNEL</span>
-      </div>
-      <div class="terminal-body" id="terminal-transcript"></div>
-    </div>
-
-    <div class="briefing-stats">
-      <div class="stat-card">
-        <div class="stat-num">37/100</div>
-        <div class="stat-label">Average T-Level Score</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--green);text-shadow:0 0 15px rgba(57,255,20,0.4);">6</div>
-        <div class="stat-label">Training Stations</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--blue);">N·E·I</div>
-        <div class="stat-label">The Method Framework</div>
-      </div>
-    </div>
-
-    <button class="btn-primary" onclick="startMission()">
-      <span>INITIATE FIELD TRAINING</span>
-      <span class="btn-arrow">→</span>
-    </button>
+<!-- STATION RAIL -->
+<div class="station-rail">
+  <div class="st-tab active" id="tab0" onclick="goStation(0)">
+    <div class="st-icon">📖</div>
+    <div class="st-name">INTEL BRIEF</div>
+    <div class="st-num">01</div>
   </div>
-</section>
+  <div class="st-tab locked" id="tab1" onclick="goStation(1)">
+    <div class="st-icon">🎬</div>
+    <div class="st-name">BRIEFING ROOM</div>
+    <div class="st-num">02</div>
+  </div>
+  <div class="st-tab locked" id="tab2" onclick="goStation(2)">
+    <div class="st-icon">🃏</div>
+    <div class="st-name">RAPID RECALL</div>
+    <div class="st-num">03</div>
+  </div>
+  <div class="st-tab locked" id="tab3" onclick="goStation(3)">
+    <div class="st-icon">✅</div>
+    <div class="st-name">KNOWLEDGE CHECK</div>
+    <div class="st-num">04</div>
+  </div>
+  <div class="st-tab locked" id="tab4" onclick="goStation(4)">
+    <div class="st-icon">💬</div>
+    <div class="st-name">TEAM DEBRIEF</div>
+    <div class="st-num">05</div>
+  </div>
+  <div class="st-tab locked" id="tab5" onclick="goStation(5)">
+    <div class="st-icon">🎯</div>
+    <div class="st-name">SOLO OP</div>
+    <div class="st-num">06</div>
+  </div>
+</div>
 
-<!-- ─── SCENE B: INTERACTIVE LEARNING ─────────────────── -->
-<section id="scene-b" class="scene">
-  <div class="scene-header">
-    <div class="scene-badge">⬡ STATION 01 — THEORY + PRACTICE</div>
-    <h2 class="scene-title">Data, Information &amp; Knowledge</h2>
-    <p class="scene-sub">Master the hierarchy. Then prove it.</p>
+<div class="page-header">
+  <div class="pg-eyebrow">FIELD TRAINING — CA 6.1.1</div>
+  <div class="pg-title">DATA, INFORMATION & KNOWLEDGE</div>
+  <p class="pg-sub">Complete all 6 stations in order to earn your Field Ready badge and unlock the exam practice module.</p>
+</div>
+
+<!-- ══════════════ STATION 1: INTEL BRIEF ══════════════ -->
+<div class="station-wrap active" id="st-0">
+  <div class="station-header">
+    <div class="st-h-tag">📖 STATION 01 — INTEL BRIEF</div>
+    <div class="st-h-title">Theory Reading: The DIK Hierarchy</div>
+    <p class="st-h-sub">Read carefully — this is the foundation. The examiner rewards students who can clearly distinguish between all three levels.</p>
   </div>
 
-  <!-- Sub-tabs -->
-  <div class="sub-tabs">
-    <button class="sub-tab active" onclick="switchTab('theory')">📡 Theory Panels</button>
-    <button class="sub-tab" onclick="switchTab('flashcards')">⚡ Flashcards</button>
-    <button class="sub-tab" onclick="switchTab('quiz')">🎯 5-Question Quiz</button>
-    <button class="sub-tab" onclick="switchTab('discuss')">💬 Discussion</button>
-    <button class="sub-tab" onclick="switchTab('classify')">🔬 Solo Classify</button>
-    <button class="sub-tab" onclick="switchTab('dnd')">🔀 Hierarchy Mission</button>
-  </div>
-
-  <!-- THEORY PANELS -->
-  <div id="sub-theory" class="sub-content active">
-    <div class="theory-grid">
-      <div class="theory-card t-data">
-        <div class="card-tier"><span class="tier-dot"></span>TIER 1 — RAW</div>
-        <span class="card-icon">📊</span>
-        <div class="card-heading">Data</div>
-        <div class="card-def">Raw, unprocessed facts and figures with no context or meaning. Data alone cannot inform a decision — it is simply numbers, symbols, or characters.</div>
-        <div class="card-example">
-          <div class="example-label">EXAMPLE</div>
-          <div class="example-text">102.4 // 847ms // 3,200 // TRUE</div>
-        </div>
-      </div>
-      <div class="theory-card t-info">
-        <div class="card-tier"><span class="tier-dot"></span>TIER 2 — PROCESSED</div>
-        <span class="card-icon">📋</span>
-        <div class="card-heading">Information</div>
-        <div class="card-def">Data that has been processed, organised, or structured so it becomes meaningful. Information provides context and answers the question: <em>"What does this mean?"</em></div>
-        <div class="card-example">
-          <div class="example-label">EXAMPLE</div>
-          <div class="example-text">Server temperature is 102.4°F — above safe operating range</div>
-        </div>
-      </div>
-      <div class="theory-card t-know">
-        <div class="card-tier"><span class="tier-dot"></span>TIER 3 — ACTIONABLE</div>
-        <span class="card-icon">🧠</span>
-        <div class="card-heading">Knowledge</div>
-        <div class="card-def">Information combined with experience and insight that drives action. Knowledge answers: <em>"What should we do about this?"</em> — this is the <strong>Impact</strong> mark.</div>
-        <div class="card-example">
-          <div class="example-label">EXAMPLE</div>
-          <div class="example-text">Shut down the server immediately to prevent hardware failure and data loss</div>
-        </div>
-      </div>
-    </div>
-    <div style="max-width:1100px;margin:0 auto;text-align:center;">
-      <button class="btn-submit" onclick="switchTab('dnd');document.querySelectorAll('.sub-tab')[5].classList.add('active');document.querySelectorAll('.sub-tab').forEach((t,i)=>i!==5&&t.classList.remove('active'))">
-        Proceed to Hierarchy Mission →
-      </button>
+  <div class="panel-block">
+    <div class="pb-head"><span class="pb-icon">📡</span><span class="pb-title">WHAT IS DATA?</span></div>
+    <div class="pb-body">
+      <p class="theory-chunk"><span class="hl">Data</span> is raw, unprocessed facts and figures. On its own, data has no meaning. It is simply a collection of numbers, characters, or symbols that have not yet been interpreted.</p>
+      <p class="theory-chunk"><strong>Example:</strong> <span class="hl">102.4, 98.6, 104.1, 99.8</span> — these are temperature readings. Without context, they tell us nothing about what is happening or why.</p>
+      <div class="callout"><strong>Examiner Note:</strong> Data is always described as "raw" and "without context". If your answer says "data is useful to businesses", you have missed the point — it is not useful until it becomes information.</div>
+      <table class="def-table">
+        <tr><th>PROPERTY</th><th>DESCRIPTION</th></tr>
+        <tr><td class="dik-accent-data">Raw</td><td>Unprocessed. Not analysed or given context.</td></tr>
+        <tr><td class="dik-accent-data">Meaningless alone</td><td>Cannot be acted upon without processing.</td></tr>
+        <tr><td class="dik-accent-data">Objective</td><td>Just facts — no interpretation applied.</td></tr>
+      </table>
     </div>
   </div>
 
-  <!-- FLASHCARDS -->
-  <div id="sub-flashcards" class="sub-content">
-    <div class="flashcard-grid">
-      <div class="flashcard" onclick="this.classList.toggle('flipped')">
-        <div class="fc-inner">
-          <div class="fc-front">
-            <div class="fc-front-label">FLIP TO REVEAL</div>
-            <div class="fc-front-q">What is the key difference between Data and Information?</div>
-          </div>
-          <div class="fc-back">
-            <div class="fc-back-label">ANSWER</div>
-            <div class="fc-back-a">Data is raw and unprocessed. Information is data that has been given context and meaning through processing.</div>
-          </div>
-        </div>
+  <div class="panel-block">
+    <div class="pb-head"><span class="pb-icon">📊</span><span class="pb-title">WHAT IS INFORMATION?</span></div>
+    <div class="pb-body">
+      <p class="theory-chunk"><span class="hl-gold">Information</span> is data that has been processed, organised, and given context so that it becomes meaningful. Information answers the question: <em>what is happening?</em></p>
+      <p class="theory-chunk"><strong>Example:</strong> "Server temperature reading of 104.1°F — <span class="hl-gold">the server is overheating</span>." The raw number (data) has been compared against a threshold and given meaning (information).</p>
+      <div class="callout"><strong>Key Process:</strong> Data → Information requires <strong>processing</strong>. This includes sorting, filtering, comparing, summarising, or applying a rule. The context is what transforms data into information.</div>
+      <table class="def-table">
+        <tr><th>PROPERTY</th><th>DESCRIPTION</th></tr>
+        <tr><td class="dik-accent-info">Processed</td><td>Data has been organised, compared, or contextualised.</td></tr>
+        <tr><td class="dik-accent-info">Meaningful</td><td>Has context. Answers "what is happening?"</td></tr>
+        <tr><td class="dik-accent-info">Actionable basis</td><td>Enables decisions — but is not the decision itself.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel-block">
+    <div class="pb-head"><span class="pb-icon">🧠</span><span class="pb-title">WHAT IS KNOWLEDGE?</span></div>
+    <div class="pb-body">
+      <p class="theory-chunk"><span class="hl-amber">Knowledge</span> is information combined with experience and understanding to enable decision-making. Knowledge answers: <em>what should we do?</em></p>
+      <p class="theory-chunk"><strong>Example:</strong> "Server temperature has exceeded safe threshold — <span class="hl-amber">shut down the server immediately to prevent hardware damage and data loss</span>." This is a decision informed by past experience, protocols, and the information at hand.</p>
+      <div class="callout"><strong>The Mark You're Missing:</strong> The Impact mark (3rd mark) in exam questions almost always requires knowledge-level thinking — the business consequence or decision triggered by the information. "This allows the organisation to..." is how you signal knowledge.</div>
+      <table class="def-table">
+        <tr><th>PROPERTY</th><th>DESCRIPTION</th></tr>
+        <tr><td class="dik-accent-know">Experience-based</td><td>Combines information with prior understanding.</td></tr>
+        <tr><td class="dik-accent-know">Decision-enabling</td><td>Answers "what should we do?" — the action.</td></tr>
+        <tr><td class="dik-accent-know">Business Impact</td><td>Describes the commercial or operational outcome.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel-block">
+    <div class="pb-head"><span class="pb-icon">🔗</span><span class="pb-title">THE FULL HIERARCHY — GPS LOGISTICS EXAMPLE</span></div>
+    <div class="pb-body">
+      <table class="def-table">
+        <tr><th>LEVEL</th><th>EXAMPLE</th><th>WHAT IT IS</th></tr>
+        <tr><td class="dik-accent-data">DATA</td><td>51.5074° N, 0.1278° W, 09:32:14</td><td>A GPS coordinate and timestamp — raw, no meaning.</td></tr>
+        <tr><td class="dik-accent-info">INFORMATION</td><td>Vehicle #7 is 4 minutes behind schedule on Route A</td><td>Processed and contextualised — tells us what is happening.</td></tr>
+        <tr><td class="dik-accent-know">KNOWLEDGE</td><td>Reroute via the M25 bypass to avoid the 11% late delivery penalty and protect the SLA contract</td><td>A business decision based on experience and information.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="station-cta">
+    <button class="btn-complete" id="cta-0" onclick="completeStation(0)">MARK AS READ — PROCEED TO BRIEFING ROOM ⟶</button>
+  </div>
+</div>
+
+<!-- ══════════════ STATION 2: BRIEFING ROOM ══════════════ -->
+<div class="station-wrap" id="st-1">
+  <div class="station-header">
+    <div class="st-h-tag">🎬 STATION 02 — BRIEFING ROOM</div>
+    <div class="st-h-title">Explainer Video</div>
+    <p class="st-h-sub">Watch the short explainer to reinforce the concepts from the reading. Your teacher may pause this for class discussion.</p>
+  </div>
+
+  <div class="panel-block">
+    <div class="pb-head"><span class="pb-icon">🎬</span><span class="pb-title">VIDEO: THE DIK HIERARCHY EXPLAINED</span></div>
+    <div class="pb-body">
+      <div class="video-placeholder" id="videoPlaceholder" onclick="markVideoWatched()">
+        <div class="vp-play">▶</div>
+        <div class="vp-title">THE DIK HIERARCHY — 4 MIN EXPLAINER</div>
+        <p class="vp-sub">Click to begin · CA 6.1.1 · Data, Information & Knowledge</p>
       </div>
-      <div class="flashcard" onclick="this.classList.toggle('flipped')">
-        <div class="fc-inner">
-          <div class="fc-front">
-            <div class="fc-front-label">FLIP TO REVEAL</div>
-            <div class="fc-front-q">Why does the examiner reward "Knowledge" answers more than "Information" answers?</div>
-          </div>
-          <div class="fc-back">
-            <div class="fc-back-label">ANSWER</div>
-            <div class="fc-back-a">Knowledge demonstrates the <strong>Impact</strong> — it shows how data drives business decisions and creates real value. This earns the 3rd mark.</div>
-          </div>
-        </div>
+      <div class="video-note" style="margin-top:12px;">
+        <strong>📌 For your teacher:</strong> This station embeds your chosen explainer video. Add the YouTube or Vimeo embed URL to the <code>videoUrl</code> variable in the script. The placeholder is live until a URL is provided.
       </div>
-      <div class="flashcard" onclick="this.classList.toggle('flipped')">
-        <div class="fc-inner">
-          <div class="fc-front">
-            <div class="fc-front-label">FLIP TO REVEAL</div>
-            <div class="fc-front-q">"Sales dropped 23% in Q3." What tier is this?</div>
-          </div>
-          <div class="fc-back">
-            <div class="fc-back-label">ANSWER</div>
-            <div class="fc-back-a"><strong>Information</strong> — it's processed data with context, but doesn't yet specify what action to take.</div>
-          </div>
-        </div>
-      </div>
-      <div class="flashcard" onclick="this.classList.toggle('flipped')">
-        <div class="fc-inner">
-          <div class="fc-front">
-            <div class="fc-front-label">FLIP TO REVEAL</div>
-            <div class="fc-front-q">Give an example of Knowledge from a retail business context.</div>
-          </div>
-          <div class="fc-back">
-            <div class="fc-back-label">ANSWER</div>
-            <div class="fc-back-a">Knowing that umbrella sales spike 340% before Bank Holidays allows the business to pre-stock and increase revenue.</div>
-          </div>
-        </div>
+      <div class="video-note" style="margin-top:8px;border-color:rgba(255,215,0,0.2);background:rgba(255,215,0,0.04);">
+        <strong style="color:var(--gold);">💬 Discussion trigger:</strong> After watching, think about: Where in your school day is data being collected? Is it data, information, or knowledge at each stage?
       </div>
     </div>
   </div>
 
-  <!-- QUIZ -->
-  <div id="sub-quiz" class="sub-content">
-    <div class="quiz-section">
-      <div class="quiz-title">5-Question Rapid Fire</div>
-      <div id="quiz-container"></div>
-      <div id="quiz-score-row" style="display:none;text-align:center;margin-top:1.5rem;">
-        <div style="font-family:var(--display);font-size:1.4rem;color:var(--gold);">SCORE: <span id="quiz-final">0</span>/5</div>
-      </div>
-    </div>
+  <div class="station-cta">
+    <button class="btn-complete" id="cta-1" onclick="completeStation(1)">VIDEO WATCHED — PROCEED TO FLASHCARDS ⟶</button>
+  </div>
+</div>
+
+<!-- ══════════════ STATION 3: RAPID RECALL ══════════════ -->
+<div class="station-wrap" id="st-2">
+  <div class="station-header">
+    <div class="st-h-tag">🃏 STATION 03 — RAPID RECALL</div>
+    <div class="st-h-title">Flashcard Drill</div>
+    <p class="st-h-sub">Click each card to flip it. Go through all 8 cards — term on the front, definition on the back. Use the navigation buttons to move between cards.</p>
   </div>
 
-  <!-- DISCUSSION -->
-  <div id="sub-discuss" class="sub-content">
-    <div class="discussion-grid">
-      <div class="dp-card">
-        <div class="dp-num">01</div>
-        <div class="dp-prompt">A hospital records a patient's heart rate every 5 seconds. At what point does this become Information, and at what point does it become Knowledge? Justify your reasoning to a partner.</div>
-      </div>
-      <div class="dp-card">
-        <div class="dp-num">02</div>
-        <div class="dp-prompt">An e-commerce company has 50 million rows of purchase history. Why does having more data not automatically mean better Knowledge? What additional steps are required?</div>
-      </div>
-      <div class="dp-card">
-        <div class="dp-num">03</div>
-        <div class="dp-prompt">Consider this statement: "Data without Knowledge is useless to a business." Do you agree? What exam evidence (from real business scenarios) could you use to support or challenge this view?</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SOLO CLASSIFY -->
-  <div id="sub-classify" class="sub-content">
-    <div class="classify-task">
-      <div style="font-family:var(--display);font-size:0.95rem;color:#fff;margin-bottom:1.2rem;">Classify each item as Data, Information, or Knowledge</div>
-      <div class="classify-items-grid" id="classify-grid"></div>
-      <div class="classify-check-row">
-        <button class="btn-submit" onclick="checkClassify()">Check Answers</button>
-        <div id="classify-results" style="margin-top:1rem;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DRAG AND DROP HIERARCHY -->
-  <div id="sub-dnd" class="sub-content">
-    <div class="dnd-section">
-      <div class="dnd-intro">
-        <h3>Server Temperature Scenario — Build the Hierarchy</h3>
-        <p>Drag each item to its correct position in the DIK hierarchy. You have one attempt per slot.</p>
-      </div>
-      <div class="dnd-layout">
-        <!-- Pool -->
-        <div>
-          <div class="dnd-pool-label">UNCLASSIFIED ITEMS — DRAG FROM HERE</div>
-          <div id="drag-pool">
-            <div class="drag-item" draggable="true" data-id="d1" data-type="data">
-              <span class="drag-handle">⠿</span>102.4°F
+  <div class="panel-block">
+    <div class="pb-body">
+      <div class="fc-container">
+        <div class="fc-counter"><span id="fc-cur">1</span> / <span id="fc-total">8</span> — click card to flip</div>
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div class="fc-inner">
+            <div class="fc-face fc-front">
+              <div class="fc-label">TERM</div>
+              <div class="fc-term" id="fc-term">DATA</div>
+              <div class="fc-hint">Click to reveal definition →</div>
             </div>
-            <div class="drag-item" draggable="true" data-id="d2" data-type="information">
-              <span class="drag-handle">⠿</span>Server running above safe temperature
-            </div>
-            <div class="drag-item" draggable="true" data-id="d3" data-type="knowledge">
-              <span class="drag-handle">⠿</span>Shutdown server to prevent damage &amp; data loss
-            </div>
-            <div class="drag-item" draggable="true" data-id="d4" data-type="data">
-              <span class="drag-handle">⠿</span>CPU usage: 98%
-            </div>
-            <div class="drag-item" draggable="true" data-id="d5" data-type="information">
-              <span class="drag-handle">⠿</span>System is under critical load
-            </div>
-            <div class="drag-item" draggable="true" data-id="d6" data-type="knowledge">
-              <span class="drag-handle">⠿</span>Migrate workload to backup servers during peak hours
+            <div class="fc-face fc-back">
+              <div class="fc-label">DEFINITION</div>
+              <div class="fc-def" id="fc-def">Raw, unprocessed facts and figures without context or meaning. Data cannot be acted upon until it is processed into information.</div>
             </div>
           </div>
         </div>
-
-        <div class="dnd-arrow">→</div>
-
-        <!-- Drop zones -->
-        <div>
-          <div class="dnd-targets-label">CLASSIFIED HIERARCHY</div>
-          <div class="drop-zone" id="zone-data" data-accepts="data">
-            <span class="drop-label" style="color:var(--blue);">◈ DATA — RAW TIER</span>
-            <div class="drop-value-hint">Drop raw numbers / measurements here</div>
-            <div id="zone-data-items"></div>
-          </div>
-          <div class="drop-zone" id="zone-information" data-accepts="information">
-            <span class="drop-label" style="color:var(--gold);">◈ INFORMATION — CONTEXT TIER</span>
-            <div class="drop-value-hint">Drop processed/contextualised facts here</div>
-            <div id="zone-information-items"></div>
-          </div>
-          <div class="drop-zone" id="zone-knowledge" data-accepts="knowledge">
-            <span class="drop-label" style="color:var(--green);">◈ KNOWLEDGE — ACTION TIER</span>
-            <div class="drop-value-hint">Drop actionable insights here</div>
-            <div id="zone-knowledge-items"></div>
-          </div>
+        <div class="fc-progress-row" id="fc-pips"></div>
+        <div class="fc-nav">
+          <button class="fc-btn" id="fc-prev" onclick="fcNav(-1)">← PREV</button>
+          <button class="fc-btn primary" id="fc-next" onclick="fcNav(1)">NEXT →</button>
         </div>
       </div>
-
-      <div class="dnd-submit-row">
-        <button class="btn-secondary" onclick="resetDnD()" style="margin-right:1rem;">↺ Reset</button>
-        <button class="btn-submit" onclick="checkDnD()" id="dnd-check-btn">Validate Classification →</button>
-      </div>
-      <div id="dnd-feedback" style="text-align:center;margin-top:1rem;font-family:var(--mono);font-size:0.78rem;"></div>
     </div>
   </div>
 
-  <div style="text-align:center;margin-top:2rem;">
-    <button class="btn-primary" onclick="goToScene('c')" style="margin-top:1rem;">
-      Proceed to HUD Practice Mode →
-    </button>
+  <div class="station-cta">
+    <button class="btn-complete" id="cta-2" onclick="completeStation(2)" style="display:none">ALL CARDS REVIEWED — PROCEED TO QUIZ ⟶</button>
   </div>
-</section>
+</div>
 
-<!-- ─── SCENE C: HUD PRACTICE MODE ────────────────────── -->
-<section id="scene-c" class="scene">
-  <div class="scene-header">
-    <div class="scene-badge" style="color:var(--green);background:var(--green-dim);border-color:rgba(57,255,20,0.25);">⬡ STATION 05 — HUD PRACTICE MODE</div>
-    <h2 class="scene-title">N·E·I Framework — Live Application</h2>
-    <p class="scene-sub">Construct a full 3-mark answer. Your HUD detects what you've included.</p>
+<!-- ══════════════ STATION 4: KNOWLEDGE CHECK ══════════════ -->
+<div class="station-wrap" id="st-3">
+  <div class="station-header">
+    <div class="st-h-tag">✅ STATION 04 — KNOWLEDGE CHECK</div>
+    <div class="st-h-title">5-Question Quiz</div>
+    <p class="st-h-sub">Answer all 5 questions. You get instant feedback after each answer. Aim for 4/5 or above — if not, the questions reset so you can try again.</p>
   </div>
 
-  <div class="hud-layout">
-    <!-- Editor -->
-    <div class="editor-panel">
-      <div class="editor-header">
-        <div class="question-block">
-          <div class="q-label">EXAM QUESTION // 6.1.2</div>
-          <div class="q-text">An e-commerce company uses targeted marketing based on customer purchase history. Explain one way this adds value to the business.</div>
-        </div>
-        <div class="q-marks">3 MARKS</div>
-      </div>
-      <div class="editor-body">
-        <div class="editor-label">YOUR RESPONSE</div>
-        <textarea id="answer-input" placeholder="Begin your answer here... Include the technique name, how it works, and the business impact." oninput="analyseAnswer(this.value)"></textarea>
-        <div class="word-counter">
-          <span>WORDS: <span id="word-count">0</span></span>
-          <span>CHARS: <span id="char-count">0</span></span>
-        </div>
-
-        <div class="nei-hints">
-          <div class="hints-label">◈ N·E·I FRAMEWORK GUIDE</div>
-          <div class="hint-row">
-            <span class="hint-chip hint-n">N</span>
-            Name the technique — e.g. "Predictive modelling" or "Recommendation algorithms"
-          </div>
-          <div class="hint-row">
-            <span class="hint-chip hint-e">E</span>
-            Explain the mechanism — how does the system use purchase history?
-          </div>
-          <div class="hint-row">
-            <span class="hint-chip hint-i">I</span>
-            State the impact — what measurable business value does this create?
-          </div>
-        </div>
-
-        <div class="submit-row">
-          <button class="btn-secondary" onclick="clearAnswer()">✕ Clear</button>
-          <button class="btn-submit" onclick="submitAnswer()">Submit for Calibration →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- NEI Ribbon -->
-    <div class="nei-ribbon">
-      <div class="ribbon-header">◈ METHOD RIBBON</div>
-
-      <div class="nei-block n-block" id="hud-n">
-        <div class="nei-icon"><span class="nei-icon-default">N</span></div>
-        <div class="nei-content">
-          <div class="nei-letter">NAME</div>
-          <div class="nei-desc">Technical term or tool identified</div>
-          <div class="nei-keyword" id="hud-n-kw">— not yet detected</div>
-        </div>
-      </div>
-
-      <div class="nei-block e-block" id="hud-e">
-        <div class="nei-icon"><span class="nei-icon-default">E</span></div>
-        <div class="nei-content">
-          <div class="nei-letter">EXPLAIN</div>
-          <div class="nei-desc">Mechanism described — how it works</div>
-          <div class="nei-keyword" id="hud-e-kw">— not yet detected</div>
-        </div>
-      </div>
-
-      <div class="nei-block i-block" id="hud-i">
-        <div class="nei-icon"><span class="nei-icon-default">I</span></div>
-        <div class="nei-content">
-          <div class="nei-letter">IMPACT</div>
-          <div class="nei-desc">Business value stated — why it matters</div>
-          <div class="nei-keyword" id="hud-i-kw">— not yet detected</div>
-        </div>
-      </div>
-
-      <div class="marks-indicator">
-        <div class="marks-label">PROJECTED MARKS</div>
-        <div class="marks-display"><span id="projected-marks">0</span><span class="marks-max">/3</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── SCENE D: SELF-CALIBRATION TOOL ────────────────── -->
-<section id="scene-d" class="scene">
-  <div class="scene-header">
-    <div class="scene-badge" style="color:var(--red);background:rgba(255,68,68,0.1);border-color:rgba(255,68,68,0.25);">⬡ STATION 06 — SELF-CALIBRATION</div>
-    <h2 class="scene-title">Mark Your Own Work</h2>
-    <p class="scene-sub">Tag your response using the highlighter. Every [I] Impact you identify earns the 3rd mark.</p>
-  </div>
-
-  <div class="calibration-layout">
-    <!-- Model Answer -->
-    <div class="panel-card">
-      <div class="panel-top">
-        <div class="panel-label">EXAMINER MODEL ANSWER</div>
-        <div class="panel-title">Full-Mark Response</div>
-      </div>
-      <div class="panel-body-inner">
-        <div class="model-answer">
-          The business uses
-          <span class="ma-n">predictive modelling</span>,
-          which analyses
-          <span class="ma-e">historical purchase data from thousands of customers to identify seasonal and behavioural patterns, enabling the system to automatically surface products the individual is statistically likely to buy</span>.
-          This
-          <span class="ma-i">reduces customer acquisition cost, increases average order value, and drives repeat purchases — directly increasing revenue without proportional increases in marketing spend</span>.
-        </div>
-        <div class="ma-legend">
-          <div class="leg-item"><span class="leg-swatch leg-n"></span><span style="color:var(--blue);font-family:var(--mono);font-size:0.6rem;">[N] NAME</span></div>
-          <div class="leg-item"><span class="leg-swatch leg-e"></span><span style="color:var(--gold);font-family:var(--mono);font-size:0.6rem;">[E] EXPLAIN</span></div>
-          <div class="leg-item"><span class="leg-swatch leg-i"></span><span style="color:var(--green);font-family:var(--mono);font-size:0.6rem;">[I] IMPACT</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Student Response + Highlighter -->
-    <div class="panel-card">
-      <div class="panel-top">
-        <div class="panel-label">YOUR RESPONSE — SELF-MARK</div>
-        <div class="panel-title">Highlight &amp; Tag</div>
-      </div>
-      <div class="panel-body-inner">
-        <div class="highlighter-toolbar">
-          <button class="hl-btn hl-green" id="hl-i-btn" onclick="setHighlighter('impact')" title="Tag as [I] Impact">
-            <span class="hl-dot hl-g-dot"></span>[I] IMPACT
-          </button>
-          <button class="hl-btn hl-amber-btn" id="hl-e-btn" onclick="setHighlighter('explain')" title="Tag as [E] Explain">
-            <span class="hl-dot hl-a-dot"></span>[E] EXPLAIN
-          </button>
-          <button class="hl-btn hl-red-btn" id="hl-n-btn" onclick="setHighlighter('name')" title="Tag as [N] Name">
-            <span class="hl-dot hl-r-dot"></span>[N] NAME
-          </button>
-        </div>
-        
-        <div class="student-response-area" id="student-response" onmouseup="applyHighlight()">
-          <em style="color:var(--muted);font-size:0.8rem;">[ Your submitted answer will appear here for marking. Select text and click a tag button. ]</em>
-        </div>
-
-        <div class="tagging-legend" style="margin-top:0.8rem;">
-          <span class="tag-explain">Select text, then tag it:</span>
-          <span class="tag-green-ex">✓ IMPACT = full marks</span>
-          <span class="tag-amber-ex">~ EXPLAIN = partial</span>
-          <span class="tag-red-ex">○ NAME = 1 mark only</span>
-        </div>
-
-        <!-- Vulnerability Alert -->
-        <div class="vuln-alert" id="vuln-alert">
-          <div class="vuln-header">
-            <span class="vuln-icon">⚠</span>
-            <span class="vuln-title">VULNERABILITY DETECTED</span>
-          </div>
-          <div class="vuln-msg">
-            System Check: You provided Data and Information, but missed the Knowledge (Impact). <strong>No impact = No 3rd mark.</strong>
-          </div>
-          <div class="vuln-tip">
-            "Ask yourself: what does this mean for the business's revenue, efficiency, or competitive advantage? That's your Impact mark."
-          </div>
-        </div>
-
-        <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-end;">
-          <button class="btn-submit" onclick="calibrateResult()">Calibrate Score →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Score Panel -->
-    <div class="score-panel" id="score-panel" style="display:none;">
-      <div class="score-header">
-        <div class="score-title">N·E·I Proficiency Breakdown</div>
-        <div class="score-chips">
-          <div class="score-chip chip-n"><span class="chip-dot"></span>NAME</div>
-          <div class="score-chip chip-e"><span class="chip-dot"></span>EXPLAIN</div>
-          <div class="score-chip chip-i"><span class="chip-dot"></span>IMPACT</div>
-        </div>
-      </div>
-      <div class="score-bar-row">
-        <div class="bar-label">[N] Name</div>
-        <div class="bar-track"><div class="bar-fill n-fill" id="bar-n"></div></div>
-        <div class="bar-pct" id="pct-n">—</div>
-      </div>
-      <div class="score-bar-row">
-        <div class="bar-label">[E] Explain</div>
-        <div class="bar-track"><div class="bar-fill e-fill" id="bar-e"></div></div>
-        <div class="bar-pct" id="pct-e">—</div>
-      </div>
-      <div class="score-bar-row">
-        <div class="bar-label">[I] Impact</div>
-        <div class="bar-track"><div class="bar-fill i-fill" id="bar-i"></div></div>
-        <div class="bar-pct" id="pct-i">—</div>
-      </div>
-      <div style="text-align:center;margin-top:2rem;">
-        <button class="btn-primary" onclick="goToScene('e')">Complete Mission & Claim Badge →</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ─── SCENE E: COMPLETION + BADGE ───────────────────── -->
-<section id="scene-e" class="scene">
-  <div class="completion-header">◈ FIELD TRAINING 6.1.1 // MISSION COMPLETE ◈</div>
-  
-  <div class="badge-3d">
-    <div class="badge-hex">
-      <div class="badge-icon">🏗️</div>
-      <div class="badge-text-top">FIELD READY</div>
-      <div class="badge-text-main">6.1.1</div>
+  <div class="panel-block" id="quiz-panel">
+    <div class="pb-body" id="quiz-body">
+      <!-- Rendered by JS -->
     </div>
   </div>
 
-  <h1 class="completion-title">FIELD READY <span>611</span> BADGE AWARDED</h1>
-  <p class="completion-sub">You have demonstrated understanding of the Data-Information-Knowledge hierarchy and applied the N·E·I framework.</p>
+  <div class="station-cta" id="quiz-cta" style="display:none">
+    <button class="btn-complete" id="cta-3" onclick="completeStation(3)">QUIZ PASSED — PROCEED TO TEAM DEBRIEF ⟶</button>
+  </div>
+</div>
 
-  <div class="score-final">
-    <div class="sf-item">
-      <div class="sf-num" id="final-score-display">—</div>
-      <div class="sf-label">NEI Score</div>
-    </div>
-    <div class="sf-item">
-      <div class="sf-num" style="color:var(--green);text-shadow:0 0 20px rgba(57,255,20,0.4);">6/6</div>
-      <div class="sf-label">Stations Cleared</div>
-    </div>
-    <div class="sf-item">
-      <div class="sf-num" style="color:var(--blue);">6.1.1</div>
-      <div class="sf-label">Topic Unlocked</div>
+<!-- ══════════════ STATION 5: TEAM DEBRIEF ══════════════ -->
+<div class="station-wrap" id="st-4">
+  <div class="station-header">
+    <div class="st-h-tag">💬 STATION 05 — TEAM DEBRIEF</div>
+    <div class="st-h-title">Discussion Prompts</div>
+    <p class="st-h-sub">Three prompts for discussion — great for classroom use with a teacher, equally useful as individual reflection at home. Think through each one before moving on.</p>
+  </div>
+
+  <div class="panel-block">
+    <div class="pb-body">
+      <div class="disc-cards">
+        <div class="disc-card">
+          <div class="disc-num">01</div>
+          <p class="disc-prompt">A supermarket scans 4 million items daily. At what point does a barcode scan become information? At what point does it become knowledge that drives a purchase order?</p>
+          <span class="disc-tag">CLASSROOM · SOLO</span>
+        </div>
+        <div class="disc-card">
+          <div class="disc-num">02</div>
+          <p class="disc-prompt">A social media platform collects your likes and dwell time. Is this data, information, or knowledge — from the platform's perspective? From an advertiser's perspective? Are they different?</p>
+          <span class="disc-tag">CLASSROOM · SOLO</span>
+        </div>
+        <div class="disc-card">
+          <div class="disc-num">03</div>
+          <p class="disc-prompt">An examiner gives 0 marks for: "Data helps businesses make decisions." Why? What would you need to add to turn this into a Knowledge-level answer that earns the third mark?</p>
+          <span class="disc-tag">EXAM FOCUS</span>
+        </div>
+      </div>
+      <div class="disc-note">
+        💡 <strong>Note:</strong> These prompts have no single correct answer. The goal is to practise thinking at Knowledge level — connecting concepts to business outcomes. This is exactly how the examiner thinks when awarding the Impact mark.
+      </div>
     </div>
   </div>
 
-  <button class="export-btn" onclick="exportReport()">
-    📄 Export Mission Report PDF
-  </button>
-
-  <div style="margin-top:2rem;font-family:var(--mono);font-size:0.65rem;color:var(--muted);">
-    LAUNCH MODULE ACTIVATED ON TOPIC INDEX // NEXT: 6.1.2 — Market Trends &amp; Predictive Modelling →
+  <div class="station-cta">
+    <button class="btn-complete" id="cta-4" onclick="completeStation(4)">DISCUSSION COMPLETE — PROCEED TO SOLO OP ⟶</button>
   </div>
-</section>
+</div>
 
-<!-- Scene nav dots -->
-<div class="scene-nav" id="scene-nav">
-  <div class="nav-dot active" data-scene="a" title="Briefing" onclick="goToScene('a')"></div>
-  <div class="nav-dot" data-scene="b" title="Theory" onclick="goToScene('b')"></div>
-  <div class="nav-dot" data-scene="c" title="Practice" onclick="goToScene('c')"></div>
-  <div class="nav-dot" data-scene="d" title="Calibration" onclick="goToScene('d')"></div>
-  <div class="nav-dot" data-scene="e" title="Complete" onclick="goToScene('e')"></div>
+<!-- ══════════════ STATION 6: SOLO OP ══════════════ -->
+<div class="station-wrap" id="st-5">
+  <div class="station-header">
+    <div class="st-h-tag">🎯 STATION 06 — SOLO OP</div>
+    <div class="st-h-title">Independent Practice Task</div>
+    <p class="st-h-sub">Classify 10 real-world examples into the correct tier of the DIK hierarchy. Drag each example into the right zone.</p>
+  </div>
+
+  <div class="panel-block">
+    <div class="pb-head"><span class="pb-icon">🎯</span><span class="pb-title">TASK: CLASSIFY THESE 10 EXAMPLES</span></div>
+    <div class="pb-body">
+      <p style="font-size:14px;color:var(--dim);margin-bottom:16px;">Drag each item into the correct category — Data, Information, or Knowledge. You need 7/10 correct to pass and earn your Field Ready badge.</p>
+
+      <div class="sort-grid" id="sortItems">
+        <div class="sort-item" draggable="true" data-answer="D" id="si0">23°C</div>
+        <div class="sort-item" draggable="true" data-answer="I" id="si1">Store A is 12% above sales target</div>
+        <div class="sort-item" draggable="true" data-answer="K" id="si2">Increase Store A's stock order by 15%</div>
+        <div class="sort-item" draggable="true" data-answer="D" id="si3">07:42:09</div>
+        <div class="sort-item" draggable="true" data-answer="I" id="si4">Peak footfall occurs on Saturdays 11am–1pm</div>
+        <div class="sort-item" draggable="true" data-answer="K" id="si5">Schedule extra staff on Saturday mornings</div>
+        <div class="sort-item" draggable="true" data-answer="D" id="si6">£4.99, £12.50, £7.00</div>
+        <div class="sort-item" draggable="true" data-answer="I" id="si7">Average basket value has dropped 18% this month</div>
+        <div class="sort-item" draggable="true" data-answer="K" id="si8">Launch a 3-for-2 promotion to increase basket size</div>
+        <div class="sort-item" draggable="true" data-answer="D" id="si9">4.2, 3.8, 4.5, 2.1</div>
+      </div>
+
+      <div class="sort-zones">
+        <div class="sort-zone" id="zone-D" ondragover="onDragOver(event)" ondrop="onDrop(event,'D')" ondragleave="onDragLeave(event)">
+          <div class="sort-zone-label data-lbl">📡 DATA</div>
+        </div>
+        <div class="sort-zone" id="zone-I" ondragover="onDragOver(event)" ondrop="onDrop(event,'I')" ondragleave="onDragLeave(event)">
+          <div class="sort-zone-label info-lbl">📊 INFORMATION</div>
+        </div>
+        <div class="sort-zone" id="zone-K" ondragover="onDragOver(event)" ondrop="onDrop(event,'K')" ondragleave="onDragLeave(event)">
+          <div class="sort-zone-label know-lbl">🧠 KNOWLEDGE</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;display:flex;gap:10px;align-items:center;">
+        <button class="solo-check-btn" onclick="checkSort()">CHECK MY ANSWERS</button>
+        <button onclick="resetSort()" style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:8px 16px;cursor:pointer;">RESET</button>
+      </div>
+
+      <div class="solo-result" id="sortResult"></div>
+    </div>
+  </div>
+
+  <div class="station-cta">
+    <button class="btn-complete" id="cta-5" onclick="completeStation(5)" style="display:none">🏆 EARN FIELD READY BADGE — COMPLETE MODULE</button>
+  </div>
+</div>
+
+<!-- COMPLETION OVERLAY -->
+<div class="complete-overlay" id="completeOverlay">
+  <div class="badge-3d"><div class="badge-inner"><span class="badge-emoji-big">📡</span></div></div>
+  <div class="co-title">FIELD READY</div>
+  <div class="co-badge-name">field_ready_611 UNLOCKED</div>
+  <p class="co-sub">You've completed all 6 Field Training stations for CA 6.1.1. You're cleared to launch the exam practice module.</p>
+  <div class="co-btns">
+    <a href="../../6-1-1/index.html" class="co-btn-primary">⟶ LAUNCH EXAM MODULE</a>
+    <a href="../index.html" class="co-btn-secondary">BACK TO FIELD HUB</a>
+  </div>
+</div>
+
+<div class="footer-bar">
+  <div class="f-item"><div class="f-dot"></div><span class="f-lbl">CA 6.1.1</span></div>
+  <div class="f-item"><span class="f-lbl">MODULE</span><span class="f-val">FIELD TRAINING</span></div>
+  <div class="f-progress">
+    <span class="fp-label" id="fp-label">0 / 6 STATIONS</span>
+    <div class="fp-bar"><div class="fp-fill" id="fp-fill" style="width:0%"></div></div>
+  </div>
 </div>
 
 <script>
-// ─── STATE ────────────────────────────────────────────
-const state = {
-  currentScene: 'a',
-  activeHighlighter: null,
-  taggedCategories: { name: false, explain: false, impact: false },
-  submittedAnswer: '',
-  quizScore: 0,
-  quizAnswered: 0,
-  neiScore: { n: 0, e: 0, i: 0 },
-  dndPlacements: {},
-};
+/* ── STATE ─────────────────────────────────── */
+const LS_KEY='msm_ft_611';
+let state={stations:[false,false,false,false,false,false]};
+function saveState(){localStorage.setItem(LS_KEY,JSON.stringify(state));}
+function loadState(){const s=localStorage.getItem(LS_KEY);if(s)state=JSON.parse(s);}
 
-// ─── SCENE NAVIGATION ────────────────────────────────
-function goToScene(id) {
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  document.getElementById('scene-' + id).classList.add('active');
-  state.currentScene = id;
-  updateProgress();
-  window.scrollTo(0,0);
-  document.querySelectorAll('.nav-dot').forEach(d => {
-    d.classList.toggle('active', d.dataset.scene === id);
-  });
-}
+let currentStation=0;
 
-// ─── PROGRESS ─────────────────────────────────────────
-const sceneOrder = ['a','b','c','d','e'];
-const stationLabels = {a:'BRIEFING',b:'THEORY',c:'HUD PRACTICE',d:'CALIBRATION',e:'COMPLETE'};
-function updateProgress() {
-  const idx = sceneOrder.indexOf(state.currentScene);
-  const pct = (idx / (sceneOrder.length - 1)) * 100;
-  document.getElementById('main-progress').style.width = pct + '%';
-  document.getElementById('station-label').textContent = stationLabels[state.currentScene] || '';
-}
-
-// ─── SCENE A: TYPEWRITER BRIEFING ───────────────────
-const briefingScript = [
-  {prompt:'AXIOM-7', text:'Welcome, Specialist. You\'re looking at a raw data stream.'},
-  {prompt:'AXIOM-7', text:'To most, this is just noise.', delay:1500},
-  {prompt:'AXIOM-7', text:'Examiners don\'t give marks for numbers; they give marks for the <span class="hl-gold">Impact</span>.', delay:3000},
-  {prompt:'AXIOM-7', text:'<span class="hl-blue">Data</span> is the number. <span class="hl-gold">Information</span> is the story. <span class="hl-green">Knowledge</span> is the move.', delay:5200},
-  {prompt:'AXIOM-7', text:'The average student scores 37/100. Not because they lack knowledge — because they can\'t write like an examiner.', delay:8000},
-  {prompt:'AXIOM-7', text:'Six stations. One methodology. Let\'s get to work. <span class="terminal-cursor"></span>', delay:11000},
+/* ── FLASHCARD DATA ───────────────────────── */
+const FLASHCARDS=[
+  {term:'DATA',def:'Raw, unprocessed facts and figures without context or meaning. Data cannot be acted upon until it is processed into information.'},
+  {term:'INFORMATION',def:'Data that has been processed and given context so that it becomes meaningful and describes what is happening in a situation.'},
+  {term:'KNOWLEDGE',def:'Information combined with experience and understanding that enables decision-making and describes what action should be taken.'},
+  {term:'DIK HIERARCHY',def:'The progression from Data → Information → Knowledge. Each level adds meaning. Examiners expect all three to be distinguished in your answers.'},
+  {term:'PROCESSING',def:'The transformation of raw data into information. Examples: sorting, filtering, comparing against thresholds, calculating averages, summarising.'},
+  {term:'CONTEXT',def:'The framework that gives data meaning and makes it information. Without context (e.g. expected temperature range), a number is just data.'},
+  {term:'IMPACT MARK',def:'The third mark in a 3-mark exam question. It requires a Knowledge-level response — the business decision or outcome enabled by information.'},
+  {term:'BUSINESS INTELLIGENCE',def:'The collective use of data systems to convert raw data into knowledge that informs strategic, tactical, and operational decisions.'},
 ];
+let fcIndex=0;let fcFlipped=false;let fcSeen=new Set();
 
-function typeTerminal() {
-  const container = document.getElementById('terminal-transcript');
-  briefingScript.forEach((line, i) => {
-    const timeout = line.delay || (i * 1800);
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = 'terminal-line';
-      el.innerHTML = `<span class="prompt">${line.prompt} ›</span>${line.text}`;
-      container.appendChild(el);
-    }, timeout);
-  });
-}
-
-// Add color class for blue
-document.head.insertAdjacentHTML('beforeend', '<style>.hl-blue{color:var(--blue);}</style>');
-
-function startMission() {
-  goToScene('b');
-}
-
-// ─── SCENE B: SUB-TAB NAVIGATION ─────────────────────
-function switchTab(id) {
-  document.querySelectorAll('.sub-tab').forEach((t,i) => {
-    const ids = ['theory','flashcards','quiz','discuss','classify','dnd'];
-    t.classList.toggle('active', ids[i] === id);
-  });
-  document.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
-  document.getElementById('sub-' + id).classList.add('active');
-}
-
-// ─── QUIZ ─────────────────────────────────────────────
-const quizData = [
-  {
-    q: 'A spreadsheet contains 50,000 rows of customer purchase amounts. What tier is this?',
-    opts: ['Information', 'Data', 'Knowledge', 'Analytics'],
-    correct: 1,
-    feedback: 'Correct! Raw numbers without context are Data. There is no story or decision here yet.'
-  },
-  {
-    q: 'An analyst produces a report showing "Mobile conversion rates drop 34% on Sundays." What tier is this?',
-    opts: ['Data', 'Knowledge', 'Information', 'Insight'],
-    correct: 2,
-    feedback: 'Correct! This is Information — data with context and meaning, but no clear action yet.'
-  },
-  {
-    q: 'Which statement would earn the 3rd mark (Impact) from an examiner?',
-    opts: [
-      '"The system collects user data."',
-      '"The system analyses click patterns to identify friction points."',
-      '"Identifying friction points allows the UX team to increase checkout completion by 18%, directly improving revenue."',
-      '"Data is stored in a relational database."'
-    ],
-    correct: 2,
-    feedback: 'Correct! The Impact mark requires business value — a measurable outcome that demonstrates why the data matters.'
-  },
-  {
-    q: 'A logistics company knows that delivery delays increase by 40% when fuel prices exceed £1.80/litre, so it pre-books fuel contracts in advance. What tier is this?',
-    opts: ['Data', 'Information', 'Algorithm', 'Knowledge'],
-    correct: 3,
-    feedback: 'Correct! This is Knowledge — the insight drives a strategic business action (pre-booking contracts) that mitigates risk.'
-  },
-  {
-    q: 'In the NEI framework, which component directly corresponds to "Knowledge"?',
-    opts: ['Name', 'Explain', 'Impact', 'Index'],
-    correct: 2,
-    feedback: 'Correct! Impact = Knowledge. This is the mark most students miss — it demands a business consequence, not just a description.'
-  }
+/* ── QUIZ DATA ────────────────────────────── */
+const QUESTIONS=[
+  {q:'A temperature sensor records 102.4°F. What tier of the DIK hierarchy is this?',opts:['Information — it describes the state of the server','Data — it is a raw, unprocessed number','Knowledge — it enables a decision to be made','Information — it has been collected by a sensor'],ans:1,fb:'<strong>Correct.</strong> 102.4°F on its own is just a raw number. Until it is compared against a threshold and given meaning ("the server is overheating"), it remains data.'},
+  {q:'"Sales in the North region fell 18% compared to last month." This is an example of:',opts:['Data — it is based on raw sales numbers','Knowledge — it tells managers what to do','Information — processed data presented in context','Data — it was collected from a spreadsheet'],ans:2,fb:'<strong>Correct.</strong> This statement provides processed and contextualised data. It tells us what is happening — which is the definition of information.'},
+  {q:'The logistics manager decides to reroute the delivery vehicle due to traffic data. What tier does this decision represent?',opts:['Data','Information','Knowledge','None — decisions are outside the DIK hierarchy'],ans:2,fb:'<strong>Correct.</strong> The decision itself is Knowledge — it combines information (traffic data) with experience and understanding to determine the best action.'},
+  {q:'Which of the following best describes why Data alone is not useful to organisations?',opts:['It is too large to store efficiently','It lacks context and cannot be acted upon without processing','It is always inaccurate or incomplete','It cannot be transferred between systems'],ans:1,fb:'<strong>Correct.</strong> Data lacks context. It is only when data is processed and given meaning (becoming information) that it can begin to inform decisions.'},
+  {q:'An examiner awards 0 marks to: "Information helps companies make better choices." Why?',opts:['The student used the wrong word — it should say \'data\'','The statement is technically incorrect','It is a vague definition that lacks specific context, mechanism, and business impact','It is too short to earn marks'],ans:2,fb:'<strong>Correct.</strong> This answer has no Name (specific tool/type), no Explain (how it works), and no Impact (business outcome). It is a generic statement that earns no marks regardless of its accuracy.'},
 ];
+let quizQ=0;let quizScore=0;let quizAnswered=false;
 
-function buildQuiz() {
-  const container = document.getElementById('quiz-container');
-  quizData.forEach((q, qi) => {
-    const card = document.createElement('div');
-    card.className = 'quiz-card';
-    card.innerHTML = `
-      <div class="quiz-q"><span style="color:var(--gold);font-family:var(--mono);font-size:0.7rem;">Q${qi+1}.</span> ${q.q}</div>
-      <div class="quiz-options">
-        ${q.opts.map((o,oi) => `
-          <div class="q-opt" data-qi="${qi}" data-oi="${oi}" onclick="answerQuiz(${qi},${oi})">
-            <span class="opt-letter">${String.fromCharCode(65+oi)}</span>${o}
-          </div>
-        `).join('')}
-      </div>
-      <div class="q-feedback" id="qfb-${qi}"></div>
-    `;
-    container.appendChild(card);
-  });
+/* ── NAVIGATION ───────────────────────────── */
+function goStation(n){
+  if(n>0&&!state.stations[n-1])return; // locked
+  document.querySelectorAll('.station-wrap').forEach(w=>w.classList.remove('active'));
+  document.querySelectorAll('.st-tab').forEach(t=>{t.classList.remove('active');});
+  document.getElementById('st-'+n).classList.add('active');
+  document.getElementById('tab'+n).classList.add('active');
+  currentStation=n;
+  updateFooterBar();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function answerQuiz(qi, oi) {
-  const q = quizData[qi];
-  const opts = document.querySelectorAll(`[data-qi="${qi}"]`);
-  opts.forEach(o => { o.classList.add('disabled'); });
-  const fb = document.getElementById('qfb-' + qi);
-  if (oi === q.correct) {
-    opts[oi].classList.add('correct');
-    fb.className = 'q-feedback correct-fb';
-    fb.textContent = '✓ ' + q.feedback;
-    state.quizScore++;
-  } else {
-    opts[oi].classList.add('incorrect');
-    opts[q.correct].classList.add('correct');
-    fb.className = 'q-feedback incorrect-fb';
-    fb.textContent = '✗ Incorrect. ' + q.feedback;
-  }
-  state.quizAnswered++;
-  if (state.quizAnswered === quizData.length) {
-    const scoreRow = document.getElementById('quiz-score-row');
-    document.getElementById('quiz-final').textContent = state.quizScore;
-    scoreRow.style.display = 'block';
+function updateTabs(){
+  for(let i=0;i<6;i++){
+    const tab=document.getElementById('tab'+i);
+    tab.classList.remove('active','done','locked');
+    if(state.stations[i]){tab.classList.add('done');}
+    else if(i>0&&!state.stations[i-1]){tab.classList.add('locked');}
+    if(i===currentStation)tab.classList.add('active');
   }
 }
 
-// ─── CLASSIFY ─────────────────────────────────────────
-const classifyItems = [
-  { text: '"47.2 mph"', answer: 'Data' },
-  { text: '"Vehicle speeding through school zone at 47.2mph"', answer: 'Information' },
-  { text: '"Issue automated speed camera fine and flag for police follow-up"', answer: 'Knowledge' },
-  { text: '"£3,400 revenue on Tuesday"', answer: 'Data' },
-  { text: '"Tuesday revenue exceeded Monday by 62% due to flash sale"', answer: 'Information' },
-  { text: '"Schedule weekly flash sales on Tuesdays to maximise revenue cycle"', answer: 'Knowledge' },
-  { text: '"Server response time: 2,400ms"', answer: 'Data' },
-  { text: '"Page load speed is 3× above acceptable threshold"', answer: 'Information' },
-  { text: '"Optimise image assets to reduce load time, preventing 23% bounce rate"', answer: 'Knowledge' },
-  { text: '"User ID 8821 clicked the checkout button 3 times without completing"', answer: 'Information' },
-];
+function updateFooterBar(){
+  const done=state.stations.filter(Boolean).length;
+  document.getElementById('fp-label').textContent=done+' / 6 STATIONS';
+  document.getElementById('fp-fill').style.width=Math.round((done/6)*100)+'%';
+}
 
-function buildClassify() {
-  const grid = document.getElementById('classify-grid');
-  classifyItems.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'classify-item';
-    div.innerHTML = `
-      <div class="ci-text">${item.text}</div>
-      <select class="ci-select" id="ci-${i}">
-        <option value="">— Select —</option>
-        <option value="Data">Data</option>
-        <option value="Information">Information</option>
-        <option value="Knowledge">Knowledge</option>
-      </select>
-    `;
-    grid.appendChild(div);
+/* ── COMPLETE STATION ─────────────────────── */
+function completeStation(n){
+  state.stations[n]=true;
+  saveState();
+  updateTabs();
+  updateFooterBar();
+  const btn=document.getElementById('cta-'+n);
+  if(btn){btn.className='btn-complete done-state';btn.textContent='✓ STATION COMPLETE';}
+  if(n<5){setTimeout(()=>goStation(n+1),400);}
+  else{setTimeout(()=>showComplete(),600);}
+  // Award badge
+  if(n===5){awardBadge('field_ready_611');}
+}
+
+function awardBadge(key){
+  const badges=JSON.parse(localStorage.getItem('msm_badges')||'[]');
+  if(!badges.includes(key)){badges.push(key);localStorage.setItem('msm_badges',JSON.stringify(badges));}
+}
+
+function showComplete(){
+  document.getElementById('completeOverlay').classList.add('show');
+}
+
+/* ── FLASHCARDS ───────────────────────────── */
+function renderFC(){
+  const card=FLASHCARDS[fcIndex];
+  document.getElementById('fc-term').textContent=card.term;
+  document.getElementById('fc-def').textContent=card.def;
+  document.getElementById('fc-cur').textContent=fcIndex+1;
+  document.getElementById('fc-total').textContent=FLASHCARDS.length;
+  const fc=document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  fcFlipped=false;
+  renderFCPips();
+  // Show complete CTA once all seen
+  if(fcSeen.size===FLASHCARDS.length){
+    document.getElementById('cta-2').style.display='';
+  }
+}
+function flipCard(){
+  const fc=document.getElementById('flashcard');
+  fc.classList.toggle('flipped');
+  fcFlipped=!fcFlipped;
+  fcSeen.add(fcIndex);
+  renderFCPips();
+  if(fcSeen.size===FLASHCARDS.length)document.getElementById('cta-2').style.display='';
+}
+function fcNav(dir){
+  fcIndex=(fcIndex+dir+FLASHCARDS.length)%FLASHCARDS.length;
+  renderFC();
+}
+function renderFCPips(){
+  const row=document.getElementById('fc-pips');
+  row.innerHTML='';
+  FLASHCARDS.forEach((_,i)=>{
+    const pip=document.createElement('div');
+    pip.className='fc-pip'+(fcSeen.has(i)?' done':i===fcIndex?' seen':'');
+    row.appendChild(pip);
   });
 }
 
-function checkClassify() {
-  const results = document.getElementById('classify-results');
-  let correct = 0;
-  let html = '';
-  classifyItems.forEach((item, i) => {
-    const sel = document.getElementById('ci-' + i).value;
-    if (sel === item.answer) {
+/* ── QUIZ ─────────────────────────────────── */
+function renderQuiz(){
+  if(quizQ>=QUESTIONS.length){showQuizResult();return;}
+  const q=QUESTIONS[quizQ];
+  const body=document.getElementById('quiz-body');
+  body.innerHTML=`
+    <div class="q-progress">QUESTION ${quizQ+1} / ${QUESTIONS.length} · SCORE: ${quizScore}/${quizQ}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-options" id="quiz-opts">
+      ${q.opts.map((o,i)=>`<div class="quiz-opt" id="opt${i}" onclick="selectOpt(${i})"><div class="opt-marker">${String.fromCharCode(65+i)}</div>${o}</div>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="quiz-fb"></div>
+  `;
+  quizAnswered=false;
+}
+function selectOpt(i){
+  if(quizAnswered)return;
+  quizAnswered=true;
+  const q=QUESTIONS[quizQ];
+  const opts=document.querySelectorAll('.quiz-opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  const fb=document.getElementById('quiz-fb');
+  if(i===q.ans){
+    opts[i].classList.add('correct');
+    quizScore++;
+    fb.className='quiz-feedback show correct';
+    fb.innerHTML='✓ CORRECT — '+q.fb;
+  }else{
+    opts[i].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    fb.className='quiz-feedback show wrong';
+    fb.innerHTML='✗ INCORRECT — '+q.fb;
+  }
+  setTimeout(()=>{quizQ++;renderQuiz();},2000);
+}
+function showQuizResult(){
+  const body=document.getElementById('quiz-body');
+  const pass=quizScore>=4;
+  body.innerHTML=`
+    <div class="quiz-score">${quizScore} / ${QUESTIONS.length}</div>
+    <p style="text-align:center;font-size:15px;color:var(--dim);margin-bottom:16px;">${pass?'✅ Strong result. You\'re ready to move on.':'⚠️ Below target. Review the Intel Brief and try again.'}</p>
+    ${!pass?`<button onclick="retryQuiz()" style="display:block;margin:0 auto;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--amber);border:none;border-radius:8px;padding:10px 24px;cursor:pointer;">RETRY QUIZ</button>`:''}
+  `;
+  if(pass)document.getElementById('quiz-cta').style.display='flex';
+}
+function retryQuiz(){quizQ=0;quizScore=0;quizAnswered=false;renderQuiz();}
+
+/* ── SORT TASK ─────────────────────────────── */
+let dragId=null;
+function initSort(){
+  document.querySelectorAll('.sort-item').forEach(item=>{
+    item.addEventListener('dragstart',e=>{
+      dragId=item.id;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend',()=>item.classList.remove('dragging'));
+    // touch support
+    item.addEventListener('touchstart',e=>{dragId=item.id;},{passive:true});
+  });
+}
+function onDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function onDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function onDrop(e,zone){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if(!dragId)return;
+  const item=document.getElementById(dragId);
+  e.currentTarget.appendChild(item);
+  dragId=null;
+}
+function checkSort(){
+  let correct=0;
+  document.querySelectorAll('.sort-item').forEach(item=>{
+    const zone=item.closest('.sort-zone');
+    if(!zone)return;
+    const zoneId=zone.id.replace('zone-','');
+    if(zoneId===item.dataset.answer){
       correct++;
-      html += `<span class="classify-result-item cr-correct">✓ ${item.answer}</span>`;
-    } else {
-      html += `<span class="classify-result-item cr-incorrect">✗ ${sel || '?'} → ${item.answer}</span>`;
+      item.style.background='rgba(57,255,20,0.1)';
+      item.style.borderColor='rgba(57,255,20,0.4)';
+      item.style.color='var(--green)';
+    }else{
+      item.style.background='rgba(255,59,59,0.08)';
+      item.style.borderColor='rgba(255,59,59,0.35)';
+      item.style.color='var(--red)';
     }
   });
-  results.innerHTML = `<div style="font-family:var(--display);font-size:1.1rem;color:var(--gold);margin-bottom:0.8rem;">Score: ${correct}/${classifyItems.length}</div>` + html;
+  const res=document.getElementById('sortResult');
+  const pass=correct>=7;
+  res.className='solo-result show '+(pass?'pass':'partial');
+  res.innerHTML=pass
+    ?`<strong style="color:var(--green)">✓ ${correct}/10 CORRECT</strong> — Excellent classification. You've demonstrated a solid grasp of the DIK hierarchy. Your Field Ready badge is unlocked.`
+    :`<strong style="color:var(--amber)">⚠ ${correct}/10 CORRECT</strong> — You need 7/10 to pass. Review the highlighted items, reset, and try again. Focus on the difference between Information (what is happening) and Knowledge (what to do about it).`;
+  if(pass)document.getElementById('cta-5').style.display='';
+}
+function resetSort(){
+  const grid=document.getElementById('sortItems');
+  document.querySelectorAll('.sort-item').forEach(item=>{
+    grid.appendChild(item);
+    item.style.background='';item.style.borderColor='';item.style.color='';
+  });
+  document.getElementById('sortResult').className='solo-result';
+  document.getElementById('cta-5').style.display='none';
 }
 
-// ─── DRAG AND DROP ─────────────────────────────────────
-let draggedItem = null;
-
-function initDnD() {
-  document.querySelectorAll('.drag-item').forEach(item => {
-    item.addEventListener('dragstart', e => {
-      draggedItem = item;
-      setTimeout(() => item.classList.add('dragging'), 0);
-    });
-    item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
-    });
-  });
-
-  document.querySelectorAll('.drop-zone').forEach(zone => {
-    zone.addEventListener('dragover', e => {
-      e.preventDefault();
-      zone.classList.add('drag-over');
-    });
-    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-    zone.addEventListener('drop', e => {
-      e.preventDefault();
-      zone.classList.remove('drag-over');
-      if (!draggedItem) return;
-      const accepts = zone.dataset.accepts;
-      const type = draggedItem.dataset.type;
-      const id = draggedItem.dataset.id;
-      const itemsContainer = zone.querySelector('[id^="zone-"]');
-      itemsContainer.appendChild(draggedItem);
-      draggedItem.draggable = false;
-      state.dndPlacements[id] = accepts;
-      draggedItem.classList.add('placed');
-      draggedItem.querySelector('.drag-handle').textContent = '';
-    });
-  });
-}
-
-function resetDnD() {
-  const pool = document.getElementById('drag-pool');
-  document.querySelectorAll('.drag-item').forEach(item => {
-    pool.appendChild(item);
-    item.draggable = true;
-    item.classList.remove('placed','dragging');
-    item.querySelector('.drag-handle').textContent = '⠿';
-  });
-  document.querySelectorAll('.drop-zone').forEach(z => {
-    z.classList.remove('correct','incorrect');
-  });
-  document.getElementById('dnd-feedback').innerHTML = '';
-  state.dndPlacements = {};
-}
-
-function checkDnD() {
-  const items = document.querySelectorAll('.drag-item');
-  let correct = 0, total = 0;
-  
-  document.querySelectorAll('.drop-zone').forEach(zone => {
-    zone.classList.remove('correct','incorrect');
-    const accepts = zone.dataset.accepts;
-    const children = zone.querySelectorAll('.drag-item');
-    let zoneCorrect = true;
-    children.forEach(item => {
-      total++;
-      if (item.dataset.type === accepts) correct++;
-      else zoneCorrect = false;
-    });
-    if (children.length > 0) {
-      zone.classList.add(zoneCorrect ? 'correct' : 'incorrect');
+/* ── INIT ─────────────────────────────────── */
+document.addEventListener('DOMContentLoaded',()=>{
+  loadState();
+  updateTabs();
+  updateFooterBar();
+  // restore completed CTAs
+  state.stations.forEach((done,i)=>{
+    if(done){
+      const btn=document.getElementById('cta-'+i);
+      if(btn){btn.className='btn-complete done-state';btn.textContent='✓ STATION COMPLETE';}
     }
   });
-
-  const fb = document.getElementById('dnd-feedback');
-  if (correct === total && total > 0) {
-    fb.innerHTML = `<span style="color:var(--green);">✓ CLASSIFICATION COMPLETE — ${correct}/${total} correct. Full marks awarded.</span>`;
-  } else {
-    fb.innerHTML = `<span style="color:var(--amber);">⚠ ${correct}/${total} correctly classified. Review the highlighted zones and try again.</span>`;
-  }
-}
-
-// ─── SCENE C: HUD ANALYSIS ───────────────────────────
-const nKeywords = ['predictive model', 'recommendation', 'machine learning', 'algorithm', 'analytics', 'data mining', 'personalisation', 'segmentation', 'ai', 'targeting'];
-const eKeywords = ['analyses', 'processes', 'identifies', 'uses', 'tracks', 'monitors', 'examines', 'reviews', 'calculates', 'cross-references', 'patterns', 'history', 'behaviour'];
-const iKeywords = ['revenue', 'profit', 'sales', 'conversion', 'retention', 'cost', 'efficiency', 'competitive', 'loyalty', 'return', 'increase', 'reduce', 'improve', 'growth', 'value', 'saves'];
-
-function analyseAnswer(text) {
-  const lower = text.toLowerCase();
-  const words = text.trim().split(/\s+/).filter(w => w).length;
-  document.getElementById('word-count').textContent = words;
-  document.getElementById('char-count').textContent = text.length;
-
-  const hasN = nKeywords.some(k => lower.includes(k));
-  const hasE = eKeywords.some(k => lower.includes(k)) && words > 8;
-  const hasI = iKeywords.some(k => lower.includes(k));
-
-  const nb = document.getElementById('hud-n');
-  const eb = document.getElementById('hud-e');
-  const ib = document.getElementById('hud-i');
-
-  nb.classList.toggle('detected', hasN);
-  eb.classList.toggle('detected', hasE);
-  ib.classList.toggle('detected', hasI);
-
-  document.getElementById('hud-n-kw').textContent = hasN ? '✓ technique name detected' : '— not yet detected';
-  document.getElementById('hud-e-kw').textContent = hasE ? '✓ mechanism described' : '— not yet detected';
-  document.getElementById('hud-i-kw').textContent = hasI ? '✓ business impact found' : '— not yet detected';
-
-  const marks = [hasN, hasE, hasI].filter(Boolean).length;
-  document.getElementById('projected-marks').textContent = marks;
-  document.getElementById('projected-marks').style.color = marks === 3 ? 'var(--green)' : marks === 2 ? 'var(--gold)' : 'var(--red)';
-}
-
-function clearAnswer() {
-  document.getElementById('answer-input').value = '';
-  analyseAnswer('');
-}
-
-function submitAnswer() {
-  const answer = document.getElementById('answer-input').value.trim();
-  if (!answer) {
-    document.getElementById('answer-input').style.borderColor = 'rgba(255,68,68,0.5)';
-    setTimeout(() => document.getElementById('answer-input').style.borderColor = '', 1000);
-    return;
-  }
-  state.submittedAnswer = answer;
-  
-  // Move to scene D and populate
-  goToScene('d');
-  const srArea = document.getElementById('student-response');
-  srArea.textContent = answer;
-  state.taggedCategories = { name: false, explain: false, impact: false };
-}
-
-// ─── SCENE D: HIGHLIGHTER ────────────────────────────
-function setHighlighter(type) {
-  state.activeHighlighter = type;
-  document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
-  const map = { impact: 'hl-i-btn', explain: 'hl-e-btn', name: 'hl-n-btn' };
-  if (map[type]) document.getElementById(map[type]).classList.add('active');
-}
-
-function applyHighlight() {
-  if (!state.activeHighlighter) return;
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
-
-  const range = selection.getRangeAt(0);
-  const container = document.getElementById('student-response');
-  if (!container.contains(range.commonAncestorContainer)) return;
-
-  const span = document.createElement('span');
-  const classMap = { impact: 'highlight-green', explain: 'highlight-amber', name: 'highlight-red' };
-  span.className = classMap[state.activeHighlighter];
-  span.dataset.tag = state.activeHighlighter;
-
-  try {
-    range.surroundContents(span);
-    state.taggedCategories[state.activeHighlighter] = true;
-  } catch(e) {}
-
-  selection.removeAllRanges();
-}
-
-function calibrateResult() {
-  const tagged = state.taggedCategories;
-  const hasN = tagged.name || document.querySelector('.highlight-red') !== null;
-  const hasE = tagged.explain || document.querySelector('.highlight-amber') !== null;
-  const hasI = tagged.impact || document.querySelector('.highlight-green') !== null;
-
-  // Check for tagged elements in the response
-  const redEls = document.getElementById('student-response').querySelectorAll('.highlight-red');
-  const amberEls = document.getElementById('student-response').querySelectorAll('.highlight-amber');
-  const greenEls = document.getElementById('student-response').querySelectorAll('.highlight-green');
-
-  const nFound = redEls.length > 0;
-  const eFound = amberEls.length > 0;
-  const iFound = greenEls.length > 0;
-
-  // Vulnerability check
-  if (!iFound) {
-    document.getElementById('vuln-alert').classList.add('visible');
-  } else {
-    document.getElementById('vuln-alert').classList.remove('visible');
-  }
-
-  const score = [nFound, eFound, iFound].filter(Boolean).length;
-  state.neiScore = { n: nFound ? 80 : 20, e: eFound ? 85 : 25, i: iFound ? 90 : 15 };
-
-  // Show score panel
-  const panel = document.getElementById('score-panel');
-  panel.style.display = 'block';
-
-  setTimeout(() => {
-    document.getElementById('bar-n').style.width = state.neiScore.n + '%';
-    document.getElementById('bar-e').style.width = state.neiScore.e + '%';
-    document.getElementById('bar-i').style.width = state.neiScore.i + '%';
-    document.getElementById('pct-n').textContent = state.neiScore.n + '%';
-    document.getElementById('pct-e').textContent = state.neiScore.e + '%';
-    document.getElementById('pct-i').textContent = state.neiScore.i + '%';
-  }, 100);
-
-  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  const avg = Math.round((state.neiScore.n + state.neiScore.e + state.neiScore.i) / 3);
-  document.getElementById('final-score-display').textContent = avg + '%';
-}
-
-// ─── EXPORT (Mock) ────────────────────────────────────
-function exportReport() {
-  const btn = document.querySelector('.export-btn');
-  const orig = btn.innerHTML;
-  btn.innerHTML = '⏳ Generating Mission Report...';
-  btn.disabled = true;
-  setTimeout(() => {
-    btn.innerHTML = '✓ Report Exported to Downloads';
-    setTimeout(() => {
-      btn.innerHTML = orig;
-      btn.disabled = false;
-    }, 3000);
-  }, 1500);
-}
-
-// ─── INIT ─────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  typeTerminal();
-  buildQuiz();
-  buildClassify();
-  initDnD();
-  updateProgress();
+  // find first incomplete station
+  let startAt=0;
+  for(let i=0;i<6;i++){if(!state.stations[i]){startAt=i;break;} if(i===5&&state.stations[5])startAt=5;}
+  goStation(startAt);
+  renderFC();
+  renderQuiz();
+  initSort();
 });
 </script>
 </body>
