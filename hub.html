@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Hub — The Mark Scheme Method®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0D1117;--panel:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+  --green:#39FF14;--gold:#FFD700;--red:#FF3B3B;--amber:#FF9500;
+  --cyan:#38BDF8;--purple:#A855F7;--teal:#00D4B8;
+  --ink:#E8EDF3;--dim:rgba(232,237,243,0.5);--muted:rgba(232,237,243,0.25);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--void);color:var(--ink);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(57,255,20,0.013) 1px,transparent 1px),linear-gradient(90deg,rgba(57,255,20,0.013) 1px,transparent 1px);background-size:56px 56px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);pointer-events:none;z-index:0;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;}
+.logo{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:3px;color:var(--green);text-shadow:0 0 20px rgba(57,255,20,0.5);}
+.logo span{color:var(--gold);}
+.topnav{display:flex;gap:4px;}
+.navlink{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--dim);text-decoration:none;padding:6px 14px;border-radius:4px;transition:color .2s,background .2s;}
+.navlink:hover{color:var(--green);}
+.navlink.active{color:var(--green);background:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.2);}
+
+/* HERO BANNER */
+.hero{position:relative;z-index:1;padding:48px 40px 40px;border-bottom:1px solid var(--border);overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-100px;right:-60px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(57,255,20,0.06) 0%,transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-80px;left:5%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,215,0,0.04) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{position:relative;display:flex;align-items:center;gap:40px;}
+.avatar-wrap{flex-shrink:0;}
+.avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(57,255,20,0.15),rgba(255,215,0,0.1));border:2px solid rgba(57,255,20,0.3);display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 0 30px rgba(57,255,20,0.15),0 0 60px rgba(57,255,20,0.06);animation:avatarPulse 3s ease-in-out infinite;}
+@keyframes avatarPulse{0%,100%{box-shadow:0 0 30px rgba(57,255,20,0.15),0 0 60px rgba(57,255,20,0.06);}50%{box-shadow:0 0 40px rgba(57,255,20,0.25),0 0 80px rgba(57,255,20,0.1);}}
+.hero-text{flex:1;}
+.hero-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.hero-eyebrow::before{content:'';width:20px;height:2px;background:var(--green);box-shadow:0 0 8px var(--green);}
+.hero-name{font-family:'Orbitron',monospace;font-size:32px;font-weight:900;letter-spacing:-0.5px;color:#fff;line-height:1.1;}
+.hero-name span{background:linear-gradient(135deg,var(--green) 0%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{margin-top:6px;font-size:14px;color:var(--dim);line-height:1.6;}
+.hero-stats{display:flex;gap:20px;margin-top:20px;}
+.hstat{display:flex;flex-direction:column;gap:2px;}
+.hstat-val{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;}
+.hstat-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);}
+.hs-xp .hstat-val{color:var(--gold);text-shadow:0 0 16px rgba(255,215,0,0.4);}
+.hs-badges .hstat-val{color:var(--green);text-shadow:0 0 16px rgba(57,255,20,0.4);}
+.hs-rank .hstat-val{font-size:14px;color:var(--cyan);}
+.stat-divider{width:1px;background:var(--border);align-self:stretch;}
+
+/* NEI BANNER */
+.nei-banner{position:relative;z-index:1;margin:24px 40px 0;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.2);border-radius:12px;padding:16px 24px;display:flex;align-items:stretch;gap:0;overflow:hidden;}
+.nei-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.nei-section{flex:1;padding:0 20px;border-right:1px solid rgba(57,255,20,0.15);}
+.nei-section:first-child{padding-left:0;}
+.nei-section:last-child{border-right:none;}
+.nei-letter{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;color:var(--green);text-shadow:0 0 20px rgba(57,255,20,0.5);line-height:1;}
+.nei-word{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--dim);margin:3px 0;}
+.nei-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.nei-mark{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--gold);margin-top:4px;}
+
+/* MAIN LAYOUT */
+.main{position:relative;z-index:1;display:grid;grid-template-columns:1fr 360px;gap:24px;padding:24px 40px 80px;align-items:start;}
+
+/* ── CTA CARD */
+.cta-card{background:linear-gradient(135deg,rgba(57,255,20,0.08) 0%,rgba(255,215,0,0.04) 100%);border:1px solid rgba(57,255,20,0.25);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.cta-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(57,255,20,0.04),transparent);pointer-events:none;}
+.cta-eyebrow{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--green);margin-bottom:10px;}
+.cta-title{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.2;}
+.cta-body{font-size:14px;color:var(--dim);line-height:1.65;margin-bottom:20px;}
+.cta-btn{display:inline-block;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--void);background:var(--green);border:none;border-radius:8px;padding:12px 28px;text-decoration:none;cursor:pointer;box-shadow:0 0 24px rgba(57,255,20,0.3);transition:transform .15s,box-shadow .2s;animation:ctaPulse 2.5s ease-in-out infinite;}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 24px rgba(57,255,20,0.3);}50%{box-shadow:0 0 40px rgba(57,255,20,0.6),0 0 60px rgba(57,255,20,0.2);}}
+.cta-btn:hover{transform:translateY(-2px);}
+
+/* MODULE PROGRESS STRIP */
+.section-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.progress-strip{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.prog-row{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 14px;transition:border-color .2s;}
+.prog-row:hover{border-color:rgba(255,255,255,0.15);}
+.prog-ca{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);width:48px;flex-shrink:0;}
+.prog-name{font-size:13px;color:var(--ink);flex:1;}
+.prog-bar-bg{width:80px;height:4px;border-radius:2px;background:rgba(255,255,255,0.07);overflow:hidden;flex-shrink:0;}
+.prog-bar-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.22,1,.36,1);}
+.prog-pct{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);width:28px;text-align:right;flex-shrink:0;}
+
+/* BADGES STRIP */
+.badge-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.badge-item{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:8px 12px;transition:all .2s;}
+.badge-item.earned{border-color:rgba(255,215,0,0.2);background:rgba(255,215,0,0.05);}
+.badge-item.earned:hover{border-color:rgba(255,215,0,0.4);transform:translateY(-1px);}
+.badge-emoji{font-size:18px;}
+.badge-info{}
+.badge-name{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--dim);}
+.badge-item.locked .badge-emoji{filter:grayscale(1);opacity:0.3;}
+.badge-item.locked .badge-name{color:var(--muted);}
+
+/* RIGHT SIDEBAR */
+.sidebar{display:flex;flex-direction:column;gap:16px;}
+
+/* Leaderboard */
+.panel-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.panel-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.panel-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:#fff;}
+.panel-badge{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--green);background:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.2);padding:2px 8px;border-radius:4px;}
+.panel-body{padding:4px 0;}
+
+.lb-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background .2s;}
+.lb-row:hover{background:rgba(255,255,255,0.02);}
+.lb-row:last-child{border-bottom:none;}
+.lb-row.you{background:rgba(57,255,20,0.05);border-bottom:1px solid rgba(57,255,20,0.1);}
+.lb-pos{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;width:22px;text-align:center;color:var(--muted);}
+.lb-pos.gold{color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,0.5);}
+.lb-pos.silver{color:#C0C0C0;}
+.lb-pos.bronze{color:#CD7F32;}
+.lb-avatar{width:28px;height:28px;border-radius:50%;background:var(--panel);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.lb-info{flex:1;}
+.lb-name{font-size:13px;color:var(--ink);}
+.lb-rank{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;}
+.lb-xp{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;}
+.you-tag{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--green);background:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.2);padding:1px 6px;border-radius:3px;}
+
+/* Examiner Intel */
+.intel-list{padding:12px 18px;display:flex;flex-direction:column;gap:10px;}
+.intel-item{padding:10px 12px;border-radius:8px;border-left:3px solid;}
+.intel-item.green{background:rgba(57,255,20,0.06);border-color:var(--green);}
+.intel-item.amber{background:rgba(255,149,0,0.06);border-color:var(--amber);}
+.intel-item.red{background:rgba(255,59,59,0.06);border-color:var(--red);}
+.intel-tag{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1.5px;margin-bottom:3px;}
+.intel-item.green .intel-tag{color:var(--green);}
+.intel-item.amber .intel-tag{color:var(--amber);}
+.intel-item.red .intel-tag{color:var(--red);}
+.intel-text{font-size:12px;color:var(--dim);line-height:1.5;}
+
+/* Rank progress */
+.rank-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;}
+.rank-current{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px;text-shadow:0 0 14px rgba(255,215,0,0.3);}
+.rank-next{font-size:12px;color:var(--dim);margin-bottom:12px;}
+.rank-bar-bg{height:6px;border-radius:3px;background:rgba(255,255,255,0.07);overflow:hidden;margin-bottom:6px;}
+.rank-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width 1.2s cubic-bezier(.22,1,.36,1);}
+.rank-xp-row{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:10px;}
+.rxp-cur{color:var(--gold);}
+.rxp-nxt{color:var(--muted);}
+
+/* FOOTER */
+.footer-bar{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(13,17,23,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);height:44px;display:flex;align-items:center;padding:0 40px;gap:28px;}
+.f-item{display:flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;}
+.f-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.f-lbl{color:var(--muted);}.f-val{color:var(--ink);}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--void);}::-webkit-scrollbar-thumb{background:rgba(57,255,20,0.2);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="logo">MSM<span>®</span></div>
+  <div class="topnav">
+    <a href="hub.html" class="navlink active">HUB</a>
+    <a href="topics.html" class="navlink">TOPICS</a>
+    <a href="dashboard.html" class="navlink">DASHBOARD</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="avatar-wrap">
+      <div class="avatar">🧠</div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-eyebrow">STUDENT COMMAND CENTRE</div>
+      <div class="hero-name">WELCOME BACK, <span id="heroName">SPECIALIST</span></div>
+      <p class="hero-sub">Your NEI proficiency is being tracked. Examiners award the third mark for Impact — that's where most marks are lost. Let's change that.</p>
+      <div class="hero-stats">
+        <div class="hstat hs-xp">
+          <span class="hstat-val" id="statXP">0</span>
+          <span class="hstat-lbl">TOTAL XP</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="hstat hs-badges">
+          <span class="hstat-val" id="statBadges">0</span>
+          <span class="hstat-lbl">BADGES EARNED</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="hstat hs-rank">
+          <span class="hstat-val" id="statRank">TRAINEE</span>
+          <span class="hstat-lbl">CURRENT RANK</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEI BANNER -->
+<div class="nei-banner">
+  <div class="nei-section">
+    <div class="nei-letter">N</div>
+    <div class="nei-word">NAME</div>
+    <p class="nei-desc">Identify the technical term. Name the tool, concept, or process the examiner is asking about.</p>
+    <div class="nei-mark">1 MARK</div>
+  </div>
+  <div class="nei-section">
+    <div class="nei-letter" style="color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.5)">E</div>
+    <div class="nei-word" style="color:var(--dim)">EXPLAIN</div>
+    <p class="nei-desc">Describe the mechanism. Explain <em>how</em> the tool or process works in context.</p>
+    <div class="nei-mark">2 MARKS</div>
+  </div>
+  <div class="nei-section">
+    <div class="nei-letter" style="color:var(--amber);text-shadow:0 0 20px rgba(255,149,0,0.5)">I</div>
+    <div class="nei-word" style="color:var(--dim)">IMPACT</div>
+    <p class="nei-desc">State the business value. Explain <em>why</em> this matters — the commercial or operational outcome.</p>
+    <div class="nei-mark" style="color:var(--amber)">3 MARKS ← MOST MISSED</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="content-col">
+
+    <!-- CTA -->
+    <div class="cta-card">
+      <div class="cta-eyebrow">⟶ PRIMARY ACTION</div>
+      <div class="cta-title">LAUNCH YOUR NEXT MISSION</div>
+      <p class="cta-body">Your Topic Index shows all six Content Area 6 modules with completion rings, difficulty ratings, and Field Training for each. Pick your next target and earn your marks.</p>
+      <a href="topics.html" class="cta-btn">⟶ VIEW ALL TOPICS</a>
+    </div>
+
+    <!-- Progress strip -->
+    <div class="section-label">MODULE PROGRESS</div>
+    <div class="progress-strip" id="progStrip">
+      <div class="prog-row" data-badge="raw_signal" data-accent="#39FF14">
+        <span class="prog-ca">6.1.1</span>
+        <span class="prog-name">Data, Information & Knowledge</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:65%;background:linear-gradient(90deg,#39FF14,#39FF14)"></div></div>
+        <span class="prog-pct" style="color:#39FF14">65%</span>
+      </div>
+      <div class="prog-row" data-badge="market_intelligence" data-accent="#FFD700">
+        <span class="prog-ca">6.1.2</span>
+        <span class="prog-name">Why Organisations Need Data</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:0%;background:linear-gradient(90deg,#FFD700,#FFD700)"></div></div>
+        <span class="prog-pct" style="color:#FFD700">0%</span>
+      </div>
+      <div class="prog-row" data-badge="signal_mapper" data-accent="#FF9500">
+        <span class="prog-ca">6.1.3</span>
+        <span class="prog-name">How Data is Generated</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:0%;background:linear-gradient(90deg,#FF9500,#FF9500)"></div></div>
+        <span class="prog-pct" style="color:#FF9500">0%</span>
+      </div>
+      <div class="prog-row" data-badge="data_architect" data-accent="#38BDF8">
+        <span class="prog-ca">6.2</span>
+        <span class="prog-name">Data Formats</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:0%;background:linear-gradient(90deg,#38BDF8,#38BDF8)"></div></div>
+        <span class="prog-pct" style="color:#38BDF8">0%</span>
+      </div>
+      <div class="prog-row" data-badge="systems_analyst" data-accent="#A855F7">
+        <span class="prog-ca">6.3</span>
+        <span class="prog-name">Data Systems</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:0%;background:linear-gradient(90deg,#A855F7,#A855F7)"></div></div>
+        <span class="prog-pct" style="color:#A855F7">0%</span>
+      </div>
+      <div class="prog-row" data-badge="compliance_officer" data-accent="#00D4B8">
+        <span class="prog-ca">6.4</span>
+        <span class="prog-name">Big Data, Warehousing & GDPR</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:0%;background:linear-gradient(90deg,#00D4B8,#00D4B8)"></div></div>
+        <span class="prog-pct" style="color:#00D4B8">0%</span>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="section-label">SPECIALIST RECORD — BADGES</div>
+    <div class="badge-grid" id="badgeGrid">
+      <div class="badge-item" data-key="raw_signal"><span class="badge-emoji">📡</span><div class="badge-info"><div class="badge-name">RAW SIGNAL</div></div></div>
+      <div class="badge-item" data-key="market_intelligence"><span class="badge-emoji">📊</span><div class="badge-info"><div class="badge-name">MARKET INTEL</div></div></div>
+      <div class="badge-item" data-key="signal_mapper"><span class="badge-emoji">🗺️</span><div class="badge-info"><div class="badge-name">SIGNAL MAPPER</div></div></div>
+      <div class="badge-item" data-key="data_architect"><span class="badge-emoji">🏗️</span><div class="badge-info"><div class="badge-name">DATA ARCHITECT</div></div></div>
+      <div class="badge-item" data-key="systems_analyst"><span class="badge-emoji">🔬</span><div class="badge-info"><div class="badge-name">SYS ANALYST</div></div></div>
+      <div class="badge-item" data-key="compliance_officer"><span class="badge-emoji">🛡️</span><div class="badge-info"><div class="badge-name">COMPLIANCE</div></div></div>
+      <div class="badge-item" data-key="first_strike"><span class="badge-emoji">⚡</span><div class="badge-info"><div class="badge-name">FIRST STRIKE</div></div></div>
+      <div class="badge-item" data-key="impact_specialist"><span class="badge-emoji">💥</span><div class="badge-info"><div class="badge-name">IMPACT SPEC</div></div></div>
+      <div class="badge-item" data-key="full_clearance"><span class="badge-emoji">🏆</span><div class="badge-info"><div class="badge-name">FULL CLEARANCE</div></div></div>
+    </div>
+
+  </div><!-- /.content-col -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Rank Card -->
+    <div class="rank-card">
+      <div class="rank-current" id="rankLabel">TRAINEE</div>
+      <div class="rank-next" id="rankNext">100 XP to reach DATA CADET</div>
+      <div class="rank-bar-bg"><div class="rank-bar-fill" id="rankBar" style="width:0%"></div></div>
+      <div class="rank-xp-row">
+        <span class="rxp-cur" id="rankXPcur">0 XP</span>
+        <span class="rxp-nxt" id="rankXPnxt">/ 100 XP</span>
+      </div>
+    </div>
+
+    <!-- Class Intel Leaderboard -->
+    <div class="panel-card">
+      <div class="panel-head">
+        <span class="panel-title">CLASS INTEL</span>
+        <span class="panel-badge">LIVE</span>
+      </div>
+      <div class="panel-body">
+        <div class="lb-row">
+          <div class="lb-pos gold">1</div>
+          <div class="lb-avatar">👑</div>
+          <div class="lb-info"><div class="lb-name">Aisha K.</div><div class="lb-rank">SIGNAL ANALYST</div></div>
+          <div class="lb-xp">480 XP</div>
+        </div>
+        <div class="lb-row">
+          <div class="lb-pos silver">2</div>
+          <div class="lb-avatar">🎯</div>
+          <div class="lb-info"><div class="lb-name">Remi O.</div><div class="lb-rank">DATA CADET</div></div>
+          <div class="lb-xp">310 XP</div>
+        </div>
+        <div class="lb-row">
+          <div class="lb-pos bronze">3</div>
+          <div class="lb-avatar">⚡</div>
+          <div class="lb-info"><div class="lb-name">Priya S.</div><div class="lb-rank">DATA CADET</div></div>
+          <div class="lb-xp">280 XP</div>
+        </div>
+        <div class="lb-row you">
+          <div class="lb-pos">—</div>
+          <div class="lb-avatar">🧠</div>
+          <div class="lb-info"><div class="lb-name">You <span class="you-tag">YOU</span></div><div class="lb-rank" id="lbMyRank">TRAINEE</div></div>
+          <div class="lb-xp" id="lbMyXP">0 XP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Examiner Intelligence -->
+    <div class="panel-card">
+      <div class="panel-head">
+        <span class="panel-title">EXAMINER INTEL</span>
+      </div>
+      <div class="intel-list">
+        <div class="intel-item green">
+          <div class="intel-tag">✓ WHAT EARNS MARKS</div>
+          <p class="intel-text">Answers that include a specific business consequence. "...allowing the company to reduce stockouts by predicting demand."</p>
+        </div>
+        <div class="intel-item amber">
+          <div class="intel-tag">⚠ COMMON MISTAKE</div>
+          <p class="intel-text">Stopping at Explain. Most students describe how something works but never state the business benefit — costing the 3rd mark.</p>
+        </div>
+        <div class="intel-item red">
+          <div class="intel-tag">✗ MARK KILLER</div>
+          <p class="intel-text">"Data is important for businesses." Zero marks. This is a definition of the obvious, not a structured NEI answer.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Link -->
+    <a href="dashboard.html" style="display:flex;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;text-decoration:none;transition:border-color .2s,transform .2s;color:var(--dim);" onmouseover="this.style.borderColor='rgba(57,255,20,0.3)';this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='var(--border)';this.style.transform='';">
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;">VIEW FULL DASHBOARD</span>
+      <span style="color:var(--green);font-size:18px;">→</span>
+    </a>
+
+  </div><!-- /.sidebar -->
+
+</div><!-- /.main -->
+
+<div class="footer-bar">
+  <div class="f-item"><div class="f-dot"></div><span class="f-lbl">LIVE</span></div>
+  <div class="f-item"><span class="f-lbl">CLASS CODE</span><span class="f-val">5MFH4P</span></div>
+  <div class="f-item"><span class="f-lbl">NEI API</span><span class="f-val">ONLINE</span></div>
+</div>
+
+<script>
+const RANKS=[{l:'TRAINEE',m:0,next:100},{l:'DATA CADET',m:100,next:300},{l:'SIGNAL ANALYST',m:300,next:600},{l:'SYSTEMS OPERATOR',m:600,next:1000},{l:'INTELLIGENCE LEAD',m:1000,next:1500},{l:'AXIOM SPECIALIST',m:1500,next:null}];
+function getXP(){return parseInt(localStorage.getItem('msm_xp')||'0');}
+function getBadges(){return JSON.parse(localStorage.getItem('msm_badges')||'[]');}
+function getRankData(xp){let r=RANKS[0];for(const k of RANKS)if(xp>=k.m)r=k;return r;}
+
+function initPage(){
+  const xp=getXP();
+  const badges=getBadges();
+  const rd=getRankData(xp);
+
+  // Top stats
+  document.getElementById('statXP').textContent=xp;
+  document.getElementById('statBadges').textContent=badges.length;
+  document.getElementById('statRank').textContent=rd.l;
+
+  // Rank card
+  document.getElementById('rankLabel').textContent=rd.l;
+  if(rd.next){
+    const toNext=rd.next-xp;
+    const nextRank=RANKS[RANKS.indexOf(rd)+1];
+    document.getElementById('rankNext').textContent=toNext+' XP to reach '+(nextRank?nextRank.l:'MAX RANK');
+    document.getElementById('rankXPcur').textContent=xp+' XP';
+    document.getElementById('rankXPnxt').textContent='/ '+rd.next+' XP';
+    const pct=((xp-rd.m)/(rd.next-rd.m))*100;
+    setTimeout(()=>{document.getElementById('rankBar').style.width=Math.min(pct,100)+'%';},300);
+  }else{
+    document.getElementById('rankNext').textContent='Maximum rank achieved';
+    setTimeout(()=>{document.getElementById('rankBar').style.width='100%';},300);
+  }
+
+  // Leaderboard
+  document.getElementById('lbMyRank').textContent=rd.l;
+  document.getElementById('lbMyXP').textContent=xp+' XP';
+
+  // Badges
+  document.querySelectorAll('.badge-item').forEach(el=>{
+    const key=el.dataset.key;
+    if(badges.includes(key)){el.classList.add('earned');el.classList.remove('locked');}
+    else{el.classList.add('locked');}
+  });
+
+  // Progress strip — mark earned modules as 100%
+  document.querySelectorAll('.prog-row').forEach(row=>{
+    const badge=row.dataset.badge;
+    if(badges.includes(badge)){
+      const fill=row.querySelector('.prog-bar-fill');
+      const pctEl=row.querySelector('.prog-pct');
+      setTimeout(()=>{fill.style.width='100%';pctEl.textContent='100%';},300);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded',initPage);
+</script>
+</body>
+</html>
