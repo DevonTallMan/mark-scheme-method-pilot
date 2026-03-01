@@ -3,300 +3,261 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Mark Scheme Method® — 6.1.3 How Data is Generated</title>
+<title>The Mark Scheme Method® — 6.3 Data Systems</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --void: #0D1117;
-    --panel: rgba(255,255,255,0.05);
-    --panel-border: rgba(255,255,255,0.08);
-    --green: #39FF14;
-    --green-glow: rgba(57,255,20,0.4);
-    --gold: #FFD700;
-    --gold-glow: rgba(255,215,0,0.4);
-    --red: #FF3B3B;
-    --amber: #FF9500;
-    --text-primary: #E8EDF3;
-    --text-dim: rgba(232,237,243,0.5);
-    --text-ghost: rgba(232,237,243,0.2);
+    --void:#0D1117; --panel:rgba(255,255,255,0.05); --panel-border:rgba(255,255,255,0.08);
+    --green:#39FF14; --green-glow:rgba(57,255,20,0.4);
+    --gold:#FFD700;  --gold-glow:rgba(255,215,0,0.4);
+    --purple:#A855F7; --purple-glow:rgba(168,85,247,0.4);
+    --red:#FF3B3B; --amber:#FF9500;
+    --text-primary:#E8EDF3; --text-dim:rgba(232,237,243,0.5); --text-ghost:rgba(232,237,243,0.2);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Rajdhani', sans-serif; background: var(--void); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
-  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(57,255,20,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(57,255,20,0.015) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
-  body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px); pointer-events: none; z-index: 1; }
-
-  /* TOPBAR */
-  .topbar { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: rgba(13,17,23,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--panel-border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; z-index: 100; }
-  .logo { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; letter-spacing: 3px; color: var(--green); text-shadow: 0 0 20px var(--green-glow); }
-  .logo span { color: var(--gold); }
-  .module-badge { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--green); border: 1px solid rgba(57,255,20,0.3); border-radius: 4px; padding: 3px 10px; background: rgba(57,255,20,0.06); }
-  .step-dots { display: flex; gap: 8px; }
-  .step-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--text-ghost); background: transparent; transition: all 0.3s; }
-  .step-dot.done { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 8px var(--gold-glow); }
-  .step-dot.active { background: var(--green); border-color: var(--green); box-shadow: 0 0 8px var(--green-glow); animation: pulse-dot 1.5s ease-in-out infinite; }
-  @keyframes pulse-dot { 0%,100% { transform: scale(1); } 50% { transform: scale(1.3); } }
-
-  /* FLOATING NAV */
-  #floating-nav { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 6px; z-index: 200; }
-  .nav-btn { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 1px; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--panel-border); background: rgba(13,17,23,0.9); color: var(--text-dim); cursor: pointer; text-align: right; transition: all 0.2s; white-space: nowrap; }
-  .nav-btn:hover:not(:disabled) { border-color: var(--green); color: var(--green); }
-  .nav-btn.active { border-color: var(--green); color: var(--green); background: rgba(57,255,20,0.08); }
-  .nav-btn.locked { opacity: 0.3; cursor: not-allowed; }
-
-  /* SCENES */
-  .scene { display: none; min-height: 100vh; padding: 80px 24px 40px; position: relative; z-index: 2; animation: scene-in 0.6s ease-out; }
-  .scene.active { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
-  @keyframes scene-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* GLASS */
-  .glass { background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--panel-border); border-radius: 16px; }
-
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Rajdhani',sans-serif;background:var(--void);color:var(--text-primary);min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(168,85,247,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.018) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:1;}
+  .topbar{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(13,17,23,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--panel-border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;z-index:100;}
+  .logo{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:3px;color:var(--purple);text-shadow:0 0 20px var(--purple-glow);}
+  .logo span{color:var(--green);}
+  .module-badge{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--purple);border:1px solid rgba(168,85,247,0.35);border-radius:4px;padding:3px 10px;background:rgba(168,85,247,0.07);}
+  .step-dots{display:flex;gap:8px;}
+  .step-dot{width:8px;height:8px;border-radius:50%;border:1px solid var(--text-ghost);background:transparent;transition:all 0.3s;}
+  .step-dot.done{background:var(--purple);border-color:var(--purple);box-shadow:0 0 8px var(--purple-glow);}
+  .step-dot.active{background:var(--green);border-color:var(--green);box-shadow:0 0 8px var(--green-glow);animation:pulse-dot 1.5s ease-in-out infinite;}
+  @keyframes pulse-dot{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
+  .scene{display:none;min-height:100vh;padding:80px 24px 40px;position:relative;z-index:2;animation:scene-in 0.6s ease-out;}
+  .scene.active{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+  @keyframes scene-in{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fade-in{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .glass{background:var(--panel);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--panel-border);border-radius:16px;}
+  .scene-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--purple);display:block;margin-bottom:10px;}
+  .scene-headline{font-family:'Orbitron',monospace;font-size:clamp(20px,3.5vw,30px);font-weight:900;color:var(--text-primary);margin-bottom:28px;}
+  .btn-primary{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;padding:14px 28px;background:rgba(168,85,247,0.1);border:1px solid var(--purple);color:var(--purple);border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;}
+  .btn-primary:hover{background:rgba(168,85,247,0.2);box-shadow:0 0 20px var(--purple-glow);}
+  .btn-primary span{pointer-events:none;}
+  .btn-ghost{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:10px 20px;background:transparent;border:1px solid var(--panel-border);color:var(--text-dim);border-radius:4px;cursor:pointer;transition:all 0.2s;}
+  .btn-ghost:hover{border-color:var(--text-dim);color:var(--text-primary);}
+  .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px;}
   /* SCENE 1 */
-  .briefing-container { max-width: 900px; width: 100%; margin-top: 20px; }
-  .mission-tag { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--green); margin-bottom: 12px; display: block; animation: fade-in 0.8s ease 0.2s both; }
-  .mission-title { font-family: 'Orbitron', monospace; font-size: clamp(24px, 4.5vw, 42px); font-weight: 900; line-height: 1.1; color: var(--text-primary); text-align: center; margin-bottom: 40px; animation: fade-in 0.8s ease 0.4s both; }
-  .mission-title .green { color: var(--green); text-shadow: 0 0 30px var(--green-glow); }
-  .mission-title .gold { color: var(--gold); text-shadow: 0 0 30px var(--gold-glow); }
-  .avatar-briefing { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: center; animation: fade-in 0.8s ease 0.6s both; }
-  @media (max-width: 700px) { .avatar-briefing { grid-template-columns: 1fr; } }
-  .avatar-card { padding: 24px; text-align: center; position: relative; overflow: hidden; }
-  .avatar-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, rgba(57,255,20,0.08), transparent 70%); }
-  .avatar-figure { width: 120px; height: 120px; margin: 0 auto 16px; border-radius: 50%; border: 2px solid var(--green); box-shadow: 0 0 30px var(--green-glow), inset 0 0 30px rgba(57,255,20,0.1); display: flex; align-items: center; justify-content: center; font-size: 60px; background: radial-gradient(circle, rgba(57,255,20,0.12), transparent); animation: avatar-pulse 3s ease-in-out infinite; }
-  @keyframes avatar-pulse { 0%,100% { box-shadow: 0 0 30px var(--green-glow); } 50% { box-shadow: 0 0 60px var(--green-glow); } }
-  .avatar-name { font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; color: var(--green); letter-spacing: 2px; }
-  .avatar-title { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text-dim); letter-spacing: 1px; margin-top: 4px; }
-  .briefing-panel { padding: 32px; position: relative; }
-  .terminal-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 2px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-  .terminal-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green-glow); animation: blink 1s step-end infinite; }
-  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-  .briefing-text { font-family: 'Share Tech Mono', monospace; font-size: 14px; line-height: 1.8; color: var(--text-primary); }
-  .briefing-text .hl-g { color: var(--green); }
-  .briefing-text .hl-gd { color: var(--gold); }
-  .briefing-text .hl-r { color: var(--red); }
-  .source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; margin-top: 28px; }
-  .source-card { padding: 16px 12px; border-radius: 12px; text-align: center; border: 1px solid var(--panel-border); background: rgba(255,255,255,0.03); transition: all 0.3s; }
-  .source-card:hover { border-color: var(--green); background: rgba(57,255,20,0.04); }
-  .source-icon { font-size: 28px; margin-bottom: 8px; }
-  .source-label { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: 1px; margin-bottom: 6px; }
-  .source-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
-
-  /* BUTTONS */
-  .btn-primary { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; letter-spacing: 3px; padding: 16px 40px; background: transparent; border: 2px solid var(--green); color: var(--green); border-radius: 4px; cursor: pointer; position: relative; overflow: hidden; transition: all 0.3s; text-transform: uppercase; }
-  .btn-primary::before { content: ''; position: absolute; inset: 0; background: var(--green); transform: translateX(-100%); transition: transform 0.3s ease; }
-  .btn-primary:hover::before { transform: translateX(0); }
-  .btn-primary:hover { color: var(--void); }
-  .btn-primary span { position: relative; z-index: 1; }
-  .btn-ghost { font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: 1px; padding: 12px 28px; background: transparent; border: 1px solid var(--panel-border); color: var(--text-dim); border-radius: 4px; cursor: pointer; transition: all 0.3s; }
-  .btn-ghost:hover { border-color: var(--text-dim); color: var(--text-primary); }
-  .btn-gold { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; letter-spacing: 3px; padding: 16px 40px; background: transparent; border: 2px solid var(--gold); color: var(--gold); border-radius: 4px; cursor: pointer; position: relative; overflow: hidden; transition: all 0.3s; text-transform: uppercase; }
-  .btn-gold::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: translateX(-100%); transition: transform 0.3s ease; }
-  .btn-gold:hover::before { transform: translateX(0); }
-  .btn-gold:hover { color: var(--void); }
-  .btn-gold span { position: relative; z-index: 1; }
-  .btn-row { display: flex; gap: 16px; justify-content: center; margin-top: 40px; flex-wrap: wrap; }
-
-  /* SCENE 2 - DRAG AND DROP */
-  .dd-container { max-width: 920px; width: 100%; margin-top: 20px; }
-  .scene-label { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 4px; text-align: center; margin-bottom: 8px; display: block; }
-  .scene-headline { font-family: 'Orbitron', monospace; font-size: clamp(20px, 4vw, 32px); font-weight: 700; text-align: center; margin-bottom: 8px; }
-  .scene-sub { font-size: 15px; color: var(--text-dim); text-align: center; margin-bottom: 36px; max-width: 640px; }
-  .dd-area { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  @media (max-width: 650px) { .dd-area { grid-template-columns: 1fr; } }
-  .dd-chips-area { padding: 24px; }
-  .dd-chips-title { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--text-dim); margin-bottom: 16px; }
-  .chips-pool { display: flex; flex-direction: column; gap: 10px; min-height: 180px; }
-  .data-chip { font-family: 'Share Tech Mono', monospace; font-size: 13px; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--panel-border); background: rgba(255,255,255,0.04); cursor: grab; transition: all 0.2s; user-select: none; display: flex; align-items: center; gap: 10px; }
-  .data-chip::before { content: '⣿'; font-size: 10px; opacity: 0.3; }
-  .data-chip:hover { border-color: var(--green); color: var(--green); transform: translateX(4px); }
-  .data-chip.dragging { opacity: 0.4; transform: scale(0.95); }
-  .dd-targets { display: flex; flex-direction: column; gap: 10px; }
-  .drop-zone { padding: 14px 18px; border-radius: 10px; border: 1px dashed var(--panel-border); min-height: 62px; display: flex; align-items: center; gap: 12px; transition: all 0.2s; }
-  .drop-zone.over { border-color: var(--green); background: rgba(57,255,20,0.04); }
-  .drop-zone.correct { border-color: var(--green) !important; background: rgba(57,255,20,0.07) !important; border-style: solid !important; }
-  .drop-zone.incorrect { border-color: var(--red) !important; background: rgba(255,59,59,0.07) !important; border-style: solid !important; animation: shake 0.4s ease; }
-  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-  .dz-badge { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
-  .dz-label { font-size: 13px; color: var(--text-dim); flex: 1; line-height: 1.4; }
-  .dz-answer { font-family: 'Share Tech Mono', monospace; font-size: 12px; }
-  .dz-empty { font-style: italic; opacity: 0.4; }
-  .dd-feedback { margin-top: 20px; padding: 16px 20px; border-radius: 12px; font-family: 'Share Tech Mono', monospace; font-size: 13px; display: none; }
-  .dd-feedback.show { display: block; animation: fade-in 0.4s ease both; }
-  .dd-feedback.success { border: 1px solid var(--green); background: rgba(57,255,20,0.07); color: var(--green); }
-  .dd-feedback.error { border: 1px solid var(--red); background: rgba(255,59,59,0.07); color: var(--red); }
-
-  /* SCENE 3 - MISSION */
-  .mission-layout { max-width: 1000px; width: 100%; display: grid; grid-template-columns: 1fr 220px; gap: 24px; margin-top: 20px; align-items: flex-start; }
-  @media (max-width: 750px) { .mission-layout { grid-template-columns: 1fr; } }
-  .terminal-panel { padding: 0; overflow: hidden; }
-  .terminal-header { display: flex; align-items: center; gap: 8px; padding: 14px 20px; background: rgba(57,255,20,0.03); border-bottom: 1px solid var(--panel-border); }
-  .terminal-dots { display: flex; gap: 6px; }
-  .tdot { width: 10px; height: 10px; border-radius: 50%; }
-  .tdot.r { background: #ff5f56; } .tdot.y { background: #ffbd2e; } .tdot.g { background: var(--green); }
-  .terminal-path { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); margin-left: 8px; }
-  .question-block { padding: 24px; border-bottom: 1px solid var(--panel-border); }
-  .q-tag { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--green); margin-bottom: 10px; }
-  .q-text { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 600; line-height: 1.6; }
-  .q-marks { display: inline-block; font-family: 'Orbitron', monospace; font-size: 11px; color: var(--green); border: 1px solid rgba(57,255,20,0.4); border-radius: 4px; padding: 2px 8px; margin-left: 8px; }
-  .answer-area { padding: 20px; }
-  .answer-textarea { width: 100%; min-height: 160px; background: rgba(57,255,20,0.02); border: 1px solid rgba(57,255,20,0.15); border-radius: 8px; color: var(--text-primary); font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 500; line-height: 1.7; padding: 16px; resize: vertical; outline: none; transition: border-color 0.2s; }
-  .answer-textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(57,255,20,0.06); }
-  .answer-textarea::placeholder { color: var(--text-ghost); }
-  .method-ribbon { padding: 24px 16px; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 80px; }
-  .ribbon-title { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; letter-spacing: 3px; color: var(--text-dim); text-align: center; }
-  .nei-hud-item { padding: 16px 12px; border-radius: 10px; text-align: center; border: 1px solid; transition: all 0.4s; opacity: 0.35; }
-  .nei-hud-item.active-n { opacity: 1; border-color: rgba(255,59,59,0.5); background: rgba(255,59,59,0.08); }
-  .nei-hud-item.active-e { opacity: 1; border-color: rgba(255,149,0,0.5); background: rgba(255,149,0,0.08); }
-  .nei-hud-item.active-i { opacity: 1; border-color: rgba(57,255,20,0.5); background: rgba(57,255,20,0.08); }
-  .hud-letter { font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900; display: block; margin-bottom: 4px; }
-  .hud-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 6px; }
-  .hud-hint { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
-  .hud-n { border-color: rgba(255,59,59,0.2); } .hud-n .hud-letter { color: var(--red); }
-  .hud-e { border-color: rgba(255,149,0,0.2); } .hud-e .hud-letter { color: var(--amber); }
-  .hud-i { border-color: rgba(57,255,20,0.2); } .hud-i .hud-letter { color: var(--green); }
-  @keyframes hud-glitch { 0%{filter:invert(0) brightness(1)} 20%{filter:invert(1) brightness(2)} 40%{filter:invert(0) brightness(1)} 60%{filter:invert(1) brightness(2)} 80%{filter:invert(0) brightness(1)} 100%{filter:invert(0) brightness(1)} }
-
-  /* ACE v2 */
-  .energy-bar-wrap { display:flex; align-items:center; gap:10px; margin-top:10px; }
-  .energy-bar-track { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); }
-  .energy-bar-fill { height:100%; width:0%; border-radius:4px; transition:width 0.3s ease, background 0.4s ease; }
-  .energy-bar-fill.eb-red   { background:var(--red); }
-  .energy-bar-fill.eb-amber { background:var(--amber); animation:bar-pulse 1.2s ease infinite; }
-  .energy-bar-fill.eb-green { background:var(--green); animation:bar-flash 0.6s ease forwards; }
-  @keyframes bar-pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
-  @keyframes bar-flash { 0%{box-shadow:none} 50%{box-shadow:0 0 18px rgba(57,255,20,0.7)} 100%{box-shadow:0 0 10px rgba(57,255,20,0.4)} }
-  .energy-bar-label { font-family:'Share Tech Mono',monospace; font-size:11px; min-width:160px; transition:color 0.4s; }
-  @keyframes impact-pulse { 0%,100%{box-shadow:0 0 0 rgba(57,255,20,0)} 50%{box-shadow:0 0 14px rgba(57,255,20,0.5)} }
-  #reboot-overlay { display:none; position:fixed; inset:0; z-index:9999; background:#0D1117; flex-direction:column; align-items:center; justify-content:center; font-family:'Orbitron',monospace; }
-  #reboot-overlay .rb-line1 { font-size:clamp(11px,2vw,14px); color:var(--red); letter-spacing:4px; opacity:0; transition:opacity 0.3s; text-align:center; padding:0 20px; }
-  #reboot-overlay .rb-line2 { font-size:clamp(16px,3.5vw,30px); font-weight:900; color:var(--green); letter-spacing:5px; margin-top:16px; opacity:0; transition:opacity 0.4s; text-align:center; padding:0 20px; }
-  #reboot-overlay .rb-bar-wrap { max-width:400px; width:90%; margin-top:32px; }
-  #reboot-overlay .rb-bar { height:3px; width:0%; background:var(--green); box-shadow:0 0 12px rgba(57,255,20,0.6); transition:none; }
-
-  /* SCENE 4 - CALIBRATION */
-  .calibration-layout { max-width: 960px; width: 100%; margin-top: 20px; display: grid; grid-template-columns: 1fr 280px; gap: 24px; align-items: flex-start; }
-  @media (max-width: 800px) { .calibration-layout { grid-template-columns: 1fr; } }
-  .cal-main { display: flex; flex-direction: column; gap: 20px; }
-  .model-answer-panel { padding: 24px; }
-  .ma-title { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--green); margin-bottom: 16px; }
-  .ma-text { font-size: 15px; line-height: 1.9; font-weight: 500; }
-  .ma-n { background: rgba(255,59,59,0.25); color: #ffaaaa; border-radius: 3px; padding: 1px 4px; }
-  .ma-e { background: rgba(255,149,0,0.25); color: #ffcc88; border-radius: 3px; padding: 1px 4px; }
-  .ma-i { background: rgba(57,255,20,0.2); color: #aaff88; border-radius: 3px; padding: 1px 4px; }
-  .ma-legend { display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-family: 'Share Tech Mono', monospace; font-size: 11px; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-  .student-answer-area { padding: 24px; }
-  .sa-title { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--text-dim); margin-bottom: 16px; }
-  #student-display { font-size: 16px; line-height: 1.9; font-weight: 500; cursor: text; min-height: 80px; }
-  #student-display .hl-n-tag { background: rgba(255,59,59,0.3); color: #ffcccc; border-radius: 3px; padding: 0 3px; }
-  #student-display .hl-e-tag { background: rgba(255,149,0,0.3); color: #ffe0aa; border-radius: 3px; padding: 0 3px; }
-  #student-display .hl-i-tag { background: rgba(57,255,20,0.25); color: #bbffaa; border-radius: 3px; padding: 0 3px; }
-  .highlight-toolbar { padding: 20px; position: sticky; top: 80px; }
-  .toolbar-title { font-family: 'Orbitron', monospace; font-size: 11px; letter-spacing: 2px; color: var(--text-dim); margin-bottom: 20px; text-align: center; }
-  .hl-btn { width: 100%; padding: 14px 16px; border-radius: 10px; border: 1px solid; background: transparent; cursor: pointer; font-family: 'Orbitron', monospace; font-size: 12px; font-weight: 700; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; transition: all 0.2s; margin-bottom: 10px; }
-  .hl-btn.active { transform: translateX(4px); }
-  .hl-n { border-color: rgba(255,59,59,0.4); color: var(--red); } .hl-n:hover, .hl-n.active { background: rgba(255,59,59,0.15); border-color: var(--red); }
-  .hl-e { border-color: rgba(255,149,0,0.4); color: var(--amber); } .hl-e:hover, .hl-e.active { background: rgba(255,149,0,0.15); border-color: var(--amber); }
-  .hl-i { border-color: rgba(57,255,20,0.4); color: var(--green); } .hl-i:hover, .hl-i.active { background: rgba(57,255,20,0.15); border-color: var(--green); }
-  .hl-instructions { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); line-height: 1.6; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--panel-border); }
-
-  /* VULNERABILITY / SUCCESS */
-  .vulnerability-alert { border: 1px solid rgba(255,59,59,0.4); background: rgba(255,59,59,0.06); border-radius: 12px; padding: 20px 24px; display: none; animation: fade-in 0.4s ease both; }
-  .vulnerability-alert.show { display: block; }
-  .vuln-header { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; color: var(--red); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .vuln-icon { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--red); display: flex; align-items: center; justify-content: center; font-size: 14px; }
-  .vuln-msg { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text-primary); line-height: 1.7; }
-  .vuln-msg strong { color: var(--red); }
-  .success-alert { border: 1px solid rgba(57,255,20,0.4); background: rgba(57,255,20,0.06); border-radius: 12px; padding: 20px 24px; display: none; animation: fade-in 0.4s ease both; }
-  .success-alert.show { display: block; }
-  .success-header { font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; color: var(--green); letter-spacing: 2px; margin-bottom: 10px; }
-  .nei-tally { display: flex; gap: 10px; flex-wrap: wrap; }
-  .tally-chip { font-family: 'Share Tech Mono', monospace; font-size: 12px; padding: 8px 14px; border-radius: 6px; border: 1px solid; }
-  .tally-n { border-color: rgba(255,59,59,0.5); color: #ffaaaa; background: rgba(255,59,59,0.08); }
-  .tally-e { border-color: rgba(255,149,0,0.5); color: #ffcc88; background: rgba(255,149,0,0.08); }
-  .tally-i { border-color: rgba(57,255,20,0.5); color: #aaff88; background: rgba(57,255,20,0.08); }
-
-  /* AXIOM-7 DECONSTRUCTION */
-  #axiom-deconstruction { display:none; margin-top:20px; }
-  .axd-title { font-family:'Orbitron',monospace; font-size:12px; font-weight:700; color:var(--green); letter-spacing:3px; }
-  .axd-sub { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:1px; margin-top:4px; }
-  .axd-badges { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0; }
-  .axd-badge { font-family:'Share Tech Mono',monospace; font-size:11px; padding:6px 12px; border-radius:4px; border:1px solid; letter-spacing:1px; }
-  .axd-badge.hit { color:var(--green); border-color:rgba(57,255,20,0.35); background:rgba(57,255,20,0.06); }
-  .axd-badge.miss { color:var(--text-dim); border-color:rgba(255,255,255,0.1); }
-  .axd-badge.hit::before { content:'✓  '; }
-  .axd-badge.miss::before { content:'○  '; }
-  .axd-text-wrap { background:rgba(255,255,255,0.03); border:1px solid var(--panel-border); border-radius:8px; padding:16px 18px; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500; line-height:1.8; }
-  .axd-text-wrap .nei-n { background:rgba(255,59,59,0.25); color:#ffcccc; border-radius:3px; padding:1px 4px; }
-  .axd-text-wrap .nei-e { background:rgba(255,149,0,0.25); color:#ffe0aa; border-radius:3px; padding:1px 4px; }
-  .axd-text-wrap .nei-i { background:rgba(57,255,20,0.2); color:#bbffaa; border-radius:3px; padding:1px 4px; }
-  .axd-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; }
-  .axd-legend-item { font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--text-dim); display:flex; align-items:center; gap:6px; }
-  .axd-dot { width:10px; height:10px; border-radius:2px; display:inline-block; }
-  .axd-loading { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:2px; padding:16px 0; display:flex; align-items:center; gap:10px; }
-  .axd-spinner { width:14px; height:14px; border:2px solid rgba(57,255,20,0.2); border-top-color:var(--green); border-radius:50%; animation:spin-axd 0.8s linear infinite; }
-  @keyframes spin-axd { to { transform:rotate(360deg); } }
-  .axd-error { font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--amber); letter-spacing:1px; padding:12px 0; }
-
-  /* SCENE 5 - SUCCESS */
-  .success-scene { max-width: 720px; width: 100%; text-align: center; margin-top: 20px; }
-  .badge-container { margin: 32px auto; }
-  .badge-3d { width: 180px; height: 180px; margin: 0 auto; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #2a2a3a, #0d1117); border: 3px solid var(--green); box-shadow: 0 0 60px var(--green-glow), inset 0 0 40px rgba(57,255,20,0.15); display: flex; align-items: center; justify-content: center; animation: badge-spin 4s ease-in-out infinite; }
-  @keyframes badge-spin { 0%,100% { transform: rotateY(0deg); box-shadow: 0 0 60px var(--green-glow); } 50% { transform: rotateY(20deg); box-shadow: 0 0 100px var(--green-glow); } }
-  .badge-inner { text-align: center; }
-  .badge-icon { font-size: 60px; display: block; }
-  .badge-rank { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--green); letter-spacing: 2px; margin-top: 8px; }
-  .badge-name { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: var(--text-primary); letter-spacing: 1px; margin-top: 4px; line-height: 1.3; }
-  .success-card { padding: 40px; }
-  .success-headline { font-family: 'Orbitron', monospace; font-size: clamp(20px, 4vw, 32px); font-weight: 900; color: var(--green); letter-spacing: 4px; margin-bottom: 12px; text-shadow: 0 0 30px var(--green-glow); }
-  .success-sub { font-size: 16px; color: var(--text-dim); margin-bottom: 32px; }
-  .share-card { border: 1px solid rgba(57,255,20,0.2); border-radius: 12px; padding: 20px; margin-bottom: 32px; font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--text-dim); line-height: 1.6; background: rgba(57,255,20,0.03); }
-  .nei-trio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 32px; }
-  @media (max-width: 600px) { .nei-trio { grid-template-columns: 1fr; } }
-  .nei-card { padding: 20px 16px; border-radius: 12px; text-align: center; }
-  .nei-letter { font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900; margin-bottom: 6px; }
-  .nei-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px; margin-bottom: 8px; opacity: 0.7; }
-  .nei-desc { font-size: 13px; color: var(--text-dim); }
-  .n-card { border: 1px solid rgba(255,59,59,0.3); } .n-card .nei-letter { color: var(--red); }
-  .e-card { border: 1px solid rgba(255,149,0,0.3); } .e-card .nei-letter { color: var(--amber); }
-  .i-card { border: 1px solid rgba(57,255,20,0.3); } .i-card .nei-letter { color: var(--green); }
-  .success-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-  .btn-outline { font-family: 'Share Tech Mono', monospace; font-size: 12px; letter-spacing: 2px; padding: 12px 24px; border: 1px solid var(--panel-border); color: var(--text-dim); background: transparent; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
-  .btn-outline:hover { border-color: var(--green); color: var(--green); }
-
-  /* GLITCH INTRO */
-  #glitch-overlay { position: fixed; inset: 0; background: #0D1117; z-index: 9998; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-  .glitch-text { font-family: 'Orbitron', monospace; font-size: clamp(16px,3vw,28px); font-weight: 900; color: var(--green); letter-spacing: 6px; text-align: center; position: relative; animation: gt 2s ease-out forwards; }
-  @keyframes gt { 0%{opacity:0;filter:blur(8px)} 30%{opacity:1;filter:blur(0)} 80%{opacity:1} 100%{opacity:0} }
-  .glitch-subtext { font-family: 'Share Tech Mono', monospace; font-size: clamp(10px,1.5vw,13px); color: var(--text-dim); letter-spacing: 4px; margin-top: 16px; text-align: center; animation: gt 2s ease-out 0.3s forwards; }
-  .glitch-coords { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: rgba(57,255,20,0.4); margin-top: 24px; text-align: center; letter-spacing: 2px; animation: gcoords 2s ease-out forwards; }
-  @keyframes gcoords { 0%,30%{opacity:0} 45%{opacity:1} 70%{opacity:0.6} 85%{opacity:0} 100%{opacity:0} }
-  .glitch-block { position: fixed; background: var(--green); opacity: 0; animation: gb 2s ease-out forwards; }
-  @keyframes gb { 0%{opacity:0} 10%{opacity:0.3} 20%{opacity:0} 35%{opacity:0.15} 50%{opacity:0} 100%{opacity:0} }
-  .glitch-scanlines { position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(57,255,20,0.03) 3px, rgba(57,255,20,0.03) 4px); pointer-events: none; animation: gs 2s ease-out forwards; }
-  @keyframes gs { 0%{opacity:1} 80%{opacity:0.3} 100%{opacity:0} }
-  @media (max-width:600px) { .glitch-block,.glitch-scanlines,.glitch-text::before,.glitch-text::after{display:none} }
-  @media (prefers-reduced-motion:reduce) { #glitch-overlay.active{animation:none;opacity:1} .glitch-text{animation:none;opacity:1} .glitch-subtext,.glitch-coords{animation:none;opacity:1} .glitch-block,.glitch-scanlines,.glitch-text::before,.glitch-text::after{display:none} }
-  ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:var(--void)} ::-webkit-scrollbar-thumb{background:rgba(57,255,20,0.3);border-radius:2px}
+  .briefing-container{max-width:900px;width:100%;margin-top:20px;}
+  .mission-tag{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--purple);margin-bottom:12px;display:block;animation:fade-in 0.8s ease 0.2s both;}
+  .mission-title{font-family:'Orbitron',monospace;font-size:clamp(26px,5vw,46px);font-weight:900;line-height:1.1;color:var(--text-primary);text-align:center;margin-bottom:40px;animation:fade-in 0.8s ease 0.4s both;}
+  .mission-title .pu{color:var(--purple);text-shadow:0 0 30px var(--purple-glow);}
+  .mission-title .gn{color:var(--green);text-shadow:0 0 30px var(--green-glow);}
+  .avatar-briefing{display:grid;grid-template-columns:220px 1fr;gap:32px;align-items:center;animation:fade-in 0.8s ease 0.6s both;}
+  @media(max-width:700px){.avatar-briefing{grid-template-columns:1fr;}}
+  .avatar-card{padding:24px;text-align:center;position:relative;overflow:hidden;}
+  .avatar-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(168,85,247,0.08),transparent 70%);}
+  .avatar-figure{width:120px;height:120px;margin:0 auto 16px;border-radius:50%;border:2px solid var(--purple);box-shadow:0 0 30px var(--purple-glow),inset 0 0 30px rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;font-size:60px;background:radial-gradient(circle,rgba(168,85,247,0.12),transparent);animation:avatar-pulse 3s ease-in-out infinite;}
+  @keyframes avatar-pulse{0%,100%{box-shadow:0 0 30px var(--purple-glow);}50%{box-shadow:0 0 60px var(--purple-glow);}}
+  .avatar-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:2px;}
+  .avatar-title{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px;margin-top:4px;}
+  .briefing-panel{padding:32px;position:relative;}
+  .terminal-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--purple);letter-spacing:2px;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .terminal-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--purple);box-shadow:0 0 10px var(--purple-glow);animation:blink 1s step-end infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+  .briefing-text{font-family:'Share Tech Mono',monospace;font-size:14px;line-height:1.8;color:var(--text-primary);}
+  .briefing-text .hl-g{color:var(--green);}
+  .briefing-text .hl-pu{color:var(--purple);}
+  .briefing-text .hl-r{color:var(--red);}
+  .nei-trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:28px;}
+  @media(max-width:600px){.nei-trio{grid-template-columns:1fr;}}
+  .nei-card{padding:16px;border-radius:12px;text-align:center;}
+  .nei-letter{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;margin-bottom:6px;}
+  .nei-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;margin-bottom:8px;opacity:0.7;}
+  .nei-desc{font-size:13px;color:var(--text-dim);line-height:1.4;}
+  .n-card{border:1px solid rgba(255,59,59,0.3);background:rgba(255,59,59,0.05);} .n-card .nei-letter{color:var(--red);text-shadow:0 0 20px rgba(255,59,59,0.5);}
+  .e-card{border:1px solid rgba(255,149,0,0.3);background:rgba(255,149,0,0.05);} .e-card .nei-letter{color:var(--amber);text-shadow:0 0 20px rgba(255,149,0,0.5);}
+  .i-card{border:1px solid rgba(57,255,20,0.3);background:rgba(57,255,20,0.05);} .i-card .nei-letter{color:var(--green);text-shadow:0 0 20px var(--green-glow);}
+  .intel-box{margin-top:24px;padding:16px 20px;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.2);border-radius:10px;}
+  .intel-box-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--purple);margin-bottom:10px;}
+  .intel-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center;}
+  .intel-stat-val{font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--purple);}
+  .intel-stat-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text-dim);margin-top:3px;line-height:1.4;}
+  /* SCENE 2 */
+  .dd-container{max-width:900px;width:100%;margin-top:20px;}
+  .dd-pool-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--text-dim);margin-bottom:14px;}
+  .chips-pool{display:flex;gap:10px;flex-wrap:wrap;padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--panel-border);border-radius:10px;min-height:60px;margin-bottom:28px;}
+  .data-chip{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;padding:10px 16px;border:1px solid var(--panel-border);border-radius:8px;background:rgba(255,255,255,0.06);cursor:grab;user-select:none;transition:all 0.2s;}
+  .data-chip:hover{border-color:var(--purple);background:rgba(168,85,247,0.08);}
+  .data-chip.dragging{opacity:0.4;transform:scale(0.95);}
+  .dd-targets{display:flex;flex-direction:column;gap:14px;}
+  .drop-zone{padding:16px 20px;border-radius:12px;display:flex;align-items:center;gap:16px;min-height:68px;transition:all 0.25s;}
+  .drop-zone.over{border-color:var(--purple);background:rgba(168,85,247,0.08);}
+  .drop-zone.correct{border-color:var(--green);background:rgba(57,255,20,0.07);}
+  .drop-zone.incorrect{border-color:var(--red);background:rgba(255,59,59,0.07);}
+  .dz-badge{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;padding:6px 12px;border-radius:6px;white-space:nowrap;}
+  .dz-label{flex:1;}
+  .dz-desc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:4px;}
+  .dz-answer{font-family:'Share Tech Mono',monospace;font-size:13px;}
+  .dz-empty{font-style:italic;opacity:0.4;}
+  .dd-feedback{margin-top:20px;padding:16px 20px;border-radius:12px;font-family:'Share Tech Mono',monospace;font-size:13px;display:none;}
+  .dd-feedback.show{display:block;animation:fade-in 0.4s ease both;}
+  .dd-feedback.success{border:1px solid var(--green);background:rgba(57,255,20,0.07);color:var(--green);}
+  .dd-feedback.error{border:1px solid var(--red);background:rgba(255,59,59,0.07);color:var(--red);}
+  /* SCENE 3 */
+  .mission-layout{max-width:1000px;width:100%;display:grid;grid-template-columns:1fr 220px;gap:24px;margin-top:20px;align-items:flex-start;}
+  @media(max-width:750px){.mission-layout{grid-template-columns:1fr;}}
+  .terminal-panel{padding:0;overflow:hidden;}
+  .terminal-header{display:flex;align-items:center;gap:8px;padding:14px 20px;background:rgba(168,85,247,0.04);border-bottom:1px solid var(--panel-border);}
+  .terminal-dots{display:flex;gap:6px;}
+  .tdot{width:10px;height:10px;border-radius:50%;}
+  .tdot.r{background:#ff5f56;} .tdot.y{background:#ffbd2e;} .tdot.p{background:var(--purple);}
+  .terminal-path{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);margin-left:8px;}
+  .question-block{padding:24px;border-bottom:1px solid var(--panel-border);}
+  .q-tag{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--purple);margin-bottom:10px;}
+  .q-text{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;line-height:1.6;color:var(--text-primary);}
+  .q-marks{display:inline-block;font-family:'Orbitron',monospace;font-size:11px;color:var(--purple);border:1px solid rgba(168,85,247,0.4);border-radius:4px;padding:2px 8px;margin-left:8px;}
+  .answer-area{padding:20px;}
+  .answer-textarea{width:100%;min-height:160px;background:rgba(168,85,247,0.02);border:1px solid rgba(168,85,247,0.15);border-radius:8px;color:var(--text-primary);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:500;line-height:1.7;padding:16px;resize:vertical;outline:none;transition:border-color 0.2s;}
+  .answer-textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(168,85,247,0.06);}
+  .answer-textarea::placeholder{color:var(--text-ghost);}
+  .method-ribbon{padding:24px 16px;display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+  .ribbon-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-align:center;}
+  .nei-hud-item{padding:16px 12px;border-radius:10px;text-align:center;border:1px solid;transition:all 0.4s;opacity:0.35;}
+  .nei-hud-item.active-n{opacity:1;border-color:rgba(255,59,59,0.5);background:rgba(255,59,59,0.08);}
+  .nei-hud-item.active-e{opacity:1;border-color:rgba(255,149,0,0.5);background:rgba(255,149,0,0.08);}
+  .nei-hud-item.active-i{opacity:1;border-color:rgba(57,255,20,0.5);background:rgba(57,255,20,0.08);}
+  .hud-letter{font-family:'Orbitron',monospace;font-size:24px;font-weight:900;display:block;margin-bottom:4px;}
+  .hud-n{border-color:rgba(255,59,59,0.2);} .hud-n .hud-letter{color:var(--red);}
+  .hud-e{border-color:rgba(255,149,0,0.2);} .hud-e .hud-letter{color:var(--amber);}
+  .hud-i{border-color:rgba(57,255,20,0.2);} .hud-i .hud-letter{color:var(--green);}
+  .hud-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-bottom:6px;}
+  .hud-hint{font-size:12px;color:var(--text-dim);line-height:1.4;}
+  @keyframes hud-glitch{0%{filter:invert(0) brightness(1)}20%{filter:invert(1) brightness(2)}40%{filter:invert(0) brightness(1)}60%{filter:invert(1) brightness(2)}80%{filter:invert(0) brightness(1)}100%{filter:invert(0) brightness(1)}}
+  @keyframes impact-pulse{0%,100%{box-shadow:0 0 0 rgba(57,255,20,0)}50%{box-shadow:0 0 14px rgba(57,255,20,0.5)}}
+  .energy-bar-wrap{display:flex;align-items:center;gap:10px;margin-top:10px;}
+  .energy-bar-track{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);}
+  .energy-bar-fill{height:100%;width:0%;border-radius:4px;transition:width 0.3s ease,background 0.4s ease;}
+  .energy-bar-fill.eb-red{background:var(--red);}
+  .energy-bar-fill.eb-amber{background:var(--amber);animation:bar-pulse 1.2s ease infinite;}
+  .energy-bar-fill.eb-green{background:var(--green);animation:bar-flash 0.6s ease forwards;}
+  @keyframes bar-pulse{0%,100%{opacity:1}50%{opacity:0.55}}
+  @keyframes bar-flash{0%{box-shadow:none}50%{box-shadow:0 0 18px rgba(57,255,20,0.7)}100%{box-shadow:0 0 10px rgba(57,255,20,0.4)}}
+  .energy-bar-label{font-family:'Share Tech Mono',monospace;font-size:11px;min-width:160px;transition:color 0.4s;}
+  /* SCENE 4 */
+  .calibration-layout{max-width:960px;width:100%;margin-top:20px;display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:flex-start;}
+  @media(max-width:800px){.calibration-layout{grid-template-columns:1fr;}}
+  .cal-main{display:flex;flex-direction:column;gap:20px;}
+  .model-answer-panel{padding:24px;}
+  .ma-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--purple);margin-bottom:16px;}
+  .ma-text{font-size:15px;line-height:1.8;font-weight:500;}
+  .ma-n{background:rgba(255,59,59,0.25);color:#ffaaaa;border-radius:3px;padding:1px 4px;}
+  .ma-e{background:rgba(255,149,0,0.25);color:#ffcc88;border-radius:3px;padding:1px 4px;}
+  .ma-i{background:rgba(57,255,20,0.2);color:#aaff88;border-radius:3px;padding:1px 4px;}
+  .ma-legend{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:11px;}
+  .legend-dot{width:10px;height:10px;border-radius:2px;}
+  .highlight-toolbar{padding:20px;position:sticky;top:80px;}
+  .toolbar-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:var(--text-dim);margin-bottom:20px;text-align:center;}
+  .hl-btn{width:100%;padding:14px 16px;border-radius:10px;border:1px solid;background:transparent;cursor:pointer;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;display:flex;align-items:center;gap:10px;transition:all 0.2s;margin-bottom:10px;}
+  .hl-btn.active{transform:translateX(4px);}
+  .hl-n{border-color:rgba(255,59,59,0.4);color:var(--red);} .hl-n:hover,.hl-n.active{background:rgba(255,59,59,0.15);border-color:var(--red);}
+  .hl-e{border-color:rgba(255,149,0,0.4);color:var(--amber);} .hl-e:hover,.hl-e.active{background:rgba(255,149,0,0.15);border-color:var(--amber);}
+  .hl-i{border-color:rgba(57,255,20,0.4);color:var(--green);} .hl-i:hover,.hl-i.active{background:rgba(57,255,20,0.15);border-color:var(--green);}
+  .hl-instructions{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.6;margin-top:16px;padding-top:16px;border-top:1px solid var(--panel-border);}
+  .student-answer-area{padding:24px;}
+  .sa-title{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--text-dim);margin-bottom:16px;}
+  #student-display{font-size:16px;line-height:1.9;font-weight:500;cursor:text;min-height:80px;}
+  #student-display .hl-n-tag{background:rgba(255,59,59,0.3);color:#ffcccc;border-radius:3px;padding:0 3px;}
+  #student-display .hl-e-tag{background:rgba(255,149,0,0.3);color:#ffe0aa;border-radius:3px;padding:0 3px;}
+  #student-display .hl-i-tag{background:rgba(57,255,20,0.25);color:#bbffaa;border-radius:3px;padding:0 3px;}
+  .vulnerability-alert{display:none;padding:20px 24px;border:1px solid var(--red);background:rgba(255,59,59,0.08);border-radius:12px;animation:vuln-in 0.5s ease both;}
+  .vulnerability-alert.show{display:block;}
+  @keyframes vuln-in{from{transform:scale(0.95);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .vuln-header{display:flex;align-items:center;gap:10px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--red);margin-bottom:12px;}
+  .vuln-icon{width:32px;height:32px;border-radius:50%;background:rgba(255,59,59,0.2);border:1px solid var(--red);display:flex;align-items:center;justify-content:center;font-size:16px;animation:pulse-red 1s ease-in-out infinite;}
+  @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(255,59,59,0.4);}50%{box-shadow:0 0 0 8px rgba(255,59,59,0);}}
+  .vuln-msg{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-primary);line-height:1.7;}
+  .vuln-msg strong{color:var(--red);}
+  .success-alert{display:none;padding:20px 24px;border:1px solid var(--green);background:rgba(57,255,20,0.07);border-radius:12px;animation:fade-in 0.5s ease both;}
+  .success-alert.show{display:block;}
+  .success-header{display:flex;align-items:center;gap:10px;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--green);margin-bottom:12px;}
+  .nei-tally{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;}
+  .tally-chip{font-family:'Share Tech Mono',monospace;font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid;}
+  .tally-n{border-color:var(--red);background:rgba(255,59,59,0.1);color:#ff8888;}
+  .tally-e{border-color:var(--amber);background:rgba(255,149,0,0.1);color:#ffcc88;}
+  .tally-i{border-color:var(--green);background:rgba(57,255,20,0.1);color:#aaff88;}
+  /* SCENE 5 */
+  .success-scene{max-width:700px;width:100%;margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:32px;}
+  .badge-3d{width:200px;height:200px;border-radius:50%;background:conic-gradient(var(--purple),var(--green),var(--amber),var(--purple),var(--green),var(--purple));display:flex;align-items:center;justify-content:center;animation:badge-spin 8s linear infinite,badge-float 3s ease-in-out infinite;box-shadow:0 0 60px var(--purple-glow),0 0 120px rgba(57,255,20,0.2);cursor:pointer;margin:0 auto;}
+  @keyframes badge-spin{from{filter:hue-rotate(0deg);}to{filter:hue-rotate(360deg);}}
+  @keyframes badge-float{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-12px) rotate(3deg);}}
+  .badge-inner{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,#1a2030,var(--void));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;}
+  .badge-icon{font-size:48px;margin-bottom:8px;}
+  .badge-rank{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:var(--purple);font-weight:700;}
+  .badge-name{font-family:'Orbitron',monospace;font-size:10px;font-weight:900;color:var(--text-primary);letter-spacing:1px;line-height:1.3;}
+  .success-card{padding:32px;text-align:center;width:100%;}
+  .success-headline{font-family:'Orbitron',monospace;font-size:clamp(20px,4vw,32px);font-weight:900;color:var(--purple);text-shadow:0 0 30px var(--purple-glow);margin-bottom:12px;}
+  .success-sub{font-size:16px;color:var(--text-dim);margin-bottom:28px;}
+  .share-card{padding:20px 24px;border-radius:12px;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(57,255,20,0.05));border:1px solid rgba(168,85,247,0.25);font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--purple);margin-bottom:28px;}
+  .mission-report-btn{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;padding:12px 28px;background:rgba(168,85,247,0.1);border:1px solid var(--purple);color:var(--purple);border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s;margin:0 auto;}
+  .mission-report-btn:hover{background:rgba(168,85,247,0.2);}
+  /* AXIOM */
+  #axiom-deconstruction{display:none;margin-top:20px;}
+  .axd-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .axd-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--green);letter-spacing:3px;}
+  .axd-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px;}
+  .axd-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .axd-badge{font-family:'Share Tech Mono',monospace;font-size:11px;padding:6px 12px;border-radius:4px;border:1px solid;letter-spacing:1px;}
+  .axd-badge.hit{color:var(--green);border-color:rgba(57,255,20,0.35);background:rgba(57,255,20,0.06);}
+  .axd-badge.miss{color:var(--text-dim);border-color:rgba(255,255,255,0.1);background:transparent;}
+  .axd-badge.hit::before{content:'✓  ';}
+  .axd-badge.miss::before{content:'○  ';}
+  .axd-text-wrap{background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:8px;padding:16px 18px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:500;line-height:1.8;}
+  .axd-text-wrap .nei-n{background:rgba(255,59,59,0.25);color:#ffcccc;border-radius:3px;padding:1px 4px;}
+  .axd-text-wrap .nei-e{background:rgba(255,149,0,0.25);color:#ffe0aa;border-radius:3px;padding:1px 4px;}
+  .axd-text-wrap .nei-i{background:rgba(57,255,20,0.2);color:#bbffaa;border-radius:3px;padding:1px 4px;}
+  .axd-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
+  .axd-legend-item{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);display:flex;align-items:center;gap:6px;}
+  .axd-dot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+  .axd-loading{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:2px;padding:16px 0;display:flex;align-items:center;gap:10px;}
+  .axd-spinner{width:14px;height:14px;border:2px solid rgba(57,255,20,0.2);border-top-color:var(--green);border-radius:50%;animation:spin-axd 0.8s linear infinite;}
+  @keyframes spin-axd{to{transform:rotate(360deg);}}
+  .axd-error{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:1px;padding:12px 0;}
+  /* NAV + GLITCH */
+  .nav-tabs{display:flex;gap:8px;position:fixed;bottom:24px;right:24px;z-index:50;flex-direction:column;align-items:flex-end;}
+  .nav-tab-btn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;padding:8px 16px;background:rgba(13,17,23,0.9);backdrop-filter:blur(10px);border:1px solid var(--panel-border);color:var(--text-dim);border-radius:4px;cursor:pointer;transition:all 0.2s;}
+  .nav-tab-btn.active{border-color:var(--purple);color:var(--purple);}
+  .nav-tab-btn:hover:not(:disabled){border-color:var(--text-dim);color:var(--text-primary);}
+  .nav-tab-btn.locked{border-color:rgba(255,59,59,0.2);color:rgba(232,237,243,0.2);cursor:not-allowed;}
+  .nav-tab-btn.locked:hover{border-color:rgba(255,59,59,0.4);color:rgba(255,59,59,0.5);}
+  @keyframes tab-reject{0%,100%{transform:translateX(0);}20%{transform:translateX(-5px);}40%{transform:translateX(5px);}60%{transform:translateX(-3px);}80%{transform:translateX(3px);}}
+  .nav-tab-btn.rejecting{animation:tab-reject 0.35s ease;}
+  #lock-nudge{position:fixed;bottom:28px;right:180px;background:rgba(255,59,59,0.12);border:1px solid rgba(255,59,59,0.4);border-radius:6px;padding:8px 14px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);letter-spacing:1px;white-space:nowrap;z-index:200;opacity:0;transform:translateX(8px);transition:opacity 0.2s,transform 0.2s;pointer-events:none;}
+  #lock-nudge.show{opacity:1;transform:translateX(0);}
+  #glitch-overlay{position:fixed;inset:0;background:var(--void);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;opacity:0;visibility:hidden;}
+  #glitch-overlay.active{visibility:visible;animation:glitch-sequence 1.9s ease-in-out forwards;}
+  @keyframes glitch-sequence{0%{opacity:0;}5%{opacity:1;}10%{opacity:0.6;}15%{opacity:1;}85%{opacity:1;}100%{opacity:0;visibility:hidden;}}
+  .glitch-scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(168,85,247,0.03) 3px,rgba(168,85,247,0.03) 4px);pointer-events:none;}
+  .glitch-block{position:absolute;width:100%;height:3px;opacity:0;}
+  .g1{background:var(--purple);top:28%;animation:gbar1 1.9s ease forwards 0.1s;}
+  .g2{background:var(--green);top:50%;height:2px;animation:gbar2 1.9s ease forwards 0.25s;}
+  .g3{background:var(--amber);top:70%;animation:gbar3 1.9s ease forwards 0.15s;}
+  @keyframes gbar1{0%,100%{opacity:0}10%{opacity:1;transform:translateX(-8%)}14%{opacity:0;transform:translateX(12%)}22%{opacity:1;transform:translateX(-4%)}30%{opacity:0}42%{opacity:0.6;transform:translateX(0)}55%{opacity:0}}
+  @keyframes gbar2{0%,100%{opacity:0}18%{opacity:1;transform:translateX(10%) scaleX(0.6)}25%{opacity:0}36%{opacity:0.8;transform:translateX(-5%) scaleX(1.2)}43%{opacity:0}}
+  @keyframes gbar3{0%,100%{opacity:0}16%{opacity:1;transform:translateX(6%)}21%{opacity:0;transform:translateX(-10%)}31%{opacity:0.5;transform:translateX(0)}40%{opacity:0}}
+  .glitch-text{font-family:'Orbitron',monospace;font-size:clamp(18px,4vw,32px);font-weight:900;color:var(--purple);letter-spacing:6px;text-align:center;animation:gtext 1.9s ease-in-out forwards;}
+  @keyframes gtext{0%{opacity:0;transform:translateY(8px)}10%{opacity:1;transform:translateY(0)}55%{opacity:1;letter-spacing:8px}88%{opacity:0;letter-spacing:12px}100%{opacity:0}}
+  .glitch-subtext{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:5px;color:var(--green);margin-top:20px;text-align:center;animation:gsub 1.9s ease-in-out forwards;}
+  .glitch-coords{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:rgba(168,85,247,0.5);margin-top:12px;text-align:center;animation:gcoords 1.9s ease-in-out forwards;}
+  @keyframes gsub{0%,12%{opacity:0}25%{opacity:1}65%{opacity:1}85%{opacity:0}100%{opacity:0}}
+  @keyframes gcoords{0%,30%{opacity:0}45%{opacity:1}70%{opacity:0.6}85%{opacity:0}100%{opacity:0}}
+  #reboot-overlay{display:none;position:fixed;inset:0;z-index:9999;background:#0D1117;flex-direction:column;align-items:center;justify-content:center;font-family:'Orbitron',monospace;}
+  #reboot-overlay .rb-line1{font-size:clamp(11px,2vw,14px);color:var(--purple);letter-spacing:4px;opacity:0;transition:opacity 0.3s;text-align:center;padding:0 20px;}
+  #reboot-overlay .rb-line2{font-size:clamp(16px,3.5vw,30px);font-weight:900;color:var(--green);letter-spacing:5px;margin-top:16px;opacity:0;transition:opacity 0.4s;text-align:center;padding:0 20px;}
+  #reboot-overlay .rb-bar-wrap{max-width:400px;width:90%;margin-top:32px;}
+  #reboot-overlay .rb-bar{height:3px;width:0%;background:var(--purple);box-shadow:0 0 12px var(--purple-glow);transition:none;}
+  ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:var(--void)} ::-webkit-scrollbar-thumb{background:rgba(168,85,247,0.3);border-radius:2px}
 </style>
 </head>
 <body>
 
-<!-- GLITCH INTRO -->
-<div id="glitch-overlay">
-  <div class="glitch-block" style="top:15%;left:0;right:0;height:3px;"></div>
-  <div class="glitch-block" style="top:67%;left:0;right:0;height:2px;"></div>
-  <div class="glitch-scanlines"></div>
-  <div class="glitch-text">DATA ORIGIN PROTOCOL</div>
-  <div class="glitch-subtext">CONTENT AREA 6.1.3 // LOADING WAREHOUSE SYSTEMS</div>
-  <div class="glitch-coords">SRC: IOT_SENSOR_NET // STATUS: TRANSMITTING</div>
-</div>
-
-<!-- TOPBAR -->
 <nav class="topbar">
-  <div class="logo">MARK SCHEME METHOD<span>®</span></div>
+  <div class="logo">MARK SCHEME <span>METHOD</span>®</div>
   <div class="step-dots">
     <div class="step-dot active" id="dot-1"></div>
     <div class="step-dot" id="dot-2"></div>
@@ -304,190 +265,173 @@
     <div class="step-dot" id="dot-4"></div>
     <div class="step-dot" id="dot-5"></div>
   </div>
-  <div style="display:flex;align-items:center;gap:16px;">
-    <div class="module-badge">6.1.3</div>
-    <a href="../index.html" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);text-decoration:none;letter-spacing:2px;">⌂ HOME</a>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="../topics.html" style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:rgba(232,237,243,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:5px 12px;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(168,85,247,0.4)';this.style.color='#A855F7'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='rgba(232,237,243,0.4)'">← TOPICS</a>
+    <div class="module-badge">MODULE 6.3</div>
   </div>
 </nav>
 
-<!-- FLOATING NAV -->
-<div id="floating-nav">
-  <button class="nav-btn active" id="navbtn-1" onclick="goScene(1)">01 BRIEF</button>
-  <button class="nav-btn locked" id="navbtn-2" disabled onclick="goScene(2)">02 LESSON</button>
-  <button class="nav-btn locked" id="navbtn-3" disabled onclick="goScene(3)">03 MISSION</button>
-  <button class="nav-btn locked" id="navbtn-4" disabled onclick="goScene(4)">04 CALIBRATE</button>
-  <button class="nav-btn locked" id="navbtn-5" disabled onclick="goScene(5)">05 BADGE</button>
-</div>
-
-<!-- ================================================================ -->
-<!-- SCENE 1: OPERATIONAL BRIEFING                                     -->
-<!-- ================================================================ -->
+<!-- SCENE 1 -->
 <section class="scene active" id="scene-1">
   <div class="briefing-container">
-    <span class="mission-tag">// MODULE 6.1.3 // DATA ORIGIN PROTOCOL</span>
-    <h1 class="mission-title">How Data Is <span class="green">Generated</span></h1>
-
-    <div class="avatar-briefing glass">
-      <div class="avatar-card glass">
+    <div style="text-align:center;margin-bottom:40px;">
+      <span class="mission-tag">CONTENT AREA 6 // DATA IN ORGANISATIONS // 6.3</span>
+      <h1 class="mission-title">DATA <span class="pu">SYSTEMS</span><br>& <span class="gn">MANAGEMENT</span></h1>
+    </div>
+    <div class="avatar-briefing">
+      <div class="glass avatar-card">
         <div class="avatar-figure">🤖</div>
         <div class="avatar-name">AXIOM-7</div>
-        <div class="avatar-title">DATA ARCHITECT</div>
+        <div class="avatar-title">// DATA ARCHITECT //</div>
+        <br>
+        <div style="display:flex;flex-direction:column;gap:6px;text-align:left;">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);">▸ CLEARANCE: SPECIALIST</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);">▸ MODULE: 6.3</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--purple);">▸ SYSTEM ALERT: ACTIVE</div>
+        </div>
       </div>
-      <div class="briefing-panel">
-        <div class="terminal-label">INCOMING TRANSMISSION // CLASSIFIED BRIEFING</div>
+      <div class="glass briefing-panel">
+        <div class="terminal-label">OPERATIONAL BRIEFING // AXIOM-7 TRANSMISSION</div>
         <div class="briefing-text">
-          Specialist. Before you analyse data, you need to know where it came from.<br><br>
-          Examiners don't just want you to <span class="hl-g">name a data type</span> — they want you to explain <span class="hl-gd">how it was created</span> and why that matters to the organisation.<br><br>
-          Every data point has an origin. There are five sources you must know:
+          "Specialist. A hospital trust is merging patient databases from two separate legacy systems. 14,000 patient records. Some have duplicate entries. Some have missing fields. Some have conflicting diagnoses.<br><br>
+          Bad data costs lives. This isn't abstract — <span class="hl-pu">data quality</span> is the difference between correct treatment and critical error.<br><br>
+          In this mission, you'll understand why organisations invest in <span class="hl-g">data validation, verification, and wrangling</span> — and how to answer the examiner's question about what that actually does for the business.<br><br>
+          <span class="hl-r">The examiner doesn't want you to define validation.</span><br>
+          <span class="hl-pu">They want to know what happens to the business if validation fails.</span> Ready?"
         </div>
-        <div class="source-grid" style="margin-top:24px;">
-          <div class="source-card"><div class="source-icon">👤</div><div class="source-label">HUMAN</div><div class="source-desc">Typed, clicked or entered by a person</div></div>
-          <div class="source-card"><div class="source-icon">🧠</div><div class="source-label">AI / ML</div><div class="source-desc">Generated by algorithms learning from patterns</div></div>
-          <div class="source-card"><div class="source-icon">📡</div><div class="source-label">SENSORS</div><div class="source-desc">Physical readings from the environment</div></div>
-          <div class="source-card"><div class="source-icon">🌐</div><div class="source-label">IoT</div><div class="source-desc">Connected devices transmitting automatically</div></div>
-          <div class="source-card"><div class="source-icon">💳</div><div class="source-label">TRANSACTIONAL</div><div class="source-desc">Created when a business event occurs</div></div>
+        <div class="nei-trio">
+          <div class="glass nei-card n-card">
+            <div class="nei-letter">N</div><div class="nei-label">NAME</div>
+            <div class="nei-desc">Identify the data management technique</div>
+          </div>
+          <div class="glass nei-card e-card">
+            <div class="nei-letter">E</div><div class="nei-label">EXPLAIN</div>
+            <div class="nei-desc">Describe how it checks, cleans or structures data</div>
+          </div>
+          <div class="glass nei-card i-card">
+            <div class="nei-letter">I</div><div class="nei-label">IMPACT</div>
+            <div class="nei-desc">State the measurable business or operational outcome</div>
+          </div>
+        </div>
+        <div class="intel-box">
+          <div class="intel-box-title">// SYSTEM INTELLIGENCE</div>
+          <div class="intel-stat-row">
+            <div><div class="intel-stat-val">VALID.</div><div class="intel-stat-lbl">CHECKS FORMAT<br>& RANGE RULES</div></div>
+            <div><div class="intel-stat-val">VERIF.</div><div class="intel-stat-lbl">CONFIRMS DATA<br>IS ACCURATE</div></div>
+            <div><div class="intel-stat-val">WRANG.</div><div class="intel-stat-lbl">CLEANS &amp;<br>RESTRUCTURES DATA</div></div>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="btn-row">
-      <button class="btn-primary" onclick="unlockAndGo(2)"><span>→ BEGIN LESSON</span></button>
-    </div>
+    <div class="btn-row"><button class="btn-primary" onclick="goScene(2)"><span>⟶ START MISSION</span></button></div>
   </div>
 </section>
 
-<!-- ================================================================ -->
-<!-- SCENE 2: DRAG AND DROP LESSON                                     -->
-<!-- ================================================================ -->
+<!-- SCENE 2 -->
 <section class="scene" id="scene-2">
   <div class="dd-container">
-    <span class="scene-label">SCENE 02 // INTERACTIVE LESSON // DATA ORIGIN MAPPING</span>
-    <h2 class="scene-headline">Match the <span style="color:var(--green);">Source</span> to the Example</h2>
-    <p class="scene-sub">Drag each data generation type to the correct real-world example from a smart warehouse.</p>
-
-    <div class="dd-area">
-      <div class="glass dd-chips-area">
-        <div class="dd-chips-title">// DATA SOURCES — DRAG TO MATCH</div>
-        <div class="chips-pool" id="chips-pool">
-          <div class="data-chip" draggable="true" data-type="human">👤 Human Generated</div>
-          <div class="data-chip" draggable="true" data-type="ai">🧠 AI / Machine Learning</div>
-          <div class="data-chip" draggable="true" data-type="sensor">📡 Sensors</div>
-          <div class="data-chip" draggable="true" data-type="iot">🌐 Internet of Things (IoT)</div>
-          <div class="data-chip" draggable="true" data-type="transactional">💳 Transactional Data</div>
+    <span class="scene-label">SCENE 02 // DATA QUALITY CLASSIFIER // INTERACTIVE TASK</span>
+    <h2 class="scene-headline">Match the <span style="color:var(--purple)">Data Quality Problem</span> to the Right Solution</h2>
+    <p style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text-dim);margin-bottom:24px;line-height:1.7;">
+      The hospital trust has found three data quality issues. Drag each problem to the correct technique that would fix it. Think about what the technique actually does to the data.
+    </p>
+    <div class="dd-pool-label">// DATA QUALITY ISSUES — DRAG TO CORRECT TECHNIQUE</div>
+    <div class="chips-pool" id="chips-pool">
+      <div class="data-chip" draggable="true" id="chip-a" data-answer="validation"><span style="color:var(--red);font-family:monospace;">"Date of birth entered as 45/13/1990 — impossible date"</span></div>
+      <div class="data-chip" draggable="true" id="chip-b" data-answer="verification"><span style="color:var(--amber);font-family:monospace;">"Patient's address shows two different postcodes — which is correct?"</span></div>
+      <div class="data-chip" draggable="true" id="chip-c" data-answer="wrangling"><span style="color:var(--green);font-family:monospace;">"300 records use 'M' for Male, 700 use 'Male' — inconsistent format"</span></div>
+    </div>
+    <div class="dd-targets">
+      <div class="drop-zone glass" data-target="validation">
+        <div class="dz-badge" style="background:rgba(255,59,59,0.15);color:var(--red);border:1px solid rgba(255,59,59,0.4);">VALIDATION</div>
+        <div class="dz-label">
+          <div class="dz-desc">Automated rules that reject data that doesn't meet format, range or type requirements at point of entry</div>
+          <div class="dz-answer dz-empty" id="drop-validation">Drop here...</div>
         </div>
       </div>
-
-      <div class="dd-targets">
-        <div class="drop-zone" data-answer="sensor">
-          <div class="dz-badge" style="color:var(--amber);border:1px solid rgba(255,149,0,0.3);">A</div>
-          <div class="dz-label">A temperature probe records cold storage readings at <strong>-18°C every 30 seconds</strong> without any human input</div>
-          <div class="dz-answer dz-empty">Drop here</div>
+      <div class="drop-zone glass" data-target="verification">
+        <div class="dz-badge" style="background:rgba(255,149,0,0.15);color:var(--amber);border:1px solid rgba(255,149,0,0.4);">VERIFICATION</div>
+        <div class="dz-label">
+          <div class="dz-desc">A human or second-source check to confirm data is actually correct, not just correctly formatted</div>
+          <div class="dz-answer dz-empty" id="drop-verification">Drop here...</div>
         </div>
-        <div class="drop-zone" data-answer="iot">
-          <div class="dz-badge" style="color:var(--green);border:1px solid rgba(57,255,20,0.3);">B</div>
-          <div class="dz-label">A <strong>smart shelf</strong> detects low stock levels and automatically sends a reorder request to the supplier system</div>
-          <div class="dz-answer dz-empty">Drop here</div>
-        </div>
-        <div class="drop-zone" data-answer="transactional">
-          <div class="dz-badge" style="color:var(--red);border:1px solid rgba(255,59,59,0.3);">C</div>
-          <div class="dz-label">A <strong>purchase record</strong> is created each time a warehouse processes a customer order at the dispatch terminal</div>
-          <div class="dz-answer dz-empty">Drop here</div>
-        </div>
-        <div class="drop-zone" data-answer="ai">
-          <div class="dz-badge" style="color:var(--gold);border:1px solid rgba(255,215,0,0.3);">D</div>
-          <div class="dz-label">An algorithm analyses <strong>3 years of sales patterns</strong> to predict next month's stock demand automatically</div>
-          <div class="dz-answer dz-empty">Drop here</div>
-        </div>
-        <div class="drop-zone" data-answer="human">
-          <div class="dz-badge" style="color:var(--text-dim);border:1px solid var(--panel-border);">E</div>
-          <div class="dz-label">A warehouse operative manually <strong>logs a stock discrepancy</strong> by typing it into the inventory management system</div>
-          <div class="dz-answer dz-empty">Drop here</div>
+      </div>
+      <div class="drop-zone glass" data-target="wrangling">
+        <div class="dz-badge" style="background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.3);">DATA WRANGLING</div>
+        <div class="dz-label">
+          <div class="dz-desc">Transforming and standardising raw data so it's consistent and ready for analysis or system integration</div>
+          <div class="dz-answer dz-empty" id="drop-wrangling">Drop here...</div>
         </div>
       </div>
     </div>
-
     <div class="dd-feedback" id="dd-feedback"></div>
-
-    <div class="btn-row">
+    <div class="btn-row" style="margin-top:24px;">
       <button class="btn-ghost" onclick="goScene(1)">← BACK</button>
-      <button class="btn-primary" id="dd-check-btn" onclick="checkDragDrop()"><span>→ CHECK ANSWERS</span></button>
-      <button class="btn-primary" id="dd-next-btn" style="display:none;" onclick="unlockAndGo(3)"><span>→ PROCEED TO MISSION</span></button>
+      <button class="btn-primary" onclick="checkDragDrop()"><span>→ CHECK ANSWERS</span></button>
     </div>
   </div>
 </section>
 
-<!-- ================================================================ -->
-<!-- SCENE 3: HUD PRACTICE MISSION                                     -->
-<!-- ================================================================ -->
+<!-- SCENE 3 -->
 <section class="scene" id="scene-3">
   <div class="mission-layout">
     <div class="glass terminal-panel">
       <div class="terminal-header">
-        <div class="terminal-dots"><div class="tdot r"></div><div class="tdot y"></div><div class="tdot g"></div></div>
-        <div class="terminal-path">msm://exam/content-6.1.3/iot-warehouse.q1</div>
+        <div class="terminal-dots"><div class="tdot r"></div><div class="tdot y"></div><div class="tdot p"></div></div>
+        <div class="terminal-path">msm://exam/content-6.3/data-validation-hospital-q1</div>
       </div>
-
       <div class="question-block">
-        <div class="q-tag">// EXAM QUESTION // CONTENT AREA 6.1.3 // HOW DATA IS GENERATED</div>
+        <div class="q-tag">// EXAM QUESTION // CONTENT AREA 6.3 // DATA MANAGEMENT</div>
         <div class="q-text">
-          A logistics company uses <strong>IoT sensors</strong> fitted to warehouse shelving to monitor stock levels and temperature in real time. Explain one way this generates data that adds value to the business.
+          A hospital trust is merging patient records from two legacy systems. Many records contain <span style="color:var(--purple);font-family:monospace;font-size:15px;">formatting inconsistencies</span> and <span style="color:var(--purple);font-family:monospace;font-size:15px;">duplicate entries</span>. Explain one way <span style="color:var(--purple);font-family:monospace;font-size:15px;">data wrangling</span> would benefit this organisation.
           <span class="q-marks">3 MARKS</span>
         </div>
       </div>
-
       <div class="answer-area">
         <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--text-dim);margin-bottom:12px;">YOUR RESPONSE // USE N.E.I. STRUCTURE</div>
         <textarea class="answer-textarea" id="student-answer" maxlength="600"
-          oninput="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
-          onkeyup="updateHUD(this.value); updateWordCount(this.value); resetIdleTimer(this.value)"
-          onpaste="setTimeout(()=>{ const v=this.value; updateHUD(v); updateWordCount(v); resetIdleTimer(v); },10)"
-          placeholder="Name the IoT technique, explain how the sensors generate and transmit the data, and state the measurable business outcome..."></textarea>
-
+          oninput="updateHUD(this.value);updateWordCount(this.value);resetIdleTimer(this.value)"
+          onkeyup="updateHUD(this.value);updateWordCount(this.value);resetIdleTimer(this.value)"
+          onpaste="setTimeout(()=>{const v=this.value;updateHUD(v);updateWordCount(v);resetIdleTimer(v);},10)"
+          placeholder="Name the technique, explain how it standardises and cleans the data, and state the measurable benefit to the hospital — patient safety, accurate analysis, regulatory compliance..."></textarea>
         <div class="energy-bar-wrap">
           <div class="energy-bar-track"><div class="energy-bar-fill" id="energy-bar-fill"></div></div>
           <div class="energy-bar-label" id="word-count-display">0 words — aim for 60+</div>
         </div>
         <div id="axiom-feedback" style="display:none;margin-top:14px;padding:14px 18px;border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.6;border:1px solid var(--amber);background:rgba(255,149,0,0.06);color:var(--amber);animation:fade-in 0.4s ease both;"></div>
       </div>
-
       <div style="padding:0 20px 20px;">
         <div class="btn-row" style="margin-top:0;justify-content:flex-start;">
           <button class="btn-ghost" onclick="goScene(2)">← BACK</button>
-          <button class="btn-primary" id="submit-btn" onclick="submitAnswer()"><span>→ SUBMIT FOR CALIBRATION</span></button>
+          <button class="btn-primary" onclick="submitAnswer()"><span>⟶ SUBMIT FOR CALIBRATION</span></button>
         </div>
       </div>
     </div>
-
-    <!-- HUD METHOD RIBBON -->
     <div class="glass method-ribbon">
       <div class="ribbon-title">METHOD RIBBON</div>
       <div class="nei-hud-item hud-n" id="hud-n">
         <span class="hud-letter">N</span>
         <div class="hud-label">NAME</div>
-        <div class="hud-hint">IoT / sensor type / technique</div>
+        <div class="hud-hint">Data wrangling — the technique</div>
       </div>
       <div class="nei-hud-item hud-e" id="hud-e">
         <span class="hud-letter">E</span>
         <div class="hud-label">EXPLAIN</div>
-        <div class="hud-hint">How data is captured and transmitted</div>
+        <div class="hud-hint">Standardise, remove duplicates, reformat inconsistencies</div>
       </div>
       <div class="nei-hud-item hud-i" id="hud-i">
         <span class="hud-letter">I</span>
         <div class="hud-label">IMPACT</div>
-        <div class="hud-hint">Business value / outcome</div>
+        <div class="hud-hint">Patient safety, accuracy, compliance</div>
       </div>
       <div style="padding-top:12px;border-top:1px solid var(--panel-border);font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);line-height:1.7;">
-        ▸ N+E = 2 marks<br>
-        ▸ N+E+I = 3 marks<br>
-        ▸ I alone = 0 marks
+        ▸ N+E = 2 marks<br>▸ N+E+I = 3 marks<br>▸ I alone = 0 marks
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================================ -->
-<!-- SCENE 4: SELF-CALIBRATION                                         -->
-<!-- ================================================================ -->
+<!-- SCENE 4 -->
 <section class="scene" id="scene-4">
   <div class="calibration-layout">
     <div class="cal-main">
@@ -495,16 +439,14 @@
         <span class="scene-label">SCENE 04 // SELF-CALIBRATION // NEI DECONSTRUCTION</span>
         <h2 class="scene-headline" style="text-align:left;">Mark Your <span style="color:var(--green)">Own Work</span></h2>
       </div>
-
-      <!-- MODEL ANSWER -->
       <div class="glass model-answer-panel">
         <div class="ma-title">// MODEL ANSWER // 3 MARKS ACHIEVED</div>
         <div class="ma-text">
-          <span class="ma-n">[N] <strong>IoT sensors:</strong> The warehouse uses Internet of Things sensors fitted to shelving units to automatically monitor stock levels and ambient temperature in real time.</span>
+          <span class="ma-n">[N] <strong>Data wrangling</strong> is the process of cleaning, transforming, and standardising raw data from multiple sources to make it consistent and suitable for analysis or integration into a single system.</span>
           &nbsp;
-          <span class="ma-e">[E] <strong>Data generation:</strong> Each sensor continuously captures readings and transmits them via a wireless network to a centralised data management system, which logs every change as a timestamped data record without any human input.</span>
+          <span class="ma-e">[E] <strong>Mechanism:</strong> In this case, the wrangling process would identify duplicate patient records — for example, a patient appearing twice under slightly different name spellings — and merge them into a single authoritative record, while also standardising inconsistent fields such as converting all gender entries to a uniform format.</span>
           &nbsp;
-          <span class="ma-i">[I] <strong>Business value:</strong> This allows the warehouse manager to receive instant alerts when stock drops below threshold or temperature exceeds safe limits, preventing spoilage and stockouts, which reduces waste and protects profit margins.</span>
+          <span class="ma-i">[I] <strong>Impact:</strong> This directly reduces the risk of a clinician viewing an incomplete patient history, improving diagnostic accuracy and reducing the likelihood of avoidable medication errors, which also protects the trust from regulatory penalties under data quality standards.</span>
         </div>
         <div class="ma-legend">
           <div class="legend-item"><div class="legend-dot" style="background:rgba(255,59,59,0.5);"></div><span style="color:#ff8888;">[N] Name</span></div>
@@ -512,624 +454,311 @@
           <div class="legend-item"><div class="legend-dot" style="background:rgba(57,255,20,0.4);"></div><span style="color:#aaff88;">[I] Impact</span></div>
         </div>
       </div>
-
-      <!-- STUDENT ANSWER -->
       <div class="glass student-answer-area">
-        <div class="sa-title">// YOUR ANSWER // SELECT TEXT AND TAG WITH THE TOOLBAR →</div>
+        <div class="sa-title">// YOUR ANSWER // SELECT TEXT TO HIGHLIGHT</div>
         <div id="student-display"></div>
       </div>
-
-      <!-- AXIOM-7 DECONSTRUCTION -->
       <div class="glass" id="axiom-deconstruction" style="padding:20px;">
-        <div style="margin-bottom:14px;">
-          <div class="axd-title">AXIOM-7 // NEI DECONSTRUCTION</div>
-          <div class="axd-sub">// AI-ASSISTED ANALYSIS — COMPARE WITH YOUR OWN TAGGING ABOVE</div>
+        <div class="axd-header">
+          <div>
+            <div class="axd-title">AXIOM-7 // NEI DECONSTRUCTION</div>
+            <div class="axd-sub">// AI-ASSISTED ANALYSIS — COMPARE WITH YOUR OWN TAGGING ABOVE</div>
+          </div>
         </div>
-        <div id="axd-content">
-          <div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div>
-        </div>
+        <div id="axd-content"><div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div></div>
       </div>
-
-      <!-- TALLY -->
-      <div id="nei-tally-display" style="display:none;" class="glass" style="padding:20px;">
-        <div style="padding:16px 20px;">
-          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--text-dim);margin-bottom:12px;">// NEI PROFICIENCY SCAN</div>
-          <div class="nei-tally" id="nei-tally"></div>
-        </div>
-      </div>
-
-      <!-- VULNERABILITY ALERT -->
       <div class="vulnerability-alert" id="vuln-alert">
-        <div class="vuln-header"><div class="vuln-icon">⚠</div>VULNERABILITY DETECTED</div>
+        <div class="vuln-header"><div class="vuln-icon">⚠</div>AXIOM-7 // TECHNIQUE GAP DETECTED</div>
         <div class="vuln-msg">
-          <strong>Specialist — AXIOM-7 has detected an Impact statement in your answer, but you haven't tagged it yet.</strong><br><br>
-          Scroll up to your answer, select the sentence that states what the business <em>gains</em> — reduced waste, lower costs, prevented spoilage — and tag it [I] using the toolbar on the right.<br><br>
+          <strong>You've described what data wrangling does — but you haven't told the examiner what it means for the hospital.</strong><br><br>
+          What happens when patient records are clean and consistent? Think: correct treatment decisions, no duplicate prescriptions, regulatory compliance, audit trails. That's your Impact sentence.<br><br>
           No [I] tag = no third mark confirmed.
         </div>
       </div>
-
-      <!-- SUCCESS ALERT -->
-      <div class="success-alert" id="success-check-alert">
-        <div class="success-header">✓ FULL TECHNIQUE DETECTED</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-primary);line-height:1.7;">
-          N.E.I. structure confirmed. You've tagged all three components. Your answer has the structure to achieve full marks.
+      <div class="success-alert" id="success-alert">
+        <div class="success-header">✓ CALIBRATION COMPLETE — 3/3 TECHNIQUE CONFIRMED</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim);line-height:1.7;">Full N.E.I. structure detected. You've named the technique, explained the mechanism, and stated a measurable impact on patient safety or operational compliance. That's a 3-mark answer.</div>
+        <div class="nei-tally">
+          <div class="tally-chip tally-n">✓ [N] Named</div>
+          <div class="tally-chip tally-e">✓ [E] Explained</div>
+          <div class="tally-chip tally-i">✓ [I] Impact</div>
         </div>
       </div>
-
-      <div class="btn-row" style="justify-content:flex-start;">
-        <button class="btn-ghost" onclick="goScene(3)">← REVISE ANSWER</button>
-        <button class="btn-primary" id="calibrate-btn" onclick="runCalibration()"><span>⟶ RUN CALIBRATION</span></button>
-        <button class="btn-gold" id="complete-btn" style="display:none;" onclick="unlockAndGo(5)"><span>⟶ COMPLETE MISSION</span></button>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" id="complete-btn" onclick="goScene(5)" style="display:none;"><span>✓ COMPLETE MISSION</span></button>
+        <button class="btn-ghost" onclick="runCalibration()">▶ RUN CALIBRATION</button>
       </div>
     </div>
-
-    <!-- HIGHLIGHTER TOOLBAR -->
-    <div class="glass highlight-toolbar" style="position:sticky;top:80px;">
-      <div class="toolbar-title">HIGHLIGHTER TOOLBAR</div>
-      <button class="hl-btn hl-n" id="hl-n-btn" onclick="setHighlightMode('n')">
-        <span class="hl-icon">🔴</span><span>[N] NAME</span>
-      </button>
-      <button class="hl-btn hl-e" id="hl-e-btn" onclick="setHighlightMode('e')">
-        <span class="hl-icon">🟠</span><span>[E] EXPLAIN</span>
-      </button>
-      <button class="hl-btn hl-i" id="hl-i-btn" onclick="setHighlightMode('i')">
-        <span class="hl-icon">🟢</span><span>[I] IMPACT</span>
-      </button>
-      <div class="hl-instructions">
-        1. Select a highlight mode above.<br><br>
-        2. Click + drag over text in your answer to tag it.<br><br>
-        3. Click "Run Calibration" when done.
-      </div>
+    <div class="glass highlight-toolbar">
+      <div class="toolbar-title">HIGHLIGHT TOOL</div>
+      <button class="hl-btn hl-n" id="btn-n" onclick="setMode('n')"><span style="font-size:18px;">🔴</span> [N] NAME</button>
+      <button class="hl-btn hl-e" id="btn-e" onclick="setMode('e')"><span style="font-size:18px;">🟠</span> [E] EXPLAIN</button>
+      <button class="hl-btn hl-i" id="btn-i" onclick="setMode('i')"><span style="font-size:18px;">🟢</span> [I] IMPACT</button>
+      <div class="hl-instructions">1. Select a mode above<br>2. Click and drag to highlight<br>3. Tag each N.E.I. component<br>4. Click RUN CALIBRATION</div>
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--panel-border);">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:12px;letter-spacing:2px;">// CURRENT MODE</div>
-        <div id="mode-display" style="font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:var(--text-dim);">— SELECT —</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);margin-bottom:8px;">6.3 IMPACT CHECKLIST</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);line-height:1.8;">▸ Patient safety<br>▸ Diagnostic accuracy<br>▸ Regulatory compliance<br>▸ Reduce errors / risk<br>▸ System reliability</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================================================================ -->
-<!-- SCENE 5: SUCCESS STATE                                            -->
-<!-- ================================================================ -->
+<!-- SCENE 5 -->
 <section class="scene" id="scene-5">
   <div class="success-scene">
-    <span class="scene-label">MISSION COMPLETE // CONTENT AREA 6.1.3 // LEVEL: SPECIALIST</span>
-
-    <div class="badge-container">
-      <div class="badge-3d">
-        <div class="badge-inner">
-          <div class="badge-icon">📡</div>
-          <div class="badge-rank">RANK: SPECIALIST</div>
-          <div class="badge-name">IOT<br>ARCHITECT</div>
-        </div>
+    <div class="badge-3d" onclick="exportReport()">
+      <div class="badge-inner">
+        <div class="badge-icon">🏥</div>
+        <div class="badge-rank">MODULE 6.3</div>
+        <div class="badge-name">SYSTEMS ANALYST</div>
       </div>
     </div>
-
     <div class="glass success-card">
-      <div class="success-headline">MISSION ACCOMPLISHED</div>
-      <div class="success-sub">You have demonstrated the N.E.I. technique at Specialist level. Impact mark secured.</div>
-
-      <div class="share-card">
-        "I just mapped a data origin to a business outcome.<br>
-        Level: <strong>Specialist.</strong> N.E.I. Method — Certified."
-      </div>
-
-      <div class="nei-trio" style="margin-bottom:32px;">
-        <div class="glass nei-card n-card">
-          <div class="nei-letter">N</div>
-          <div class="nei-label">NAME</div>
-          <div class="nei-desc" style="color:var(--green);">✓ Tagged</div>
-        </div>
-        <div class="glass nei-card e-card">
-          <div class="nei-letter">E</div>
-          <div class="nei-label">EXPLAIN</div>
-          <div class="nei-desc" style="color:var(--green);">✓ Tagged</div>
-        </div>
-        <div class="glass nei-card i-card">
-          <div class="nei-letter">I</div>
-          <div class="nei-label">IMPACT</div>
-          <div class="nei-desc" style="color:var(--green);">✓ Tagged</div>
-        </div>
-      </div>
-
-      <div class="success-btns">
-        <button class="btn-outline" onclick="resetMission()">↺ NEW MISSION</button>
-        <button class="btn-outline" onclick="window.location.href='../index.html'">⌂ COMMAND CENTRE</button>
-        <button class="btn-outline" onclick="window.location.href='../6-1-2/index.html'">← MODULE 6.1.2</button>
-      </div>
+      <div class="success-headline">MISSION COMPLETE</div>
+      <div class="success-sub">Data Systems mastered. Clean data isn't a technical nicety — it's a safety-critical business requirement.</div>
+      <div class="share-card">"Validation stops bad data entering the system. Verification confirms it's actually correct. Wrangling fixes what already got in. All three exist because data quality failures cost money, cause harm, and attract regulators."</div>
+      <button class="mission-report-btn" onclick="exportReport()">⬇ EXPORT MISSION REPORT</button>
+    </div>
+    <div class="btn-row">
+      <a href="../topics.html" style="text-decoration:none;"><button class="btn-ghost">← BACK TO TOPICS</button></a>
+      <a href="../6-4/index.html" style="text-decoration:none;"><button class="btn-primary"><span>⟶ MODULE 6.4</span></button></a>
     </div>
   </div>
 </section>
 
-<!-- REBOOT OVERLAY -->
+<div id="glitch-overlay" aria-hidden="true">
+  <div class="glitch-scanlines"></div>
+  <div class="glitch-block g1"></div><div class="glitch-block g2"></div><div class="glitch-block g3"></div>
+  <div class="glitch-text">DATA CLASSIFIED. TERMINAL UNLOCKING...</div>
+  <div class="glitch-subtext">ACCESSING MISSION TERMINAL</div>
+  <div class="glitch-coords">VALIDATION // VERIFICATION // WRANGLING</div>
+</div>
+<div id="lock-nudge">⚡ COMPLETE THE CLASSIFIER FIRST</div>
+<div class="nav-tabs" id="floating-nav">
+  <button class="nav-tab-btn active" onclick="goScene(1)" id="navbtn-1">01 BRIEF</button>
+  <button class="nav-tab-btn" onclick="goScene(2)" id="navbtn-2">02 LESSON</button>
+  <button class="nav-tab-btn locked" id="navbtn-3" disabled>🔒 03 MISSION</button>
+  <button class="nav-tab-btn locked" id="navbtn-4" disabled>🔒 04 CALIBRATE</button>
+  <button class="nav-tab-btn locked" id="navbtn-5" disabled>🔒 05 BADGE</button>
+</div>
 <div id="reboot-overlay">
-  <div class="rb-line1" id="rb-line1">CRITICAL INSIGHT DETECTED</div>
+  <div class="rb-line1" id="rb-line1">DATA QUALITY CONFIRMED</div>
   <div class="rb-line2" id="rb-line2">CALIBRATING SPECIALIST GRADE</div>
   <div class="rb-bar-wrap"><div class="rb-bar" id="rb-bar"></div></div>
 </div>
 
 <script>
-/* ── SCENE MANAGEMENT ── */
-let currentScene = 1;
-
-function goScene(n) {
-  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-  document.getElementById('scene-' + n).classList.add('active');
-  document.querySelectorAll('.step-dot').forEach((d,i) => {
-    d.classList.remove('active','done');
-    if (i + 1 < n) d.classList.add('done');
-    if (i + 1 === n) d.classList.add('active');
-  });
-  [1,2,3,4,5].forEach(i => {
-    const b = document.getElementById('navbtn-' + i);
-    if (b) b.classList.remove('active');
-  });
-  const ab = document.getElementById('navbtn-' + n);
-  if (ab && !ab.classList.contains('locked')) ab.classList.add('active');
-  currentScene = n;
-  window.scrollTo(0,0);
-
-  if (n === 3) {
-    clearInterval(window._textPoll);
-    window._textPoll = setInterval(() => {
-      const ta = document.getElementById('student-answer');
-      if (!ta) return;
-      const v = ta.value;
-      if (v !== (window._lastPolledValue || '')) {
-        window._lastPolledValue = v;
-        updateHUD(v);
-        updateWordCount(v);
-      }
-    }, 400);
-  } else {
-    clearInterval(window._textPoll);
-  }
-  if (n === 4) prepCalibration();
-}
-
-function unlockAndGo(n) {
-  const btn = document.getElementById('navbtn-' + n);
-  if (btn) { btn.classList.remove('locked'); btn.disabled = false; }
-  goScene(n);
-}
-
-/* ── DRAG AND DROP ── */
-const dropAnswers = {};
-
-document.addEventListener('DOMContentLoaded', () => {
-  const chips = document.querySelectorAll('.data-chip');
-  const zones = document.querySelectorAll('.drop-zone');
-  let draggedChip = null;
-
-  chips.forEach(chip => {
-    chip.addEventListener('dragstart', e => {
-      draggedChip = chip;
-      chip.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
-  });
-
-  zones.forEach(zone => {
-    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
-    zone.addEventListener('dragleave', () => zone.classList.remove('over'));
-    zone.addEventListener('drop', e => {
-      e.preventDefault();
-      zone.classList.remove('over');
-      if (!draggedChip) return;
-      const answerDiv = zone.querySelector('.dz-answer');
-      answerDiv.textContent = draggedChip.textContent.replace('⣿ ','').trim();
-      answerDiv.classList.remove('dz-empty');
-      dropAnswers[zone.dataset.answer] = draggedChip.dataset.type;
-      draggedChip.style.opacity = '0.3';
-      draggedChip.draggable = false;
-      draggedChip = null;
-    });
-  });
-
-  setTimeout(() => {
-    document.getElementById('glitch-overlay').style.display = 'none';
-  }, 2200);
+let sorterComplete=false,nudgeTimer=null,glitchTriggerTimer=null,glitchNavTimer=null,glitchCleanTimer=null;
+document.getElementById('floating-nav').addEventListener('mousedown',e=>{
+  const btn=e.target.closest('.nav-tab-btn.locked');if(!btn)return;
+  btn.classList.remove('rejecting');void btn.offsetWidth;btn.classList.add('rejecting');
+  btn.addEventListener('animationend',()=>btn.classList.remove('rejecting'),{once:true});
+  const nudge=document.getElementById('lock-nudge');nudge.classList.add('show');clearTimeout(nudgeTimer);
+  nudgeTimer=setTimeout(()=>nudge.classList.remove('show'),2200);
 });
-
-function checkDragDrop() {
-  const zones = document.querySelectorAll('.drop-zone');
-  let correct = 0;
-  zones.forEach(zone => {
-    const expected = zone.dataset.answer;
-    const given = dropAnswers[expected];
-    zone.classList.remove('correct','incorrect');
-    if (given === expected) { zone.classList.add('correct'); correct++; }
-    else if (given) { zone.classList.add('incorrect'); }
+function unlockTabs(){
+  if(sorterComplete)return;sorterComplete=true;
+  [{id:'navbtn-3',label:'03 MISSION',scene:3},{id:'navbtn-5',label:'05 BADGE',scene:5}].forEach(({id,label,scene})=>{
+    const btn=document.getElementById(id);btn.classList.remove('locked');btn.disabled=false;
+    btn.textContent=label;btn.setAttribute('onclick',`goScene(${scene})`);
   });
-
-  const fb = document.getElementById('dd-feedback');
+}
+function glitchToMission(){
+  const overlay=document.getElementById('glitch-overlay');
+  unlockTabs();overlay.classList.remove('active');void overlay.offsetWidth;overlay.classList.add('active');
+  glitchNavTimer=setTimeout(()=>{glitchNavTimer=null;goScene(3);},950);
+  glitchCleanTimer=setTimeout(()=>{glitchCleanTimer=null;overlay.classList.remove('active');},2000);
+}
+let currentScene=1;
+function goScene(n){
+  if(glitchTriggerTimer){clearTimeout(glitchTriggerTimer);glitchTriggerTimer=null;}
+  if(glitchNavTimer){clearTimeout(glitchNavTimer);glitchNavTimer=null;}
+  if(glitchCleanTimer){clearTimeout(glitchCleanTimer);glitchCleanTimer=null;}
+  document.getElementById('glitch-overlay').classList.remove('active');
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scene-'+n).classList.add('active');
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{
+    d.classList.remove('active','done');
+    if(i+1<n&&n<=5)d.classList.add('done');
+    else if(i+1===n)d.classList.add('active');
+  });
+  [1,2,3,4,5].forEach(i=>{const b=document.getElementById('navbtn-'+i);if(b)b.classList.remove('active');});
+  const ab=document.getElementById('navbtn-'+n);if(ab&&!ab.classList.contains('locked'))ab.classList.add('active');
+  document.getElementById('floating-nav').style.display='flex';
+  currentScene=n;window.scrollTo(0,0);
+  if(n===3){
+    clearInterval(window._textPoll);
+    window._textPoll=setInterval(()=>{const ta=document.getElementById('student-answer');if(!ta)return;const v=ta.value;if(v!==(window._lastPolledValue||'')){window._lastPolledValue=v;updateHUD(v);updateWordCount(v);}},400);
+  }else{clearInterval(window._textPoll);}
+  if(n===4)prepCalibration();
+}
+(function initDnD(){
+  const chips=document.querySelectorAll('.data-chip');
+  const zones=document.querySelectorAll('.drop-zone');
+  function dropChipOnZone(chip,zone){
+    const target=zone.dataset.target;
+    const prev=document.getElementById('drop-'+target);
+    if(prev&&prev.dataset.chipId&&prev.dataset.chipId!==chip.id){
+      const old=document.getElementById(prev.dataset.chipId);
+      if(old){old.style.display='';document.getElementById('chips-pool').appendChild(old);}
+    }
+    const display=document.getElementById('drop-'+target);
+    display.textContent=chip.textContent;display.classList.remove('dz-empty');
+    display.dataset.chipId=chip.id;chip.style.display='none';
+  }
+  function clearHL(){zones.forEach(z=>z.classList.remove('over'));}
+  chips.forEach(chip=>{
+    chip.addEventListener('dragstart',e=>{e.dataTransfer.setData('chipId',chip.id);chip.classList.add('dragging');});
+    chip.addEventListener('dragend',()=>chip.classList.remove('dragging'));
+  });
+  zones.forEach(zone=>{
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('over');});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('over'));
+    zone.addEventListener('drop',e=>{e.preventDefault();clearHL();const chip=document.getElementById(e.dataTransfer.getData('chipId'));if(chip)dropChipOnZone(chip,zone);});
+  });
+  let touchChip=null,touchClone=null;
+  chips.forEach(chip=>{
+    chip.addEventListener('touchstart',e=>{touchChip=chip;chip.classList.add('dragging');touchClone=chip.cloneNode(true);touchClone.style.cssText=`position:fixed;pointer-events:none;z-index:9999;opacity:0.85;transform:scale(1.05);transition:none;margin:0;width:${chip.offsetWidth}px;`;document.body.appendChild(touchClone);moveTouchClone(e.touches[0]);},{passive:true});
+    chip.addEventListener('touchmove',e=>{e.preventDefault();if(!touchClone)return;moveTouchClone(e.touches[0]);clearHL();const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);const zone=el&&el.closest('.drop-zone');if(zone)zone.classList.add('over');},{passive:false});
+    chip.addEventListener('touchend',e=>{if(!touchChip||!touchClone)return;const touch=e.changedTouches[0];clearHL();touchClone.remove();touchClone=null;touchChip.classList.remove('dragging');const el=document.elementFromPoint(touch.clientX,touch.clientY);const zone=el&&el.closest('.drop-zone');if(zone)dropChipOnZone(touchChip,zone);touchChip=null;});
+  });
+  function moveTouchClone(touch){if(!touchClone)return;touchClone.style.left=(touch.clientX-touchClone.offsetWidth/2)+'px';touchClone.style.top=(touch.clientY-24)+'px';}
+})();
+function checkDragDrop(){
+  const fb=document.getElementById('dd-feedback');
+  const zones=document.querySelectorAll('.drop-zone');
+  let correct=0;
+  zones.forEach(zone=>{
+    const target=zone.dataset.target;const el=document.getElementById('drop-'+target);const chipId=el&&el.dataset.chipId;
+    zone.classList.remove('correct','incorrect');if(!chipId)return;
+    const chip=document.getElementById(chipId);
+    if(chip&&chip.dataset.answer===target){zone.classList.add('correct');correct++;}else zone.classList.add('incorrect');
+  });
   fb.classList.add('show');
-  if (correct === 5) {
-    fb.className = 'dd-feedback show success';
-    fb.textContent = '✓ PERFECT — All five data generation sources matched correctly. Proceeding to mission.';
-    document.getElementById('dd-check-btn').style.display = 'none';
-    document.getElementById('dd-next-btn').style.display = 'inline-flex';
-    if (typeof msmEarnBadge === 'function') msmEarnBadge('raw_signal');
-  } else {
-    fb.className = 'dd-feedback show error';
-    fb.textContent = `${correct}/5 correct — incorrect zones are highlighted. Try again.`;
-    Object.keys(dropAnswers).forEach(k => {
-      if (dropAnswers[k] !== k) delete dropAnswers[k];
-    });
-    document.querySelectorAll('.drop-zone.incorrect .dz-answer').forEach(a => {
-      a.textContent = 'Drop here';
-      a.classList.add('dz-empty');
-    });
-    document.querySelectorAll('.data-chip').forEach(c => {
-      if (c.style.opacity === '0.3') { c.style.opacity = '1'; c.draggable = true; }
-    });
+  if(correct===3){
+    fb.className='dd-feedback show success';
+    fb.innerHTML='✓ DATA QUALITY CLASSIFIED — Correct. Validation catches the impossible date at entry. Verification requires a human check to confirm which postcode is right. Wrangling cleans and standardises the inconsistent gender field across 1000 records. You understand the difference. Mission Terminal unlocking...';
+    glitchTriggerTimer=setTimeout(()=>{glitchTriggerTimer=null;glitchToMission();},600);
+  }else{
+    fb.className='dd-feedback show error';
+    fb.innerHTML=`✗ ${correct}/3 CORRECT — Validation = automated rules at entry. Verification = confirming accuracy through checking. Wrangling = transforming existing messy data into a consistent format.`;
   }
 }
-
-/* ── KEYWORD ARRAYS ── */
-const N_WORDS = [
-  'iot','internet of things','sensor','sensors','smart','rfid','wireless','connected device',
-  'connected devices','beacon','actuator','telemetry','embedded','real-time monitoring',
-  'real time monitoring','automated','automatic','remote monitoring'
-];
-const E_WORDS = [
-  'transmit','transmits','transmitted','captures','capture','captured','records','recorded',
-  'logs','logged','collects','collected','sends','sent','detect','detects','detected',
-  'monitor','monitors','monitored','reads','reading','measures','measured','wireless network',
-  'central','centralised','centralized','database','system','continuously','automatically',
-  'without human','real time','real-time','timestamp','timestamped','threshold','trigger',
-  'alert','signal','data stream','streams'
-];
-const I_WORDS = [
-  'prevent','prevents','prevented','spoilage','waste','reduce','reduces','reduced','cost',
-  'costs','profit','margin','margins','stockout','stock out','shortage','shortage',
-  'efficient','efficiency','save','saves','saving','loss','losses','compliance','safe',
-  'safety','proactive','respond','response','faster','immediate','instant','alert',
-  'revenue','income','value','benefit','improve','improves','improved','optimis','optimiz',
-  'manager','decision','informed','automat'
-];
-
-function hasKeyword(text, words) {
-  const t = text.toLowerCase();
-  return words.some(w => t.includes(w));
+const N_WORDS=['data wrangling','wrangling','wrangled','data cleaning','data cleansing','validation','verification','normalise','normaliz','standardis','standardiz','deduplicat','duplicate','transforming','restructuring','cleansing'];
+const E_WORDS=['inconsistent','inconsistencies','format','duplicate','record','merge','convert','standardise','standardize','field','entry','entries','reformat','schema','pipeline','transform','clean','map','filter','identical','matching','reconcil'];
+const I_WORDS=['patient','safety','accurate','accuracy','clinical','diagnos','treatment','error','risk','compliance','regulatory','regulat','audit','reliable','reliability','correct','medication','prescrib','harm','avoid','prevent','trust','quality','outcome'];
+function hasKeyword(text,words){const t=text.toLowerCase();return words.some(w=>t.includes(w));}
+function countWords(text){return text.trim()===''?0:text.trim().split(/\s+/).length;}
+const IDLE_DELAY=10000;
+const IDLE_PROMPT='You\'ve described the process. But what actually happens to the hospital when the data is clean?\nThink: patient outcomes, treatment accuracy, regulatory requirements, error prevention.';
+let idleTimer=null;
+function updateWordCount(text){
+  const count=countWords(text);const el=document.getElementById('word-count-display');const fill=document.getElementById('energy-bar-fill');if(!el||!fill)return;
+  const pct=Math.min(100,Math.round((count/60)*100));fill.style.width=pct+'%';fill.classList.remove('eb-red','eb-amber','eb-green');
+  if(count===0){el.textContent='0 words — aim for 60+';el.style.color='';}
+  else if(count<40){fill.classList.add('eb-red');el.textContent=count+' words — keep going';el.style.color='var(--red)';}
+  else if(count<60){fill.classList.add('eb-amber');el.textContent=count+' words — almost there';el.style.color='var(--amber)';}
+  else{fill.classList.add('eb-green');el.textContent=count+' words ✓';el.style.color='var(--green)';}
+  if(hasKeyword(text,I_WORDS)&&count>=60)triggerHUDGlitch();
+  const hudI=document.getElementById('hud-i');if(hudI){if(count>=50&&!hudI.classList.contains('active-i'))hudI.style.animation='impact-pulse 1.8s ease infinite';else hudI.style.animation='';}
 }
-
-/* ── HUD UPDATE ── */
-function updateHUD(text) {
-  const nA = hasKeyword(text, N_WORDS);
-  const eA = hasKeyword(text, E_WORDS);
-  const iA = hasKeyword(text, I_WORDS);
-  document.getElementById('hud-n').className = 'nei-hud-item hud-n' + (nA ? ' active-n' : '');
-  document.getElementById('hud-e').className = 'nei-hud-item hud-e' + (eA ? ' active-e' : '');
-  document.getElementById('hud-i').className = 'nei-hud-item hud-i' + (iA ? ' active-i' : '');
-  if (typeof window._origUpdateHUD_613 === 'function') window._origUpdateHUD_613(text);
-  if (nA && eA && iA) window._msmAllHUDActive = true;
-  const wc = countWords(text);
-  if (nA && eA && iA && wc >= 60 && wc <= 70) window._msmPrecisionWriter = true;
+function resetIdleTimer(text){
+  clearTimeout(idleTimer);if(countWords(text)>=60)return;
+  idleTimer=setTimeout(()=>{const fb=document.getElementById('axiom-feedback');if(!fb||fb.style.display!=='none')return;fb.style.display='block';fb.style.borderColor='rgba(57,255,20,0.4)';fb.style.background='rgba(57,255,20,0.05)';fb.style.color='var(--green)';fb.textContent='AXIOM-7 // '+IDLE_PROMPT;},IDLE_DELAY);
 }
-
-function triggerHUDGlitch() {
-  const hudI = document.getElementById('hud-i');
-  if (hudI.dataset.glitched) return;
-  hudI.dataset.glitched = '1';
-  hudI.style.animation = 'hud-glitch 0.5s ease';
-  setTimeout(() => { hudI.style.animation = ''; delete hudI.dataset.glitched; }, 600);
+function triggerHUDGlitch(){const hudI=document.getElementById('hud-i');if(hudI.dataset.glitched)return;hudI.dataset.glitched='1';hudI.style.animation='hud-glitch 0.5s ease';setTimeout(()=>{hudI.style.animation='';delete hudI.dataset.glitched;},600);}
+function updateHUD(text){
+  const nA=hasKeyword(text,N_WORDS);const eA=hasKeyword(text,E_WORDS);const iA=hasKeyword(text,I_WORDS);
+  document.getElementById('hud-n').className='nei-hud-item hud-n'+(nA?' active-n':'');
+  document.getElementById('hud-e').className='nei-hud-item hud-e'+(eA?' active-e':'');
+  document.getElementById('hud-i').className='nei-hud-item hud-i'+(iA?' active-i':'');
+  if(nA&&eA&&iA)window._msmAllHUDActive=true;
+  const wc=countWords(text);if(nA&&eA&&iA&&wc>=60&&wc<=70)window._msmPrecisionWriter=true;
 }
-
-/* ── ACE v2: WORD COUNT + PROGRESS BAR + IMPACT PULSE ── */
-const IDLE_DELAY  = 10000;
-const IDLE_PROMPT = 'Specialist — you\'ve described the sensor. But what does the business actually gain?\nHow does having this data prevent a loss or create a saving?';
-let idleTimer = null;
-
-function countWords(text) {
-  return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-}
-
-function updateWordCount(text) {
-  const count = countWords(text);
-  const el   = document.getElementById('word-count-display');
-  const fill = document.getElementById('energy-bar-fill');
-  if (!el || !fill) return;
-
-  const pct = Math.min(100, Math.round((count / 60) * 100));
-  fill.style.width = pct + '%';
-  fill.classList.remove('eb-red','eb-amber','eb-green');
-
-  if (count === 0) {
-    el.textContent = '0 words — aim for 60+'; el.style.color = '';
-  } else if (count < 40) {
-    fill.classList.add('eb-red');
-    el.textContent = count + ' words — keep going'; el.style.color = 'var(--red)';
-  } else if (count < 60) {
-    fill.classList.add('eb-amber');
-    el.textContent = count + ' words — almost there'; el.style.color = 'var(--amber)';
-  } else {
-    fill.classList.add('eb-green');
-    el.textContent = count + ' words ✓'; el.style.color = 'var(--green)';
+let submitAttempts=0;
+const TIER1_MSG=`⚠ AXIOM-7 // INSUFFICIENT SIGNAL DETECTED\n\nYour response needs more depth. Name the technique, explain exactly what it does to the data, and state the business or patient outcome.\n\nAim for at least 60 words. The third mark is always in your last sentence.`;
+const TIER2_TEMPLATE=`Try this structure:\n\n[N] Data wrangling is the process of...\n[E] In this case, it would [EXPLAIN WHAT IT DOES TO THE RECORDS — merge duplicates, standardise formats]...\n[I] This means the hospital can [STATE THE OUTCOME — accurate treatment, reduced errors, regulatory compliance]...`;
+function submitAnswer(){
+  const answer=document.getElementById('student-answer').value.trim();if(!answer){alert('Please write your answer before submitting.');return;}
+  const words=countWords(answer);const fb=document.getElementById('axiom-feedback');submitAttempts++;
+  if(words<60){
+    fb.style.display='block';
+    if(submitAttempts===1){fb.style.borderColor='var(--amber)';fb.style.background='rgba(255,149,0,0.06)';fb.style.color='var(--amber)';fb.style.whiteSpace='pre-line';fb.textContent=TIER1_MSG;}
+    else{fb.style.borderColor='var(--red)';fb.style.background='rgba(255,59,59,0.06)';fb.style.color='var(--text-primary)';fb.style.whiteSpace='pre-line';fb.textContent=TIER2_TEMPLATE;document.getElementById('student-answer').placeholder='[N] Data wrangling is the process of cleaning...\n[E] It would identify duplicate records and standardise...\n[I] This means the hospital can reduce the risk of...';}
+    const btn=document.querySelector('#scene-3 .btn-primary');if(btn){btn.style.animation='tab-reject 0.4s ease';setTimeout(()=>{btn.style.animation='';},450);}return;
   }
-
-  const iA = hasKeyword(text, I_WORDS);
-  if (iA && count >= 60) triggerHUDGlitch();
-
-  const hudI = document.getElementById('hud-i');
-  if (hudI) {
-    if (count >= 50 && !hudI.classList.contains('active-i')) {
-      hudI.style.animation = 'impact-pulse 1.8s ease infinite';
-    } else {
-      hudI.style.animation = '';
-    }
-  }
-}
-
-function resetIdleTimer(text) {
-  clearTimeout(idleTimer);
-  if (countWords(text) >= 60) return;
-  idleTimer = setTimeout(() => {
-    const fb = document.getElementById('axiom-feedback');
-    if (!fb || fb.style.display !== 'none') return;
-    fb.style.display    = 'block';
-    fb.style.borderColor = 'rgba(57,255,20,0.4)';
-    fb.style.background  = 'rgba(57,255,20,0.05)';
-    fb.style.color       = 'var(--green)';
-    fb.textContent       = 'AXIOM-7 // ' + IDLE_PROMPT;
-  }, IDLE_DELAY);
-}
-
-/* ── SUBMISSION ── */
-let submitAttempts = 0;
-let _tierWarningShown = false;
-
-const TIER1_MSG = `⚠ AXIOM-7 // INSUFFICIENT SIGNAL DETECTED\n\nYour response is too brief. An examiner needs to see three things: the name of the IoT technique, how it generates and transmits data, and what the business gains from it.\n\nExpand your answer — aim for at least 60 words. The third mark is always in your last sentence.`;
-
-const TIER2_TEMPLATE = `Try this structure:\n\n[N] The warehouse uses IoT sensors — specifically [NAME THE SENSOR TYPE]...\n[E] The sensors [EXPLAIN HOW THEY CAPTURE AND TRANSMIT DATA]...\n[I] This means the business [STATE THE MEASURABLE OUTCOME — reduced waste, prevented spoilage, lower costs]...`;
-
-function submitAnswer() {
-  const text = document.getElementById('student-answer').value.trim();
-  const count = countWords(text);
-  const fb = document.getElementById('axiom-feedback');
-
-  submitAttempts++;
-
-  if (count < 40) {
-    fb.style.display = 'block';
-    fb.style.borderColor = 'rgba(255,59,59,0.4)';
-    fb.style.background  = 'rgba(255,59,59,0.06)';
-    fb.style.color       = 'var(--red)';
-    fb.textContent = TIER1_MSG;
-    _tierWarningShown = true;
-    return;
-  }
-
-  if (count < 60) {
-    if (submitAttempts === 1) {
-      fb.style.display = 'block';
-      fb.style.borderColor = 'rgba(255,149,0,0.4)';
-      fb.style.background  = 'rgba(255,149,0,0.06)';
-      fb.style.color       = 'var(--amber)';
-      fb.textContent = TIER2_TEMPLATE;
-      _tierWarningShown = true;
-      return;
-    }
-  }
-
-  // 60+ words — proceed
-  fb.style.display = 'none';
-  const btn4 = document.getElementById('navbtn-4');
-  btn4.classList.remove('locked'); btn4.disabled = false;
-  btn4.textContent = '04 CALIBRATE'; btn4.setAttribute('onclick','goScene(4)');
+  fb.style.display='none';
+  const btn4=document.getElementById('navbtn-4');btn4.classList.remove('locked');btn4.disabled=false;btn4.textContent='04 CALIBRATE';btn4.setAttribute('onclick','goScene(4)');
   triggerReboot();
 }
-
-/* ── ACE v2: REBOOT ANIMATION ── */
-function triggerReboot() {
-  const overlay = document.getElementById('reboot-overlay');
-  const line1   = document.getElementById('rb-line1');
-  const line2   = document.getElementById('rb-line2');
-  const bar     = document.getElementById('rb-bar');
-  overlay.style.display = 'flex';
-  setTimeout(() => { line1.style.opacity = '1'; }, 200);
-  setTimeout(() => { line2.style.opacity = '1'; }, 700);
-  setTimeout(() => { bar.style.transition = 'width 1.2s ease-out'; bar.style.width = '100%'; }, 1000);
-  setTimeout(() => {
-    overlay.style.display = 'none';
-    line1.style.opacity = '0'; line2.style.opacity = '0';
-    bar.style.transition = 'none'; bar.style.width = '0%';
-    goScene(4);
-  }, 2400);
-
-  const answer = document.getElementById('student-answer').value.trim();
-  window._neiApiPromise = analyzeWithNEIChecker(
-    answer,
-    'Focus on IoT sensors, smart warehouse systems, how data is captured and transmitted automatically, and measurable business outcomes such as reduced waste, prevented spoilage, and cost savings'
-  );
+function triggerReboot(){
+  const overlay=document.getElementById('reboot-overlay');const line1=document.getElementById('rb-line1');const line2=document.getElementById('rb-line2');const bar=document.getElementById('rb-bar');
+  overlay.style.display='flex';
+  setTimeout(()=>{line1.style.opacity='1';},200);setTimeout(()=>{line2.style.opacity='1';},700);
+  setTimeout(()=>{bar.style.transition='width 1.2s ease-out';bar.style.width='100%';},1000);
+  setTimeout(()=>{overlay.style.display='none';line1.style.opacity='0';line2.style.opacity='0';bar.style.transition='none';bar.style.width='0%';goScene(4);},2400);
+  const answer=document.getElementById('student-answer').value.trim();
+  window._neiApiPromise=analyzeWithNEIChecker(answer,'Focus on data wrangling, data cleaning, standardisation of patient records, deduplication, and measurable business impacts such as patient safety, diagnostic accuracy, reduced errors, and regulatory compliance');
 }
-
-/* ── NEI CHECKER API ── */
-async function analyzeWithNEIChecker(studentText, customPrompt = '') {
-  const API_URL = 'https://neichecker.toolsforteaching.co.uk/nei-checker.php';
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ studentText, prompt: customPrompt })
-  });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  const data = await response.json();
-  if (!data.success) throw new Error(data.error || 'Analysis failed');
-  return data;
+async function analyzeWithNEIChecker(studentText,customPrompt=''){
+  const r=await fetch('https://neichecker.toolsforteaching.co.uk/nei-checker.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({studentText,prompt:customPrompt})});
+  if(!r.ok)throw new Error(`HTTP ${r.status}`);const d=await r.json();if(!d.success)throw new Error(d.error||'Analysis failed');return d;
 }
-
-function renderAxiomDeconstruction(result) {
-  const panel   = document.getElementById('axiom-deconstruction');
-  const content = document.getElementById('axd-content');
-  panel.style.display = 'block';
-
-  const { hasName, hasExplain, hasImpact } = result.analysis;
-  let html = result.highlightedHtml || result.originalText || '';
-  html = html.replace(/style=['"][^'"]*color\s*:\s*#ff6b6b[^'"]*['"]/gi, 'class="nei-n"');
-  html = html.replace(/style=['"][^'"]*color\s*:\s*#ffa500[^'"]*['"]/gi, 'class="nei-e"');
-  html = html.replace(/style=['"][^'"]*color\s*:\s*#51cf66[^'"]*['"]/gi, 'class="nei-i"');
-
-  content.innerHTML = `
-    <div class="axd-badges">
-      <div class="axd-badge ${hasName    ? 'hit' : 'miss'}">[N] NAME</div>
-      <div class="axd-badge ${hasExplain ? 'hit' : 'miss'}">[E] EXPLAIN</div>
-      <div class="axd-badge ${hasImpact  ? 'hit' : 'miss'}">[I] IMPACT</div>
-    </div>
-    ${!hasImpact ? `<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);letter-spacing:1px;margin-bottom:12px;padding:10px 12px;border:1px solid rgba(255,59,59,0.25);border-radius:6px;background:rgba(255,59,59,0.05);">⚠ AXIOM-7 // NO IMPACT COMPONENT DETECTED — THIRD MARK AT RISK</div>` : ''}
-    <div class="axd-text-wrap">${html}</div>
-    <div class="axd-legend">
-      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,59,59,0.5);"></div>[N] NAME</div>
-      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,149,0,0.5);"></div>[E] EXPLAIN</div>
-      <div class="axd-legend-item"><div class="axd-dot" style="background:rgba(57,255,20,0.4);"></div>[I] IMPACT</div>
-    </div>
-  `;
+function renderAxiomDeconstruction(result){
+  const content=document.getElementById('axd-content');document.getElementById('axiom-deconstruction').style.display='block';
+  const{hasName,hasExplain,hasImpact}=result.analysis;
+  let html=result.highlightedHtml||result.originalText||'';
+  html=html.replace(/style=['"][^'"]*color\s*:\s*#ff6b6b[^'"]*['"]/gi,'class="nei-n"');
+  html=html.replace(/style=['"][^'"]*color\s*:\s*#ffa500[^'"]*['"]/gi,'class="nei-e"');
+  html=html.replace(/style=['"][^'"]*color\s*:\s*#51cf66[^'"]*['"]/gi,'class="nei-i"');
+  content.innerHTML=`<div class="axd-badges"><div class="axd-badge ${hasName?'hit':'miss'}">[N] NAME</div><div class="axd-badge ${hasExplain?'hit':'miss'}">[E] EXPLAIN</div><div class="axd-badge ${hasImpact?'hit':'miss'}">[I] IMPACT</div></div>${!hasImpact?`<div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--red);letter-spacing:1px;margin-bottom:12px;padding:10px 12px;border:1px solid rgba(255,59,59,0.25);border-radius:6px;background:rgba(255,59,59,0.05);">⚠ AXIOM-7 // NO IMPACT COMPONENT DETECTED — THIRD MARK AT RISK</div>`:''}<div class="axd-text-wrap">${html}</div><div class="axd-legend"><div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,59,59,0.5);"></div>[N] NAME</div><div class="axd-legend-item"><div class="axd-dot" style="background:rgba(255,149,0,0.5);"></div>[E] EXPLAIN</div><div class="axd-legend-item"><div class="axd-dot" style="background:rgba(57,255,20,0.4);"></div>[I] IMPACT</div></div>`;
 }
-
-/* ── SCENE 4: CALIBRATION ── */
-let highlightMode = null, taggedN = false, taggedE = false, taggedI = false;
-
-function prepCalibration() {
-  const answer = document.getElementById('student-answer').value.trim();
-  const disp   = document.getElementById('student-display');
-  disp.innerHTML = answer || '<em style="color:var(--text-dim);">No answer submitted yet. Go back and write your response.</em>';
-
-  taggedN = false; taggedE = false; taggedI = false;
-  document.getElementById('vuln-alert').classList.remove('show');
-  document.getElementById('success-check-alert').classList.remove('show');
-  document.getElementById('nei-tally-display').style.display = 'none';
-  document.getElementById('complete-btn').style.display = 'none';
-  document.getElementById('calibrate-btn').style.display = 'inline-flex';
-  highlightMode = null;
-  document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('mode-display').textContent = '— SELECT —';
-  document.getElementById('mode-display').style.color = 'var(--text-dim)';
-
-  const panel   = document.getElementById('axiom-deconstruction');
-  const content = document.getElementById('axd-content');
-  panel.style.display = 'block';
-  content.innerHTML = '<div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div>';
-
-  if (window._neiApiPromise) {
-    window._neiApiPromise
-      .then(result => renderAxiomDeconstruction(result))
-      .catch(() => { content.innerHTML = '<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>'; });
-  } else {
-    if (answer) {
-      analyzeWithNEIChecker(answer, 'Focus on IoT sensors, smart warehouse systems, how data is captured and transmitted automatically, and measurable business outcomes such as reduced waste, prevented spoilage, and cost savings')
-        .then(result => renderAxiomDeconstruction(result))
-        .catch(() => { content.innerHTML = '<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>'; });
-    } else {
-      panel.style.display = 'none';
-    }
-  }
+let currentMode=null,taggedN=false,taggedE=false,taggedI=false;
+function prepCalibration(){
+  const answer=document.getElementById('student-answer').value.trim();
+  document.getElementById('student-display').innerText=answer||'(No answer entered — go back to Scene 3 to write your answer.)';
+  document.getElementById('vuln-alert').classList.remove('show');document.getElementById('success-alert').classList.remove('show');document.getElementById('complete-btn').style.display='none';
+  taggedN=false;taggedE=false;taggedI=false;currentMode=null;
+  ['btn-n','btn-e','btn-i'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  const content=document.getElementById('axd-content');document.getElementById('axiom-deconstruction').style.display='block';
+  content.innerHTML='<div class="axd-loading"><div class="axd-spinner"></div>SCANNING RESPONSE...</div>';
+  if(window._neiApiPromise){window._neiApiPromise.then(renderAxiomDeconstruction).catch(()=>{content.innerHTML='<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>';});}
+  else if(answer){analyzeWithNEIChecker(answer,'Focus on data wrangling, data cleaning, standardisation of patient records, deduplication, and measurable business impacts such as patient safety, diagnostic accuracy, reduced errors, and regulatory compliance').then(renderAxiomDeconstruction).catch(()=>{content.innerHTML='<div class="axd-error">⚠ AXIOM-7 OFFLINE — Complete your self-tagging above.</div>';});}
+  else{document.getElementById('axiom-deconstruction').style.display='none';}
 }
-
-function setHighlightMode(m) {
-  highlightMode = m;
-  document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('hl-' + m + '-btn').classList.add('active');
-  const labels = { n: '[N] NAME', e: '[E] EXPLAIN', i: '[I] IMPACT' };
-  const colors = { n: 'var(--red)', e: 'var(--amber)', i: 'var(--green)' };
-  document.getElementById('mode-display').textContent = labels[m];
-  document.getElementById('mode-display').style.color = colors[m];
-}
-
-document.addEventListener('mouseup', () => {
-  if (!highlightMode) return;
-  const disp = document.getElementById('student-display');
-  const sel  = window.getSelection();
-  if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
-  const range = sel.getRangeAt(0);
-  if (!disp.contains(range.commonAncestorContainer)) return;
-  const span = document.createElement('span');
-  const cls  = { n: 'hl-n-tag', e: 'hl-e-tag', i: 'hl-i-tag' };
-  span.className = cls[highlightMode];
-  try {
-    range.surroundContents(span);
-    if (highlightMode === 'n') taggedN = true;
-    if (highlightMode === 'e') taggedE = true;
-    if (highlightMode === 'i') taggedI = true;
-    sel.removeAllRanges();
-  } catch(e) { sel.removeAllRanges(); }
+function setMode(m){currentMode=m;['btn-n','btn-e','btn-i'].forEach(id=>document.getElementById(id).classList.remove('active'));document.getElementById('btn-'+m).classList.add('active');}
+document.addEventListener('mouseup',()=>{
+  if(!currentMode)return;const sel=window.getSelection();if(!sel||sel.isCollapsed)return;
+  const display=document.getElementById('student-display');if(!display||!display.contains(sel.anchorNode))return;
+  try{const range=sel.getRangeAt(0);const span=document.createElement('span');span.className='hl-'+currentMode+'-tag';range.surroundContents(span);if(currentMode==='n')taggedN=true;if(currentMode==='e')taggedE=true;if(currentMode==='i')taggedI=true;}catch(err){}
+  sel.removeAllRanges();
 });
-
-function runCalibration() {
-  const tally      = document.getElementById('nei-tally');
-  const tallyWrap  = document.getElementById('nei-tally-display');
-  const vuln       = document.getElementById('vuln-alert');
-  const success    = document.getElementById('success-check-alert');
-  const calBtn     = document.getElementById('calibrate-btn');
-  const completeBtn= document.getElementById('complete-btn');
-
-  tallyWrap.style.display = 'block';
-  tallyWrap.className = 'glass';
-  tallyWrap.style.padding = '0';
-
-  const chips = [];
-  if (taggedN) chips.push('<div class="tally-chip tally-n">✓ [N] Name Tagged</div>');
-  else chips.push('<div class="tally-chip" style="border-color:rgba(255,59,59,0.3);color:var(--text-dim);">○ [N] Not Tagged</div>');
-  if (taggedE) chips.push('<div class="tally-chip tally-e">✓ [E] Explain Tagged</div>');
-  else chips.push('<div class="tally-chip" style="border-color:rgba(255,149,0,0.3);color:var(--text-dim);">○ [E] Not Tagged</div>');
-  if (taggedI) chips.push('<div class="tally-chip tally-i">✓ [I] Impact Tagged</div>');
-  else chips.push('<div class="tally-chip" style="border-color:rgba(57,255,20,0.2);color:var(--text-dim);">○ [I] Not Tagged</div>');
-
-  tally.innerHTML = chips.join('');
-
-  if (!taggedI) {
-    vuln.classList.add('show');
-    success.classList.remove('show');
-    completeBtn.style.display = 'none';
-    window._msmVulnTriggered = true;
-  } else {
-    vuln.classList.remove('show');
-    success.classList.add('show');
-    calBtn.style.display = 'none';
-    completeBtn.style.display = 'inline-flex';
-    msmCheckBadges_613();
-  }
+function runCalibration(){
+  const vuln=document.getElementById('vuln-alert');const succ=document.getElementById('success-alert');const btn=document.getElementById('complete-btn');
+  vuln.classList.remove('show');succ.classList.remove('show');btn.style.display='none';
+  if(!taggedI){vuln.classList.add('show');vuln.scrollIntoView({behavior:'smooth',block:'center'});window._msmVulnTriggered=true;}
+  else{succ.classList.add('show');btn.style.display='inline-flex';succ.scrollIntoView({behavior:'smooth',block:'center'});msmCheckBadges_63();}
 }
-
-/* ── BADGE SYSTEM ── */
-function msmEarnBadge(key) {
-  if (typeof window.msmAwardBadge === 'function') window.msmAwardBadge(key);
-  else {
-    const badges = JSON.parse(localStorage.getItem('msm_badges') || '{}');
-    if (!badges[key]) { badges[key] = { earned: true, earnedAt: new Date().toISOString() }; localStorage.setItem('msm_badges', JSON.stringify(badges)); }
-  }
+const MSM_LS='msm_badges';
+function msmEarnBadge(key){try{const b=JSON.parse(localStorage.getItem(MSM_LS))||{};if(b[key])return false;b[key]={earned:true,ts:Date.now()};localStorage.setItem(MSM_LS,JSON.stringify(b));return true;}catch(e){return false;}}
+function msmCheckBadges_63(){
+  msmEarnBadge('systems_analyst');
+  const fb=document.getElementById('axiom-feedback');if(!fb||fb.style.display==='none'||fb.style.display==='')msmEarnBadge('first_strike');
+  if(window._msmVulnTriggered){msmEarnBadge('signal_recovered');window._msmVulnTriggered=false;}
+  if(window._msmAllHUDActive)msmEarnBadge('impact_specialist');
+  if(submitAttempts>=3)msmEarnBadge('resilient_analyst');
+  if(window._msmPrecisionWriter)msmEarnBadge('precision_writer');
 }
-
-function msmCheckBadges_613() {
-  const answer = document.getElementById('student-answer').value.trim();
-  const wc = countWords(answer);
-
-  msmEarnBadge('signal_mapper');
-
-  const badges = JSON.parse(localStorage.getItem('msm_badges') || '{}');
-  const has611 = badges['raw_signal']?.earned;
-  const has612 = badges['market_intelligence']?.earned;
-  if (has611 && has612) msmEarnBadge('full_clearance');
-
-  if (!_tierWarningShown) msmEarnBadge('first_strike');
-  if (window._msmAllHUDActive) msmEarnBadge('impact_specialist');
-  if (window._msmPrecisionWriter) msmEarnBadge('precision_writer');
-  if (window._msmVulnTriggered && taggedI) msmEarnBadge('signal_recovered');
-  if (submitAttempts >= 3) msmEarnBadge('resilient_analyst');
-
-  const has613 = true;
-  if (has611 && has612 && has613 && badges['impact_specialist']?.earned) msmEarnBadge('method_mastery');
-  if (has611 && has612 && has613) msmEarnBadge('double_certified');
-}
-
-function resetMission() {
-  document.getElementById('student-answer').value = '';
-  submitAttempts = 0;
-  window._neiApiPromise = null;
-  window._msmAllHUDActive = false;
-  window._msmPrecisionWriter = false;
-  window._msmVulnTriggered = false;
-  updateHUD(''); updateWordCount('');
-  goScene(1);
+function exportReport(){
+  const answer=document.getElementById('student-answer').value||'(No answer recorded)';
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Mission Report — 6.3 Data Systems</title><style>body{font-family:monospace;background:#0D1117;color:#E8EDF3;padding:40px;max-width:800px;margin:0 auto;}h1{color:#A855F7;font-size:24px;margin-bottom:4px;}.tag{font-size:11px;letter-spacing:3px;color:#39FF14;margin-bottom:24px;display:block;}h2{color:#A855F7;font-size:14px;letter-spacing:2px;margin:24px 0 12px;}p{line-height:1.8;font-size:14px;}.ma{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:20px;margin:12px 0;}.n{color:#ffaaaa;}.e{color:#ffcc88;}.i{color:#aaff88;}.sa{background:rgba(168,85,247,0.04);border:1px solid rgba(168,85,247,0.2);border-radius:8px;padding:20px;margin:12px 0;}.chips{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}.chip{padding:6px 14px;border-radius:20px;font-size:12px;border:1px solid;}.chip-n{border-color:#FF3B3B;color:#ff8888;}.chip-e{border-color:#FF9500;color:#ffcc88;}.chip-i{border-color:#39FF14;color:#aaff88;}</style></head><body>
+  <h1>THE MARK SCHEME METHOD®</h1><span class="tag">MISSION REPORT // MODULE 6.3 // DATA SYSTEMS</span>
+  <h2>EXAM QUESTION</h2><p>A hospital trust is merging patient records from two legacy systems. Many records contain formatting inconsistencies and duplicate entries. Explain one way data wrangling would benefit this organisation. (3 Marks)</p>
+  <h2>MODEL ANSWER — 3 MARKS</h2><div class="ma"><p><span class="n">[N] Data wrangling is the process of cleaning, transforming, and standardising raw data from multiple sources to make it consistent and suitable for analysis.</span></p><p><span class="e">[E] It would identify duplicate patient records and merge them into a single authoritative entry, while standardising inconsistent fields such as gender coding across all 14,000 records.</span></p><p><span class="i">[I] This reduces the risk of a clinician viewing an incomplete patient history, improving diagnostic accuracy and reducing the likelihood of medication errors, while also protecting the trust from regulatory penalties.</span></p></div>
+  <h2>YOUR ANSWER</h2><div class="sa"><p>${answer.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p></div>
+  <h2>NEI PROFICIENCY SCAN</h2><div class="chips"><div class="chip chip-n">${taggedN?'✓':'✗'} [N] Name ${taggedN?'DETECTED':'NOT TAGGED'}</div><div class="chip chip-e">${taggedE?'✓':'✗'} [E] Explain ${taggedE?'DETECTED':'NOT TAGGED'}</div><div class="chip chip-i">${taggedI?'✓':'✗'} [I] Impact ${taggedI?'DETECTED':'NOT TAGGED'}</div></div>
+  <p style="margin-top:32px;font-size:11px;color:rgba(232,237,243,0.3);">Generated by The Mark Scheme Method® — Module 6.3</p></body></html>`;
+  const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mission-report-63-data-systems.html';a.click();
 }
 </script>
 </body>
