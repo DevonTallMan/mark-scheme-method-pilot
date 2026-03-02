@@ -1,1 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Training 6.1.3 — How Data is Generated | The Mark Scheme Method®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#0D1117;
+  --panel-bg:rgba(255,255,255,0.04);
+  --panel-border:rgba(255,255,255,0.08);
+  --cyan:#00E5FF;
+  --cyan-dim:rgba(0,229,255,0.10);
+  --gold:#FFD700;
+  --gold-dim:rgba(255,215,0,0.10);
+  --red:#FF4444;
+  --amber:#FF9900;
+  --green:#39FF14;
+  --purple:#B44FFF;
+  --ink:#D4DDE8;
+  --muted:#556070;
+  --mono:'Share Tech Mono',monospace;
+  --display:'Orbitron',monospace;
+  --body:'Rajdhani',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  background-image:
+    radial-gradient(ellipse at 10% 20%, rgba(0,229,255,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 75%, rgba(255,215,0,0.04) 0%, transparent 50%),
+    linear-gradient(rgba(0,229,255,0.012) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,0.012) 1px,transparent 1px);
+  background-size:auto,auto,60px 60px,60px 60px;
+  font-family:var(--body);color:var(--ink);overflow-x:hidden;min-height:100vh;
+}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:9999;}
 
+/* ─── HEADER ─── */
+.header{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--panel-border);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.header-brand{font-family:var(--display);font-size:0.6rem;letter-spacing:0.14em;color:var(--cyan);text-shadow:0 0 12px var(--cyan);text-transform:uppercase;}
+.header-status{display:flex;align-items:center;gap:1.5rem;}
+.status-item{font-family:var(--mono);font-size:0.6rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.progress-bar{width:160px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));border-radius:2px;transition:width 0.6s ease;}
+
+/* ─── SCENES ─── */
+.scene{display:none;}
+.scene.active{display:block;}
+#scene-a.active,#scene-e.active{display:flex;}
+
+/* ─── SCENE A: BRIEFING ─── */
+#scene-a{min-height:calc(100vh - 52px);flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;position:relative;overflow:hidden;}
+.briefing-bg{position:absolute;inset:0;pointer-events:none;}
+.briefing-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,229,255,0.04) 0%,transparent 65%);}
+.briefing-bg::after{content:'';position:absolute;inset:0;background:repeating-conic-gradient(rgba(0,229,255,0.012) 0deg 1deg,transparent 1deg 30deg);animation:rotate 90s linear infinite;transform-origin:center;}
+@keyframes rotate{to{transform:rotate(360deg);}}
+.briefing-container{position:relative;z-index:2;max-width:860px;width:100%;text-align:center;}
+.mission-badge{display:inline-flex;align-items:center;gap:0.6rem;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.25);padding:0.4rem 1.2rem;border-radius:4px;font-family:var(--mono);font-size:0.62rem;color:var(--cyan);letter-spacing:0.15em;margin-bottom:2rem;animation:fadeIn 0.5s ease both;}
+.mission-badge::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:pulse 1.5s ease-in-out infinite;}
+.avatar-frame{width:160px;height:160px;margin:0 auto 2rem;position:relative;animation:fadeIn 0.6s 0.1s ease both;}
+.avatar-hex{width:160px;height:160px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(255,215,0,0.08));display:flex;align-items:center;justify-content:center;position:relative;}
+.avatar-hex::before{content:'';position:absolute;inset:-2px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--cyan),var(--gold));z-index:-1;}
+.avatar-inner{font-size:5rem;line-height:1;filter:drop-shadow(0 0 20px rgba(0,229,255,0.5));}
+.avatar-ring{position:absolute;inset:-12px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);border:1px solid rgba(0,229,255,0.2);animation:ringPulse 3s ease-in-out infinite;}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:0.2;}50%{transform:scale(1.08);opacity:0.6;}}
+.briefing-title{font-family:var(--display);font-size:1.9rem;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.02em;margin-bottom:0.5rem;animation:fadeIn 0.6s 0.2s ease both;}
+.briefing-title span{background:linear-gradient(135deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.briefing-sub{font-size:0.9rem;color:var(--muted);letter-spacing:0.05em;margin-bottom:2.5rem;animation:fadeIn 0.6s 0.3s ease both;}
+.terminal{background:rgba(0,0,0,0.6);border:1px solid rgba(0,229,255,0.2);border-radius:12px;overflow:hidden;margin-bottom:2rem;text-align:left;animation:fadeIn 0.6s 0.4s ease both;box-shadow:0 0 40px rgba(0,229,255,0.06),0 20px 60px rgba(0,0,0,0.6);}
+.terminal-bar{background:rgba(0,229,255,0.05);border-bottom:1px solid rgba(0,229,255,0.12);padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;}
+.t-dot{width:8px;height:8px;border-radius:50%;}
+.t-red{background:#FF5F57;}.t-amber{background:#FEBC2E;}.t-green{background:#28C840;}
+.terminal-label{margin-left:auto;font-family:var(--mono);font-size:0.55rem;color:var(--cyan);letter-spacing:0.1em;}
+.terminal-body{padding:1.5rem 1.5rem 1.8rem;}
+.terminal-line{font-family:var(--mono);font-size:0.82rem;line-height:1.7;color:rgba(255,255,255,0.75);margin-bottom:0.3rem;}
+.terminal-line .prompt{color:var(--cyan);margin-right:0.6rem;}
+.hl-gold{color:var(--gold);}.hl-cyan{color:var(--cyan);}.hl-green{color:var(--green);}.hl-amber{color:var(--amber);}
+.terminal-cursor{display:inline-block;width:8px;height:14px;background:var(--cyan);vertical-align:middle;animation:blink 1s step-end infinite;margin-left:2px;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.briefing-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;animation:fadeIn 0.6s 0.5s ease both;}
+.stat-card{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:10px;padding:1rem;backdrop-filter:blur(10px);text-align:center;}
+.stat-num{font-family:var(--display);font-size:1.4rem;font-weight:700;}
+.stat-label{font-size:0.72rem;color:var(--muted);margin-top:0.25rem;letter-spacing:0.05em;}
+.btn-primary{display:inline-flex;align-items:center;gap:0.75rem;background:linear-gradient(135deg,var(--cyan),#00B8D4);color:#000;font-family:var(--display);font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.9rem 2.5rem;border-radius:6px;border:none;cursor:pointer;box-shadow:0 0 30px rgba(0,229,255,0.25),0 4px 20px rgba(0,0,0,0.5);transition:all 0.2s;animation:fadeIn 0.6s 0.6s ease both;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(0,229,255,0.45),0 8px 30px rgba(0,0,0,0.6);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SCENE NAV ─── */
+.scene-nav{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;gap:0.5rem;z-index:200;}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s;}
+.nav-dot.active{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 10px var(--cyan);width:24px;border-radius:5px;}
+
+/* ─── SCENE B ─── */
+#scene-b{min-height:calc(100vh - 52px);padding:2.5rem 2rem;}
+.scene-header{text-align:center;margin-bottom:2.5rem;}
+.scene-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--cyan-dim);border:1px solid rgba(0,229,255,0.25);color:var(--cyan);font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;padding:0.3rem 1rem;border-radius:4px;margin-bottom:1rem;}
+.scene-title{font-family:var(--display);font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:0.3rem;}
+.scene-sub{font-size:0.9rem;color:var(--muted);}
+.sub-tabs{display:flex;gap:0.5rem;max-width:1100px;margin:0 auto 2rem;background:rgba(0,0,0,0.2);border-radius:10px;padding:0.4rem;border:1px solid var(--panel-border);}
+.sub-tab{flex:1;padding:0.6rem;border-radius:7px;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;color:var(--muted);cursor:pointer;text-align:center;transition:all 0.2s;background:transparent;border:none;text-transform:uppercase;}
+.sub-tab.active{background:rgba(0,229,255,0.08);color:var(--cyan);border:1px solid rgba(0,229,255,0.22);box-shadow:0 0 10px rgba(0,229,255,0.08);}
+.sub-content{display:none;}
+.sub-content.active{display:block;}
+
+/* ─── THEORY CARDS ─── */
+.theory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1100px;margin:0 auto 2rem;}
+.theory-card{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:14px;padding:1.5rem;backdrop-filter:blur(12px);position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;}
+.theory-card:hover{transform:translateY(-4px);}
+.theory-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.t-d2d::before{background:linear-gradient(90deg,var(--cyan),transparent);}
+.t-h2d::before{background:linear-gradient(90deg,var(--green),transparent);}
+.t-sensor::before{background:linear-gradient(90deg,var(--gold),transparent);}
+.t-d2d:hover{border-color:rgba(0,229,255,0.2);box-shadow:0 0 30px rgba(0,229,255,0.06);}
+.t-h2d:hover{border-color:rgba(57,255,20,0.2);box-shadow:0 0 30px rgba(57,255,20,0.06);}
+.t-sensor:hover{border-color:rgba(255,215,0,0.2);box-shadow:0 0 30px rgba(255,215,0,0.06);}
+.card-tier{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:0.8rem;display:flex;align-items:center;gap:0.4rem;}
+.t-d2d .card-tier{color:var(--cyan);}
+.t-h2d .card-tier{color:var(--green);}
+.t-sensor .card-tier{color:var(--gold);}
+.tier-dot{width:6px;height:6px;border-radius:50%;}
+.t-d2d .tier-dot{background:var(--cyan);}
+.t-h2d .tier-dot{background:var(--green);}
+.t-sensor .tier-dot{background:var(--gold);}
+.card-icon{font-size:2.2rem;margin-bottom:0.8rem;display:block;}
+.card-heading{font-family:var(--display);font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.6rem;}
+.card-def{font-size:0.83rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;}
+.card-example{background:rgba(0,0,0,0.3);border-radius:8px;padding:0.75rem;}
+.example-label{font-family:var(--mono);font-size:0.55rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.4rem;}
+.example-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;}
+.t-d2d .card-example{border-left:2px solid var(--cyan);}
+.t-h2d .card-example{border-left:2px solid var(--green);}
+.t-sensor .card-example{border-left:2px solid var(--gold);}
+.card-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;}
+.ctag{font-family:var(--mono);font-size:0.55rem;padding:0.15rem 0.5rem;border-radius:3px;}
+.t-d2d .ctag{background:rgba(0,229,255,0.08);color:rgba(0,229,255,0.7);border:1px solid rgba(0,229,255,0.15);}
+.t-h2d .ctag{background:rgba(57,255,20,0.08);color:rgba(57,255,20,0.7);border:1px solid rgba(57,255,20,0.15);}
+.t-sensor .ctag{background:rgba(255,215,0,0.08);color:rgba(255,215,0,0.7);border:1px solid rgba(255,215,0,0.15);}
+
+/* Explainer diagram */
+.flow-diagram{max-width:900px;margin:0 auto 2rem;}
+.flow-diagram-inner{background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:14px;padding:2rem;position:relative;overflow:hidden;}
+.flow-diagram-inner::before{content:'DATA FLOW DIAGRAM';position:absolute;top:1rem;right:1.5rem;font-family:var(--mono);font-size:0.55rem;color:rgba(255,255,255,0.1);letter-spacing:0.15em;}
+.flow-row{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+.flow-node-box{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:10px;padding:0.75rem 1.2rem;text-align:center;min-width:130px;}
+.fnb-icon{font-size:1.5rem;display:block;margin-bottom:0.3rem;}
+.fnb-label{font-family:var(--display);font-size:0.6rem;font-weight:700;margin-bottom:0.2rem;}
+.fnb-sub{font-size:0.65rem;color:var(--muted);}
+.fnb-d2d{border-color:rgba(0,229,255,0.3);}.fnb-d2d .fnb-label{color:var(--cyan);}
+.fnb-h2d{border-color:rgba(57,255,20,0.3);}.fnb-h2d .fnb-label{color:var(--green);}
+.fnb-sensor{border-color:rgba(255,215,0,0.3);}.fnb-sensor .fnb-label{color:var(--gold);}
+.fnb-process{border-color:rgba(180,79,255,0.3);}.fnb-process .fnb-label{color:var(--purple);}
+.fnb-output{border-color:rgba(57,255,20,0.3);background:rgba(57,255,20,0.04);}.fnb-output .fnb-label{color:var(--green);}
+.flow-arrow{font-family:var(--mono);font-size:1.1rem;color:rgba(255,255,255,0.2);}
+.flow-plus{font-family:var(--mono);font-size:1rem;color:rgba(255,255,255,0.3);padding:0 0.25rem;}
+.flow-label{font-family:var(--mono);font-size:0.6rem;color:var(--muted);text-align:center;margin-top:0.5rem;}
+.nei-box{max-width:1100px;margin:0 auto 2rem;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.15);border-radius:12px;padding:1.2rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;}
+.nei-box-icon{font-size:1.5rem;flex-shrink:0;}
+.nei-box-title{font-family:var(--display);font-size:0.72rem;font-weight:700;color:var(--green);margin-bottom:0.4rem;}
+.nei-box-text{font-size:0.82rem;color:var(--muted);line-height:1.5;}
+.nei-chip{display:inline-flex;align-items:center;font-family:var(--display);font-size:0.6rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:3px;margin:0 2px;}
+.chip-n{background:rgba(0,212,255,0.15);color:#00D4FF;}
+.chip-e{background:rgba(255,215,0,0.15);color:var(--gold);}
+.chip-i{background:rgba(57,255,20,0.15);color:var(--green);}
+
+/* ─── VIDEO ─── */
+.video-section{max-width:800px;margin:0 auto;}
+.video-frame{background:rgba(0,0,0,0.5);border:1px solid var(--panel-border);border-radius:14px;overflow:hidden;aspect-ratio:16/9;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;cursor:pointer;}
+.video-placeholder{text-align:center;padding:2rem;}
+.vp-icon{font-size:4rem;margin-bottom:1rem;display:block;opacity:0.6;}
+.vp-play{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);font-family:var(--mono);font-size:0.65rem;padding:0.5rem 1.2rem;border-radius:6px;margin-top:1rem;cursor:pointer;}
+.video-timestamps{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:10px;padding:1rem;}
+.ts-label{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:0.75rem;}
+.ts-row{display:flex;align-items:center;gap:1rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.ts-row:last-child{border-bottom:none;}
+.ts-time{font-family:var(--mono);font-size:0.65rem;color:var(--cyan);width:40px;flex-shrink:0;}
+.ts-text{font-size:0.8rem;color:rgba(255,255,255,0.6);}
+
+/* ─── FLASHCARDS ─── */
+.flashcard-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+.flashcard{perspective:600px;cursor:pointer;height:150px;}
+.fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(.22,1,.36,1);}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-front,.fc-back{position:absolute;inset:0;background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;text-align:center;backdrop-filter:blur(12px);}
+.fc-back{transform:rotateY(180deg);background:rgba(0,229,255,0.04);border-color:rgba(0,229,255,0.2);}
+.fc-front-label{font-family:var(--mono);font-size:0.55rem;color:var(--gold);letter-spacing:0.12em;margin-bottom:0.5rem;}
+.fc-front-q{font-size:0.85rem;color:rgba(255,255,255,0.8);}
+.fc-back-label{font-family:var(--mono);font-size:0.55rem;color:var(--cyan);letter-spacing:0.12em;margin-bottom:0.5rem;}
+.fc-back-a{font-size:0.8rem;color:rgba(255,255,255,0.75);}
+.fc-flip-hint{font-family:var(--mono);font-size:0.52rem;color:var(--muted);margin-top:0.5rem;}
+
+/* ─── QUIZ ─── */
+.quiz-section{max-width:900px;margin:0 auto;}
+.quiz-title{font-family:var(--display);font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.7rem;}
+.quiz-title::before{content:'';display:inline-block;width:4px;height:20px;background:linear-gradient(var(--cyan),var(--gold));border-radius:2px;}
+.quiz-card{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:0.75rem;backdrop-filter:blur(12px);}
+.quiz-q{font-size:0.88rem;color:rgba(255,255,255,0.8);margin-bottom:0.75rem;line-height:1.5;}
+.quiz-options{display:flex;flex-direction:column;gap:0.5rem;}
+.q-opt{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:0.6rem 1rem;font-size:0.82rem;color:var(--muted);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:0.6rem;}
+.q-opt:hover{background:rgba(0,229,255,0.06);border-color:rgba(0,229,255,0.2);color:var(--ink);}
+.q-opt.correct{background:rgba(57,255,20,0.1);border-color:rgba(57,255,20,0.4);color:var(--green);}
+.q-opt.incorrect{background:rgba(255,68,68,0.08);border-color:rgba(255,68,68,0.3);color:var(--red);}
+.q-opt.disabled{cursor:default;pointer-events:none;}
+.opt-letter{width:22px;height:22px;border-radius:5px;background:rgba(255,255,255,0.05);font-family:var(--mono);font-size:0.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.q-feedback{margin-top:0.6rem;padding:0.6rem 0.9rem;border-radius:7px;font-size:0.78rem;line-height:1.5;display:none;}
+.q-feedback.correct-fb{display:block;background:rgba(57,255,20,0.07);border:1px solid rgba(57,255,20,0.2);color:var(--green);}
+.q-feedback.incorrect-fb{display:block;background:rgba(255,68,68,0.07);border:1px solid rgba(255,68,68,0.2);color:var(--red);}
+
+/* ─── DISCUSSION ─── */
+.discussion-grid{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;}
+.dp-card{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.5rem;display:flex;gap:1rem;align-items:flex-start;}
+.dp-num{width:36px;height:36px;border-radius:8px;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.25);font-family:var(--display);font-size:0.7rem;font-weight:700;color:var(--cyan);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.dp-prompt{font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:0.6rem;}
+.dp-think{font-family:var(--mono);font-size:0.62rem;color:var(--muted);display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;}
+.dp-think-label{color:var(--gold);}
+.dp-hint{display:inline-flex;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.15);color:rgba(255,215,0,0.7);padding:0.15rem 0.5rem;border-radius:3px;font-size:0.6rem;}
+
+/* ─── SOLO TASK: DATA MAP ─── */
+.map-task{max-width:1050px;margin:0 auto;}
+.map-intro{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
+.map-intro h3{font-family:var(--display);font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+.map-intro p{font-size:0.85rem;color:var(--muted);line-height:1.5;}
+.scenario-selector{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem;}
+.scenario-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.5rem 1rem;font-family:var(--mono);font-size:0.62rem;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.scenario-btn.active{background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.3);color:var(--cyan);}
+.map-canvas{background:rgba(0,0,0,0.4);border:1px solid var(--panel-border);border-radius:14px;padding:2rem;margin-bottom:1.5rem;position:relative;}
+.map-canvas-title{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;}
+.map-canvas-title::before{content:'';width:12px;height:1px;background:var(--cyan);}
+.source-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;}
+.source-col{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:10px;overflow:hidden;}
+.source-col-header{padding:0.85rem 1rem;border-bottom:1px solid var(--panel-border);display:flex;align-items:center;gap:0.5rem;}
+.source-col-title{font-family:var(--display);font-size:0.65rem;font-weight:700;}
+.sc-d2d .source-col-title{color:var(--cyan);}
+.sc-h2d .source-col-title{color:var(--green);}
+.sc-machine .source-col-title{color:var(--gold);}
+.source-col-body{padding:0.85rem;}
+.source-textarea{width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.06);border-radius:7px;padding:0.65rem 0.85rem;color:rgba(255,255,255,0.8);font-family:var(--mono);font-size:0.7rem;line-height:1.6;resize:vertical;outline:none;min-height:90px;transition:border-color 0.2s;}
+.sc-d2d .source-textarea:focus{border-color:rgba(0,229,255,0.3);}
+.sc-h2d .source-textarea:focus{border-color:rgba(57,255,20,0.3);}
+.sc-machine .source-textarea:focus{border-color:rgba(255,215,0,0.3);}
+.source-textarea::placeholder{color:var(--muted);font-style:italic;}
+.source-chips{display:flex;flex-wrap:wrap;gap:0.4rem;padding:0 0.85rem 0.85rem;}
+.source-chip{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:5px;padding:0.2rem 0.5rem;font-family:var(--mono);font-size:0.58rem;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.15s;}
+.sc-d2d .source-chip:hover{background:rgba(0,229,255,0.08);border-color:rgba(0,229,255,0.2);color:var(--cyan);}
+.sc-h2d .source-chip:hover{background:rgba(57,255,20,0.08);border-color:rgba(57,255,20,0.2);color:var(--green);}
+.sc-machine .source-chip:hover{background:rgba(255,215,0,0.08);border-color:rgba(255,215,0,0.2);color:var(--gold);}
+.map-output-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.output-box{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:10px;overflow:hidden;}
+.output-header{padding:0.75rem 1rem;border-bottom:1px solid var(--panel-border);}
+.output-header-title{font-family:var(--display);font-size:0.65rem;font-weight:700;}
+.ob-data .output-header-title{color:var(--amber);}
+.ob-insight .output-header-title{color:var(--green);}
+.output-textarea{width:100%;background:rgba(0,0,0,0.3);border:none;padding:0.85rem 1rem;color:rgba(255,255,255,0.7);font-family:var(--mono);font-size:0.7rem;line-height:1.6;resize:vertical;outline:none;min-height:75px;}
+.output-textarea::placeholder{color:var(--muted);font-style:italic;}
+.map-submit-row{text-align:center;margin-top:1.5rem;}
+.map-result{display:none;margin-top:1.5rem;background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:14px;padding:1.5rem;}
+.map-result.visible{display:block;}
+.mr-title{font-family:var(--display);font-size:0.9rem;font-weight:700;color:var(--green);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;}
+.mr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;}
+.mr-col{background:rgba(0,0,0,0.2);border-radius:8px;padding:1rem;}
+.mr-col-title{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.mr-col.d2d .mr-col-title{color:var(--cyan);}
+.mr-col.h2d .mr-col-title{color:var(--green);}
+.mr-col.mach .mr-col-title{color:var(--gold);}
+.mr-text{font-size:0.78rem;color:rgba(255,255,255,0.6);line-height:1.5;}
+.nei-verdict-box{background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.18);border-radius:10px;padding:1.2rem;}
+.nvb-title{font-family:var(--display);font-size:0.72rem;font-weight:700;color:var(--green);margin-bottom:0.4rem;}
+.nvb-text{font-size:0.82rem;color:rgba(255,255,255,0.6);line-height:1.5;}
+
+/* Buttons */
+.btn-submit{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,rgba(0,229,255,0.12),rgba(0,229,255,0.06));border:1px solid rgba(0,229,255,0.35);color:var(--cyan);font-family:var(--display);font-size:0.65rem;font-weight:700;letter-spacing:0.12em;padding:0.75rem 1.8rem;border-radius:6px;cursor:pointer;transition:all 0.2s;}
+.btn-submit:hover{background:rgba(0,229,255,0.15);box-shadow:0 0 20px rgba(0,229,255,0.15);}
+.btn-secondary{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--muted);font-family:var(--display);font-size:0.65rem;font-weight:600;letter-spacing:0.1em;padding:0.75rem 1.5rem;border-radius:6px;cursor:pointer;transition:all 0.2s;}
+.btn-secondary:hover{background:rgba(255,255,255,0.08);color:var(--ink);}
+
+/* ─── SCENE E ─── */
+#scene-e{min-height:calc(100vh - 52px);flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;text-align:center;}
+.completion-header{font-family:var(--display);font-size:0.6rem;letter-spacing:0.2em;color:var(--cyan);text-transform:uppercase;margin-bottom:2rem;animation:fadeIn 0.5s ease both;}
+.badge-3d{width:200px;height:200px;margin:0 auto 2.5rem;animation:fadeIn 0.6s 0.2s ease both;}
+.badge-hex{width:200px;height:200px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#001a2e,#00111F);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;animation:badgeRotate3d 6s ease-in-out infinite;}
+@keyframes badgeRotate3d{0%,100%{transform:rotateY(0deg);}25%{transform:rotateY(15deg) rotateX(5deg);}50%{transform:rotateY(0deg);}75%{transform:rotateY(-15deg) rotateX(-5deg);}}
+.badge-hex::before{content:'';position:absolute;inset:-3px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--cyan),var(--gold),var(--cyan));z-index:-1;animation:borderGlow 3s ease-in-out infinite;}
+@keyframes borderGlow{0%,100%{opacity:1;}50%{opacity:0.6;}}
+.badge-icon{font-size:4rem;line-height:1;margin-bottom:0.4rem;}
+.badge-text-top{font-family:var(--display);font-size:0.5rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
+.badge-text-main{font-family:var(--display);font-size:0.65rem;font-weight:700;color:var(--cyan);letter-spacing:0.05em;text-shadow:0 0 10px var(--cyan);}
+.completion-title{font-family:var(--display);font-size:2rem;font-weight:900;color:#fff;margin-bottom:0.5rem;animation:fadeIn 0.6s 0.4s ease both;}
+.completion-title span{background:linear-gradient(135deg,var(--cyan),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.completion-sub{font-size:0.9rem;color:var(--muted);margin-bottom:2.5rem;animation:fadeIn 0.6s 0.5s ease both;max-width:560px;}
+.score-final{display:flex;gap:1.5rem;justify-content:center;margin-bottom:2.5rem;animation:fadeIn 0.6s 0.6s ease both;}
+.sf-item{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.2rem 2rem;text-align:center;}
+.sf-num{font-family:var(--display);font-size:2rem;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.4);}
+.sf-label{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;letter-spacing:0.05em;}
+.export-btn{display:inline-flex;align-items:center;gap:0.75rem;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);font-family:var(--display);font-size:0.65rem;font-weight:700;letter-spacing:0.1em;padding:0.85rem 2rem;border-radius:6px;cursor:pointer;transition:all 0.2s;animation:fadeIn 0.6s 0.8s ease both;}
+.export-btn:hover{box-shadow:0 0 20px rgba(0,229,255,0.18);}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">The Mark Scheme Method® // Field Training 6.1.3</div>
+  <div class="header-status">
+    <div class="status-item"><span class="status-dot"></span>SYSTEM ONLINE</div>
+    <div class="status-item">STATION: <span id="station-label" style="color:var(--gold);margin-left:4px;">BRIEFING</span></div>
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <div class="status-item">PROGRESS</div>
+      <div class="progress-bar"><div class="progress-fill" id="main-progress" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ SCENE A: BRIEFING ═══ -->
+<section id="scene-a" class="scene active">
+  <div class="briefing-bg"></div>
+  <div class="briefing-container">
+    <div class="mission-badge">⬡ FIELD TRAINING 6.1.3 — OPERATIONAL BRIEFING ⬡</div>
+    <div class="avatar-frame">
+      <div class="avatar-hex"><div class="avatar-inner">🛰️</div></div>
+      <div class="avatar-ring"></div>
+    </div>
+    <h1 class="briefing-title">HOW DATA IS<br><span>GENERATED</span></h1>
+    <p class="briefing-sub">AXIOM-7 TACTICAL BRIEF // CONTENT AREA 6.1.3 // CLEARANCE: STANDARD</p>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="t-dot t-red"></span><span class="t-dot t-amber"></span><span class="t-dot t-green"></span>
+        <span class="terminal-label">AXIOM-7 // DATA ORIGINS CHANNEL</span>
+      </div>
+      <div class="terminal-body" id="terminal-transcript"></div>
+    </div>
+    <div class="briefing-stats">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--cyan);text-shadow:0 0 15px rgba(0,229,255,0.4);">D2D</div>
+        <div class="stat-label">Device-to-Device</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green);text-shadow:0 0 15px rgba(57,255,20,0.3);">H2D</div>
+        <div class="stat-label">Human-to-Device</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--gold);">+150XP</div>
+        <div class="stat-label">field_ready_613 Badge</div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="startMission()">INITIATE FIELD TRAINING →</button>
+  </div>
+</section>
+
+<!-- ═══ SCENE B: STATIONS ═══ -->
+<section id="scene-b" class="scene">
+  <div class="scene-header">
+    <div class="scene-badge">⬡ STATIONS 01–06 — HOW DATA IS GENERATED</div>
+    <h2 class="scene-title">D2D, H2D &amp; Machine/Sensor Sources</h2>
+    <p class="scene-sub">Understand where data comes from — and how to explain it for full marks.</p>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchTab('theory')">📡 Theory</button>
+    <button class="sub-tab" onclick="switchTab('video')">▶ Explainer</button>
+    <button class="sub-tab" onclick="switchTab('flashcards')">⚡ Flashcards</button>
+    <button class="sub-tab" onclick="switchTab('quiz')">🎯 Quiz</button>
+    <button class="sub-tab" onclick="switchTab('discuss')">💬 Discussion</button>
+    <button class="sub-tab" onclick="switchTab('mapping')">🗺 Data Map</button>
+  </div>
+
+  <!-- THEORY -->
+  <div id="sub-theory" class="sub-content active">
+    <div class="theory-grid">
+      <div class="theory-card t-d2d">
+        <div class="card-tier"><span class="tier-dot"></span>SOURCE TYPE 1</div>
+        <span class="card-icon">📡</span>
+        <div class="card-heading">Device-to-Device (D2D)</div>
+        <div class="card-def">Data generated automatically when one device communicates with another — no human involvement. D2D is the backbone of IoT, automated logistics, and smart infrastructure.</div>
+        <div class="card-example">
+          <div class="example-label">REAL-WORLD EXAMPLES</div>
+          <div class="example-text">A delivery van's GPS unit automatically transmits location data to the depot server every 30 seconds. A smart thermostat sends temperature readings to a cloud server. RFID tags on products update stock systems as they move through a warehouse.</div>
+        </div>
+        <div class="card-tags">
+          <span class="ctag">IoT</span><span class="ctag">Automated</span><span class="ctag">No human input</span><span class="ctag">Real-time</span>
+        </div>
+      </div>
+      <div class="theory-card t-h2d">
+        <div class="card-tier"><span class="tier-dot"></span>SOURCE TYPE 2</div>
+        <span class="card-icon">👤</span>
+        <div class="card-heading">Human-to-Device (H2D)</div>
+        <div class="card-def">Data created when a human interacts with a device — typing, clicking, swiping, submitting forms. Every deliberate action a person takes with technology generates H2D data.</div>
+        <div class="card-example">
+          <div class="example-label">REAL-WORLD EXAMPLES</div>
+          <div class="example-text">A customer completing a checkout form on an e-commerce site. A student typing an answer into a revision platform. A doctor entering a diagnosis into a hospital system. A user clicking "Like" on a social media post.</div>
+        </div>
+        <div class="card-tags">
+          <span class="ctag">User input</span><span class="ctag">Intentional</span><span class="ctag">Forms & clicks</span><span class="ctag">Behavioural</span>
+        </div>
+      </div>
+      <div class="theory-card t-sensor">
+        <div class="card-tier"><span class="tier-dot"></span>SOURCE TYPE 3</div>
+        <span class="card-icon">⚙️</span>
+        <div class="card-heading">Machine &amp; Sensor Sources</div>
+        <div class="card-def">Data generated by physical sensors, machinery, and automated systems monitoring the environment. Sensors capture data that humans cannot consistently or accurately measure manually.</div>
+        <div class="card-example">
+          <div class="example-label">REAL-WORLD EXAMPLES</div>
+          <div class="example-text">Temperature sensors in a food cold-chain. Vibration sensors on industrial machinery detecting wear. Air quality monitors in smart cities. Motion sensors in a retail store counting footfall. Biometric readers at building access points.</div>
+        </div>
+        <div class="card-tags">
+          <span class="ctag">Physical world</span><span class="ctag">Continuous</span><span class="ctag">Environmental</span><span class="ctag">High volume</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow diagram -->
+    <div class="flow-diagram" style="max-width:1100px;margin:0 auto 2rem;">
+      <div class="flow-diagram-inner">
+        <div style="font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:1.5rem;">◈ HOW DATA FLOWS — FROM GENERATION TO VALUE</div>
+        <div class="flow-row">
+          <div class="flow-node-box fnb-d2d"><span class="fnb-icon">📡</span><div class="fnb-label">D2D</div><div class="fnb-sub">Device signals</div></div>
+          <div class="flow-plus">+</div>
+          <div class="flow-node-box fnb-h2d"><span class="fnb-icon">👤</span><div class="fnb-label">H2D</div><div class="fnb-sub">Human input</div></div>
+          <div class="flow-plus">+</div>
+          <div class="flow-node-box fnb-sensor"><span class="fnb-icon">⚙️</span><div class="fnb-label">SENSORS</div><div class="fnb-sub">Environment</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node-box fnb-process"><span class="fnb-icon">🔄</span><div class="fnb-label">PROCESS</div><div class="fnb-sub">Clean & store</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node-box fnb-output"><span class="fnb-icon">📊</span><div class="fnb-label">INSIGHT</div><div class="fnb-sub">Business value</div></div>
+        </div>
+        <div class="flow-label" style="color:var(--muted);font-size:0.6rem;">Raw data from all three sources → combined → processed → becomes actionable knowledge that earns the [I] Impact mark</div>
+      </div>
+    </div>
+
+    <div class="nei-box" style="max-width:1100px;margin:0 auto 2rem;">
+      <div class="nei-box-icon">🎯</div>
+      <div>
+        <div class="nei-box-title">◈ EXAMINER CONNECTION — HOW THIS EARNS MARKS</div>
+        <div class="nei-box-text">
+          When asked <em>"Describe how a business collects data"</em>:
+          <span class="nei-chip chip-n">N</span> <strong>Name the source type</strong> (D2D / H2D / sensor),
+          <span class="nei-chip chip-e">E</span> <strong>Explain the mechanism</strong> (how the data is captured),
+          <span class="nei-chip chip-i">I</span> <strong>State the impact</strong> (what business decision this enables). Students who only say "the company uses sensors" score 1/3 maximum.
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1100px;margin:0 auto;text-align:center;">
+      <button class="btn-submit" onclick="switchTab('video');document.querySelectorAll('.sub-tab')[1].click()">Continue to Explainer →</button>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div id="sub-video" class="sub-content">
+    <div class="video-section">
+      <div class="video-frame" id="video-frame">
+        <div class="video-placeholder">
+          <span class="vp-icon">📺</span>
+          <div style="font-family:var(--display);font-size:0.75rem;color:rgba(255,255,255,0.5);letter-spacing:0.1em;">EXPLAINER VIDEO</div>
+          <div style="color:var(--muted);font-size:0.8rem;margin-top:0.4rem;">D2D, H2D &amp; Sensor Data — From Signal to Business Intelligence</div>
+          <div class="vp-play" onclick="playVideo()">▶ PLAY EXPLAINER (5:15)</div>
+        </div>
+      </div>
+      <div class="video-timestamps">
+        <div class="ts-label">◈ TIMESTAMP GUIDE — KEY EXAMINER MOMENTS</div>
+        <div class="ts-row"><span class="ts-time">0:00</span><span class="ts-text">Why understanding data origins earns marks other students miss</span></div>
+        <div class="ts-row"><span class="ts-time">0:50</span><span class="ts-text">D2D explained — IoT devices, automated signals, no human input</span></div>
+        <div class="ts-row"><span class="ts-time">1:55</span><span class="ts-text">H2D explained — forms, clicks, user behaviour as data</span></div>
+        <div class="ts-row"><span class="ts-time">3:10</span><span class="ts-text">Machine &amp; sensor sources — what they measure and why it matters</span></div>
+        <div class="ts-row"><span class="ts-time">4:20</span><span class="ts-text">Full NEI answer template for data generation questions</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div id="sub-flashcards" class="sub-content">
+    <div class="flashcard-grid">
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="fc-inner">
+          <div class="fc-front"><div class="fc-front-label">FLIP TO REVEAL</div><div class="fc-front-q">What is the key difference between D2D and H2D data generation?</div><div class="fc-flip-hint">↕ tap to flip</div></div>
+          <div class="fc-back"><div class="fc-back-label">ANSWER</div><div class="fc-back-a">D2D requires <strong>no human involvement</strong> — devices communicate automatically. H2D is generated through <strong>deliberate human actions</strong> such as typing, clicking, or submitting data.</div></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="fc-inner">
+          <div class="fc-front"><div class="fc-front-label">FLIP TO REVEAL</div><div class="fc-front-q">A warehouse uses RFID tags on every pallet. When a pallet passes a scanner, stock records update automatically. What type is this?</div><div class="fc-flip-hint">↕ tap to flip</div></div>
+          <div class="fc-back"><div class="fc-back-label">ANSWER</div><div class="fc-back-a"><strong>D2D</strong> — The RFID tag (device) communicates with the scanner (device) without any human action. The stock update is fully automated.</div></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="fc-inner">
+          <div class="fc-front"><div class="fc-front-label">FLIP TO REVEAL</div><div class="fc-front-q">Why do sensor sources generate data that humans cannot replicate manually?</div><div class="fc-flip-hint">↕ tap to flip</div></div>
+          <div class="fc-back"><div class="fc-back-label">ANSWER</div><div class="fc-back-a">Sensors can monitor <strong>continuously</strong>, at <strong>microsecond intervals</strong>, in <strong>hostile environments</strong>, and with far greater <strong>precision</strong> than any human observer — making them essential for real-time monitoring.</div></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="fc-inner">
+          <div class="fc-front"><div class="fc-front-label">FLIP TO REVEAL</div><div class="fc-front-q">A customer fills in a returns form on a retailer's website. What data generation type is this, and what business value does it create?</div><div class="fc-flip-hint">↕ tap to flip</div></div>
+          <div class="fc-back"><div class="fc-back-label">ANSWER</div><div class="fc-back-a"><strong>H2D.</strong> Business value: return reason data allows identification of product quality issues, enabling the business to reduce future defect rates and protect profit margins.</div></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="fc-inner">
+          <div class="fc-front"><div class="fc-front-label">FLIP TO REVEAL</div><div class="fc-front-q">Give one risk to a business if its sensor data is inaccurate or delayed.</div><div class="fc-flip-hint">↕ tap to flip</div></div>
+          <div class="fc-back"><div class="fc-back-label">ANSWER</div><div class="fc-back-a">Decisions based on faulty data lead to operational failure — e.g. a temperature sensor malfunction in cold storage could result in stock spoilage and significant financial loss.</div></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="fc-inner">
+          <div class="fc-front"><div class="fc-front-label">FLIP TO REVEAL</div><div class="fc-front-q">Name three different data sources a modern supermarket uses and classify each.</div><div class="fc-flip-hint">↕ tap to flip</div></div>
+          <div class="fc-back"><div class="fc-back-label">ANSWER</div><div class="fc-back-a"><strong>D2D:</strong> RFID stock tags → warehouse system. <strong>H2D:</strong> Loyalty card swipe at checkout. <strong>Sensor:</strong> Temperature sensors in refrigeration units. Each creates different but complementary data streams.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="sub-quiz" class="sub-content">
+    <div class="quiz-section">
+      <div class="quiz-title">5-Question Rapid Fire — 6.1.3</div>
+      <div id="quiz-container"></div>
+      <div id="quiz-score-row" style="display:none;text-align:center;margin-top:1.5rem;">
+        <div style="font-family:var(--display);font-size:1.4rem;color:var(--gold);">SCORE: <span id="quiz-final">0</span>/5</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCUSSION -->
+  <div id="sub-discuss" class="sub-content">
+    <div class="discussion-grid">
+      <div class="dp-card">
+        <div class="dp-num">01</div>
+        <div>
+          <div class="dp-prompt"><strong>Where does your school generate data?</strong> Map out every data generation event that happens in a typical school day — from the moment a student scans in at the gate to a teacher marking work online. Which type dominates: D2D, H2D, or sensor?</div>
+          <div class="dp-think"><span class="dp-think-label">THINK ABOUT:</span><span class="dp-hint">Attendance systems</span><span class="dp-hint">VLE logins</span><span class="dp-hint">Canteen payments</span><span class="dp-hint">Fire alarm sensors</span><span class="dp-hint">CCTV</span></div>
+        </div>
+      </div>
+      <div class="dp-card">
+        <div class="dp-num">02</div>
+        <div>
+          <div class="dp-prompt">A logistics company wants to reduce fuel costs by 15%. It currently only collects H2D data (driver reports). A consultant recommends switching to D2D telematics. <strong>What data would the D2D system generate that the H2D system cannot? Why does this matter?</strong></div>
+          <div class="dp-think"><span class="dp-think-label">CONSIDER:</span><span class="dp-hint">Driver behaviour</span><span class="dp-hint">Route efficiency</span><span class="dp-hint">Idle time</span><span class="dp-hint">Speed patterns</span></div>
+        </div>
+      </div>
+      <div class="dp-card">
+        <div class="dp-num">03</div>
+        <div>
+          <div class="dp-prompt">IoT sensors are projected to generate <strong>79.4 zettabytes of data by 2025</strong>. Is this a business opportunity or a problem? Consider both sides — what value does high-volume sensor data create, and what challenges does it introduce?</div>
+          <div class="dp-think"><span class="dp-think-label">KEY TERMS:</span><span class="dp-hint">Data overload</span><span class="dp-hint">Storage costs</span><span class="dp-hint">Real-time decisions</span><span class="dp-hint">Predictive maintenance</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLO TASK: DATA GENERATION MAP -->
+  <div id="sub-mapping" class="sub-content">
+    <div class="map-task">
+      <div class="map-intro">
+        <h3>Solo Task — Sketch a Data Generation Map</h3>
+        <p>Select a business scenario. For each source type, identify what data is generated, how it is captured, and what business decision it enables. Then describe the combined output and the key insight it produces.</p>
+        <div class="scenario-selector">
+          <button class="scenario-btn active" onclick="selectScenario(this,'airport')">✈️ Airport</button>
+          <button class="scenario-btn" onclick="selectScenario(this,'hospital')">🏥 Hospital</button>
+          <button class="scenario-btn" onclick="selectScenario(this,'retailer')">🛒 Smart Retailer</button>
+          <button class="scenario-btn" onclick="selectScenario(this,'factory')">🏭 Smart Factory</button>
+        </div>
+      </div>
+
+      <div class="map-canvas">
+        <div class="map-canvas-title">DATA GENERATION MAP — <span id="scenario-name">AIRPORT</span></div>
+        <div class="source-grid">
+          <div class="source-col sc-d2d">
+            <div class="source-col-header">
+              <span style="font-size:1.1rem;">📡</span>
+              <div class="source-col-title">D2D SOURCES</div>
+            </div>
+            <div class="source-col-body">
+              <textarea class="source-textarea" id="input-d2d" placeholder="What D2D data is generated? How? What does it enable?"></textarea>
+            </div>
+            <div class="source-chips" id="chips-d2d"></div>
+          </div>
+          <div class="source-col sc-h2d">
+            <div class="source-col-header">
+              <span style="font-size:1.1rem;">👤</span>
+              <div class="source-col-title">H2D SOURCES</div>
+            </div>
+            <div class="source-col-body">
+              <textarea class="source-textarea" id="input-h2d" placeholder="What H2D data is generated? How? What does it enable?"></textarea>
+            </div>
+            <div class="source-chips" id="chips-h2d"></div>
+          </div>
+          <div class="source-col sc-machine">
+            <div class="source-col-header">
+              <span style="font-size:1.1rem;">⚙️</span>
+              <div class="source-col-title">SENSOR/MACHINE SOURCES</div>
+            </div>
+            <div class="source-col-body">
+              <textarea class="source-textarea" id="input-sensor" placeholder="What sensor/machine data is generated? What does it monitor?"></textarea>
+            </div>
+            <div class="source-chips" id="chips-sensor"></div>
+          </div>
+        </div>
+        <div class="map-output-row">
+          <div class="output-box ob-data">
+            <div class="output-header"><div class="output-header-title">⚡ COMBINED DATA OUTPUT</div></div>
+            <textarea class="output-textarea" id="input-output" placeholder="What does the combined data stream look like? How is it stored and processed?"></textarea>
+          </div>
+          <div class="output-box ob-insight">
+            <div class="output-header"><div class="output-header-title">🎯 KEY BUSINESS INSIGHT (Your [I] Mark)</div></div>
+            <textarea class="output-textarea" id="input-insight" placeholder="What decision does this combined data enable? What is the measurable business impact?"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-submit-row">
+        <button class="btn-secondary" onclick="clearMap()" style="margin-right:1rem;">↺ Clear</button>
+        <button class="btn-submit" onclick="checkMap()">Reveal Examiner Map →</button>
+      </div>
+
+      <div class="map-result" id="map-result">
+        <div class="mr-title">✓ EXAMINER'S REFERENCE MAP</div>
+        <div class="mr-grid" id="mr-grid"></div>
+        <div class="nei-verdict-box">
+          <div class="nvb-title">◈ THE MARK YOU'RE CHASING</div>
+          <div class="nvb-text" id="nvb-text"></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:2rem;">
+        <button class="btn-primary" onclick="goToScene('e')">Complete Training &amp; Claim Badge →</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;padding-bottom:3rem;">
+    <button class="btn-primary" onclick="goToScene('e')">Complete Field Training 6.1.3 →</button>
+  </div>
+</section>
+
+<!-- ═══ SCENE E: COMPLETION ═══ -->
+<section id="scene-e" class="scene">
+  <div class="completion-header">◈ FIELD TRAINING 6.1.3 // MISSION COMPLETE ◈</div>
+  <div class="badge-3d">
+    <div class="badge-hex">
+      <div class="badge-icon">🛰️</div>
+      <div class="badge-text-top">FIELD READY</div>
+      <div class="badge-text-main">6.1.3</div>
+    </div>
+  </div>
+  <h1 class="completion-title">FIELD READY <span>613</span> BADGE AWARDED</h1>
+  <p class="completion-sub">You have demonstrated understanding of D2D, H2D and sensor/machine data generation — and how to apply the N·E·I framework to earn full marks on data origins questions.</p>
+  <div class="score-final">
+    <div class="sf-item"><div class="sf-num">+150</div><div class="sf-label">XP Earned</div></div>
+    <div class="sf-item"><div class="sf-num" style="color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,0.4);">6/6</div><div class="sf-label">Stations Cleared</div></div>
+    <div class="sf-item"><div class="sf-num" style="color:var(--green);">6.2</div><div class="sf-label">Next Module Unlocked</div></div>
+  </div>
+  <button class="export-btn" onclick="exportReport()">📄 Export Mission Report PDF</button>
+  <div style="margin-top:2rem;font-family:var(--mono);font-size:0.65rem;color:var(--muted);">NEXT: FIELD TRAINING 6.2 — DATA FORMATS →</div>
+</section>
+
+<div class="scene-nav">
+  <div class="nav-dot active" data-scene="a" onclick="goToScene('a')"></div>
+  <div class="nav-dot" data-scene="b" onclick="goToScene('b')"></div>
+  <div class="nav-dot" data-scene="e" onclick="goToScene('e')"></div>
+</div>
+
+<script>
+const state = { currentScene:'a', quizScore:0, quizAnswered:0, activeScenario:'airport' };
+const sceneOrder = ['a','b','e'];
+const stationLabels = {a:'BRIEFING',b:'STATIONS',e:'COMPLETE'};
+
+function goToScene(id) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.getElementById('scene-'+id).classList.add('active');
+  state.currentScene = id;
+  const idx = sceneOrder.indexOf(id);
+  document.getElementById('main-progress').style.width = (idx/(sceneOrder.length-1)*100)+'%';
+  document.getElementById('station-label').textContent = stationLabels[id]||'';
+  document.querySelectorAll('.nav-dot').forEach(d => d.classList.toggle('active', d.dataset.scene===id));
+  window.scrollTo(0,0);
+}
+function startMission(){goToScene('b');}
+
+function switchTab(id) {
+  const ids=['theory','video','flashcards','quiz','discuss','mapping'];
+  document.querySelectorAll('.sub-tab').forEach((t,i) => t.classList.toggle('active',ids[i]===id));
+  document.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('sub-'+id).classList.add('active');
+}
+
+// Terminal
+const script = [
+  {prompt:'AXIOM-7', text:'Specialist. Every byte of data your organisation holds had to come from somewhere.', delay:0},
+  {prompt:'AXIOM-7', text:'Three pipelines. <span class="hl-cyan">Device-to-Device</span>. <span class="hl-green">Human-to-Device</span>. <span class="hl-gold">Sensors and machines</span>.', delay:2000},
+  {prompt:'AXIOM-7', text:'Most students describe the <span class="hl-gold">output</span> — the stored data. Examiners want you to explain the <span class="hl-cyan">source</span>.', delay:4200},
+  {prompt:'AXIOM-7', text:'Know how it enters the system. Know what it captures. Know what it <span class="hl-green">enables</span>.', delay:6500},
+  {prompt:'AXIOM-7', text:'That chain — source to decision — is your full 3-mark answer. <span class="terminal-cursor"></span>', delay:9000},
+];
+function typeTerminal() {
+  const c = document.getElementById('terminal-transcript');
+  script.forEach(line => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className='terminal-line';
+      el.innerHTML=`<span class="prompt">${line.prompt} ›</span>${line.text}`;
+      c.appendChild(el);
+    }, line.delay);
+  });
+}
+
+// Quiz
+const quizData = [
+  {
+    q:'A smart factory floor has machines that automatically report their temperature, speed, and error codes to a central dashboard every second. What type of data generation is this?',
+    opts:['Human-to-Device (H2D)','Device-to-Device (D2D)','Manual data entry','Batch processing'],
+    correct:1,
+    feedback:'Correct! Machines communicating automatically with no human involvement = D2D. The continuous reporting to a central dashboard is a textbook D2D interaction.'
+  },
+  {
+    q:'Which of these is the BEST example of H2D data generation?',
+    opts:[
+      'A motion sensor detecting a customer entering a store',
+      'A GPS unit in a delivery van transmitting location every 10 seconds',
+      'A patient entering their symptoms into a hospital triage app',
+      'A temperature sensor monitoring cold storage'
+    ],
+    correct:2,
+    feedback:'Correct! H2D requires deliberate human input into a device. The patient entering symptoms is a direct human action creating data — the others are all automated.'
+  },
+  {
+    q:'An examiner asks: "Describe one way an e-commerce business generates data." Which answer scores full marks?',
+    opts:[
+      '"The business collects data from customers."',
+      '"When a customer clicks on a product, H2D data is generated. The click-stream data is analysed to identify which products attract the most engagement, allowing the business to optimise its homepage layout and increase conversion rates."',
+      '"The website stores cookies."',
+      '"The business uses sensors to monitor its servers."'
+    ],
+    correct:1,
+    feedback:'Correct! Full marks require: [N] H2D named, [E] mechanism explained (click-stream), [I] business impact stated (conversion rate optimisation). The other answers lack at least one component.'
+  },
+  {
+    q:'Why are sensor sources often preferred over H2D for monitoring industrial environments?',
+    opts:[
+      'Sensors are cheaper than hiring humans',
+      'Sensors can monitor continuously with precision in environments that are unsafe, inaccessible, or too fast for humans to observe accurately',
+      'Sensors generate less data, making storage easier',
+      'H2D data is less accurate because humans make mistakes'
+    ],
+    correct:1,
+    feedback:'Correct! The key advantages are continuous monitoring, precision, and the ability to operate in hostile or inaccessible environments — all impossible with human observers.'
+  },
+  {
+    q:'An airport uses D2D, H2D, and sensor sources simultaneously. Which combination correctly maps to each type?',
+    opts:[
+      'D2D: Passenger fills in check-in form / H2D: Baggage belt RFID scanner / Sensor: Weight scales',
+      'D2D: Baggage RFID tags update the tracking system / H2D: Passenger enters passport details / Sensor: Runway temperature monitoring',
+      'D2D: Security staff log incidents / H2D: Aircraft GPS transmits position / Sensor: Passenger feedback forms',
+      'D2D: Staff check in online / H2D: Smoke detectors activate / Sensor: Gate computers sync departure data'
+    ],
+    correct:1,
+    feedback:'Correct! D2D = RFID (device-to-device, no human). H2D = passport entry (deliberate human input). Sensor = temperature monitoring (environmental measurement). The other options mix up the types.'
+  }
+];
+
+function buildQuiz() {
+  const c = document.getElementById('quiz-container');
+  quizData.forEach((q,qi) => {
+    const card = document.createElement('div');
+    card.className='quiz-card';
+    card.innerHTML=`
+      <div class="quiz-q"><span style="color:var(--gold);font-family:var(--mono);font-size:0.7rem;">Q${qi+1}.</span> ${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,oi)=>`<div class="q-opt" data-qi="${qi}" data-oi="${oi}" onclick="answerQuiz(${qi},${oi})"><span class="opt-letter">${String.fromCharCode(65+oi)}</span>${o}</div>`).join('')}</div>
+      <div class="q-feedback" id="qfb-${qi}"></div>`;
+    c.appendChild(card);
+  });
+}
+
+function answerQuiz(qi,oi) {
+  const q=quizData[qi];
+  document.querySelectorAll(`[data-qi="${qi}"]`).forEach(o=>o.classList.add('disabled'));
+  const fb=document.getElementById('qfb-'+qi);
+  if(oi===q.correct){
+    document.querySelectorAll(`[data-qi="${qi}"]`)[oi].classList.add('correct');
+    fb.className='q-feedback correct-fb';fb.textContent='✓ '+q.feedback;state.quizScore++;
+  } else {
+    document.querySelectorAll(`[data-qi="${qi}"]`)[oi].classList.add('incorrect');
+    document.querySelectorAll(`[data-qi="${qi}"]`)[q.correct].classList.add('correct');
+    fb.className='q-feedback incorrect-fb';fb.textContent='✗ '+q.feedback;
+  }
+  state.quizAnswered++;
+  if(state.quizAnswered===quizData.length){
+    document.getElementById('quiz-final').textContent=state.quizScore;
+    document.getElementById('quiz-score-row').style.display='block';
+  }
+}
+
+// Mapping task
+const scenarios = {
+  airport:{
+    name:'AIRPORT',
+    d2d:['Baggage RFID tags','Aircraft transponders','Gate door sensors','Fuel pump meters','Runway lights feedback'],
+    h2d:['Passport scan at check-in','Online booking form','Security staff incident log','Lounge feedback kiosk','Staff attendance swipe'],
+    sensor:['Runway temperature','Wind speed & direction','Smoke detectors','Passenger footfall counters','Noise monitoring'],
+    answers:{
+      d2d:'Baggage RFID tags automatically update the tracking system as luggage moves through the airport — D2D, no human action required. This enables real-time baggage location and prevents misrouting.',
+      h2d:'Passengers enter passport and booking details at self-check-in kiosks — H2D data that builds the passenger manifest and triggers gate assignment.',
+      sensor:'Runway temperature and wind sensors feed continuous data to air traffic control — enabling real-time decisions on runway usage, preventing weather-related incidents.',
+      verdict:'For an airport exam answer: [N] "D2D baggage tracking via RFID" [E] "tags update the central system as luggage passes each checkpoint automatically" [I] "reducing misrouted bags by 94%, protecting passenger satisfaction scores and compensation costs."'
+    }
+  },
+  hospital:{
+    name:'HOSPITAL',
+    d2d:['Patient monitor → nurse station','Pharmacy dispensing system','MRI machine → PACS system','Blood lab analyser','Medical device firmware updates'],
+    h2d:['Doctor entering diagnosis','Patient triage form','Staff time logging','Prescription entry','Appointment booking'],
+    sensor:['Patient vital signs monitors','Room temperature sensors','Hand sanitiser usage counters','Equipment location tags','Air quality monitors'],
+    answers:{
+      d2d:'Patient monitoring devices automatically transmit vital signs data to the nursing station — D2D, enabling real-time alert escalation without manual observation.',
+      h2d:'Doctors enter diagnoses and prescriptions into the clinical system — H2D that creates the patient record and triggers automated safety checks for drug interactions.',
+      sensor:'Continuous vital signs sensors alert staff to deterioration the moment it occurs — enabling faster intervention and reducing preventable critical incidents.',
+      verdict:'Hospital exam answers score highest with clinical impact: [N] "continuous patient monitoring via sensor data" [E] "vital signs transmitted automatically every 5 seconds" [I] "early warning system reduces code blue response time by 40%, directly improving patient survival rates."'
+    }
+  },
+  retailer:{
+    name:'SMART RETAILER',
+    d2d:['RFID stock tags → ERP','Self-checkout → inventory system','Digital shelf labels','Supply chain EDI','Loyalty card reader'],
+    h2d:['Customer checkout form','Product review submission','Store colleague stock count','Customer service ticket','Online returns form'],
+    sensor:['Footfall counters','Shelf weight sensors','Refrigeration temperature','Queue length cameras','Car park occupancy'],
+    answers:{
+      d2d:'RFID stock tags automatically update the ERP system as products move from stockroom to shelf — D2D that enables real-time inventory accuracy and automatic reorder triggers.',
+      h2d:'Customers submitting product reviews and returns forms generates H2D data that feeds quality analysis and identifies recurring product defects.',
+      sensor:'Footfall counters and queue-length cameras generate continuous sensor data used to dynamically allocate checkout staff, reducing average wait time and improving customer satisfaction.',
+      verdict:'Retail exam answers need a commercial impact: [N] "sensor-driven queue management" [E] "camera analytics count queue length and trigger staff reallocation in real-time" [I] "reducing average checkout wait by 3 minutes, increasing customer satisfaction scores by 22%."'
+    }
+  },
+  factory:{
+    name:'SMART FACTORY',
+    d2d:['CNC machine → MES','Robot arm position sensors → controller','Quality camera → defect database','AGV navigation signals','Production line PLC'],
+    h2d:['Operator quality sign-off','Maintenance engineer fault log','Production supervisor override','Safety incident report','Shift handover notes'],
+    sensor:['Vibration sensors on motors','Torque sensors on assembly arms','Ambient temperature & humidity','Particulate matter monitors','Energy consumption meters'],
+    answers:{
+      d2d:'CNC machines automatically report production metrics (cycle time, tool wear, output count) to the Manufacturing Execution System — D2D enabling real-time OEE monitoring.',
+      h2d:'Maintenance engineers log fault details and interventions into the CMMS — H2D that builds the maintenance history used to predict future failures.',
+      sensor:'Vibration sensors on motors detect deviation from baseline patterns — enabling predictive maintenance before catastrophic failure occurs, reducing unplanned downtime.',
+      verdict:'Manufacturing exam answers should quantify downtime prevention: [N] "predictive maintenance via vibration sensor data" [E] "sensors detect motor bearing degradation 2 weeks before failure" [I] "preventing unplanned shutdowns that cost £14,000/hour in lost production."'
+    }
+  }
+};
+
+function selectScenario(btn, id) {
+  document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  state.activeScenario=id;
+  document.getElementById('scenario-name').textContent=scenarios[id].name;
+  renderChips(id);
+  clearMap();
+  document.getElementById('map-result').classList.remove('visible');
+}
+
+function renderChips(id) {
+  const s=scenarios[id];
+  ['d2d','h2d','sensor'].forEach(type=>{
+    const c=document.getElementById('chips-'+type);
+    c.innerHTML=s[type].map(t=>`<span class="source-chip" onclick="insertChip('input-${type}','${t}')">${t}</span>`).join('');
+  });
+}
+
+function insertChip(id,text) {
+  const ta=document.getElementById(id);
+  ta.value=ta.value?ta.value+'\n'+text:text;
+}
+
+function clearMap() {
+  ['input-d2d','input-h2d','input-sensor','input-output','input-insight'].forEach(id=>document.getElementById(id).value='');
+}
+
+function checkMap() {
+  const s=scenarios[state.activeScenario];
+  const a=s.answers;
+  document.getElementById('mr-grid').innerHTML=`
+    <div class="mr-col d2d"><div class="mr-col-title">📡 D2D</div><div class="mr-text">${a.d2d}</div></div>
+    <div class="mr-col h2d"><div class="mr-col-title">👤 H2D</div><div class="mr-text">${a.h2d}</div></div>
+    <div class="mr-col mach"><div class="mr-col-title">⚙️ SENSOR</div><div class="mr-text">${a.sensor}</div></div>`;
+  document.getElementById('nvb-text').textContent=a.verdict;
+  const r=document.getElementById('map-result');
+  r.classList.add('visible');
+  r.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function playVideo() {
+  document.getElementById('video-frame').innerHTML=`
+    <div style="text-align:center;padding:2rem;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🎬</div>
+      <div style="font-family:var(--display);font-size:0.75rem;color:var(--cyan);letter-spacing:0.1em;margin-bottom:0.5rem;">VIDEO ASSET PENDING</div>
+      <div style="font-size:0.8rem;color:var(--muted);">Upload your explainer video to this asset slot.<br>Replace with a Loom or Vimeo &lt;iframe&gt; embed.</div>
+    </div>`;
+}
+
+function exportReport() {
+  const btn=document.querySelector('.export-btn');
+  const orig=btn.innerHTML;
+  btn.innerHTML='⏳ Generating...';btn.disabled=true;
+  setTimeout(()=>{btn.innerHTML='✓ Report Ready';setTimeout(()=>{btn.innerHTML=orig;btn.disabled=false;},2500);},1500);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  typeTerminal();buildQuiz();renderChips('airport');
+});
+</script>
+</body>
+</html>
