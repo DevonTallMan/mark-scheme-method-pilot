@@ -1,1 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Training 6.2 - Data Formats | The Mark Scheme Method(R)</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--void:#0D1117;--panel-bg:rgba(255,255,255,0.04);--panel-border:rgba(255,255,255,0.08);--orange:#FF8C00;--orange-dim:rgba(255,140,0,0.10);--gold:#FFD700;--red:#FF4444;--green:#39FF14;--blue:#00D4FF;--teal:#00FFB2;--ink:#D4DDE8;--muted:#556070;--mono:"Share Tech Mono",monospace;--display:"Orbitron",monospace;--body:"Rajdhani",sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--void);background-image:radial-gradient(ellipse at 15% 20%,rgba(255,140,0,0.05) 0%,transparent 50%),radial-gradient(ellipse at 85% 80%,rgba(255,215,0,0.04) 0%,transparent 50%),linear-gradient(rgba(255,140,0,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,140,0,0.012) 1px,transparent 1px);background-size:auto,auto,60px 60px,60px 60px;font-family:var(--body);color:var(--ink);overflow-x:hidden;min-height:100vh;}
+body::after{content:"";position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:9999;}
+.header{position:sticky;top:0;z-index:100;background:rgba(13,17,23,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--panel-border);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.header-brand{font-family:var(--display);font-size:0.6rem;letter-spacing:0.14em;color:var(--orange);text-shadow:0 0 12px rgba(255,140,0,0.6);text-transform:uppercase;}
+.header-right{display:flex;align-items:center;gap:1.5rem;}
+.status-item{font-family:var(--mono);font-size:0.6rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.prog-bar{width:160px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--gold));border-radius:2px;transition:width 0.6s ease;}
+.scene{display:none;}.scene.active{display:block;}
+#scene-a.active,#scene-e.active{display:flex;}
+#scene-a,#scene-e{flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 52px);padding:3rem 2rem;}
+#scene-a{position:relative;overflow:hidden;}
+.bg-layer{position:absolute;inset:0;pointer-events:none;}
+.bg-layer::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(255,140,0,0.04) 0%,transparent 65%);}
+.bg-layer::after{content:"";position:absolute;inset:0;background:repeating-conic-gradient(rgba(255,140,0,0.01) 0deg 1deg,transparent 1deg 30deg);animation:spin 90s linear infinite;transform-origin:center;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.bc{position:relative;z-index:2;max-width:860px;width:100%;text-align:center;}
+.mbadge{display:inline-flex;align-items:center;gap:0.6rem;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.28);padding:0.4rem 1.2rem;border-radius:4px;font-family:var(--mono);font-size:0.62rem;color:var(--orange);letter-spacing:0.15em;margin-bottom:2rem;animation:fi 0.5s ease both;}
+.mbadge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 10px var(--orange);animation:pulse 1.5s ease-in-out infinite;}
+.avatar-frame{width:160px;height:160px;margin:0 auto 2rem;position:relative;animation:fi 0.6s 0.1s ease both;}
+.ahex{width:160px;height:160px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,rgba(255,140,0,0.12),rgba(255,215,0,0.08));display:flex;align-items:center;justify-content:center;position:relative;}
+.ahex::before{content:"";position:absolute;inset:-2px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--orange),var(--gold));z-index:-1;}
+.a-inner{font-size:5rem;line-height:1;filter:drop-shadow(0 0 20px rgba(255,140,0,0.5));}
+.a-ring{position:absolute;inset:-12px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);border:1px solid rgba(255,140,0,0.22);animation:rp 3s ease-in-out infinite;}
+@keyframes rp{0%,100%{transform:scale(1);opacity:0.2;}50%{transform:scale(1.08);opacity:0.6;}}
+.b-title{font-family:var(--display);font-size:1.9rem;font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.02em;margin-bottom:0.5rem;animation:fi 0.6s 0.2s ease both;}
+.b-title span{background:linear-gradient(135deg,var(--orange),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.b-sub{font-size:0.9rem;color:var(--muted);letter-spacing:0.05em;margin-bottom:2.5rem;animation:fi 0.6s 0.3s ease both;}
+.terminal{background:rgba(0,0,0,0.6);border:1px solid rgba(255,140,0,0.2);border-radius:12px;overflow:hidden;margin-bottom:2rem;text-align:left;animation:fi 0.6s 0.4s ease both;box-shadow:0 0 40px rgba(255,140,0,0.06),0 20px 60px rgba(0,0,0,0.6);}
+.tbar{background:rgba(255,140,0,0.05);border-bottom:1px solid rgba(255,140,0,0.12);padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;}
+.td{width:8px;height:8px;border-radius:50%;}.td-r{background:#FF5F57;}.td-a{background:#FEBC2E;}.td-g{background:#28C840;}
+.t-lbl{margin-left:auto;font-family:var(--mono);font-size:0.55rem;color:var(--orange);letter-spacing:0.1em;}
+.t-body{padding:1.5rem 1.5rem 1.8rem;}
+.tl{font-family:var(--mono);font-size:0.82rem;line-height:1.7;color:rgba(255,255,255,0.75);margin-bottom:0.3rem;}
+.tl .prompt{color:var(--orange);margin-right:0.6rem;}
+.ho{color:var(--orange);}.hg{color:var(--gold);}.hgr{color:var(--green);}.hb{color:var(--blue);}
+.t-cur{display:inline-block;width:8px;height:14px;background:var(--orange);vertical-align:middle;animation:blink 1s step-end infinite;margin-left:2px;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;animation:fi 0.6s 0.5s ease both;}
+.stat-c{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:10px;padding:1rem;text-align:center;}
+.stat-n{font-family:var(--display);font-size:1.3rem;font-weight:700;}
+.stat-l{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;letter-spacing:0.05em;}
+.btn-primary{display:inline-flex;align-items:center;gap:0.75rem;background:linear-gradient(135deg,var(--orange),#E07800);color:#000;font-family:var(--display);font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0.9rem 2.5rem;border-radius:6px;border:none;cursor:pointer;box-shadow:0 0 30px rgba(255,140,0,0.25),0 4px 20px rgba(0,0,0,0.5);transition:all 0.2s;animation:fi 0.6s 0.6s ease both;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(255,140,0,0.45),0 8px 30px rgba(0,0,0,0.6);}
+@keyframes fi{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.scene-nav{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;gap:0.5rem;z-index:200;}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s;}
+.nav-dot.active{background:var(--orange);border-color:var(--orange);box-shadow:0 0 10px var(--orange);width:24px;border-radius:5px;}
+#scene-b{min-height:calc(100vh - 52px);padding:2.5rem 2rem;}
+.scene-hdr{text-align:center;margin-bottom:2.5rem;}
+.scene-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.25);color:var(--orange);font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;padding:0.3rem 1rem;border-radius:4px;margin-bottom:1rem;}
+.scene-title{font-family:var(--display);font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:0.3rem;}
+.scene-sub{font-size:0.9rem;color:var(--muted);}
+.sub-tabs{display:flex;gap:0.5rem;max-width:1150px;margin:0 auto 2rem;background:rgba(0,0,0,0.2);border-radius:10px;padding:0.4rem;border:1px solid var(--panel-border);}
+.sub-tab{flex:1;padding:0.6rem;border-radius:7px;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.07em;color:var(--muted);cursor:pointer;text-align:center;transition:all 0.2s;background:transparent;border:none;text-transform:uppercase;}
+.sub-tab.active{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,140,0,0.25);box-shadow:0 0 10px rgba(255,140,0,0.08);}
+.sub-content{display:none;}.sub-content.active{display:block;}
+.format-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;max-width:1150px;margin:0 auto 1.5rem;}
+.fmt-card{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:13px;padding:0;overflow:hidden;backdrop-filter:blur(12px);transition:transform 0.2s;}
+.fmt-card:hover{transform:translateY(-3px);}
+.fmt-header{padding:1rem 1.2rem 0.75rem;border-bottom:1px solid rgba(255,255,255,0.05);}
+.fmt-tag{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.35rem;}
+.fmt-tag-dot{width:5px;height:5px;border-radius:50%;}
+.fmt-name{font-family:var(--display);font-size:1rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:0.6rem;}
+.fmt-icon{font-size:1.3rem;}
+.fmt-full{font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.3rem;}
+.f-csv .fmt-tag{color:var(--green);}.f-csv .fmt-tag-dot{background:var(--green);}
+.f-json .fmt-tag{color:var(--orange);}.f-json .fmt-tag-dot{background:var(--orange);}
+.f-xml .fmt-tag{color:var(--blue);}.f-xml .fmt-tag-dot{background:var(--blue);}
+.f-bin .fmt-tag{color:#B44FFF;}.f-bin .fmt-tag-dot{background:#B44FFF;}
+.f-fw .fmt-tag{color:var(--gold);}.f-fw .fmt-tag-dot{background:var(--gold);}
+.fmt-body{padding:1rem 1.2rem;}
+.fmt-def{font-size:0.8rem;color:var(--muted);line-height:1.55;margin-bottom:0.85rem;}
+.fmt-sample{background:rgba(0,0,0,0.5);border-radius:8px;padding:0.75rem 0.9rem;font-family:var(--mono);font-size:0.68rem;line-height:1.6;overflow-x:auto;white-space:pre;border-left:2px solid;}
+.f-csv .fmt-sample{border-color:var(--green);color:rgba(57,255,20,0.8);}
+.f-json .fmt-sample{border-color:var(--orange);color:rgba(255,140,0,0.9);}
+.f-xml .fmt-sample{border-color:var(--blue);color:rgba(0,212,255,0.8);}
+.f-bin .fmt-sample{border-color:#B44FFF;color:rgba(180,79,255,0.8);}
+.f-fw .fmt-sample{border-color:var(--gold);color:rgba(255,215,0,0.8);}
+.fmt-tags-row{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.85rem;}
+.ftag{font-family:var(--mono);font-size:0.55rem;padding:0.15rem 0.5rem;border-radius:3px;}
+.f-csv .ftag{background:rgba(57,255,20,0.08);color:rgba(57,255,20,0.7);border:1px solid rgba(57,255,20,0.15);}
+.f-json .ftag{background:rgba(255,140,0,0.08);color:rgba(255,140,0,0.7);border:1px solid rgba(255,140,0,0.18);}
+.f-xml .ftag{background:rgba(0,212,255,0.08);color:rgba(0,212,255,0.7);border:1px solid rgba(0,212,255,0.15);}
+.f-bin .ftag{background:rgba(180,79,255,0.08);color:rgba(180,79,255,0.7);border:1px solid rgba(180,79,255,0.15);}
+.f-fw .ftag{background:rgba(255,215,0,0.08);color:rgba(255,215,0,0.7);border:1px solid rgba(255,215,0,0.15);}
+.compare-wrap{max-width:1150px;margin:0 auto 1.5rem;overflow-x:auto;}
+.compare-wrap table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+.compare-wrap th{background:rgba(255,140,0,0.07);color:var(--orange);padding:0.65rem 0.9rem;text-align:left;border-bottom:1px solid rgba(255,140,0,0.15);font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;}
+.compare-wrap td{padding:0.6rem 0.9rem;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.65);}
+.compare-wrap tr:hover td{background:rgba(255,255,255,0.02);}
+.ct-f{font-family:var(--mono);font-weight:700;}
+.ct-csv{color:var(--green);}.ct-json{color:var(--orange);}.ct-xml{color:var(--blue);}.ct-bin{color:#B44FFF;}.ct-fw{color:var(--gold);}
+.tick{color:var(--green);}.cross{color:var(--red);}
+.nei-box{max-width:1150px;margin:0 auto 1.5rem;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.15);border-radius:12px;padding:1.2rem 1.5rem;display:flex;gap:1rem;}
+.nei-t{font-family:var(--display);font-size:0.72rem;font-weight:700;color:var(--green);margin-bottom:0.4rem;}
+.nei-txt{font-size:0.82rem;color:var(--muted);line-height:1.5;}
+.chip{display:inline-flex;font-family:var(--display);font-size:0.6rem;font-weight:700;padding:0.12rem 0.45rem;border-radius:3px;margin:0 2px;}
+.cn{background:rgba(0,212,255,0.15);color:var(--blue);}.ce{background:rgba(255,215,0,0.15);color:var(--gold);}.ci{background:rgba(57,255,20,0.15);color:var(--green);}
+.video-section{max-width:800px;margin:0 auto;}
+.video-frame{background:rgba(0,0,0,0.5);border:1px solid var(--panel-border);border-radius:14px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;cursor:pointer;}
+.vp-play{display:inline-flex;align-items:center;gap:0.5rem;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.3);color:var(--orange);font-family:var(--mono);font-size:0.65rem;padding:0.5rem 1.2rem;border-radius:6px;margin-top:1rem;cursor:pointer;}
+.ts-wrap{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:10px;padding:1rem;}
+.ts-lbl{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.12em;margin-bottom:0.75rem;}
+.ts-row{display:flex;align-items:center;gap:1rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.ts-row:last-child{border-bottom:none;}
+.ts-time{font-family:var(--mono);font-size:0.65rem;color:var(--orange);width:40px;flex-shrink:0;}
+.ts-txt{font-size:0.8rem;color:rgba(255,255,255,0.6);}
+.fc-grid{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+.fc{perspective:600px;cursor:pointer;height:155px;}
+.fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(.22,1,.36,1);}
+.fc.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-front,.fc-back{position:absolute;inset:0;background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;text-align:center;}
+.fc-back{transform:rotateY(180deg);background:rgba(255,140,0,0.04);border-color:rgba(255,140,0,0.2);}
+.fc-ql{font-family:var(--mono);font-size:0.55rem;color:var(--gold);letter-spacing:0.12em;margin-bottom:0.5rem;}
+.fc-q{font-size:0.85rem;color:rgba(255,255,255,0.8);}
+.fc-al{font-family:var(--mono);font-size:0.55rem;color:var(--orange);letter-spacing:0.12em;margin-bottom:0.5rem;}
+.fc-a{font-size:0.8rem;color:rgba(255,255,255,0.75);}
+.fc-hint{font-family:var(--mono);font-size:0.52rem;color:var(--muted);margin-top:0.5rem;}
+.quiz-wrap{max-width:900px;margin:0 auto;}
+.quiz-ttl{font-family:var(--display);font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.7rem;}
+.quiz-ttl::before{content:"";display:inline-block;width:4px;height:20px;background:linear-gradient(var(--orange),var(--gold));border-radius:2px;}
+.qcard{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:0.75rem;}
+.qq{font-size:0.88rem;color:rgba(255,255,255,0.8);margin-bottom:0.75rem;line-height:1.5;}
+.qopts{display:flex;flex-direction:column;gap:0.5rem;}
+.qo{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:0.6rem 1rem;font-size:0.82rem;color:var(--muted);cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:0.6rem;}
+.qo:hover{background:rgba(255,140,0,0.06);border-color:rgba(255,140,0,0.22);color:var(--ink);}
+.qo.correct{background:rgba(57,255,20,0.1);border-color:rgba(57,255,20,0.4);color:var(--green);}
+.qo.incorrect{background:rgba(255,68,68,0.08);border-color:rgba(255,68,68,0.3);color:var(--red);}
+.qo.disabled{cursor:default;pointer-events:none;}
+.ql{width:22px;height:22px;border-radius:5px;background:rgba(255,255,255,0.05);font-family:var(--mono);font-size:0.65rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qfb{margin-top:0.6rem;padding:0.6rem 0.9rem;border-radius:7px;font-size:0.78rem;line-height:1.5;display:none;}
+.qfb.ok{display:block;background:rgba(57,255,20,0.07);border:1px solid rgba(57,255,20,0.2);color:var(--green);}
+.qfb.bad{display:block;background:rgba(255,68,68,0.07);border:1px solid rgba(255,68,68,0.2);color:var(--red);}
+.disc-wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;}
+.dp-card{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.5rem;display:flex;gap:1rem;align-items:flex-start;}
+.dp-num{width:36px;height:36px;border-radius:8px;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.25);font-family:var(--display);font-size:0.7rem;font-weight:700;color:var(--orange);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.dp-prompt{font-size:0.88rem;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:0.6rem;}
+.dp-hints{font-family:var(--mono);font-size:0.62rem;color:var(--muted);display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;}
+.dp-hlbl{color:var(--gold);}
+.dp-h{display:inline-flex;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.15);color:rgba(255,215,0,0.7);padding:0.15rem 0.5rem;border-radius:3px;font-size:0.6rem;}
+.conv-wrap{max-width:1050px;margin:0 auto;}
+.conv-intro{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
+.conv-intro h3{font-family:var(--display);font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+.conv-intro p{font-size:0.85rem;color:var(--muted);line-height:1.5;}
+.sc-btns{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem;}
+.sc-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.5rem 1rem;font-family:var(--mono);font-size:0.62rem;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.sc-btn.active{background:var(--orange-dim);border-color:rgba(255,140,0,0.32);color:var(--orange);}
+.conv-layout{display:grid;grid-template-columns:1fr 50px 1fr;gap:0;align-items:start;margin-bottom:1.5rem;}
+.conv-panel{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;overflow:hidden;}
+.cph{padding:0.85rem 1.1rem;border-bottom:1px solid var(--panel-border);display:flex;align-items:center;justify-content:space-between;}
+.cph-title{font-family:var(--display);font-size:0.65rem;font-weight:700;}
+.cph-badge{font-family:var(--mono);font-size:0.55rem;padding:0.15rem 0.5rem;border-radius:4px;}
+.src-p .cph-title{color:var(--orange);}.src-p .cph-badge{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,140,0,0.2);}
+.tgt-p .cph-title{color:var(--gold);}.tgt-p .cph-badge{background:rgba(255,215,0,0.09);color:var(--gold);border:1px solid rgba(255,215,0,0.2);}
+.conv-code{padding:1rem;font-family:var(--mono);font-size:0.7rem;line-height:1.65;white-space:pre;overflow-x:auto;min-height:200px;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.4);}
+.conv-ta{width:100%;background:rgba(0,0,0,0.35);border:none;outline:none;font-family:var(--mono);font-size:0.7rem;line-height:1.65;color:rgba(255,255,255,0.75);resize:none;min-height:200px;padding:1rem;}
+.conv-ta::placeholder{color:var(--muted);font-style:italic;}
+.conv-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;padding:0 0.4rem;padding-top:3rem;}
+.arrow-ico{font-size:1.4rem;color:var(--orange);opacity:0.6;}
+.arrow-lbl{font-family:var(--mono);font-size:0.5rem;color:var(--muted);letter-spacing:0.08em;text-align:center;}
+.conv-check{text-align:center;margin-bottom:1.5rem;}
+.conv-result{display:none;background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.5rem;}
+.conv-result.visible{display:block;}
+.cr-title{font-family:var(--display);font-size:0.9rem;font-weight:700;color:var(--orange);margin-bottom:1rem;}
+.cr-panels{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.cr-panel{background:rgba(0,0,0,0.3);border-radius:10px;padding:1rem;}
+.cr-pt{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;margin-bottom:0.75rem;}
+.cr-code{font-family:var(--mono);font-size:0.7rem;line-height:1.65;white-space:pre;overflow-x:auto;color:rgba(255,255,255,0.7);}
+.cr-notes{background:rgba(255,140,0,0.04);border:1px solid rgba(255,140,0,0.18);border-radius:10px;padding:1.2rem;margin-bottom:1rem;}
+.cr-nt{font-family:var(--display);font-size:0.72rem;font-weight:700;color:var(--orange);margin-bottom:0.5rem;}
+.cr-ntxt{font-size:0.82rem;color:rgba(255,255,255,0.6);line-height:1.5;}
+.nv-box{background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.15);border-radius:10px;padding:1.2rem;}
+.nv-t{font-family:var(--display);font-size:0.72rem;font-weight:700;color:var(--green);margin-bottom:0.4rem;}
+.nv-txt{font-size:0.82rem;color:rgba(255,255,255,0.6);line-height:1.5;}
+.btn-submit{display:inline-flex;align-items:center;gap:0.5rem;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.38);color:var(--orange);font-family:var(--display);font-size:0.65rem;font-weight:700;letter-spacing:0.12em;padding:0.75rem 1.8rem;border-radius:6px;cursor:pointer;transition:all 0.2s;}
+.btn-submit:hover{background:rgba(255,140,0,0.18);box-shadow:0 0 20px rgba(255,140,0,0.15);}
+.btn-sec{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--muted);font-family:var(--display);font-size:0.65rem;font-weight:600;letter-spacing:0.1em;padding:0.75rem 1.5rem;border-radius:6px;cursor:pointer;transition:all 0.2s;}
+.btn-sec:hover{background:rgba(255,255,255,0.08);color:var(--ink);}
+#scene-e{text-align:center;}
+.comp-hdr{font-family:var(--display);font-size:0.6rem;letter-spacing:0.2em;color:var(--orange);text-transform:uppercase;margin-bottom:2rem;animation:fi 0.5s ease both;}
+.badge-3d{width:200px;height:200px;margin:0 auto 2.5rem;animation:fi 0.6s 0.2s ease both;}
+.b-hex{width:200px;height:200px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,#1a0d00,#100800);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;animation:b3d 6s ease-in-out infinite;}
+@keyframes b3d{0%,100%{transform:rotateY(0);}25%{transform:rotateY(15deg) rotateX(5deg);}50%{transform:rotateY(0);}75%{transform:rotateY(-15deg) rotateX(-5deg);}}
+.b-hex::before{content:"";position:absolute;inset:-3px;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);background:linear-gradient(135deg,var(--orange),var(--gold),var(--orange));z-index:-1;animation:bg 3s ease-in-out infinite;}
+@keyframes bg{0%,100%{opacity:1;}50%{opacity:0.6;}}
+.b-ico{font-size:4rem;line-height:1;margin-bottom:0.4rem;}
+.b-ttop{font-family:var(--display);font-size:0.5rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
+.b-tmain{font-family:var(--display);font-size:0.65rem;font-weight:700;color:var(--orange);letter-spacing:0.05em;text-shadow:0 0 10px rgba(255,140,0,0.6);}
+.comp-title{font-family:var(--display);font-size:2rem;font-weight:900;color:#fff;margin-bottom:0.5rem;animation:fi 0.6s 0.4s ease both;}
+.comp-title span{background:linear-gradient(135deg,var(--orange),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.comp-sub{font-size:0.9rem;color:var(--muted);margin-bottom:2.5rem;animation:fi 0.6s 0.5s ease both;max-width:560px;}
+.score-row{display:flex;gap:1.5rem;justify-content:center;margin-bottom:2.5rem;animation:fi 0.6s 0.6s ease both;}
+.sf-item{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:1.2rem 2rem;text-align:center;}
+.sf-num{font-family:var(--display);font-size:2rem;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.4);}
+.sf-lbl{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;letter-spacing:0.05em;}
+.exp-btn{display:inline-flex;align-items:center;gap:0.75rem;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.32);color:var(--orange);font-family:var(--display);font-size:0.65rem;font-weight:700;letter-spacing:0.1em;padding:0.85rem 2rem;border-radius:6px;cursor:pointer;transition:all 0.2s;animation:fi 0.6s 0.8s ease both;}
+.exp-btn:hover{box-shadow:0 0 20px rgba(255,140,0,0.2);}
+</style>
+</head>
+<body>
 
+<header class="header">
+  <div class="header-brand">The Mark Scheme Method(R) // Field Training 6.2</div>
+  <div class="header-right">
+    <div class="status-item"><span class="sdot"></span>SYSTEM ONLINE</div>
+    <div class="status-item">STATION: <span id="station-label" style="color:var(--gold);margin-left:4px;">BRIEFING</span></div>
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <div class="status-item">PROGRESS</div>
+      <div class="prog-bar"><div class="prog-fill" id="main-prog" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<section id="scene-a" class="scene active">
+  <div class="bg-layer"></div>
+  <div class="bc">
+    <div class="mbadge">FIELD TRAINING 6.2 - OPERATIONAL BRIEFING</div>
+    <div class="avatar-frame"><div class="ahex"><div class="a-inner">&#128230;</div></div><div class="a-ring"></div></div>
+    <h1 class="b-title">DATA<br><span>FORMATS</span></h1>
+    <p class="b-sub">AXIOM-7 TACTICAL BRIEF // CONTENT AREA 6.2 // CLEARANCE: STANDARD</p>
+    <div class="terminal">
+      <div class="tbar"><span class="td td-r"></span><span class="td td-a"></span><span class="td td-g"></span><span class="t-lbl">AXIOM-7 // FORMAT INTELLIGENCE CHANNEL</span></div>
+      <div class="t-body" id="terminal-transcript"></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-c"><div class="stat-n" style="color:var(--orange);">5</div><div class="stat-l">Data Formats to Master</div></div>
+      <div class="stat-c"><div class="stat-n" style="color:var(--gold);">6</div><div class="stat-l">Training Stations</div></div>
+      <div class="stat-c"><div class="stat-n" style="color:var(--green);">+150XP</div><div class="stat-l">field_ready_62 Badge</div></div>
+    </div>
+    <button class="btn-primary" onclick="startMission()">INITIATE FIELD TRAINING</button>
+  </div>
+</section>
+
+<section id="scene-b" class="scene">
+  <div class="scene-hdr">
+    <div class="scene-badge">STATIONS 01-06 - DATA FORMATS</div>
+    <h2 class="scene-title">CSV, JSON, XML, Binary &amp; Fixed-Width</h2>
+    <p class="scene-sub">Know the format. Know why it matters. Know what the examiner is looking for.</p>
+  </div>
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="switchTab(\'theory\')">Theory</button>
+    <button class="sub-tab" onclick="switchTab(\'video\')">Explainer</button>
+    <button class="sub-tab" onclick="switchTab(\'flashcards\')">Flashcards</button>
+    <button class="sub-tab" onclick="switchTab(\'quiz\')">Quiz</button>
+    <button class="sub-tab" onclick="switchTab(\'discuss\')">Discussion</button>
+    <button class="sub-tab" onclick="switchTab(\'converter\')">Converter Lab</button>
+  </div>
+
+  <div id="sub-theory" class="sub-content active">
+    <div class="format-grid">
+      <div class="fmt-card f-csv">
+        <div class="fmt-header"><div class="fmt-tag"><span class="fmt-tag-dot"></span>FORMAT 01</div><div class="fmt-name"><span class="fmt-icon">&#128202;</span>CSV</div><div class="fmt-full">Comma-Separated Values</div></div>
+        <div class="fmt-body">
+          <div class="fmt-def">Plain text format where rows are records and values are separated by commas. Simple, universal, and readable by almost every application - the default for data exchange and bulk transfers.</div>
+          <div class="fmt-sample">OrderID,Customer,Total\nORD-001,S.Mitchell,38.97\nORD-002,J.Thornton,49.00</div>
+          <div class="fmt-tags-row"><span class="ftag">Human-readable</span><span class="ftag">Lightweight</span><span class="ftag">Spreadsheets</span><span class="ftag">No nesting</span></div>
+        </div>
+      </div>
+      <div class="fmt-card f-json">
+        <div class="fmt-header"><div class="fmt-tag"><span class="fmt-tag-dot"></span>FORMAT 02</div><div class="fmt-name"><span class="fmt-icon">&#128279;</span>JSON</div><div class="fmt-full">JavaScript Object Notation</div></div>
+        <div class="fmt-body">
+          <div class="fmt-def">Lightweight text format using key-value pairs and arrays. The dominant format for APIs and web services - structured, human-readable, and natively supported by JavaScript and most languages.</div>
+          <div class="fmt-sample">{"order":{\n  "id":"ORD-001",\n  "customer":"S.Mitchell",\n  "total":38.97\n}}</div>
+          <div class="fmt-tags-row"><span class="ftag">APIs</span><span class="ftag">Web services</span><span class="ftag">Nested data</span><span class="ftag">JavaScript</span></div>
+        </div>
+      </div>
+      <div class="fmt-card f-xml">
+        <div class="fmt-header"><div class="fmt-tag"><span class="fmt-tag-dot"></span>FORMAT 03</div><div class="fmt-name"><span class="fmt-icon">&#127991;</span>XML</div><div class="fmt-full">eXtensible Markup Language</div></div>
+        <div class="fmt-body">
+          <div class="fmt-def">Tag-based hierarchical format for structured data. Verbose but extremely flexible - used in enterprise systems, config files, document formats (Word, XHTML). Supports schema validation via XSD.</div>
+          <div class="fmt-sample">&lt;order&gt;\n  &lt;id&gt;ORD-001&lt;/id&gt;\n  &lt;total&gt;38.97&lt;/total&gt;\n&lt;/order&gt;</div>
+          <div class="fmt-tags-row"><span class="ftag">Verbose</span><span class="ftag">Enterprise</span><span class="ftag">Self-describing</span><span class="ftag">Schemas</span></div>
+        </div>
+      </div>
+      <div class="fmt-card f-bin">
+        <div class="fmt-header"><div class="fmt-tag"><span class="fmt-tag-dot"></span>FORMAT 04</div><div class="fmt-name"><span class="fmt-icon">&#9881;</span>Binary</div><div class="fmt-full">Binary / Machine-Readable Format</div></div>
+        <div class="fmt-body">
+          <div class="fmt-def">Data stored as raw bytes (0s and 1s) - not human-readable but extremely compact and fast. Used for images, audio, executables, video, and high-performance database storage formats.</div>
+          <div class="fmt-sample">4F 52 44 2D 30 30 31\n53 2E 4D 69 74 63 68\n65 6C 6C 00 26 E5 47</div>
+          <div class="fmt-tags-row"><span class="ftag">Compact</span><span class="ftag">Fast</span><span class="ftag">Not readable</span><span class="ftag">Media files</span></div>
+        </div>
+      </div>
+      <div class="fmt-card f-fw">
+        <div class="fmt-header"><div class="fmt-tag"><span class="fmt-tag-dot"></span>FORMAT 05</div><div class="fmt-name"><span class="fmt-icon">&#128207;</span>Fixed-Width</div><div class="fmt-full">Fixed-Width / Positional Format</div></div>
+        <div class="fmt-body">
+          <div class="fmt-def">Each field occupies a fixed number of characters - no delimiters. Common in legacy banking, government, and mainframe systems where field position defines meaning. Strict but fast to parse.</div>
+          <div class="fmt-sample">ORD-001S.Mitchell    38.97\nORD-002J.Thornton   49.00\n|--7--||---12-----||--6--|</div>
+          <div class="fmt-tags-row"><span class="ftag">Legacy</span><span class="ftag">Banking</span><span class="ftag">No delimiter</span><span class="ftag">Positional</span></div>
+        </div>
+      </div>
+      <div class="fmt-card" style="border-color:rgba(255,140,0,0.2);background:rgba(255,140,0,0.03);">
+        <div class="fmt-header" style="border-bottom-color:rgba(255,140,0,0.1);">
+          <div class="fmt-tag" style="color:var(--orange);"><span class="fmt-tag-dot" style="background:var(--orange);"></span>EXAMINER GUIDE</div>
+          <div class="fmt-name" style="color:var(--orange);"><span class="fmt-icon">&#127919;</span>Choose Right</div>
+          <div class="fmt-full" style="color:rgba(255,140,0,0.6);">Format selection = marks</div>
+        </div>
+        <div class="fmt-body">
+          <div class="fmt-def" style="font-size:0.78rem;">Examiners ask which format is most suitable and why - the answer always needs a reason linked to the use case.</div>
+          <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.5rem;">
+            <div style="font-family:var(--mono);font-size:0.62rem;padding:0.3rem 0.5rem;border-radius:5px;background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.12);color:rgba(57,255,20,0.7);">Spreadsheet / bulk transfer -&gt; CSV</div>
+            <div style="font-family:var(--mono);font-size:0.62rem;padding:0.3rem 0.5rem;border-radius:5px;background:var(--orange-dim);border:1px solid rgba(255,140,0,0.15);color:rgba(255,140,0,0.8);">Web API / app -&gt; JSON</div>
+            <div style="font-family:var(--mono);font-size:0.62rem;padding:0.3rem 0.5rem;border-radius:5px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.12);color:rgba(0,212,255,0.7);">Enterprise / config -&gt; XML</div>
+            <div style="font-family:var(--mono);font-size:0.62rem;padding:0.3rem 0.5rem;border-radius:5px;background:rgba(180,79,255,0.06);border:1px solid rgba(180,79,255,0.12);color:rgba(180,79,255,0.7);">Media / performance -&gt; Binary</div>
+            <div style="font-family:var(--mono);font-size:0.62rem;padding:0.3rem 0.5rem;border-radius:5px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.12);color:rgba(255,215,0,0.7);">Banking / mainframe -&gt; Fixed-width</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-wrap">
+      <table>
+        <thead><tr><th>FORMAT</th><th>HUMAN-READABLE?</th><th>FILE SIZE</th><th>SUPPORTS NESTING?</th><th>BEST USE CASE</th><th>EXAM KEYWORD</th></tr></thead>
+        <tbody>
+          <tr><td class="ct-f ct-csv">CSV</td><td class="tick">Yes</td><td>Small</td><td class="cross">No</td><td>Bulk tabular data</td><td style="font-family:var(--mono);font-size:0.7rem;color:rgba(57,255,20,0.7);">Simple / portable</td></tr>
+          <tr><td class="ct-f ct-json">JSON</td><td class="tick">Yes</td><td>Small-Med</td><td class="tick">Yes</td><td>Web APIs, mobile apps</td><td style="font-family:var(--mono);font-size:0.7rem;color:rgba(255,140,0,0.8);">Lightweight / web-native</td></tr>
+          <tr><td class="ct-f ct-xml">XML</td><td class="tick">Yes</td><td>Large</td><td class="tick">Yes</td><td>Enterprise, config</td><td style="font-family:var(--mono);font-size:0.7rem;color:rgba(0,212,255,0.7);">Verbose / self-describing</td></tr>
+          <tr><td class="ct-f ct-bin">Binary</td><td class="cross">No</td><td>Smallest</td><td>N/A</td><td>Media, high performance</td><td style="font-family:var(--mono);font-size:0.7rem;color:rgba(180,79,255,0.7);">Efficient / compact</td></tr>
+          <tr><td class="ct-f ct-fw">Fixed-Width</td><td>Partial</td><td>Small</td><td class="cross">No</td><td>Legacy banking / govt</td><td style="font-family:var(--mono);font-size:0.7rem;color:rgba(255,215,0,0.7);">Positional / legacy</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nei-box">
+      <div style="font-size:1.5rem;flex-shrink:0;">&#127919;</div>
+      <div>
+        <div class="nei-t">EXAMINER CONNECTION - FORMAT CHOICE EARNS MARKS</div>
+        <div class="nei-txt">When asked which format should a business use for its customer API:
+          <span class="chip cn">N</span> Name the format (JSON),
+          <span class="chip ce">E</span> Explain why (lightweight, natively supported, supports nesting),
+          <span class="chip ci">I</span> State the impact (faster API response, reduced bandwidth, compatible with all modern frameworks). Students who say JSON because its good score 1 out of 3.
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1150px;margin:0 auto;text-align:center;">
+      <button class="btn-submit" onclick="switchTab(\'video\');document.querySelectorAll(\'.sub-tab\')[1].click()">Continue to Explainer</button>
+    </div>
+  </div>
+
+  <div id="sub-video" class="sub-content">
+    <div class="video-section">
+      <div class="video-frame" id="video-frame">
+        <div style="text-align:center;padding:2rem;">
+          <span style="font-size:4rem;display:block;opacity:0.6;margin-bottom:1rem;">&#128250;</span>
+          <div style="font-family:var(--display);font-size:0.75rem;color:rgba(255,255,255,0.5);letter-spacing:0.1em;">EXPLAINER VIDEO</div>
+          <div style="color:var(--muted);font-size:0.8rem;margin-top:0.4rem;">CSV, JSON, XML, Binary and Fixed-Width - Which Format and Why</div>
+          <div class="vp-play" onclick="playVideo()">PLAY EXPLAINER (5:20)</div>
+        </div>
+      </div>
+      <div class="ts-wrap">
+        <div class="ts-lbl">TIMESTAMP GUIDE - KEY EXAMINER MOMENTS</div>
+        <div class="ts-row"><span class="ts-time">0:00</span><span class="ts-txt">Why format choice is a 3-mark trap most students miss</span></div>
+        <div class="ts-row"><span class="ts-time">0:52</span><span class="ts-txt">CSV and fixed-width - similarities, differences, when each wins</span></div>
+        <div class="ts-row"><span class="ts-time">1:58</span><span class="ts-txt">JSON vs XML - the API debate, verbosity, and nesting</span></div>
+        <div class="ts-row"><span class="ts-time">3:15</span><span class="ts-txt">Binary - why you cannot read it but businesses love it</span></div>
+        <div class="ts-row"><span class="ts-time">4:25</span><span class="ts-txt">Full NEI answer template for format selection questions</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sub-flashcards" class="sub-content">
+    <div class="fc-grid">
+      <div class="fc" onclick="this.classList.toggle(\'flipped\')"><div class="fc-inner"><div class="fc-front"><div class="fc-ql">FLIP TO REVEAL</div><div class="fc-q">A developer is building a REST API to serve product data to a mobile app. Which format should they use and why?</div><div class="fc-hint">tap to flip</div></div><div class="fc-back"><div class="fc-al">ANSWER</div><div class="fc-a">JSON. It is lightweight, natively parsed by JavaScript, supports nested objects, and is the industry standard for web APIs - minimising bandwidth and maximising compatibility.</div></div></div></div>
+      <div class="fc" onclick="this.classList.toggle(\'flipped\')"><div class="fc-inner"><div class="fc-front"><div class="fc-ql">FLIP TO REVEAL</div><div class="fc-q">What is the main disadvantage of XML compared to JSON for API use?</div><div class="fc-hint">tap to flip</div></div><div class="fc-back"><div class="fc-al">ANSWER</div><div class="fc-a">XML is verbose - opening and closing tags for every field significantly increase file size. For APIs this means higher bandwidth costs and slower transfer compared to equivalent JSON.</div></div></div></div>
+      <div class="fc" onclick="this.classList.toggle(\'flipped\')"><div class="fc-inner"><div class="fc-front"><div class="fc-ql">FLIP TO REVEAL</div><div class="fc-q">Why would a bank use fixed-width format instead of CSV for transaction files?</div><div class="fc-hint">tap to flip</div></div><div class="fc-back"><div class="fc-al">ANSWER</div><div class="fc-a">Fixed-width uses positional parsing - programs read bytes at fixed offsets rather than scanning for delimiters. This is faster on mainframe systems and avoids issues if data contains commas.</div></div></div></div>
+      <div class="fc" onclick="this.classList.toggle(\'flipped\')"><div class="fc-inner"><div class="fc-front"><div class="fc-ql">FLIP TO REVEAL</div><div class="fc-q">Why is binary format used for storing images rather than XML or CSV?</div><div class="fc-hint">tap to flip</div></div><div class="fc-back"><div class="fc-al">ANSWER</div><div class="fc-a">Binary stores pixel data as raw bytes - far more compact than text encoding. A 4K image as XML would be unworkably large. Binary enables fast read/write and efficient compression.</div></div></div></div>
+      <div class="fc" onclick="this.classList.toggle(\'flipped\')"><div class="fc-inner"><div class="fc-front"><div class="fc-ql">FLIP TO REVEAL</div><div class="fc-q">A business wants to export 50,000 customer records to give to a partner company. Which format is most appropriate?</div><div class="fc-hint">tap to flip</div></div><div class="fc-back"><div class="fc-al">ANSWER</div><div class="fc-a">CSV. It is universally supported by Excel, Python, R, and SQL import tools. For flat tabular data with no nesting, CSV is the pragmatic, universally compatible choice.</div></div></div></div>
+      <div class="fc" onclick="this.classList.toggle(\'flipped\')"><div class="fc-inner"><div class="fc-front"><div class="fc-ql">FLIP TO REVEAL</div><div class="fc-q">Name one format that supports nested data and one that does not. Explain the business implication.</div><div class="fc-hint">tap to flip</div></div><div class="fc-back"><div class="fc-al">ANSWER</div><div class="fc-a">JSON supports nesting (one order containing multiple items). CSV does not - each row must be flat. For complex relational data, CSV requires multiple files, increasing processing complexity.</div></div></div></div>
+    </div>
+  </div>
+
+  <div id="sub-quiz" class="sub-content">
+    <div class="quiz-wrap">
+      <div class="quiz-ttl">5-Question Rapid Fire - 6.2</div>
+      <div id="quiz-container"></div>
+      <div id="quiz-score-row" style="display:none;text-align:center;margin-top:1.5rem;"><div style="font-family:var(--display);font-size:1.4rem;color:var(--gold);">SCORE: <span id="quiz-final">0</span>/5</div></div>
+    </div>
+  </div>
+
+  <div id="sub-discuss" class="sub-content">
+    <div class="disc-wrap">
+      <div class="dp-card"><div class="dp-num">01</div><div><div class="dp-prompt">Why does format choice matter in business? A startup decides to use XML for all internal APIs instead of JSON because it looks more professional. Three months later their mobile app is slow and their cloud bill has doubled. Diagnose what went wrong and what they should have chosen instead.</div><div class="dp-hints"><span class="dp-hlbl">TRACE:</span><span class="dp-h">File size</span><span class="dp-h">Bandwidth cost</span><span class="dp-h">Parse speed</span><span class="dp-h">Developer experience</span></div></div></div>
+      <div class="dp-card"><div class="dp-num">02</div><div><div class="dp-prompt">A government department needs to transfer pension payment records to HMRC monthly. Records contain: recipient name, NI number, payment amount, date, and bank sort code. Evaluate CSV vs Fixed-Width for this use case. Which would you recommend and why?</div><div class="dp-hints"><span class="dp-hlbl">CONSIDER:</span><span class="dp-h">Data sensitivity</span><span class="dp-h">Legacy systems</span><span class="dp-h">Comma in data?</span><span class="dp-h">Parsing reliability</span></div></div></div>
+      <div class="dp-card"><div class="dp-num">03</div><div><div class="dp-prompt">JSON has largely replaced XML for web APIs, yet XML is still used in healthcare (HL7 FHIR), finance (FpML), and publishing (DocBook). Why has XML survived? What properties make it irreplaceable in certain contexts despite its verbosity?</div><div class="dp-hints"><span class="dp-hlbl">KEY TERMS:</span><span class="dp-h">Schema validation</span><span class="dp-h">Namespaces</span><span class="dp-h">Self-documenting</span><span class="dp-h">Industry standards</span></div></div></div>
+    </div>
+  </div>
+
+  <div id="sub-converter" class="sub-content">
+    <div class="conv-wrap">
+      <div class="conv-intro">
+        <h3>Converter Lab - Transform a Sample Dataset Between Formats</h3>
+        <p>Select a conversion below. Study the source data on the left, then write the equivalent in the target format on the right. Click Reveal Answer to see the correct conversion with examiner notes.</p>
+        <div class="sc-btns">
+          <button class="sc-btn active" onclick="selectConv(this,\'csv-json\')">CSV to JSON</button>
+          <button class="sc-btn" onclick="selectConv(this,\'json-xml\')">JSON to XML</button>
+          <button class="sc-btn" onclick="selectConv(this,\'csv-fw\')">CSV to Fixed-Width</button>
+          <button class="sc-btn" onclick="selectConv(this,\'xml-csv\')">XML to CSV</button>
+        </div>
+      </div>
+      <div class="conv-layout">
+        <div class="conv-panel src-p">
+          <div class="cph"><div class="cph-title">SOURCE DATA</div><div class="cph-badge" id="src-badge">CSV</div></div>
+          <div class="conv-code" id="src-code"></div>
+        </div>
+        <div class="conv-mid"><div class="arrow-ico">&#8594;</div><div class="arrow-lbl">CONVERT<br>TO</div></div>
+        <div class="conv-panel tgt-p">
+          <div class="cph"><div class="cph-title">YOUR CONVERSION</div><div class="cph-badge" id="tgt-badge">JSON</div></div>
+          <textarea class="conv-ta" id="tgt-input" placeholder="Write your converted version here..."></textarea>
+        </div>
+      </div>
+      <div class="conv-check">
+        <button class="btn-sec" onclick="clearConv()" style="margin-right:1rem;">Clear</button>
+        <button class="btn-submit" onclick="revealAnswer()">Reveal Answer and Examiner Notes</button>
+      </div>
+      <div class="conv-result" id="conv-result">
+        <div class="cr-title">CORRECT CONVERSION + EXAMINER NOTES</div>
+        <div class="cr-panels">
+          <div class="cr-panel"><div class="cr-pt" style="color:var(--orange);">SOURCE</div><div class="cr-code" id="cr-src"></div></div>
+          <div class="cr-panel"><div class="cr-pt" style="color:var(--gold);">TARGET (CORRECT)</div><div class="cr-code" id="cr-tgt"></div></div>
+        </div>
+        <div class="cr-notes"><div class="cr-nt">STRUCTURAL NOTES - WHAT THE EXAMINER LOOKS FOR</div><div class="cr-ntxt" id="cr-notes"></div></div>
+        <div class="nv-box" style="margin-top:1rem;"><div class="nv-t">THE FORMAT CHOICE MARK - YOUR IMPACT</div><div class="nv-txt" id="nv-text"></div></div>
+        <div style="text-align:center;margin-top:1.5rem;"><button class="btn-primary" onclick="goToScene(\'e\')">Complete Training and Claim Badge</button></div>
+      </div>
+      <div style="text-align:center;margin-top:2rem;"><button class="btn-primary" onclick="goToScene(\'e\')">Complete Field Training 6.2</button></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;padding-bottom:3rem;">
+    <button class="btn-primary" onclick="goToScene(\'e\')">Complete Field Training 6.2</button>
+  </div>
+</section>
+
+<section id="scene-e" class="scene">
+  <div class="comp-hdr">FIELD TRAINING 6.2 // MISSION COMPLETE</div>
+  <div class="badge-3d"><div class="b-hex"><div class="b-ico">&#128230;</div><div class="b-ttop">FIELD READY</div><div class="b-tmain">6.2</div></div></div>
+  <h1 class="comp-title">FIELD READY <span>6.2</span> BADGE AWARDED</h1>
+  <p class="comp-sub">You have demonstrated understanding of CSV, JSON, XML, Binary and Fixed-Width data formats and how to apply the N.E.I framework to justify format selection for full marks.</p>
+  <div class="score-row">
+    <div class="sf-item"><div class="sf-num">+150</div><div class="sf-lbl">XP Earned</div></div>
+    <div class="sf-item"><div class="sf-num" style="color:var(--orange);">6/6</div><div class="sf-lbl">Stations Cleared</div></div>
+    <div class="sf-item"><div class="sf-num" style="color:var(--teal);">6.3</div><div class="sf-lbl">Next Module Unlocked</div></div>
+  </div>
+  <button class="exp-btn" onclick="exportReport()">Export Mission Report PDF</button>
+  <div style="margin-top:2rem;font-family:var(--mono);font-size:0.65rem;color:var(--muted);">NEXT: FIELD TRAINING 6.3 - DATA SYSTEMS</div>
+</section>
+
+<div class="scene-nav">
+  <div class="nav-dot active" data-scene="a" onclick="goToScene(\'a\')"></div>
+  <div class="nav-dot" data-scene="b" onclick="goToScene(\'b\')"></div>
+  <div class="nav-dot" data-scene="e" onclick="goToScene(\'e\')"></div>
+</div>
+
+<script>
+const state={currentScene:\'a\',quizScore:0,quizAnswered:0};
+function goToScene(id){document.querySelectorAll(\'.scene\').forEach(s=>s.classList.remove(\'active\'));document.getElementById(\'scene-\'+id).classList.add(\'active\');state.currentScene=id;const order=[\'a\',\'b\',\'e\'];document.getElementById(\'main-prog\').style.width=(order.indexOf(id)/(order.length-1)*100)+\'%\';document.getElementById(\'station-label\').textContent={a:\'BRIEFING\',b:\'STATIONS\',e:\'COMPLETE\'}[id]||\'\';document.querySelectorAll(\'.nav-dot\').forEach(d=>d.classList.toggle(\'active\',d.dataset.scene===id));window.scrollTo(0,0);}
+function startMission(){goToScene(\'b\');}
+function switchTab(id){const ids=[\'theory\',\'video\',\'flashcards\',\'quiz\',\'discuss\',\'converter\'];document.querySelectorAll(\'.sub-tab\').forEach((t,i)=>t.classList.toggle(\'active\',ids[i]===id));document.querySelectorAll(\'.sub-content\').forEach(c=>c.classList.remove(\'active\'));document.getElementById(\'sub-\'+id).classList.add(\'active\');}
+
+const script=[{prompt:\'AXIOM-7\',text:\'Specialist. The same data can be packaged in dozens of different ways.\',delay:0},{prompt:\'AXIOM-7\',text:\'Choose the wrong format and you waste <span class="hg">bandwidth</span>, break <span class="ho">compatibility</span>, or make systems <span class="hb">unreadable</span>.\',delay:2000},{prompt:\'AXIOM-7\',text:\'<span class="hgr">CSV</span>. <span class="ho">JSON</span>. <span class="hb">XML</span>. Binary. Fixed-width. Five formats. Each with a specific job.\',delay:4200},{prompt:\'AXIOM-7\',text:\'Examiners do not just want the name. They want the <span class="hgr">justification</span>.\',delay:6500},{prompt:\'AXIOM-7\',text:\'Know the format. Know the reason. Know the <span class="hgr">impact</span>. Begin. <span class="t-cur"></span>\',delay:9000}];
+function typeTerminal(){const c=document.getElementById(\'terminal-transcript\');script.forEach(line=>{setTimeout(()=>{const el=document.createElement(\'div\');el.className=\'tl\';el.innerHTML=\'<span class="prompt">\'+line.prompt+\' \u203a</span>\'+line.text;c.appendChild(el);},line.delay);});}
+
+const quizData=[{q:\'A logistics company wants to share daily shipment records (flat tabular, no nesting) with a partner company. Which format is most appropriate?\',opts:[\'XML - because it is self-describing\',\'Binary - because it is compact\',\'CSV - because it is universally compatible and ideal for flat tabular data\',\'JSON - because it is modern\'],correct:2,feedback:\'Correct! For flat tabular data shared between organisations, CSV is the pragmatic choice - universally supported by Excel, Python, SQL, and R without special parsing libraries.\'},{q:\'Which is the most accurate statement about JSON?\',opts:[\'JSON uses opening and closing tags like XML\',\'JSON is a binary format that cannot be read by humans\',\'JSON uses key-value pairs, supports nesting, and is the standard format for web APIs\',\'JSON can only store numbers and text\'],correct:2,feedback:\'Correct! JSON uses key-value pairs and supports nested objects and arrays. It is the dominant format for REST APIs.\'},{q:\'A healthcare provider migrating data from a 1980s mainframe finds records with positional fields - each field is a specific number of characters with no delimiters. What format is this?\',opts:[\'CSV\',\'XML\',\'JSON\',\'Fixed-width\'],correct:3,feedback:\'Correct! Fixed-width (positional) format defines fields by character position rather than delimiters - common in legacy mainframe, banking, and government systems.\'},{q:\'An examiner asks: Explain why JSON is suitable for a mobile app API. Which answer earns full marks?\',opts:[\'JSON is a popular format used by many developers.\',\'JSON is lightweight (N), uses key-value pairs that map directly to JavaScript objects (E), reducing parsing overhead and improving app response times (I).\',\'JSON is better than XML because it is newer.\',\'JSON files are small and easy to use.\'],correct:1,feedback:\'Correct! Full marks require all three NEI components: the format named, the specific technical mechanism, and the measurable business impact.\'},{q:\'Why is binary format used for storing video files rather than XML or CSV?\',opts:[\'Binary is easier for humans to read\',\'Binary encodes video as raw bytes - dramatically smaller file sizes and faster processing than any text-based format could achieve for media data\',\'XML and CSV cannot store any type of data\',\'Binary is required by law for media storage\'],correct:1,feedback:\'Correct! Binary format stores data as raw bytes. For media files this means orders of magnitude smaller file sizes compared to any text encoding approach.\'}];
+
+function buildQuiz(){const c=document.getElementById(\'quiz-container\');quizData.forEach((q,qi)=>{const card=document.createElement(\'div\');card.className=\'qcard\';card.innerHTML=\'<div class="qq"><span style="color:var(--gold);font-family:var(--mono);font-size:0.7rem;">Q\'+(qi+1)+\'.</span> \'+q.q+\'</div><div class="qopts">\'+q.opts.map((o,oi)=>\'<div class="qo" data-qi="\'+qi+\'" data-oi="\'+oi+\'" onclick="answerQuiz(\'+qi+\',\'+oi+\')"><span class="ql">\'+String.fromCharCode(65+oi)+\'</span>\'+o+\'</div>\').join(\'\')+\'</div><div class="qfb" id="qfb-\'+qi+\'"></div>\';c.appendChild(card);});}
+function answerQuiz(qi,oi){const q=quizData[qi];document.querySelectorAll(\'[data-qi="\'+qi+\'"]\').forEach(o=>o.classList.add(\'disabled\'));const fb=document.getElementById(\'qfb-\'+qi);if(oi===q.correct){document.querySelectorAll(\'[data-qi="\'+qi+\'"]\')[oi].classList.add(\'correct\');fb.className=\'qfb ok\';fb.textContent=\'Correct: \'+q.feedback;state.quizScore++;}else{document.querySelectorAll(\'[data-qi="\'+qi+\'"]\')[oi].classList.add(\'incorrect\');document.querySelectorAll(\'[data-qi="\'+qi+\'"]\')[q.correct].classList.add(\'correct\');fb.className=\'qfb bad\';fb.textContent=\'Incorrect: \'+q.feedback;}state.quizAnswered++;if(state.quizAnswered===quizData.length){document.getElementById(\'quiz-final\').textContent=state.quizScore;document.getElementById(\'quiz-score-row\').style.display=\'block\';}}
+
+const conversions={\'csv-json\':{sl:\'CSV\',tl:\'JSON\',src:\'ProductID,Name,Category,Price\nP001,Wireless Mouse,Peripherals,24.99\nP002,USB-C Hub,Peripherals,49.99\nP003,Mechanical Keyboard,Peripherals,89.99\',ans:\'{\n  "products": [\n    {"ProductID":"P001","Name":"Wireless Mouse","Category":"Peripherals","Price":24.99},\n    {"ProductID":"P002","Name":"USB-C Hub","Category":"Peripherals","Price":49.99},\n    {"ProductID":"P003","Name":"Mechanical Keyboard","Category":"Peripherals","Price":89.99}\n  ]\n}\',notes:\'CSV rows become JSON objects inside an array. Headers become keys. Numbers (Price) are not quoted. Each object is separated by a comma. The dataset is wrapped in a named array - a common API convention.\',verdict:\'An examiner asking why to convert CSV to JSON for an API wants: JSON named, it supports nested objects and is natively parsed by web applications (Explain), enabling real-time queries with faster API response and reduced bandwidth (Impact).\'},\'json-xml\':{sl:\'JSON\',tl:\'XML\',src:\'{\n  "order":{\n    "id":"ORD-0042",\n    "customer":{"name":"Priya Sharma","email":"p.sharma@mail.com"},\n    "total":139.97\n  }\n}\',ans:\'<?xml version="1.0" encoding="UTF-8"?>\n<order>\n  <id>ORD-0042</id>\n  <customer>\n    <name>Priya Sharma</name>\n    <email>p.sharma@mail.com</email>\n  </customer>\n  <total>139.97</total>\n</order>\',notes:\'Every JSON key becomes an XML element with opening and closing tags. Nested objects become nested elements. The XML declaration header is required. Notice how much more verbose XML is - the same data takes roughly twice as many characters.\',verdict:\'XML is chosen over JSON for enterprise integration because it supports schema validation (XSD), namespaces for disambiguation, and is self-documenting. The verbosity cost is justified when strict data contracts and audit trails are required.\'},\'csv-fw\':{sl:\'CSV\',tl:\'Fixed-Width\',src:\'ID,     Name,           Amount\nT001,   Sarah Mitchell, 1250.00\nT002,   James Thornton, 890.50\nT003,   Priya Sharma,   2100.75\',ans:\'T001Sarah Mitchell    1250.00\nT002James Thornton    0890.50\nT003Priya Sharma      2100.75\n|--4-||----16--------||--7--|  (field widths)\',notes:\'Fixed-width has NO delimiters - field position and length define the data. ID = 4 chars, Name = 16 chars (space-padded), Amount = 7 chars (zero-padded). The field schema is agreed separately - without it the file is unreadable.\',verdict:\'Fixed-width is chosen for mainframe banking systems because positional parsing is faster than delimiter scanning, avoids issues with data containing commas, and guarantees predictable byte offsets critical for high-volume batch processing.\'},\'xml-csv\':{sl:\'XML\',tl:\'CSV\',src:\'<?xml version="1.0"?>\n<employees>\n  <employee>\n    <id>EMP-001</id>\n    <name>Laura Griffiths</name>\n    <dept>Engineering</dept>\n    <salary>42000</salary>\n  </employee>\n  <employee>\n    <id>EMP-002</id>\n    <name>David Park</name>\n    <dept>Marketing</dept>\n    <salary>38500</salary>\n  </employee>\n</employees>\',ans:\'id,name,dept,salary\nEMP-001,Laura Griffiths,Engineering,42000\nEMP-002,David Park,Marketing,38500\',notes:\'Each employee element becomes a CSV row. XML tags become column headers in the first row. The XML declaration and wrapper element (employees) are discarded. Notice how much smaller the CSV is - 4 lines vs 18 lines in XML.\',verdict:\'Converting XML to CSV for business intelligence reduces file size significantly, making it faster to import into Excel or a data warehouse. Trade-off: CSV loses the self-describing structure of XML - column names must be understood from context.\'} };
+
+let activeConv=\'csv-json\';
+function selectConv(btn,key){document.querySelectorAll(\'.sc-btn\').forEach(b=>b.classList.remove(\'active\'));btn.classList.add(\'active\');activeConv=key;const c=conversions[key];document.getElementById(\'src-code\').textContent=c.src;document.getElementById(\'src-badge\').textContent=c.sl;document.getElementById(\'tgt-badge\').textContent=c.tl;document.getElementById(\'tgt-input\').value=\'\';document.getElementById(\'conv-result\').classList.remove(\'visible\');}
+function clearConv(){document.getElementById(\'tgt-input\').value=\'\';document.getElementById(\'conv-result\').classList.remove(\'visible\');}
+function revealAnswer(){const c=conversions[activeConv];document.getElementById(\'cr-src\').textContent=c.src;document.getElementById(\'cr-tgt\').textContent=c.ans;document.getElementById(\'cr-notes\').textContent=c.notes;document.getElementById(\'nv-text\').textContent=c.verdict;const r=document.getElementById(\'conv-result\');r.classList.add(\'visible\');r.scrollIntoView({behavior:\'smooth\',block:\'start\'});}
+function playVideo(){document.getElementById(\'video-frame\').innerHTML=\'<div style="text-align:center;padding:2rem;"><div style="font-size:3rem;margin-bottom:1rem;">&#127916;</div><div style="font-family:var(--display);font-size:0.75rem;color:var(--orange);letter-spacing:0.1em;margin-bottom:0.5rem;">VIDEO ASSET PENDING</div><div style="font-size:0.8rem;color:var(--muted);">Upload your explainer video here. Replace with a Loom or Vimeo iframe embed.</div></div>\';}
+function exportReport(){const btn=document.querySelector(\'.exp-btn\');const orig=btn.innerHTML;btn.innerHTML=\'Generating...\';btn.disabled=true;setTimeout(()=>{btn.innerHTML=\'Report Ready\';setTimeout(()=>{btn.innerHTML=orig;btn.disabled=false;},2500);},1500);}
+
+document.addEventListener(\'DOMContentLoaded\',()=>{typeTerminal();buildQuiz();const c=conversions[\'csv-json\'];document.getElementById(\'src-code\').textContent=c.src;});
+<\/script>
+</body>
+</html>
