@@ -297,6 +297,149 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sf-label{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;letter-spacing:0.05em;}
 .export-btn{display:inline-flex;align-items:center;gap:0.75rem;background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);font-family:var(--display);font-size:0.65rem;font-weight:700;letter-spacing:0.1em;padding:0.85rem 2rem;border-radius:6px;cursor:pointer;transition:all 0.2s;animation:fadeIn 0.6s 0.8s ease both;}
 .export-btn:hover{box-shadow:0 0 20px rgba(0,229,255,0.18);}
+
+/* ══════════════════════════════════════════════════
+   PRACTICE ARENA — AXIOM-7 INTEGRATION
+   ══════════════════════════════════════════════════ */
+
+/* Config bar */
+.pa-config{max-width:1100px;margin:0 auto 1.5rem;background:rgba(255,140,0,0.03);border:1px solid rgba(255,140,0,0.18);border-radius:10px;padding:0.85rem 1.2rem;display:flex;align-items:center;gap:0.9rem;flex-wrap:wrap;}
+.pa-config-lbl{font-family:var(--mono);font-size:0.52rem;color:rgba(255,140,0,0.7);letter-spacing:0.14em;white-space:nowrap;}
+.pa-key-input{flex:1;min-width:220px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,140,0,0.2);border-radius:6px;padding:0.42rem 0.75rem;font-family:var(--mono);font-size:0.64rem;color:var(--ink);outline:none;transition:border-color 0.2s;}
+.pa-key-input:focus{border-color:rgba(255,140,0,0.45);}
+.pa-key-input::placeholder{color:var(--muted);}
+.pa-key-btn{background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.28);border-radius:5px;padding:0.35rem 0.85rem;font-family:var(--mono);font-size:0.52rem;color:rgba(255,140,0,0.9);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.pa-key-btn:hover{background:rgba(255,140,0,0.18);}
+.pa-key-status{display:flex;align-items:center;gap:0.38rem;font-family:var(--mono);font-size:0.52rem;}
+.pa-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);transition:all 0.3s;}
+.pa-dot.live{background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.5s ease-in-out infinite;}
+.pa-dot.err{background:var(--red);}
+.pa-key-note{font-family:var(--mono);font-size:0.5rem;color:rgba(255,255,255,0.18);margin-left:auto;}
+
+/* Question picker */
+.pa-wrap{max-width:1100px;margin:0 auto;}
+.pa-section-lbl{font-family:var(--mono);font-size:0.52rem;color:var(--muted);letter-spacing:0.14em;margin-bottom:0.65rem;}
+.pa-q-list{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.5rem;}
+.pa-q-opt{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0.9rem 1.1rem;cursor:pointer;transition:all 0.18s;display:flex;align-items:flex-start;gap:0.75rem;}
+.pa-q-opt:hover{border-color:rgba(0,229,255,0.2);background:rgba(0,229,255,0.03);}
+.pa-q-opt.selected{border-color:rgba(0,229,255,0.38);background:rgba(0,229,255,0.05);}
+.pa-q-num{font-family:var(--display);font-size:0.6rem;font-weight:700;color:var(--cyan);min-width:20px;padding-top:0.15rem;}
+.pa-q-text{font-size:0.86rem;color:rgba(255,255,255,0.75);line-height:1.55;flex:1;}
+.pa-q-marks{font-family:var(--mono);font-size:0.56rem;color:var(--gold);background:rgba(255,215,0,0.07);border:1px solid rgba(255,215,0,0.18);border-radius:3px;padding:0.1rem 0.38rem;white-space:nowrap;margin-top:0.1rem;flex-shrink:0;}
+
+/* Main layout */
+.pa-main{display:grid;grid-template-columns:1fr 210px;gap:1.25rem;align-items:start;}
+.pa-left{display:flex;flex-direction:column;gap:0.75rem;}
+
+/* Question display */
+.pa-q-display{background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.14);border-radius:10px;padding:1rem 1.2rem;}
+.pa-q-display-lbl{font-family:var(--mono);font-size:0.5rem;color:var(--cyan);letter-spacing:0.13em;margin-bottom:0.45rem;}
+.pa-q-display-text{font-size:0.87rem;color:rgba(255,255,255,0.85);line-height:1.6;}
+.pa-q-display-marks{font-family:var(--mono);font-size:0.58rem;color:var(--gold);margin-top:0.35rem;}
+
+/* Answer textarea */
+.pa-textarea{width:100%;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.85rem 1rem;color:rgba(255,255,255,0.85);font-family:var(--body);font-size:0.88rem;line-height:1.65;resize:vertical;outline:none;min-height:130px;transition:border-color 0.2s;}
+.pa-textarea:focus{border-color:rgba(0,229,255,0.22);}
+.pa-textarea::placeholder{color:var(--muted);}
+.pa-textarea:disabled{opacity:0.45;}
+
+/* Submit row */
+.pa-submit-row{display:flex;align-items:center;gap:0.75rem;}
+.btn-axiom7{display:inline-flex;align-items:center;gap:0.55rem;background:linear-gradient(135deg,rgba(0,229,255,0.14),rgba(255,215,0,0.05));border:1px solid rgba(0,229,255,0.38);color:var(--cyan);font-family:var(--display);font-size:0.62rem;font-weight:700;letter-spacing:0.12em;padding:0.78rem 1.9rem;border-radius:7px;cursor:pointer;transition:all 0.2s;}
+.btn-axiom7:hover:not(:disabled){background:linear-gradient(135deg,rgba(0,229,255,0.22),rgba(255,215,0,0.09));box-shadow:0 0 24px rgba(0,229,255,0.14);}
+.btn-axiom7:disabled{opacity:0.38;cursor:not-allowed;}
+.pa-char{font-family:var(--mono);font-size:0.52rem;color:var(--muted);margin-left:auto;}
+
+/* Loading */
+.pa-loading{display:none;align-items:center;gap:0.9rem;padding:1.2rem 1.1rem;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.1);border-radius:10px;}
+.pa-loading.vis{display:flex;}
+.pa-spin{width:22px;height:22px;border:2px solid rgba(0,229,255,0.1);border-top:2px solid var(--cyan);border-radius:50%;animation:spin 0.75s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.pa-loading-txt{font-family:var(--mono);font-size:0.6rem;}
+
+/* NEI HUD ribbon */
+.pa-hud{display:flex;flex-direction:column;gap:0.65rem;position:sticky;top:76px;}
+.pa-hud-lbl{font-family:var(--mono);font-size:0.5rem;color:var(--muted);letter-spacing:0.16em;text-align:center;margin-bottom:0.1rem;}
+.hud-seg{border-radius:9px;padding:0.9rem 0.65rem;text-align:center;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);transition:all 0.4s ease;}
+.hud-seg.hs-present{background:rgba(57,255,20,0.07);border-color:rgba(57,255,20,0.28);box-shadow:0 0 18px rgba(57,255,20,0.07);}
+.hud-seg.hs-partial{background:rgba(255,165,0,0.07);border-color:rgba(255,165,0,0.28);box-shadow:0 0 18px rgba(255,165,0,0.07);}
+.hud-seg.hs-missing{background:rgba(255,68,68,0.07);border-color:rgba(255,68,68,0.28);}
+.hud-seg.hs-misconception{background:rgba(180,79,255,0.07);border-color:rgba(180,79,255,0.28);}
+.hud-letter{font-family:var(--display);font-size:1.9rem;font-weight:900;transition:color 0.4s,text-shadow 0.4s;}
+.hud-seg .hud-letter{color:rgba(255,255,255,0.1);}
+.hs-present .hud-letter{color:var(--green);text-shadow:0 0 20px rgba(57,255,20,0.45);}
+.hs-partial .hud-letter{color:var(--amber);text-shadow:0 0 16px rgba(255,165,0,0.35);}
+.hs-missing .hud-letter{color:var(--red);text-shadow:0 0 12px rgba(255,68,68,0.35);}
+.hs-misconception .hud-letter{color:var(--purple);}
+.hud-status{font-family:var(--mono);font-size:0.48rem;letter-spacing:0.1em;font-weight:700;margin-top:0.18rem;transition:color 0.4s;}
+.hud-seg .hud-status{color:rgba(255,255,255,0.14);}
+.hs-present .hud-status{color:rgba(57,255,20,0.75);}
+.hs-partial .hud-status{color:rgba(255,165,0,0.75);}
+.hs-missing .hud-status{color:rgba(255,68,68,0.75);}
+.hs-misconception .hud-status{color:var(--purple);}
+.hud-ev{font-size:0.62rem;color:rgba(255,255,255,0.3);line-height:1.4;margin-top:0.3rem;font-style:italic;text-align:left;}
+.hud-marks{background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.07);border-radius:9px;padding:0.85rem 0.5rem;text-align:center;margin-top:0.15rem;}
+.hud-marks-num{font-family:var(--display);font-size:2rem;font-weight:900;line-height:1;transition:color 0.4s;}
+.hud-marks-num.hm-idle{color:rgba(255,255,255,0.1);}
+.hud-marks-num.hm-full{color:var(--green);text-shadow:0 0 18px rgba(57,255,20,0.38);}
+.hud-marks-num.hm-part{color:var(--amber);}
+.hud-marks-num.hm-low{color:var(--red);}
+.hud-marks-lbl{font-family:var(--mono);font-size:0.48rem;color:var(--muted);letter-spacing:0.1em;margin-top:0.25rem;}
+
+/* Feedback panel */
+.pa-feedback{display:none;margin-top:1.25rem;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);animation:fadeInUp 0.38s ease;}
+.pa-feedback.vis{display:block;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fb-hdr{background:rgba(22,27,34,0.85);padding:0.65rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:0.75rem;}
+.fb-hdr-title{font-family:var(--display);font-size:0.6rem;font-weight:700;color:var(--gold);}
+.fb-marks-pill{font-family:var(--display);font-size:0.72rem;font-weight:900;padding:0.14rem 0.65rem;border-radius:5px;margin-left:auto;}
+.fmp-full{background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.28);}
+.fmp-part{background:rgba(255,165,0,0.09);color:var(--amber);border:1px solid rgba(255,165,0,0.22);}
+.fmp-low{background:rgba(255,68,68,0.09);color:var(--red);border:1px solid rgba(255,68,68,0.22);}
+.fb-body{padding:1.1rem;}
+.fb-verdict{font-size:0.84rem;color:rgba(255,255,255,0.68);line-height:1.75;margin-bottom:1rem;padding:0.9rem 1rem;background:rgba(0,0,0,0.3);border-radius:8px;border-left:3px solid rgba(255,215,0,0.38);}
+.fb-to-earn{background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.18);border-radius:8px;padding:0.85rem 1rem;}
+.fb-te-lbl{font-family:var(--mono);font-size:0.49rem;color:var(--gold);letter-spacing:0.13em;margin-bottom:0.38rem;}
+.fb-te-text{font-size:0.84rem;color:rgba(255,255,255,0.68);line-height:1.6;}
+.fb-actions{display:flex;gap:0.7rem;margin-top:1rem;flex-wrap:wrap;}
+
+/* ── Highlight & Tag mechanic ── */
+.pa-tag-section{display:none;margin-top:1.5rem;animation:fadeInUp 0.38s ease;}
+.pa-tag-section.vis{display:block;}
+.tag-hdr{background:rgba(57,255,20,0.03);border:1px solid rgba(57,255,20,0.14);border-radius:10px 10px 0 0;padding:0.82rem 1.2rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
+.tag-hdr-title{font-family:var(--display);font-size:0.62rem;font-weight:700;color:var(--green);}
+.tag-hdr-sub{font-size:0.75rem;color:var(--muted);}
+.tag-toolbar{background:rgba(22,27,34,0.88);border-left:1px solid rgba(57,255,20,0.1);border-right:1px solid rgba(57,255,20,0.1);padding:0.58rem 1.2rem;display:flex;align-items:center;gap:0.55rem;flex-wrap:wrap;}
+.tag-btn{display:inline-flex;align-items:center;gap:0.38rem;padding:0.33rem 0.85rem;border-radius:5px;font-family:var(--display);font-size:0.57rem;font-weight:700;cursor:pointer;transition:all 0.14s;border:1px solid;}
+.tbtn-n{background:rgba(0,212,255,0.09);border-color:rgba(0,212,255,0.28);color:#00D4FF;}
+.tbtn-n:hover{background:rgba(0,212,255,0.17);}
+.tbtn-e{background:rgba(255,215,0,0.09);border-color:rgba(255,215,0,0.28);color:var(--gold);}
+.tbtn-e:hover{background:rgba(255,215,0,0.17);}
+.tbtn-i{background:rgba(57,255,20,0.09);border-color:rgba(57,255,20,0.28);color:var(--green);}
+.tbtn-i:hover{background:rgba(57,255,20,0.17);}
+.tbtn-clr{background:rgba(255,68,68,0.07);border-color:rgba(255,68,68,0.18);color:rgba(255,68,68,0.65);}
+.tag-tb-hint{font-family:var(--mono);font-size:0.5rem;color:var(--muted);margin-left:auto;}
+.tag-canvas{background:rgba(0,0,0,0.48);border-left:1px solid rgba(57,255,20,0.1);border-right:1px solid rgba(57,255,20,0.1);padding:1.1rem 1.2rem;}
+.tag-text{font-size:0.9rem;color:rgba(255,255,255,0.8);line-height:2.1;word-spacing:0.04em;user-select:text;}
+.tag-text .tn{background:rgba(0,212,255,0.16);border-bottom:2px solid #00D4FF;border-radius:3px;padding:0.04rem 0.18rem;color:#00D4FF;}
+.tag-text .te{background:rgba(255,215,0,0.13);border-bottom:2px solid var(--gold);border-radius:3px;padding:0.04rem 0.18rem;color:var(--gold);}
+.tag-text .ti{background:rgba(57,255,20,0.1);border-bottom:2px solid var(--green);border-radius:3px;padding:0.04rem 0.18rem;color:var(--green);}
+.tag-footer{background:rgba(22,27,34,0.7);border:1px solid rgba(57,255,20,0.1);border-top:none;border-radius:0 0 10px 10px;padding:0.82rem 1.2rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
+.btn-check-tags{background:linear-gradient(135deg,rgba(57,255,20,0.11),rgba(57,255,20,0.05));border:1px solid rgba(57,255,20,0.32);color:var(--green);font-family:var(--display);font-size:0.58rem;font-weight:700;letter-spacing:0.1em;padding:0.62rem 1.4rem;border-radius:6px;cursor:pointer;transition:all 0.2s;}
+.btn-check-tags:hover{background:rgba(57,255,20,0.18);box-shadow:0 0 14px rgba(57,255,20,0.1);}
+.tag-legend{display:flex;align-items:center;gap:0.9rem;font-family:var(--mono);font-size:0.5rem;color:var(--muted);}
+.tleg-n{color:#00D4FF;}.tleg-e{color:var(--gold);}.tleg-i{color:var(--green);}
+
+/* Alert panels */
+.pa-alert{display:none;margin-top:0.9rem;border-radius:10px;padding:1rem 1.1rem;animation:fadeInUp 0.3s ease;}
+.pa-alert.vis{display:block;}
+.pa-alert-vuln{background:rgba(180,79,255,0.05);border:1px solid rgba(180,79,255,0.28);}
+.pa-alert-ok{background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.28);}
+.pa-alert-title{font-family:var(--display);font-size:0.65rem;font-weight:700;margin-bottom:0.45rem;display:flex;align-items:center;gap:0.5rem;}
+.pa-alert-vuln .pa-alert-title{color:var(--purple);}
+.pa-alert-ok .pa-alert-title{color:var(--green);}
+.pa-alert-text{font-size:0.82rem;color:rgba(255,255,255,0.58);line-height:1.6;}
+
 </style>
 </head>
 <body>
@@ -364,6 +507,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <button class="sub-tab" onclick="switchTab('quiz')">🎯 Quiz</button>
     <button class="sub-tab" onclick="switchTab('discuss')">💬 Discussion</button>
     <button class="sub-tab" onclick="switchTab('mapping')">🗺 Data Map</button>
+    <button class="sub-tab" onclick="switchTab('arena')">⚡ Practice Arena</button>
   </div>
 
   <!-- THEORY -->
@@ -633,6 +777,183 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   </div>
 </section>
 
+  <!-- ══════════════════════════════════════════════════
+       PRACTICE ARENA — AXIOM-7 INTEGRATED TAB
+       ══════════════════════════════════════════════════ -->
+  <div id="sub-arena" class="sub-content">
+    <div class="pa-wrap">
+
+      <!-- API Key config ────────────────────────────────── -->
+      <div class="pa-config">
+        <div class="pa-config-lbl">◈ GROQ API KEY</div>
+        <input type="password" class="pa-key-input" id="pa-key-input"
+          placeholder="gsk_xxxxxxxxxxxxxxxx — paste your free Groq key"
+          oninput="paKeyInput()">
+        <button class="pa-key-btn" onclick="paSaveKey()">SAVE</button>
+        <div class="pa-key-status">
+          <div class="pa-dot" id="pa-dot"></div>
+          <span id="pa-key-lbl" style="color:var(--muted);font-family:var(--mono);font-size:0.52rem;">NOT SET</span>
+        </div>
+        <div class="pa-key-note">Free key → console.groq.com</div>
+      </div>
+
+      <!-- Question selector ─────────────────────────────── -->
+      <div class="pa-section-lbl">◈ SELECT PRACTICE QUESTION</div>
+      <div class="pa-q-list">
+        <div class="pa-q-opt selected" onclick="paSelectQ(this,0)">
+          <div class="pa-q-num">Q1</div>
+          <div class="pa-q-text">A smart factory installs sensors on its production line machinery. Explain one benefit this sensor data provides to the business.</div>
+          <div class="pa-q-marks">3 MARKS</div>
+        </div>
+        <div class="pa-q-opt" onclick="paSelectQ(this,1)">
+          <div class="pa-q-num">Q2</div>
+          <div class="pa-q-text">An e-commerce company tracks customer browsing behaviour on its website. Explain one way this Human-to-Device (H2D) data adds value to the business.</div>
+          <div class="pa-q-marks">3 MARKS</div>
+        </div>
+        <div class="pa-q-opt" onclick="paSelectQ(this,2)">
+          <div class="pa-q-num">Q3</div>
+          <div class="pa-q-text">A hospital uses Device-to-Device (D2D) technology to monitor patients in intensive care. Explain one benefit of this system for the hospital.</div>
+          <div class="pa-q-marks">3 MARKS</div>
+        </div>
+        <div class="pa-q-opt" onclick="paSelectQ(this,3)">
+          <div class="pa-q-num">Q4</div>
+          <div class="pa-q-text">A logistics company uses RFID tags to track packages automatically through its warehouses. Evaluate one advantage this D2D approach offers over manual tracking processes.</div>
+          <div class="pa-q-marks">4 MARKS</div>
+        </div>
+      </div>
+
+      <!-- Main grid: answer panel + HUD ────────────────── -->
+      <div class="pa-main">
+
+        <!-- Left: answer + feedback ─────────────── -->
+        <div class="pa-left">
+
+          <!-- Question display -->
+          <div class="pa-q-display">
+            <div class="pa-q-display-lbl">◈ EXAM QUESTION — 6.1.3 HOW DATA IS GENERATED</div>
+            <div class="pa-q-display-text" id="pa-q-text">A smart factory installs sensors on its production line machinery. Explain one benefit this sensor data provides to the business.</div>
+            <div class="pa-q-display-marks" id="pa-q-marks">(3 marks)</div>
+          </div>
+
+          <!-- Answer input -->
+          <textarea class="pa-textarea" id="pa-textarea"
+            placeholder="Write your answer here. Apply the N·E·I method: Name the technology or source type, Explain the mechanism, state the business Impact."
+            oninput="paCharCount()"></textarea>
+
+          <!-- Submit row -->
+          <div class="pa-submit-row">
+            <button class="btn-axiom7" id="pa-submit" onclick="paRunAxiom7()">
+              ⚡ ANALYSE WITH AXIOM-7
+            </button>
+            <span class="pa-char" id="pa-char">0 / 800</span>
+          </div>
+
+          <!-- Loading indicator -->
+          <div class="pa-loading" id="pa-loading">
+            <div class="pa-spin"></div>
+            <div>
+              <div class="pa-loading-txt" style="color:var(--cyan);">AXIOM-7 ACTIVE — GROQ LPU PROCESSING</div>
+              <div class="pa-loading-txt" style="color:var(--muted);margin-top:0.2rem;">Marking against N·E·I framework with examiner-grade context…</div>
+            </div>
+          </div>
+
+          <!-- Feedback panel (revealed after analysis) -->
+          <div class="pa-feedback" id="pa-feedback">
+            <div class="fb-hdr">
+              <div class="fb-hdr-title">◈ AXIOM-7 // EXAMINER VERDICT</div>
+              <div class="fb-marks-pill" id="fb-pill"></div>
+            </div>
+            <div class="fb-body">
+              <div class="fb-verdict" id="fb-verdict"></div>
+              <div class="fb-to-earn">
+                <div class="fb-te-lbl">◈ TO EARN THE NEXT MARK</div>
+                <div class="fb-te-text" id="fb-to-earn"></div>
+              </div>
+              <div class="fb-actions">
+                <button class="btn-axiom7" style="font-size:0.57rem;padding:0.58rem 1.2rem;"
+                  onclick="paShowTagger()">◈ SELF-MARK WITH HIGHLIGHTER →</button>
+                <button class="btn-secondary" onclick="paReset()">↺ New Attempt</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight & Tag mechanic ─────────────────── -->
+          <div class="pa-tag-section" id="pa-tag-section">
+            <div class="tag-hdr">
+              <div class="tag-hdr-title">◈ SELF-CALIBRATION — HIGHLIGHT YOUR N·E·I</div>
+              <div class="tag-hdr-sub">Select text in your answer, then click the component button to tag it.</div>
+            </div>
+            <div class="tag-toolbar">
+              <button class="tag-btn tbtn-n" onclick="paTag('N')">
+                <span style="font-family:var(--display);font-size:0.68rem;">N</span> NAME
+              </button>
+              <button class="tag-btn tbtn-e" onclick="paTag('E')">
+                <span style="font-family:var(--display);font-size:0.68rem;">E</span> EXPLAIN
+              </button>
+              <button class="tag-btn tbtn-i" onclick="paTag('I')">
+                <span style="font-family:var(--display);font-size:0.68rem;">I</span> IMPACT
+              </button>
+              <button class="tag-btn tbtn-clr" onclick="paClearTags()">✕ CLEAR</button>
+              <div class="tag-tb-hint">Select text in your answer → click tag</div>
+            </div>
+            <div class="tag-canvas">
+              <div class="tag-text" id="tag-text"></div>
+            </div>
+            <div class="tag-footer">
+              <button class="btn-check-tags" onclick="paCheckTags()">◈ CHECK SELF-ASSESSMENT</button>
+              <div class="tag-legend">
+                <span class="tleg-n">■ N</span>
+                <span class="tleg-e">■ E</span>
+                <span class="tleg-i">■ I</span>
+              </div>
+            </div>
+
+            <!-- Vulnerability alert -->
+            <div class="pa-alert pa-alert-vuln" id="pa-alert-vuln">
+              <div class="pa-alert-title">⚠ VULNERABILITY DETECTED — IMPACT COMPONENT MISSING</div>
+              <div class="pa-alert-text">You have not tagged any text as the <strong style="color:var(--green);">[I] Impact</strong> component. This is the mark most students miss. Examiners cannot award the final mark without an explicit business consequence — what the technology <em>enables, prevents, or costs</em>. A statement of mechanism alone is Level 1 maximum. Return to your answer and add the business outcome.</div>
+            </div>
+
+            <!-- All-clear -->
+            <div class="pa-alert pa-alert-ok" id="pa-alert-ok">
+              <div class="pa-alert-title">✓ N·E·I STRUCTURE CONFIRMED</div>
+              <div class="pa-alert-text">All three components tagged. Now compare your highlighted sections against the examiner's N/E/I evidence lines in the HUD — do they match? This is how you build examiner-level awareness of your own answers.</div>
+            </div>
+          </div><!-- /pa-tag-section -->
+
+        </div><!-- /pa-left -->
+
+        <!-- Right: sticky NEI HUD ribbon ─────────── -->
+        <div class="pa-hud">
+          <div class="pa-hud-lbl">◈ N·E·I HUD</div>
+
+          <div class="hud-seg" id="hud-N">
+            <div class="hud-letter">N</div>
+            <div class="hud-status">—</div>
+            <div class="hud-ev" id="hud-N-ev"></div>
+          </div>
+          <div class="hud-seg" id="hud-E">
+            <div class="hud-letter">E</div>
+            <div class="hud-status">—</div>
+            <div class="hud-ev" id="hud-E-ev"></div>
+          </div>
+          <div class="hud-seg" id="hud-I">
+            <div class="hud-letter">I</div>
+            <div class="hud-status">—</div>
+            <div class="hud-ev" id="hud-I-ev"></div>
+          </div>
+
+          <div class="hud-marks">
+            <div class="hud-marks-num hm-idle" id="hud-marks-num">—</div>
+            <div class="hud-marks-lbl">MARKS AWARDED</div>
+          </div>
+        </div><!-- /pa-hud -->
+
+      </div><!-- /pa-main -->
+
+    </div><!-- /pa-wrap -->
+  </div><!-- /sub-arena -->
+
 <!-- ═══ SCENE E: COMPLETION ═══ -->
 <section id="scene-e" class="scene">
   <div class="completion-header">◈ FIELD TRAINING 6.1.3 // MISSION COMPLETE ◈</div>
@@ -678,7 +999,7 @@ function goToScene(id) {
 function startMission(){goToScene('b');}
 
 function switchTab(id) {
-  const ids=['theory','video','flashcards','quiz','discuss','mapping'];
+  const ids=['theory','video','flashcards','quiz','discuss','mapping','arena'];
   document.querySelectorAll('.sub-tab').forEach((t,i) => t.classList.toggle('active',ids[i]===id));
   document.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
   document.getElementById('sub-'+id).classList.add('active');
@@ -899,8 +1220,698 @@ function exportReport() {
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  typeTerminal();buildQuiz();renderChips('airport');
+  typeTerminal();buildQuiz();renderChips('airport');paInitArena();
 });
+
+// ── AXIOM-7 HANDOVER (inlined from axiom7-groq-handover.js) ──────────────────
+/**
+ * ============================================================================
+ * AXIOM-7 EXAMINER VOICE ENGINE — COMPLETE GROQ API HANDOVER PACKAGE
+ * The Mark Scheme Method® // Integration 02 // v1.0 // March 2026
+ * ============================================================================
+ *
+ * TECHNICAL CONFIGURATION (non-negotiable):
+ *   Endpoint    : https://api.groq.com/openai/v1/chat/completions
+ *   Model       : llama-3.3-70b-versatile   ← DO NOT substitute with 8b
+ *   Temperature : 0.3                        ← DO NOT exceed 0.4
+ *   Max Tokens  : 1024
+ *   Top P       : 1.0
+ *
+ * USAGE:
+ *   const body = buildExaminerRequest(question, studentAnswer, marks, topic);
+ *   const res  = await fetch(GROQ_ENDPOINT, {
+ *     method: "POST",
+ *     headers: { "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+ *                "Content-Type": "application/json" },
+ *     body: JSON.stringify(body)
+ *   });
+ *   const raw    = (await res.json()).choices[0].message.content;
+ *   const parsed = parseExaminerResponse(raw);
+ *   // parsed => { marksAwarded, marksTotal, N, E, I, verdict, toEarn }
+ * ============================================================================
+ */
+
+// ─── 1. MASTER SYSTEM PROMPT ─────────────────────────────────────────────────
+
+const MASTER_SYSTEM_PROMPT = `SYSTEM ROLE: T-Level Digital Lead Examiner
+
+You are a T-Level Digital lead examiner with direct experience writing mark schemes and authoring Lead Examiner Reports. You understand precisely how marks are awarded and why candidates fail to earn them.
+
+YOUR PURPOSE:
+Analyze the student answer against the N.E.I. framework (Name, Explain, Impact) and provide feedback that mirrors the verbal commentary a chief examiner gives in a marking meeting — specific, evidenced, and actionable.
+
+THE N.E.I. MARKING LENS:
+N (Name)    — Has the student named the correct technical term, tool, or concept?
+E (Explain) — Has the student described the mechanism? How does it work?
+I (Impact)  — Has the student stated the business value? What does this enable, prevent, or cost?
+
+OUTPUT RULES:
+1. MARKS: X/[TOTAL] — no preamble.
+2. N/E/I STATUS: [STATUS] — [one evidence sentence taken directly from the student answer].
+   Valid statuses: PRESENT, PARTIAL, MISSING, MISCONCEPTION.
+3. VERDICT: 2-3 sentences using authentic examiner report phrasing.
+4. TO EARN THE [X]th MARK: One concrete technical instruction.
+   If full marks awarded: THIS RESPONSE MEETS THE STANDARD BECAUSE: [brief justification].
+5. Total response: 80-150 words. Plain text only. No markdown. No asterisks.
+
+FORBIDDEN PHRASES (never use):
+Great, Well done, Good effort, Good attempt, Good start, However you could improve,
+I can see that you understand, Unfortunately, As an AI, Let me help you.
+
+REQUIRED PHRASING PATTERNS (use variations of these):
+"This response demonstrates [X] but fails to..."
+"Candidates who scored full marks here typically..."
+"The mark scheme required evidence of..."
+"The descriptor for [X] marks requires the candidate to..."
+"A stronger response would have contextualised [X] by..."
+"This response meets the standard because..."
+"The candidate has identified [X] but failed to..."
+"Remains at the level of a superficial assertion..."
+"This answer would be placed at Level [X] because..."`;
+
+
+// ─── 2. ALL 15 FEW-SHOT EXAMPLES ─────────────────────────────────────────────
+// Format: { input: "user message", output: "assistant message" }
+// These are injected as user/assistant pairs in the messages array
+// BEFORE the live student question. Order matters — do not reorder.
+
+const FEW_SHOT_EXAMPLES = [
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // GROUP A — 3-MARK QUESTIONS (Core N.E.I. Structure)
+  // ══════════════════════════════════════════════════════════════════════════
+
+  {
+    // 01 — CRM / 1 mark awarded (N only, no E or I)
+    input:
+`QUESTION: An e-commerce business uses a CRM system to manage customer data. Explain one way this adds value to the business. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.1.2 Data and Information
+STUDENT ANSWER: "A CRM stores customer information and helps the business send emails to customers. It is useful for marketing."`,
+
+    output:
+`MARKS: 1/3
+N: PRESENT — CRM is correctly named, earning the first mark.
+E: MISSING — "helps the business send emails" is a use case, not a mechanism; no explanation of how the CRM processes or analyses data is provided.
+I: MISSING — "useful for marketing" is a category label, not a business outcome; no revenue, retention, or cost consequence is articulated.
+VERDICT: This response demonstrates awareness of the CRM tool but fails to progress beyond a Level 1 descriptor. The mechanism — how the system segments customers, analyses purchase frequency, or triggers automated workflows — is entirely absent. Candidates who scored full marks here articulated a specific operational function and linked it to a measurable business outcome.
+TO EARN THE 2nd AND 3rd MARKS: Explain what the CRM does with the data (e.g. segments customers by purchase frequency, triggers automated re-engagement campaigns based on inactivity thresholds) and state the business consequence: reducing churn by targeting lapsed customers and protecting recurring revenue.`
+  },
+
+  {
+    // 02 — CRM / 2 marks awarded (N + E present, I missing)
+    input:
+`QUESTION: An e-commerce business uses a CRM system to manage customer data. Explain one way this adds value to the business. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.1.2 Data and Information
+STUDENT ANSWER: "A CRM system analyses customer purchase history and browsing behaviour. It identifies customers who have not purchased in 90 days and automatically triggers a personalised discount email to re-engage them."`,
+
+    output:
+`MARKS: 2/3
+N: PRESENT — CRM named and contextualised with specific data types: purchase history and browsing behaviour.
+E: PRESENT — the mechanism is clearly described; analysis of inactivity triggers an automated personalised campaign.
+I: MISSING — the response stops at describing the action; no business outcome — revenue recovered, retention rate, or cost saving — is explicitly stated.
+VERDICT: This response meets the Level 2 descriptor; the mechanism is accurately and specifically described. The mark scheme required the candidate to complete the value chain by identifying the business consequence of the re-engagement campaign. A stronger response would have contextualised the automated campaign in terms of its financial or operational impact on the business.
+TO EARN THE 3rd MARK: Add the business outcome — for example: "...recovering an estimated 12-18% of lapsed customers and protecting annual recurring revenue that would otherwise be lost to competitor platforms."`
+  },
+
+  {
+    // 03 — CRM / 3 marks awarded (full N.E.I. — target answer)
+    input:
+`QUESTION: An e-commerce business uses a CRM system to manage customer data. Explain one way this adds value to the business. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.1.2 Data and Information
+STUDENT ANSWER: "A CRM system analyses customer purchase history and behavioural data to segment customers by lifetime value and purchase frequency. This enables targeted retention campaigns at high-value customers showing signs of churn, reducing customer acquisition costs by retaining existing customers rather than replacing them."`,
+
+    output:
+`MARKS: 3/3
+N: PRESENT — CRM named with specific data types referenced: purchase history and behavioural data.
+E: PRESENT — mechanism clearly stated: segmentation by lifetime value and purchase frequency deployed to retention campaigns.
+I: PRESENT — business impact explicitly stated and contextualised: cost reduction through retention versus acquisition economics.
+VERDICT: This response meets the standard for full marks. The candidate has correctly named the tool, described the mechanism with appropriate specificity, and articulated the business impact in terms of operational cost economics. The reference to acquisition cost versus retention cost demonstrates applied understanding of commercial context — precisely what the top descriptor requires.
+THIS RESPONSE MEETS THE STANDARD BECAUSE: all three N.E.I. components are present, specific, and correctly linked to form a complete value chain.`
+  },
+
+  {
+    // 04 — Data Validation / 1 mark (conflates validation with verification)
+    input:
+`QUESTION: Describe what is meant by "data validation" and explain why it is important for a business. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.1.1 Data
+STUDENT ANSWER: "Data validation checks that data is correct. It is important because businesses need accurate data. For example, a form might check that an email address is the right format."`,
+
+    output:
+`MARKS: 1/3
+N: PARTIAL — "checks that data is correct" conflates validation with verification; validation checks format, type, and range, not factual accuracy.
+E: PARTIAL — the email example illustrates one validation type but the underlying mechanism — rules-based checking at point of entry — is not articulated.
+I: MISSING — "businesses need accurate data" is a circular statement; no specific operational consequence of failed validation is described.
+VERDICT: This response conflates validation with verification — a distinction the mark scheme specifically tests. The descriptor for two marks requires the candidate to identify what validation checks for: format, type, range, and presence at the point of data entry, before storage. The operational consequence of invalid data passing through unchecked is entirely absent.
+TO EARN THE 2nd AND 3rd MARKS: Clarify that validation checks data format and type at point of entry, then state the business consequence of invalid data: failed automated processes, incorrect customer communications, or corrupted reporting that leads to poor strategic decisions.`
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // GROUP B — 2-MARK AND 4-MARK VARIATIONS
+  // ══════════════════════════════════════════════════════════════════════════
+
+  {
+    // 05 — Structured vs Unstructured / 2 marks awarded (full marks)
+    input:
+`QUESTION: State one difference between structured and unstructured data. (2 marks)
+MARKS AVAILABLE: 2
+TOPIC: 6.1.1 Data
+STUDENT ANSWER: "Structured data is organised in rows and columns like a spreadsheet. Unstructured data does not have a fixed format, such as emails or social media posts."`,
+
+    output:
+`MARKS: 2/2
+N: PRESENT — both types correctly named with accurate defining characteristics.
+E: PRESENT — the structural contrast is clear and both examples are appropriate.
+I: N/A — a 2-mark question does not require the Impact component; N+E is the target structure.
+VERDICT: This response meets the standard for full marks. The candidate has correctly identified the defining structural difference between the two data types and supported it with distinct, appropriate examples for each. For a 2-mark "State one difference" question, the N+E structure is the target — no Impact statement is required.
+THIS RESPONSE MEETS THE STANDARD BECAUSE: both data types are defined by their structural property and supported with valid examples.`
+  },
+
+  {
+    // 06 — Structured vs Unstructured / 0 marks (consequence not definition)
+    input:
+`QUESTION: State one difference between structured and unstructured data. (2 marks)
+MARKS AVAILABLE: 2
+TOPIC: 6.1.1 Data
+STUDENT ANSWER: "Structured data is easier to analyse. Unstructured data is harder to process."`,
+
+    output:
+`MARKS: 0/2
+N: MISSING — neither type is defined by its structural property; "easier to analyse" describes a consequence, not a defining characteristic.
+E: MISSING — no mechanism or structural property is described for either type.
+I: N/A — moot; no marks are earned.
+VERDICT: This response fails to meet the requirements of the question at any mark level. Relative ease of analysis is a consequence of structural properties, not a definition of those properties. The mark scheme requires the candidate to state what makes each type structurally distinct — not to compare their downstream analytical complexity.
+TO EARN THE 1st AND 2nd MARKS: Define structured data by its organisational property (fixed schema, rows and columns, relational format) and unstructured data by the absence of that property (no predefined format, not stored in tabular form). The contrast between the two definitions earns both marks.`
+  },
+
+  {
+    // 07 — JSON vs CSV evaluate / 1 mark (surface level, no evaluation)
+    input:
+`QUESTION: A retail company is deciding whether to store order data in JSON or CSV format. Evaluate the suitability of each format for this use case. (4 marks)
+MARKS AVAILABLE: 4
+TOPIC: 6.2 Data Formats
+STUDENT ANSWER: "JSON would be good because it supports nested data. CSV is simpler and can be opened in Excel. For a retail company, CSV is probably better because it is easier to use."`,
+
+    output:
+`MARKS: 1/4
+N: PRESENT — both formats named with at least one technical property each.
+E: PARTIAL — "supports nested data" is correct but not connected to the structure of order data; the candidate does not explain why nesting matters for orders containing multiple line items.
+I: MISSING — "CSV is probably better" has no evidential foundation; no evaluation of the trade-off is attempted.
+VERDICT: This response identifies surface-level properties of each format but does not progress to evaluation. The descriptor for 3-4 marks requires the candidate to weigh competing factors against the specific use case and reach a supported conclusion. Candidates who scored full marks here considered the nested structure of order data, the downstream consumer of that data, and the operational context.
+TO EARN THE REMAINING MARKS: For each format, state the relevant property, explain why it is or is not suited to order data specifically — orders contain nested line items which CSV cannot represent without flattening — then reach a reasoned conclusion acknowledging that format choice depends on whether data feeds a web API (JSON) or a BI reporting tool (CSV).`
+  },
+
+  {
+    // 08 — Data vs Information / 2 marks (I partial — no decision chain)
+    input:
+`QUESTION: Explain what is meant by "information" in the context of data processing, and state how it differs from raw data. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.1.1 Data
+STUDENT ANSWER: "Information is data that has been processed and given meaning. The number 102.4 is data, but 102.4 degrees Fahrenheit recorded for a server is information because it tells you something useful."`,
+
+    output:
+`MARKS: 2/3
+N: PRESENT — "data that has been processed and given meaning" is an accurate and valid definition.
+E: PRESENT — the server temperature example clearly demonstrates the transformation from raw value to contextualised reading.
+I: PARTIAL — "tells you something useful" gestures toward value but does not specify the decision or operational response the information enables.
+VERDICT: This response is placed at Level 2. The definition is accurate and the example is well-chosen and technically relevant. The mark scheme's third mark requires the candidate to complete the knowledge chain — data to information to decision or action — and the candidate stops short of that final step.
+TO EARN THE 3rd MARK: Extend the server example to include the operational response the information enables: "...which allows the IT team to identify an overheating condition and initiate a controlled shutdown, preventing hardware failure and unplanned system downtime."`
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // GROUP C — EDGE CASES AND COMMON ERROR PATTERNS
+  // ══════════════════════════════════════════════════════════════════════════
+
+  {
+    // 09 — Machine Learning / 1 mark (comparative claims, no mechanism)
+    input:
+`QUESTION: A business uses machine learning to analyse sales data. Explain one benefit of this approach compared to traditional analysis. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.1.2 Data and Information
+STUDENT ANSWER: "Machine learning is better than traditional methods because it is faster and more accurate. It can find patterns in big data sets that humans would miss."`,
+
+    output:
+`MARKS: 1/3
+N: PARTIAL — machine learning is named but not defined; "better and faster" is comparative without a referent.
+E: PARTIAL — "find patterns in big datasets" describes a capability but not the mechanism; how ML identifies patterns through iterative training on historical data is absent.
+I: MISSING — "more accurate" is a relative claim without a business referent; no specific operational or financial consequence is articulated.
+VERDICT: This response makes comparative claims without evidential foundation — a pattern the mark scheme does not reward. "Faster and more accurate" requires a referent: faster than what process, and accurate to what standard? The descriptor for two marks requires the mechanism to be stated — how ML identifies patterns differently from rule-based or manual threshold analysis.
+TO EARN THE 2nd AND 3rd MARKS: State the mechanism — ML models identify non-linear correlations in historical sales data through iterative training, detecting seasonal patterns that threshold rules would miss — then state the business impact: enabling proactive stock management that reduces overstock costs and stockout incidents.`
+  },
+
+  {
+    // 10 — Big Data V-model / 2 marks awarded (full marks)
+    input:
+`QUESTION: State two characteristics of "big data" using the V-model framework. (2 marks)
+MARKS AVAILABLE: 2
+TOPIC: 6.1.2 Data and Information
+STUDENT ANSWER: "Big data has Volume, which means there is a lot of it. It also has Velocity, which means it comes in quickly."`,
+
+    output:
+`MARKS: 2/2
+N: PRESENT — both Vs correctly identified from the framework: Volume and Velocity.
+E: PRESENT — both accurately defined; "a lot of data" and "comes in quickly" are correct, if informal, definitions.
+I: N/A — 2-mark question; N+E structure per characteristic is sufficient for full marks.
+VERDICT: This response meets the standard. Both Vs are correctly identified and defined with sufficient accuracy for a 2-mark "state" question. The mark scheme awards one mark per characteristic — name plus brief definition — and both are clearly provided.
+THIS RESPONSE MEETS THE STANDARD BECAUSE: both characteristics are correctly named and defined within the V-model framework.`
+  },
+
+  {
+    // 11 — Primary vs Foreign Keys / 2 marks (no operational value stated)
+    input:
+`QUESTION: Explain the difference between a primary key and a foreign key in a relational database. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.3 Database Concepts
+STUDENT ANSWER: "A primary key is a unique identifier for each record in a table. A foreign key links tables together. For example, a CustomerID in the Orders table is a foreign key that links to the Customers table."`,
+
+    output:
+`MARKS: 2/3
+N: PRESENT — both key types correctly named and defined with accurate core properties.
+E: PRESENT — mechanism described: primary keys ensure uniqueness within a table; foreign keys create relational links between tables; example reinforces this clearly.
+I: MISSING — no business or operational consequence of the relational structure is stated; what the relationship enables for the business is absent.
+VERDICT: This response accurately describes both key types and demonstrates understanding of the relational structure through a well-chosen example. The mark scheme's third mark requires the candidate to explain the operational value of the relationship — not simply that the link exists. Candidates who scored full marks here articulated what the relationship enables for the business.
+TO EARN THE 3rd MARK: Add the business value — for example: "This eliminates the need to store full customer details with every order record, reducing data redundancy and enabling JOIN queries that generate business intelligence reports — such as revenue by customer segment — without duplication."`
+  },
+
+  {
+    // 12 — Data Integrity / 1 mark (integrity vs security conflation)
+    input:
+`QUESTION: A hospital stores patient records digitally. Identify two reasons why data integrity is important in this context. (4 marks)
+MARKS AVAILABLE: 4
+TOPIC: 6.1.1 Data
+STUDENT ANSWER: "Data integrity is important because records must be accurate. If wrong, a doctor might give the wrong treatment. It is also important to keep data safe from hackers."`,
+
+    output:
+`MARKS: 1/4
+N: PARTIAL — "accurate records" implies integrity but the term is not defined; the second point conflates data integrity with data security, which are distinct concepts.
+E: PARTIAL — "wrong treatment" is a valid consequence but lacks specificity; the security point is a MISCONCEPTION for an integrity question.
+I: MISSING — neither reason is developed to the level of specific patient safety or operational consequence the 4-mark descriptor requires.
+VERDICT: This response reveals the most common misconception in this topic area: conflating data integrity with data security. Data integrity refers to the accuracy, consistency, and completeness of data across its lifecycle — not its protection from external threats. A 4-mark question requires two fully developed reasons, each with a specific consequence contextualised to the hospital setting.
+TO EARN THE REMAINING MARKS: For each reason, state the integrity principle (accuracy, consistency between systems, completeness of record), describe what compromised integrity looks like in context — contradictory allergy records across departments, incomplete medication history — then state the consequence: misdiagnosis, adverse drug interaction, or treatment delay. Security belongs in a data protection answer, not an integrity answer.`
+  },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // GROUP D — EXAMPLES 13-15 (Refined Verdicts — Marking Room Register)
+  // ══════════════════════════════════════════════════════════════════════════
+
+  {
+    // 13 — Data Security / 1 mark (generic auth, antivirus misconception)
+    input:
+`QUESTION: A school stores student records on a cloud server. Explain one way the school can protect this data from unauthorised access. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.4 Data Security
+STUDENT ANSWER: "The school should use a password so that only authorised people can log in. They could also use antivirus software to stop hackers."`,
+
+    output:
+`MARKS: 1/3
+N: PARTIAL — a password is implied but no specific technical control is named (e.g. MFA, RBAC, encryption at rest).
+E: MISSING — no explanation of how any protection mechanism operates at a technical level is provided.
+I: MISSING — no business or compliance consequence is stated.
+VERDICT: The candidate has identified a generic authentication measure but failed to name a specific technical control. The mark scheme requires a formal mechanism — such as MFA, RBAC, or encryption at rest — to be explicitly identified and its operation described. Mentioning antivirus software is a common candidate error; it is irrelevant to access control and suggests a confusion between malware mitigation and identity management.
+TO EARN THE 2nd AND 3rd MARKS: Name a specific control (e.g. MFA), explain the mechanism (e.g. requiring a time-limited token in addition to static credentials), and state the compliance consequence: this ensures the 'confidentiality' element of the CIA triad is maintained, specifically meeting GDPR requirements to prevent unauthorised data disclosure.`
+  },
+
+  {
+    // 14 — Cloud Computing / 2 marks (CapEx-to-OpEx mechanism missing)
+    input:
+`QUESTION: A startup uses cloud storage instead of a local server. Explain one business benefit of this decision. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.5 Cloud Technologies
+STUDENT ANSWER: "Cloud storage is cheaper than buying a server. The business does not need to spend lots of money on hardware and can access their files from anywhere."`,
+
+    output:
+`MARKS: 2/3
+N: PRESENT — cloud storage correctly named as the technology.
+E: PARTIAL — describes the outcome (not buying hardware) but not the underlying financial mechanism.
+I: MISSING — "access from anywhere" is a stated fact, not a contextualised business impact with a consequence chain.
+VERDICT: This response correctly identifies a cost benefit but remains at the level of a simple assertion. To move into the higher mark bracket, the candidate must explain the underlying financial mechanism — specifically the transition from Capital Expenditure (CapEx) on depreciating hardware to an Operational Expenditure (OpEx) subscription model.
+TO EARN THE 3rd MARK: Link this saving to a vocational impact. For a startup, this preserves liquidity and improves cash flow, allowing the business to scale its infrastructure costs in direct proportion to user growth rather than over-provisioning for unused capacity.`
+  },
+
+  {
+    // 15 — Programming Functions / 2 marks (maintainability Impact absent)
+    input:
+`QUESTION: A developer uses functions when writing a program. Explain one reason why using functions is considered good programming practice. (3 marks)
+MARKS AVAILABLE: 3
+TOPIC: 6.6 Programming Concepts
+STUDENT ANSWER: "Functions are good because you can reuse the code. Instead of writing the same code lots of times you write it once and call it whenever you need it."`,
+
+    output:
+`MARKS: 2/3
+N: PRESENT — functions correctly named; reusability identified as the defining property.
+E: PRESENT — the mechanism is accurately described: write once, call many times.
+I: MISSING — no consequence for the software lifecycle, codebase integrity, or maintenance burden is articulated.
+VERDICT: This response reaches the Level 2 descriptor by accurately explaining the mechanism of "write once, call many." However, the candidate has failed to articulate the consequence for the software lifecycle or codebase integrity.
+TO EARN THE 3rd MARK: State the impact on maintainability — for example: "Centralising logic within a function ensures that any future bug fixes or updates only need to be applied in one location, significantly reducing the risk of inconsistent behaviour across the program and minimising the technical debt associated with code duplication."`
+  }
+
+];
+
+
+// ─── 3. BUILD THE API REQUEST ─────────────────────────────────────────────────
+
+/**
+ * Builds the complete Groq API request body with all 15 few-shot pairs
+ * and the live student question appended as the final user message.
+ *
+ * @param {string} question      - The exam question text
+ * @param {string} studentAnswer - The student's typed answer
+ * @param {number} marks         - Marks available (e.g. 3)
+ * @param {string} topic         - Topic code (e.g. "6.1.1 Data")
+ * @returns {object}             - Pass directly to JSON.stringify() in fetch body
+ */
+function buildExaminerRequest(question, studentAnswer, marks, topic) {
+  const messages = [
+    { role: "system", content: MASTER_SYSTEM_PROMPT }
+  ];
+
+  // Inject all 15 few-shot pairs before the live input
+  for (const ex of FEW_SHOT_EXAMPLES) {
+    messages.push({ role: "user",      content: ex.input  });
+    messages.push({ role: "assistant", content: ex.output });
+  }
+
+  // Live student input — always the final message
+  messages.push({
+    role: "user",
+    content:
+`QUESTION: ${question}
+MARKS AVAILABLE: ${marks}
+TOPIC: ${topic}
+STUDENT ANSWER: "${studentAnswer}"`
+  });
+
+  return {
+    model:       "llama-3.3-70b-versatile",
+    temperature: 0.3,
+    max_tokens:  1024,
+    top_p:       1.0,
+    messages
+  };
+}
+
+
+// ─── 4. PARSE RESPONSE → HUD DATA ────────────────────────────────────────────
+
+/**
+ * Parses the structured plain-text response from AXIOM-7 into an object
+ * the frontend can use to update the NEI HUD ribbon and feedback panel.
+ *
+ * HUD colour mapping:
+ *   "PRESENT"       → green  (#39FF14)
+ *   "PARTIAL"       → amber  (#FFA500)
+ *   "MISSING"       → red    (#FF4444)
+ *   "MISCONCEPTION" → red    (#FF4444) + show misconception badge
+ *   "N/A"           → grey   (#556070)
+ *
+ * @param   {string} raw  - The raw text from choices[0].message.content
+ * @returns {{ marksAwarded, marksTotal, N, E, I, verdict, toEarn }}
+ */
+function parseExaminerResponse(raw) {
+  const getLine = (field) => {
+    const m = raw.match(new RegExp(`^${field}:\\s*(.+)`, "m"));
+    return m ? m[1].trim() : "";
+  };
+
+  const parseNEI = (field) => {
+    const line = getLine(field);
+    if (!line) return { status: "MISSING", evidence: "" };
+    const sep = " — ";
+    const idx = line.indexOf(sep);
+    if (idx === -1) return { status: line.trim(), evidence: "" };
+    return {
+      status:   line.slice(0, idx).trim(),
+      evidence: line.slice(idx + sep.length).trim()
+    };
+  };
+
+  const marksRaw = getLine("MARKS");
+  const [awarded, total] = marksRaw.split("/").map(Number);
+
+  const verdictMatch = raw.match(
+    /^VERDICT:\s*([\s\S]+?)(?=\nTO EARN|\nTHIS RESPONSE MEETS)/m
+  );
+  const toEarnMatch = raw.match(
+    /(?:TO EARN[^:]*:|THIS RESPONSE MEETS THE STANDARD BECAUSE:)\s*([\s\S]+?)(?:\n\n|$)/
+  );
+
+  return {
+    marksAwarded: awarded || 0,
+    marksTotal:   total   || 0,
+    N:       parseNEI("N"),
+    E:       parseNEI("E"),
+    I:       parseNEI("I"),
+    verdict: verdictMatch ? verdictMatch[1].trim() : "",
+    toEarn:  toEarnMatch  ? toEarnMatch[1].trim()  : ""
+  };
+}
+
+// ════════════════════════════════════════════════════════════════════
+// PRACTICE ARENA — AXIOM-7 / GROQ INTEGRATION
+// Direct browser→Groq call (GitHub Pages — no backend)
+// Model: llama-3.3-70b-versatile | Temp: 0.3
+// ════════════════════════════════════════════════════════════════════
+
+const PA_GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+const PA_QUESTIONS = [
+  { text:'A smart factory installs sensors on its production line machinery. Explain one benefit this sensor data provides to the business.', marks:3, topic:'6.1.3 How Data is Generated' },
+  { text:'An e-commerce company tracks customer browsing behaviour on its website. Explain one way this Human-to-Device (H2D) data adds value to the business.', marks:3, topic:'6.1.3 How Data is Generated' },
+  { text:'A hospital uses Device-to-Device (D2D) technology to monitor patients in intensive care. Explain one benefit of this system for the hospital.', marks:3, topic:'6.1.3 How Data is Generated' },
+  { text:'A logistics company uses RFID tags to track packages automatically through its warehouses. Evaluate one advantage this D2D approach offers over manual tracking processes.', marks:4, topic:'6.1.3 How Data is Generated' },
+];
+
+let paCurrentQ = 0;
+let paLastResult = null;
+
+// ─── Key management ──────────────────────────────────────────────────
+function paKeyInput() {
+  const k = document.getElementById('pa-key-input').value.trim();
+  const dot = document.getElementById('pa-dot');
+  const lbl = document.getElementById('pa-key-lbl');
+  const ready = k.startsWith('gsk_') && k.length > 20;
+  dot.className = 'pa-dot' + (ready ? ' live' : '');
+  lbl.textContent = ready ? 'KEY READY' : 'NOT SET';
+  lbl.style.color = ready ? 'var(--green)' : 'var(--muted)';
+}
+function paSaveKey() {
+  const k = document.getElementById('pa-key-input').value.trim();
+  if (!k) return;
+  localStorage.setItem('axiom7_groq_key', k);
+  const btn = document.querySelector('.pa-key-btn');
+  btn.textContent = 'SAVED ✓'; btn.style.color = 'var(--green)';
+  setTimeout(() => { btn.textContent = 'SAVE'; btn.style.color = ''; }, 2200);
+  paKeyInput();
+}
+function paGetKey() {
+  return (document.getElementById('pa-key-input').value.trim()
+       || localStorage.getItem('axiom7_groq_key') || '');
+}
+function paInitArena() {
+  const k = localStorage.getItem('axiom7_groq_key');
+  if (k) { document.getElementById('pa-key-input').value = k; paKeyInput(); }
+}
+
+// ─── Question selection ───────────────────────────────────────────────
+function paSelectQ(el, idx) {
+  document.querySelectorAll('.pa-q-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  paCurrentQ = idx;
+  const q = PA_QUESTIONS[idx];
+  document.getElementById('pa-q-text').textContent = q.text;
+  document.getElementById('pa-q-marks').textContent = `(${q.marks} marks)`;
+  paReset(true);
+}
+function paCharCount() {
+  const len = document.getElementById('pa-textarea').value.length;
+  document.getElementById('pa-char').textContent = `${len} / 800`;
+}
+
+// ─── Reset ────────────────────────────────────────────────────────────
+function paReset(keepQ) {
+  if (!keepQ) document.getElementById('pa-textarea').value = '';
+  document.getElementById('pa-textarea').disabled = false;
+  document.getElementById('pa-submit').disabled = false;
+  document.getElementById('pa-loading').classList.remove('vis');
+  document.getElementById('pa-feedback').classList.remove('vis');
+  document.getElementById('pa-tag-section').classList.remove('vis');
+  document.getElementById('pa-alert-vuln').classList.remove('vis');
+  document.getElementById('pa-alert-ok').classList.remove('vis');
+  paCharCount();
+  paResetHUD();
+  paLastResult = null;
+}
+
+// ─── HUD helpers ──────────────────────────────────────────────────────
+const PA_HUD_CLASS = {
+  PRESENT:'hs-present', PARTIAL:'hs-partial',
+  MISSING:'hs-missing', MISCONCEPTION:'hs-misconception', 'N/A':''
+};
+function paResetHUD() {
+  ['N','E','I'].forEach(c => {
+    const seg = document.getElementById('hud-'+c);
+    seg.className = 'hud-seg';
+    seg.querySelector('.hud-status').textContent = '—';
+    document.getElementById('hud-'+c+'-ev').textContent = '';
+  });
+  const mn = document.getElementById('hud-marks-num');
+  mn.className = 'hud-marks-num hm-idle';
+  mn.textContent = '—';
+}
+function paUpdateHUD(parsed) {
+  ['N','E','I'].forEach(c => {
+    const d = parsed[c];
+    const seg = document.getElementById('hud-'+c);
+    seg.className = 'hud-seg ' + (PA_HUD_CLASS[d.status] || 'hs-missing');
+    seg.querySelector('.hud-status').textContent = d.status;
+    document.getElementById('hud-'+c+'-ev').textContent = d.evidence || '';
+  });
+  const mn = document.getElementById('hud-marks-num');
+  const pct = parsed.marksAwarded / parsed.marksTotal;
+  mn.className = 'hud-marks-num ' + (pct >= 1 ? 'hm-full' : pct >= 0.6 ? 'hm-part' : 'hm-low');
+  mn.textContent = `${parsed.marksAwarded}/${parsed.marksTotal}`;
+}
+
+// ─── Main AXIOM-7 call ────────────────────────────────────────────────
+async function paRunAxiom7() {
+  const key    = paGetKey();
+  const answer = document.getElementById('pa-textarea').value.trim();
+  const q      = PA_QUESTIONS[paCurrentQ];
+
+  if (!key || !key.startsWith('gsk_')) {
+    alert('Enter your Groq API key in the configuration field above.\nGet a free key at console.groq.com — no credit card needed.');
+    return;
+  }
+  if (!answer || answer.length < 15) {
+    alert('Please write a complete answer before running analysis.');
+    return;
+  }
+
+  // Loading state
+  document.getElementById('pa-submit').disabled = true;
+  document.getElementById('pa-textarea').disabled = true;
+  document.getElementById('pa-loading').classList.add('vis');
+  document.getElementById('pa-feedback').classList.remove('vis');
+  document.getElementById('pa-tag-section').classList.remove('vis');
+  paResetHUD();
+
+  const controller = new AbortController();
+  const tout = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const body = buildExaminerRequest(q.text, answer, q.marks, q.topic);
+
+    const res = await fetch(PA_GROQ_URL, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+    clearTimeout(tout);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      if (res.status === 401) throw new Error('API key rejected. Check it is correct at console.groq.com');
+      if (res.status === 429) throw new Error('Rate limit reached. Wait 15 seconds and try again.');
+      throw new Error(err.error?.message || `Groq API error ${res.status}`);
+    }
+
+    const data   = await res.json();
+    const raw    = data.choices[0].message.content;
+    const parsed = parseExaminerResponse(raw);
+
+    if (isNaN(parsed.marksAwarded) || !parsed.verdict) {
+      throw new Error('Unexpected response format. Please try again.');
+    }
+
+    paLastResult = { ...parsed, answer, raw };
+
+    // Update HUD
+    paUpdateHUD(parsed);
+
+    // Show feedback panel
+    const pct = parsed.marksAwarded / parsed.marksTotal;
+    const pillCls = pct >= 1 ? 'fmp-full' : pct >= 0.6 ? 'fmp-part' : 'fmp-low';
+    const pill = document.getElementById('fb-pill');
+    pill.className = 'fb-marks-pill ' + pillCls;
+    pill.textContent = `${parsed.marksAwarded}/${parsed.marksTotal}`;
+    document.getElementById('fb-verdict').textContent = parsed.verdict;
+    document.getElementById('fb-to-earn').textContent = parsed.toEarn;
+    document.getElementById('pa-feedback').classList.add('vis');
+    setTimeout(() => {
+      document.getElementById('pa-feedback').scrollIntoView({ behavior:'smooth', block:'start' });
+    }, 100);
+
+  } catch (err) {
+    const msg = err.name === 'AbortError'
+      ? 'Request timed out. Check your connection and try again.'
+      : err.message;
+    document.getElementById('fb-pill').className = 'fb-marks-pill fmp-low';
+    document.getElementById('fb-pill').textContent = 'ERROR';
+    document.getElementById('fb-verdict').textContent = msg;
+    document.getElementById('fb-to-earn').textContent = 'Check your API key is valid, then retry. Free key: console.groq.com';
+    document.getElementById('pa-feedback').classList.add('vis');
+  } finally {
+    clearTimeout(tout);
+    document.getElementById('pa-loading').classList.remove('vis');
+    document.getElementById('pa-submit').disabled = false;
+    document.getElementById('pa-textarea').disabled = false;
+  }
+}
+
+// ─── Highlight & Tag mechanic ─────────────────────────────────────────
+function paShowTagger() {
+  if (!paLastResult) return;
+  const el = document.getElementById('tag-text');
+  el.innerHTML = paEscape(paLastResult.answer);
+  document.getElementById('pa-tag-section').classList.add('vis');
+  document.getElementById('pa-alert-vuln').classList.remove('vis');
+  document.getElementById('pa-alert-ok').classList.remove('vis');
+  setTimeout(() => {
+    document.getElementById('pa-tag-section').scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 100);
+}
+function paEscape(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function paTag(type) {
+  const el  = document.getElementById('tag-text');
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !el.contains(sel.getRangeAt(0).commonAncestorContainer)) return;
+  const range = sel.getRangeAt(0);
+  const span  = document.createElement('span');
+  span.className = 't' + type.toLowerCase();
+  span.dataset.tag = type;
+  try {
+    range.surroundContents(span);
+  } catch(e) {
+    const frag = range.extractContents();
+    span.appendChild(frag);
+    range.insertNode(span);
+  }
+  sel.removeAllRanges();
+}
+function paClearTags() {
+  if (!paLastResult) return;
+  document.getElementById('tag-text').innerHTML = paEscape(paLastResult.answer);
+  document.getElementById('pa-alert-vuln').classList.remove('vis');
+  document.getElementById('pa-alert-ok').classList.remove('vis');
+}
+function paCheckTags() {
+  const el   = document.getElementById('tag-text');
+  const hasI = !!el.querySelector('[data-tag="I"]');
+  document.getElementById('pa-alert-vuln').classList.toggle('vis', !hasI);
+  document.getElementById('pa-alert-ok').classList.toggle('vis',  hasI);
+  const target = hasI
+    ? document.getElementById('pa-alert-ok')
+    : document.getElementById('pa-alert-vuln');
+  target.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
 </script>
 </body>
 </html>
