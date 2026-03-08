@@ -1,8 +1,8 @@
 name: Restructure — Move Extras to /content-areas/
 
-# ── When this runs ─────────────────────────────────────────────────────────────────────────────────
-# You trigger this manually from the GitHub website.
-# Go to: Actions tab + "Restructure" + Run workflow + Run workflow (green button)
+# When this runs:
+# Trigger manually from the GitHub website.
+# Go to: Actions tab > "Restructure" > Run workflow > Run workflow (green button)
 on:
   workflow_dispatch:
     inputs:
@@ -16,130 +16,100 @@ jobs:
     name: Move extras files and update all links
     runs-on: ubuntu-latest
 
-    # Only run if the user typed YES in the confirmation box
     if: github.event.inputs.confirm == 'YES'
 
     permissions:
-      contents: write  # Needed so the workflow can commit and push changes
+      contents: write
 
     steps:
 
-      # ── 1. Check out the repo ─────────────────────────────────────────────────────────────────
       - name: Check out repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history so git mv preserves file logs
+          fetch-depth: 0
 
-      # ── 2. Move the extras files ───────────────────────────────────────────────────────────────
       - name: Create /content-areas/ folder and move extras files
         run: |
           mkdir -p content-areas
 
-          # File 1: classroom-611-v3.html (currently in 6-1-1/)
           if [ -f "6-1-1/classroom-611-v3.html" ]; then
             git mv "6-1-1/classroom-611-v3.html" "content-areas/classroom-611-v3.html"
-            echo "Moved: 6-1-1/classroom-611-v3.html → content-areas/"
+            echo "Moved: 6-1-1/classroom-611-v3.html to content-areas/"
           else
             echo "Not found (skipping): 6-1-1/classroom-611-v3.html"
           fi
 
-          # File 2: 6-1-2-why-organisations-need-data.html (currently in 6-1-2/)
           if [ -f "6-1-2/6-1-2-why-organisations-need-data.html" ]; then
             git mv "6-1-2/6-1-2-why-organisations-need-data.html" "content-areas/6-1-2-why-organisations-need-data.html"
-            echo "Moved: 6-1-2/6-1-2-why-organisations-need-data.html → content-areas/"
+            echo "Moved: 6-1-2/6-1-2-why-organisations-need-data.html to content-areas/"
           else
             echo "Not found (skipping): 6-1-2/6-1-2-why-organisations-need-data.html"
           fi
 
-          # File 3: 6-1-3-how-data-is-generated.html (not yet uploaded to repo)
           if [ -f "6-1-3/6-1-3-how-data-is-generated.html" ]; then
             git mv "6-1-3/6-1-3-how-data-is-generated.html" "content-areas/6-1-3-how-data-is-generated.html"
-            echo "Moved: 6-1-3/6-1-3-how-data-is-generated.html → content-areas/"
+            echo "Moved: 6-1-3/6-1-3-how-data-is-generated.html to content-areas/"
           else
             echo "Not found (skipping): 6-1-3/6-1-3-how-data-is-generated.html"
           fi
 
-      # ── 3. Fix relative asset paths inside moved files ─────────────────────────────────────
-      - name: Fix relative asset paths inside moved files
+      - name: Fix asset paths in moved files
         run: |
-          for FILE in content-areas/*.html; do
-            [ -f "$FILE" ] || continue
-            sed -i 's|href="assets/|href="../assets/|g' "$FILE"
-            sed -i 's|src="assets/|src="../assets/|g' "$FILE"
-            sed -i 's|href="index\.html|href="../index.html|g' "$FILE"
+          for f in content-areas/*.html; do
+            [ -f "$f" ] || continue
+            sed -i 's|href="../|href="../../|g' "$f"
+            sed -i 's|src="../|src="../../|g' "$f"
+            echo "Patched paths in: $f"
           done
 
-      # ── 4. Update links in root HTML files ────────────────────────────────────────────────
-      - name: Update links in root HTML files
+      - name: Update links in root index files
         run: |
-          for ROOT_FILE in *.html; do
-            [ -f "$ROOT_FILE" ] || continue
-            # classroom-611-v3 (old path: either root or 6-1-1/)
-            sed -i 's|href="classroom-611-v3\.html|href="content-areas/classroom-611-v3.html|g' "$ROOT_FILE"
-            sed -i 's|href="6-1-1/classroom-611-v3\.html|href="content-areas/classroom-611-v3.html|g' "$ROOT_FILE"
-            # 6-1-2-why-organisations-need-data (old path: either root or 6-1-2/)
-            sed -i 's|href="6-1-2-why-organisations-need-data\.html|href="content-areas/6-1-2-why-organisations-need-data.html|g' "$ROOT_FILE"
-            sed -i 's|href="6-1-2/6-1-2-why-organisations-need-data\.html|href="content-areas/6-1-2-why-organisations-need-data.html|g' "$ROOT_FILE"
-            # 6-1-3-how-data-is-generated (old path: either root or 6-1-3/)
-            sed -i 's|href="6-1-3-how-data-is-generated\.html|href="content-areas/6-1-3-how-data-is-generated.html|g' "$ROOT_FILE"
-            sed -i 's|href="6-1-3/6-1-3-how-data-is-generated\.html|href="content-areas/6-1-3-how-data-is-generated.html|g' "$ROOT_FILE"
+          for idx in index.html 6-1-1/index.html 6-1-2/index.html 6-1-3/index.html; do
+            [ -f "$idx" ] || continue
+            sed -i 's|classroom-611-v3\.html|../content-areas/classroom-611-v3.html|g' "$idx"
+            sed -i 's|6-1-2-why-organisations-need-data\.html|../content-areas/6-1-2-why-organisations-need-data.html|g' "$idx"
+            sed -i 's|6-1-3-how-data-is-generated\.html|../content-areas/6-1-3-how-data-is-generated.html|g' "$idx"
+            echo "Updated links in: $idx"
           done
 
-      # ── 5. Create redirect stubs at old subdirectory paths ───────────────────────────
-      - name: Create redirect stubs at old root URLs
+      - name: Create redirect stubs at old subdirectory paths
         run: |
-          create_stub() {
-            local SRC="$1"
-            local DEST="$2"
-            if [ ! -f "$SRC" ]; then
-              cat > "$SRC" <<HTML
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=${DEST}">
-  <title>Redirecting — The Mark Scheme Method®</title>
-  <style>
-    body { margin:0; background:#0D1117; color:#8B9490;
-           font-family:Arial,sans-serif; display:flex;
-           align-items:center; justify-content:center; height:100vh; }
-    a { color:#39FF14; }
-  </style>
-</head>
-<body>
-  <p>Redirecting… <a href="${DEST}">Click here if not redirected.</a></p>
-</body>
-</html>
-HTML
-              echo "Created redirect stub: ${SRC} → ${DEST}"
-            fi
-          }
+          python3 -c '
+          import os
+          nl = chr(10)
+          q = chr(34)
+          stubs = [
+              ("6-1-1/classroom-611-v3.html", "../content-areas/classroom-611-v3.html"),
+              ("6-1-2/6-1-2-why-organisations-need-data.html", "../content-areas/6-1-2-why-organisations-need-data.html"),
+          ]
+          for src, dest in stubs:
+              if not os.path.exists(src) and os.path.exists("content-areas/" + os.path.basename(src)):
+                  html = (
+                      "<!DOCTYPE html>" + nl +
+                      "<html lang=" + q + "en" + q + ">" + nl +
+                      "<head>" + nl +
+                      "  <meta charset=" + q + "UTF-8" + q + ">" + nl +
+                      "  <meta http-equiv=" + q + "refresh" + q + " content=" + q + "0; url=" + dest + q + ">" + nl +
+                      "  <title>Redirecting...</title>" + nl +
+                      "</head>" + nl +
+                      "<body>" + nl +
+                      "  <p>This page has moved. <a href=" + q + dest + q + ">Click here</a> if not redirected.</p>" + nl +
+                      "</body>" + nl +
+                      "</html>" + nl
+                  )
+                  open(src, "w").write(html)
+                  print("Created redirect stub: " + src)
+          '
 
-          # Only create stubs for files that were actually moved
-          [ -f "content-areas/classroom-611-v3.html" ]              && create_stub "6-1-1/classroom-611-v3.html"              "../content-areas/classroom-611-v3.html"
-          [ -f "content-areas/6-1-2-why-organisations-need-data.html" ] && create_stub "6-1-2/6-1-2-why-organisations-need-data.html" "../content-areas/6-1-2-why-organisations-need-data.html"
-          [ -f "content-areas/6-1-3-how-data-is-generated.html" ]     && create_stub "6-1-3/6-1-3-how-data-is-generated.html"    "../content-areas/6-1-3-how-data-is-generated.html"
-
-      # ── 6. Commit and push ──────────────────────────────────────────────────────────────────────────────────
-      - name: Commit and push all changes
+      - name: Commit and push changes
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-
-          # Only commit if there are actual changes
+          git add -A
           if git diff --cached --quiet; then
-            echo "Nothing to commit — restructure may have already been run."
+            echo "Nothing to commit"
           else
-            git commit -m "refactor: move extras to /content-areas/ — v3.0 structure
-
-            - Move extras HTML files to content-areas/
-            - Fix relative asset paths inside moved files
-            - Update all inbound links in root HTML files
-            - Add redirect stubs at old subdirectory paths
-
-            Triggered via GitHub Actions workflow_dispatch"
-
+            git commit -m "restructure: move extras HTML to /content-areas/ and add redirect stubs"
             git push
-            echo "Changes pushed to main."
+            echo "Done - changes pushed to main."
           fi
