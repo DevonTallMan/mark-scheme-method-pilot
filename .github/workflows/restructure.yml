@@ -1,8 +1,8 @@
 name: Restructure — Move Extras to /content-areas/
 
-# ── When this runs ─────────────────────────────────────────────────────────
+# ── When this runs ─────────────────────────────────────────────────────────────────────────────────
 # You trigger this manually from the GitHub website.
-# Go to: Actions tab → "Restructure" → Run workflow → Run workflow (green button)
+# Go to: Actions tab + "Restructure" + Run workflow + Run workflow (green button)
 on:
   workflow_dispatch:
     inputs:
@@ -20,124 +20,111 @@ jobs:
     if: github.event.inputs.confirm == 'YES'
 
     permissions:
-      contents: write   # Needed so the workflow can commit and push changes
+      contents: write  # Needed so the workflow can commit and push changes
 
     steps:
 
-      # ── 1. Check out the repo ─────────────────────────────────────────────
+      # ── 1. Check out the repo ─────────────────────────────────────────────────────────────────
       - name: Check out repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # Full history so git mv preserves file logs
+          fetch-depth: 0  # Full history so git mv preserves file logs
 
-      # ── 2. Run the restructure logic ──────────────────────────────────────
+      # ── 2. Move the extras files ───────────────────────────────────────────────────────────────
       - name: Create /content-areas/ folder and move extras files
         run: |
           mkdir -p content-areas
 
-          # Move each extras file if it exists at root
-          for FILE in \
-            "classroom-611-v3.html" \
-            "6-1-2-why-organisations-need-data.html" \
-            "6-1-3-how-data-is-generated.html"; do
+          # File 1: classroom-611-v3.html (currently in 6-1-1/)
+          if [ -f "6-1-1/classroom-611-v3.html" ]; then
+            git mv "6-1-1/classroom-611-v3.html" "content-areas/classroom-611-v3.html"
+            echo "Moved: 6-1-1/classroom-611-v3.html → content-areas/"
+          else
+            echo "Not found (skipping): 6-1-1/classroom-611-v3.html"
+          fi
 
-            if [ -f "$FILE" ]; then
-              git mv "$FILE" "content-areas/$FILE"
-              echo "Moved: $FILE → content-areas/$FILE"
-            else
-              echo "Not found (skipping): $FILE"
-            fi
-          done
+          # File 2: 6-1-2-why-organisations-need-data.html (currently in 6-1-2/)
+          if [ -f "6-1-2/6-1-2-why-organisations-need-data.html" ]; then
+            git mv "6-1-2/6-1-2-why-organisations-need-data.html" "content-areas/6-1-2-why-organisations-need-data.html"
+            echo "Moved: 6-1-2/6-1-2-why-organisations-need-data.html → content-areas/"
+          else
+            echo "Not found (skipping): 6-1-2/6-1-2-why-organisations-need-data.html"
+          fi
 
-      # ── 3. Fix asset paths inside the moved files ─────────────────────────
+          # File 3: 6-1-3-how-data-is-generated.html (not yet uploaded to repo)
+          if [ -f "6-1-3/6-1-3-how-data-is-generated.html" ]; then
+            git mv "6-1-3/6-1-3-how-data-is-generated.html" "content-areas/6-1-3-how-data-is-generated.html"
+            echo "Moved: 6-1-3/6-1-3-how-data-is-generated.html → content-areas/"
+          else
+            echo "Not found (skipping): 6-1-3/6-1-3-how-data-is-generated.html"
+          fi
+
+      # ── 3. Fix relative asset paths inside moved files ─────────────────────────────────────
       - name: Fix relative asset paths inside moved files
         run: |
           for FILE in content-areas/*.html; do
             [ -f "$FILE" ] || continue
-
-            # Add ../ prefix to relative asset paths
             sed -i 's|href="assets/|href="../assets/|g' "$FILE"
-            sed -i "s|href='assets/|href='../assets/|g" "$FILE"
             sed -i 's|src="assets/|src="../assets/|g' "$FILE"
-            sed -i "s|src='assets/|src='../assets/|g" "$FILE"
-
-            # Fix links back to root pages
-            sed -i 's|href="index\.html"|href="../index.html"|g' "$FILE"
-            sed -i 's|href="teacher\.html"|href="../teacher.html"|g' "$FILE"
-            sed -i 's|href="topics\.html"|href="../topics.html"|g' "$FILE"
-            sed -i 's|href="pricing\.html"|href="../pricing.html"|g' "$FILE"
-
-            echo "Fixed asset paths in: $FILE"
+            sed -i 's|href="index\.html|href="../index.html|g' "$FILE"
           done
 
-      # ── 4. Update inbound links in all root HTML files ────────────────────
+      # ── 4. Update links in root HTML files ────────────────────────────────────────────────
       - name: Update links in root HTML files
         run: |
-          FILES_MOVED=(
-            "classroom-611-v3.html"
-            "6-1-2-why-organisations-need-data.html"
-            "6-1-3-how-data-is-generated.html"
-          )
-
-          for MOVED in "${FILES_MOVED[@]}"; do
-            OLD="$MOVED"
-            NEW="content-areas/$MOVED"
-
-            for HTML in *.html; do
-              [ -f "$HTML" ] || continue
-
-              if grep -q "$OLD" "$HTML" 2>/dev/null; then
-                sed -i "s|href=\"${OLD}\"|href=\"${NEW}\"|g" "$HTML"
-                sed -i "s|href='${OLD}'|href='${NEW}'|g" "$HTML"
-                sed -i "s|'${OLD}'|'${NEW}'|g" "$HTML"
-                sed -i "s|\"${OLD}\"|\"${NEW}\"|g" "$HTML"
-                echo "Updated links in: $HTML"
-              fi
-            done
+          for ROOT_FILE in *.html; do
+            [ -f "$ROOT_FILE" ] || continue
+            # classroom-611-v3 (old path: either root or 6-1-1/)
+            sed -i 's|href="classroom-611-v3\.html|href="content-areas/classroom-611-v3.html|g' "$ROOT_FILE"
+            sed -i 's|href="6-1-1/classroom-611-v3\.html|href="content-areas/classroom-611-v3.html|g' "$ROOT_FILE"
+            # 6-1-2-why-organisations-need-data (old path: either root or 6-1-2/)
+            sed -i 's|href="6-1-2-why-organisations-need-data\.html|href="content-areas/6-1-2-why-organisations-need-data.html|g' "$ROOT_FILE"
+            sed -i 's|href="6-1-2/6-1-2-why-organisations-need-data\.html|href="content-areas/6-1-2-why-organisations-need-data.html|g' "$ROOT_FILE"
+            # 6-1-3-how-data-is-generated (old path: either root or 6-1-3/)
+            sed -i 's|href="6-1-3-how-data-is-generated\.html|href="content-areas/6-1-3-how-data-is-generated.html|g' "$ROOT_FILE"
+            sed -i 's|href="6-1-3/6-1-3-how-data-is-generated\.html|href="content-areas/6-1-3-how-data-is-generated.html|g' "$ROOT_FILE"
           done
 
-      # ── 5. Create redirect stubs at old root paths ────────────────────────
+      # ── 5. Create redirect stubs at old subdirectory paths ───────────────────────────
       - name: Create redirect stubs at old root URLs
         run: |
-          FILES_MOVED=(
-            "classroom-611-v3.html"
-            "6-1-2-why-organisations-need-data.html"
-            "6-1-3-how-data-is-generated.html"
-          )
-
-          for FILE in "${FILES_MOVED[@]}"; do
-            DEST="content-areas/$FILE"
-            # Only create stub if the file was actually moved (dest exists)
-            if [ -f "$DEST" ]; then
-              cat > "$FILE" <<HTML
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="refresh" content="0; url=${DEST}">
-            <title>Redirecting — The Mark Scheme Method®</title>
-            <style>
-              body { margin:0; background:#0D1117; color:#8B949E;
-                     font-family:Arial,sans-serif; display:flex;
-                     align-items:center; justify-content:center; height:100vh; }
-              a { color:#39FF14; }
-            </style>
-          </head>
-          <body>
-            <p>Redirecting… <a href="${DEST}">Click here if not redirected.</a></p>
-          </body>
-          </html>
-          HTML
-              echo "Created redirect stub: $FILE → $DEST"
+          create_stub() {
+            local SRC="$1"
+            local DEST="$2"
+            if [ ! -f "$SRC" ]; then
+              cat > "$SRC" <<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=${DEST}">
+  <title>Redirecting — The Mark Scheme Method®</title>
+  <style>
+    body { margin:0; background:#0D1117; color:#8B9490;
+           font-family:Arial,sans-serif; display:flex;
+           align-items:center; justify-content:center; height:100vh; }
+    a { color:#39FF14; }
+  </style>
+</head>
+<body>
+  <p>Redirecting… <a href="${DEST}">Click here if not redirected.</a></p>
+</body>
+</html>
+HTML
+              echo "Created redirect stub: ${SRC} → ${DEST}"
             fi
-          done
+          }
 
-      # ── 6. Commit and push ────────────────────────────────────────────────
+          # Only create stubs for files that were actually moved
+          [ -f "content-areas/classroom-611-v3.html" ]              && create_stub "6-1-1/classroom-611-v3.html"              "../content-areas/classroom-611-v3.html"
+          [ -f "content-areas/6-1-2-why-organisations-need-data.html" ] && create_stub "6-1-2/6-1-2-why-organisations-need-data.html" "../content-areas/6-1-2-why-organisations-need-data.html"
+          [ -f "content-areas/6-1-3-how-data-is-generated.html" ]     && create_stub "6-1-3/6-1-3-how-data-is-generated.html"    "../content-areas/6-1-3-how-data-is-generated.html"
+
+      # ── 6. Commit and push ──────────────────────────────────────────────────────────────────────────────────
       - name: Commit and push all changes
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git add .
 
           # Only commit if there are actual changes
@@ -146,14 +133,13 @@ jobs:
           else
             git commit -m "refactor: move extras to /content-areas/ — v3.0 structure
 
-          - Move extras HTML files to content-areas/
-          - Fix relative asset paths inside moved files
-          - Update all inbound links in root HTML files
-          - Add redirect stubs at old root paths
+            - Move extras HTML files to content-areas/
+            - Fix relative asset paths inside moved files
+            - Update all inbound links in root HTML files
+            - Add redirect stubs at old subdirectory paths
 
-          Triggered via GitHub Actions workflow_dispatch"
+            Triggered via GitHub Actions workflow_dispatch"
 
             git push
             echo "Changes pushed to main."
           fi
-
