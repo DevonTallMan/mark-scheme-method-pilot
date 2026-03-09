@@ -150,6 +150,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .btn-path-mission:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 0 24px rgba(57,255,20,0.35);}
 @keyframes missionPulse{0%,100%{box-shadow:0 0 16px rgba(57,255,20,0.3);}50%{box-shadow:0 0 32px rgba(57,255,20,0.65),0 0 48px rgba(57,255,20,0.2);}}
 .btn-path-mission.pulse{animation:missionPulse 2s ease-in-out infinite;}
+/* Classroom lesson button — amber tint */
+.btn-path-lesson{color:var(--amber);background:rgba(255,149,0,0.1);border:1px solid rgba(255,149,0,0.3);}
+.btn-path-lesson:hover{background:rgba(255,149,0,0.18);border-color:rgba(255,149,0,0.5);box-shadow:0 0 14px rgba(255,149,0,0.2);}
 
 /* "Skip ahead" nudge label */
 .skip-nudge{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;color:var(--amber);opacity:0.8;margin-top:2px;text-align:center;}
@@ -275,6 +278,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="path-status mission-ready" id="ms-status-611">65% complete</div>
         <a href="6-1-1/index.html" class="btn-path btn-path-mission pulse">⟶ MISSION</a>
       </div>
+      <div class="path path-lesson">
+        <div class="path-header"><span class="path-icon">🏫</span><span class="path-label">CLASSROOM LESSON</span></div>
+        <div class="path-status">Data, Information & Knowledge</div>
+        <a href="content-areas/classroom-611-v3.html" class="btn-path btn-path-lesson">⟶ LESSON</a>
+      </div>
     </div>
   </div>
 
@@ -315,6 +323,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="path-status mission-skip" id="ms-status-612">Skip ahead</div>
         <a href="6-1-2/index.html" class="btn-path btn-path-mission">⟶ MISSION</a>
         <div class="skip-nudge">RECOMMENDED: DO FIELD TRAINING FIRST</div>
+      </div>
+      <div class="path path-lesson">
+        <div class="path-header"><span class="path-icon">🏫</span><span class="path-label">CLASSROOM LESSON</span></div>
+        <div class="path-status">Why Organisations Need Data</div>
+        <a href="content-areas/6-1-2-why-organisations-need-data.html" class="btn-path btn-path-lesson">⟶ LESSON</a>
       </div>
     </div>
   </div>
