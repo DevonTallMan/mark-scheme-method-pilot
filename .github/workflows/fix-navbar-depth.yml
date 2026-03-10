@@ -7,9 +7,10 @@ on:
         description: 'Type YES to apply the navbar fix'
         required: true
         default: ''
+
 permissions:
   contents: write
-  
+
 jobs:
   fix-navbar:
     runs-on: ubuntu-latest
@@ -62,6 +63,7 @@ jobs:
           git add 6-1-1/index.html
           git diff --cached --quiet && echo "Nothing to commit." || \
             git commit -m "fix: correct navbar depth in 6-1-1/index.html (../../ → ../)"
+          git pull --rebase origin main
           git push
 
       - name: Summary
