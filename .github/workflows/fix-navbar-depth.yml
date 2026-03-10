@@ -1,0 +1,72 @@
+name: Fix Navbar Depth — 6-1-1 HUB Link
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to apply the navbar fix'
+        required: true
+        default: ''
+
+jobs:
+  fix-navbar:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify target file exists
+        run: |
+          if [ ! -f "6-1-1/index.html" ]; then
+            echo "ERROR: 6-1-1/index.html not found. Aborting."
+            exit 1
+          fi
+          echo "Target file found: 6-1-1/index.html"
+
+      - name: Check if fix is needed
+        id: check
+        run: |
+          if grep -q '\.\.\/\.\.\/' 6-1-1/index.html; then
+            echo "needs_fix=true" >> $GITHUB_OUTPUT
+            echo "Found depth-2 paths (../../) in 6-1-1/index.html — fix will be applied."
+          else
+            echo "needs_fix=false" >> $GITHUB_OUTPUT
+            echo "No depth-2 paths found — file may already be correct. No changes needed."
+          fi
+
+      - name: Apply navbar depth fix
+        if: steps.check.outputs.needs_fix == 'true'
+        run: |
+          # Replace ../../index.html with ../index.html (HUB navbar link)
+          sed -i 's|\.\./\.\./index\.html|../index.html|g' 6-1-1/index.html
+
+          # Also fix any other ../../ asset paths that belong at depth-1
+          # (covers href and src attributes pointing to root-level assets)
+          sed -i 's|href="\.\./\.\./|href="../|g' 6-1-1/index.html
+          sed -i 's|src="\.\./\.\./|src="../|g' 6-1-1/index.html
+
+          echo "Fix applied. Showing changed lines:"
+          grep -n '\.\.' 6-1-1/index.html || echo "(no remaining .. paths)"
+
+      - name: Commit and push fix
+        if: steps.check.outputs.needs_fix == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add 6-1-1/index.html
+          git diff --cached --quiet && echo "Nothing to commit." || \
+            git commit -m "fix: correct navbar depth in 6-1-1/index.html (../../ → ../)"
+          git push
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.check.outputs.needs_fix }}" == "true" ]; then
+            echo "✅ Fix applied and pushed. The HUB navbar link in 6-1-1/index.html"
+            echo "   now correctly uses ../index.html instead of ../../index.html."
+          else
+            echo "ℹ️  No fix needed — file was already correct."
+          fi
