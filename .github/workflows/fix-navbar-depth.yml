@@ -60,10 +60,10 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
           git add 6-1-1/index.html
           git diff --cached --quiet && echo "Nothing to commit." || \
             git commit -m "fix: correct navbar depth in 6-1-1/index.html (../../ → ../)"
-          git pull --rebase origin main
           git push
 
       - name: Summary
