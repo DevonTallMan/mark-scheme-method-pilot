@@ -1,0 +1,55 @@
+name: Fix classroom-611-v3 Exam Practice Link
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to apply the fix'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  fix-link:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync with latest remote main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+
+      - name: Verify target file exists
+        run: |
+          if [ ! -f "content-areas/classroom-611-v3.html" ]; then
+            echo "ERROR: content-areas/classroom-611-v3.html not found. Aborting."
+            exit 1
+          fi
+          echo "Target file found: content-areas/classroom-611-v3.html"
+
+      - name: Apply link fix
+        run: |
+          # Fix broken EXAM PRACTICE link: ../../6-1-1/index.html -> ../6-1-1/index.html
+          sed -i 's|\.\./\.\./6-1-1/index\.html|../6-1-1/index.html|g' content-areas/classroom-611-v3.html
+
+          echo "Fix applied. Verifying:"
+          grep -n '6-1-1' content-areas/classroom-611-v3.html || echo "No matching lines found."
+
+      - name: Commit and push
+        run: |
+          git add content-areas/classroom-611-v3.html
+          git diff --cached --quiet && echo "Nothing to commit — already clean." || \
+            git commit -m "fix: correct EXAM PRACTICE link in classroom-611-v3.html (../../6-1-1/ to ../6-1-1/)"
+          git push
+
+      - name: Summary
+        run: echo "Done — EXAM PRACTICE link now correctly points to ../6-1-1/index.html"
