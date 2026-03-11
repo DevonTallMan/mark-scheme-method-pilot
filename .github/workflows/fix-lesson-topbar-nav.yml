@@ -1,0 +1,109 @@
+name: Fix Lesson Pages — Add Top Navigation Bar
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to apply the fix'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  fix-topbar:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync with latest remote main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+
+      - name: Verify target files exist
+        run: |
+          for f in "content-areas/classroom-611-v3.html" "content-areas/6-1-2-why-organisations-need-data.html"; do
+            if [ ! -f "$f" ]; then
+              echo "ERROR: $f not found. Aborting."
+              exit 1
+            fi
+            echo "Found: $f"
+          done
+
+      - name: Inject topbar into both lesson files
+        run: |
+          python3 << 'PYEOF'
+          import os
+
+          TOPBAR = '''<nav style="
+            position:sticky;
+            top:0;
+            z-index:9999;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:12px 24px;
+            background:#0d0d0d;
+            border-bottom:1px solid #39ff14;
+            font-family:monospace;
+            font-size:13px;
+            letter-spacing:0.08em;
+          ">
+            <span style="color:#39ff14;font-weight:bold;text-transform:uppercase;">
+              The Mark Scheme Method&#174;
+            </span>
+            <div style="display:flex;gap:20px;align-items:center;">
+              <a href="../index.html" style="color:#ccc;text-decoration:none;text-transform:uppercase;" onmouseover="this.style.color='#39ff14'" onmouseout="this.style.color='#ccc'">Hub</a>
+              <a href="../index.html#topics" style="color:#ccc;text-decoration:none;text-transform:uppercase;" onmouseover="this.style.color='#39ff14'" onmouseout="this.style.color='#ccc'">Topics</a>
+            </div>
+          </nav>
+          '''
+
+          files = [
+            "content-areas/classroom-611-v3.html",
+            "content-areas/6-1-2-why-organisations-need-data.html"
+          ]
+
+          for path in files:
+            with open(path, 'r', encoding='utf-8') as f:
+              content = f.read()
+
+            if 'msm-topbar-injected' in content:
+              print(f"SKIP: topbar already present in {path}")
+              continue
+
+            marker = '<!-- msm-topbar-injected -->'
+            insert = marker + '\n' + TOPBAR
+
+            if '<body' in content:
+              # Insert after the closing > of the <body> tag
+              idx = content.find('<body')
+              idx = content.find('>', idx) + 1
+              content = content[:idx] + '\n' + insert + content[idx:]
+            else:
+              content = insert + content
+
+            with open(path, 'w', encoding='utf-8') as f:
+              f.write(content)
+
+            print(f"DONE: topbar injected into {path}")
+
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git add content-areas/classroom-611-v3.html content-areas/6-1-2-why-organisations-need-data.html
+          git diff --cached --quiet && echo "Nothing to commit — already clean." || \
+            git commit -m "fix: inject sticky topbar nav into both lesson pages"
+          git push
+
+      - name: Summary
+        run: echo "Done — both lesson pages now have a sticky top navigation bar."
