@@ -1,0 +1,90 @@
+name: Fix Dashboard Navbar — Add FIELD TRAINING Link
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to apply the fix'
+        required: true
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  fix-nav:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync with latest remote main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+
+      - name: Verify target file exists
+        run: |
+          if [ ! -f "dashboard.html" ]; then
+            echo "ERROR: dashboard.html not found. Aborting."
+            exit 1
+          fi
+          echo "Target file found: dashboard.html"
+
+      - name: Check if already fixed
+        id: check
+        run: |
+          if grep -q 'learn/index.html' dashboard.html; then
+            echo "already_done=true" >> $GITHUB_OUTPUT
+            echo "FIELD TRAINING link already present — skipping."
+          else
+            echo "already_done=false" >> $GITHUB_OUTPUT
+            echo "FIELD TRAINING link missing — will inject."
+          fi
+
+      - name: Inject FIELD TRAINING link into navbar
+        if: steps.check.outputs.already_done == 'false'
+        run: |
+          python3 << 'PYEOF'
+          with open('dashboard.html', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          # The new link to inject
+          field_training = '<a href="learn/index.html">FIELD TRAINING</a>'
+
+          # Find the DASHBOARD nav link and insert FIELD TRAINING after it
+          # Try common patterns for the last nav item
+          import re
+
+          # Look for DASHBOARD link in the navbar
+          pattern = r'(<a[^>]*>[^<]*DASHBOARD[^<]*</a>)'
+          match = re.search(pattern, content, re.IGNORECASE)
+
+          if match:
+              insertion_point = match.end()
+              content = content[:insertion_point] + '\n              ' + field_training + content[insertion_point:]
+              print("Injected FIELD TRAINING after DASHBOARD link.")
+          else:
+              print("WARNING: Could not find DASHBOARD link to anchor injection. Check navbar structure manually.")
+              exit(1)
+
+          with open('dashboard.html', 'w', encoding='utf-8') as f:
+              f.write(content)
+
+          PYEOF
+
+      - name: Commit and push
+        if: steps.check.outputs.already_done == 'false'
+        run: |
+          git add dashboard.html
+          git diff --cached --quiet && echo "Nothing to commit." || \
+            git commit -m "fix: add FIELD TRAINING link to dashboard.html navbar"
+          git push
+
+      - name: Summary
+        run: echo "Done — FIELD TRAINING link added to dashboard.html navbar."
