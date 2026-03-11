@@ -1,0 +1,141 @@
+name: Fix Dashboard — Add Module & Badge Links
+
+on:
+  workflow_dispatch:
+
+jobs:
+  patch-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: |
+          git fetch origin main
+          git merge origin/main --ff-only
+
+      - name: Patch dashboard.html — add clickable links
+        run: |
+          python3 - <<'PYEOF'
+          import re
+
+          with open('dashboard.html', 'r', encoding='utf-8') as f:
+              html = f.read()
+
+          # ── 1. MODULE ITEMS — add data-href attributes ────────────────────────────
+          # Each mod-item maps to a module URL
+          MODULE_HREFS = [
+              ('CA 6.1.1', '/6-1-1/index.html'),
+              ('CA 6.1.2', '/6-1-2/index.html'),
+              ('CA 6.1.3', '/6-1-3/index.html'),
+              ('CA 6.2',   '/6-2/index.html'),
+              ('CA 6.3',   '/6-3/index.html'),
+              ('CA 6.4',   '/6-4/index.html'),
+          ]
+          for ca_label, href in MODULE_HREFS:
+              # Find the mod-item div that contains this CA label and add data-href
+              # Pattern: <div class="mod-item"[^>]*> followed by content with this CA
+              # We target the opening tag of the mod-item that contains the matching CA text
+              # Replace: add data-href before the closing >
+              pattern = r'(<div class="mod-item"(?:[^>]*)>)(\s*<div class="mod-ca">' + re.escape(ca_label) + r'</div>)'
+              replacement = r'<div class="mod-item" data-href="' + href + r'" \1>\2'
+              # Simpler: inject data-href into the opening tag
+              def make_replacer(href_val, ca_val):
+                  def replacer(m):
+                      tag = m.group(1)
+                      rest = m.group(2)
+                      # Insert data-href into the opening div tag
+                      new_tag = tag.replace('<div class="mod-item"', f'<div class="mod-item" data-href="{href_val}"', 1)
+                      return new_tag + rest
+                  return replacer
+
+              pat = r'(<div class="mod-item"(?:[^>]*)>)(\s*<div class="mod-ca">' + re.escape(ca_label) + r'</div>)'
+              html = re.sub(pat, make_replacer(href, ca_label), html)
+
+          # ── 2. CSS — add cursor:pointer + go-link affordance to mod-item ─────────
+          # Append to .mod-item rule
+          old_mod_css = '.mod-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;position:relative;overflow:hidden;}'
+          new_mod_css = '.mod-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s;}'
+          if old_mod_css in html:
+              html = html.replace(old_mod_css, new_mod_css)
+          else:
+              # Fallback: append after .mod-item{ block ends
+              html = html.replace(
+                  '.mod-item{',
+                  '.mod-item{cursor:pointer;'
+              )
+
+          # Add hover rule for mod-item after the existing .mod-item.done::before rule
+          hover_css = '\n.mod-item:hover{border-color:rgba(57,255,20,0.35);transform:translateY(-1px);}\n.mod-item[data-href]::after{content:"→";position:absolute;top:10px;right:10px;font-family:"Share Tech Mono",monospace;font-size:10px;color:rgba(57,255,20,0.4);}\n.mod-item[data-href]:hover::after{color:rgba(57,255,20,0.9);}'
+          html = html.replace(
+              '.mod-ca{',
+              hover_css + '\n.mod-ca{'
+          )
+
+          # ── 3. BADGE TILES — add cursor:pointer for earned tiles ─────────────────
+          html = html.replace(
+              '.badge-tile.earned:hover{border-color:rgba(255,215,0,0.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4);}',
+              '.badge-tile.earned:hover{border-color:rgba(255,215,0,0.4);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4);cursor:pointer;}'
+          )
+
+          # ── 4. JS — wire up click handlers ───────────────────────────────────────
+          click_js = """
+          // ── CLICKABLE MODULE ITEMS ──────────────────────────────────────────────
+          document.querySelectorAll('.mod-item[data-href]').forEach(function(el){
+            el.addEventListener('click', function(){
+              window.location.href = el.dataset.href;
+            });
+          });
+
+          // ── CLICKABLE BADGE TILES (earned only) ────────────────────────────────
+          var BADGE_URLS = {
+            'raw_signal':          '/6-1-1/index.html',
+            'market_intelligence': '/6-1-2/index.html',
+            'signal_mapper':       '/6-1-3/index.html',
+            'data_architect':      '/6-2/index.html',
+            'systems_analyst':     '/6-3/index.html',
+            'compliance_officer':  '/6-4/index.html',
+            'first_strike':        '/topics.html',
+            'impact_specialist':   '/topics.html',
+            'precision_writer':    '/topics.html',
+            'resilient_analyst':   '/topics.html',
+            'signal_recovered':    '/topics.html',
+            'full_clearance':      '/topics.html'
+          };
+          document.querySelectorAll('.badge-tile').forEach(function(tile){
+            var key = tile.dataset.key;
+            if(tile.classList.contains('earned') && BADGE_URLS[key]){
+              tile.addEventListener('click', function(){
+                window.location.href = BADGE_URLS[key];
+              });
+            }
+          });
+          """
+
+          # Inject before closing </script> tag (the last one, which is the initAll script)
+          html = html.replace(
+              "document.addEventListener('DOMContentLoaded',initAll);",
+              "document.addEventListener('DOMContentLoaded',initAll);\n" + click_js
+          )
+
+          with open('dashboard.html', 'w', encoding='utf-8') as f:
+              f.write(html)
+
+          print("✅ dashboard.html patched — module grid and badge cabinet now link to topics.")
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dashboard.html
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "fix(dashboard): add clickable links from module grid and badge cabinet to topics
+
+          - Module completion grid items now navigate to their respective module page on click
+          - Earned badge tiles navigate to the topic that awards that badge
+          - Achievement badges (first_strike, impact_specialist etc) link to topics.html
+          - Added cursor:pointer and arrow affordance (→) on module items
+          - Resolves audit WARN: dashboard was a dead end for acting on progress"
+          git push origin main
