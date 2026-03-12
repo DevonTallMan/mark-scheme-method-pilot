@@ -10,7 +10,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Sync with latest remote main to prevent non-fast-forward push problems
+      - name: Sync with latest remote main
+        run: git pull origin main --ff-only
 
       # ---- 1: Set up Python 3.11 ------------------------------------
       - name: Set up Python 3.11
@@ -66,7 +73,7 @@ jobs:
           name: zap-report
           path: zap_report.html
 
-      # ---- 7: Generate Allure report --------------------------------
+      # ---- 7: Generate and attach Allure report --------------------
       - name: Install Allure CLI
         run: |
           curl -o allure.tgz -Ls \
@@ -84,27 +91,7 @@ jobs:
           name: allure-report
           path: allure-report
 
-  # ---- 8: Publish Allure to GitHub Pages (main only) ---------------
-  pages:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: allure-report
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      # NOTE: The 'pages' deployment job has been removed.
+      # The Allure report is available above as a downloadable artifact
+      # on the Actions run page. Your live GitHub Pages site remains
+      # untouched and served from your repo's main branch as normal.
