@@ -1,0 +1,55 @@
+name: Fix Homepage Nav Paths
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to run'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  fix-nav-paths:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.confirm == 'YES' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync with latest remote main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main && git merge origin/main --ff-only
+
+      - name: Fix absolute nav paths in index.html
+        run: |
+          python3 << 'PYEOF'
+          import re
+
+          with open('index.html', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          # Replace devontallman.github.io/ NOT already followed by mark-scheme-method-pilot
+          fixed = re.sub(
+              r'https://devontallman\.github\.io/(?!mark-scheme-method-pilot)',
+              'https://devontallman.github.io/mark-scheme-method-pilot/',
+              content
+          )
+
+          changes = len(re.findall(r'https://devontallman\.github\.io/(?!mark-scheme-method-pilot)', content))
+          print(f"Fixed {changes} broken path(s) in index.html")
+
+          with open('index.html', 'w', encoding='utf-8') as f:
+              f.write(fixed)
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git add index.html
+          git diff --staged --quiet && echo "No changes needed — paths already correct." && exit 0
+          git commit -m "Fix: correct absolute nav paths in index.html to include /mark-scheme-method-pilot/ subpath"
+          git push origin main
