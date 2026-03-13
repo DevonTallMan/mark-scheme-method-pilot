@@ -25,7 +25,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main && git merge origin/main --ff-only
 
-      - name: Fix absolute nav paths in index.html
+      - name: Diagnose and fix nav paths in index.html
         run: |
           python3 << 'PYEOF'
           import re
@@ -33,23 +33,45 @@ jobs:
           with open('index.html', 'r', encoding='utf-8') as f:
               content = f.read()
 
-          # Replace devontallman.github.io/ NOT already followed by mark-scheme-method-pilot
+          # Show all href and src values for diagnosis
+          all_links = re.findall(r'(?:href|src)=["\']([^"\']+)["\']', content)
+          print("=== ALL LINKS FOUND IN index.html ===")
+          for link in all_links:
+              print(f"  {link}")
+
+          # Fix 1: root-relative paths missing the subpath
+          # e.g. href="/topics.html" → href="/mark-scheme-method-pilot/topics.html"
           fixed = re.sub(
-              r'https://devontallman\.github\.io/(?!mark-scheme-method-pilot)',
-              'https://devontallman.github.io/mark-scheme-method-pilot/',
+              r'(href|src)="(/(?!mark-scheme-method-pilot)(?!#)(?!\w+://)([^"]+))"',
+              r'\1="/mark-scheme-method-pilot/\3"',
               content
           )
 
-          changes = len(re.findall(r'https://devontallman\.github\.io/(?!mark-scheme-method-pilot)', content))
-          print(f"Fixed {changes} broken path(s) in index.html")
+          # Fix 2: absolute URLs missing the subpath
+          # e.g. https://devontallman.github.io/topics.html
+          fixed = re.sub(
+              r'https://devontallman\.github\.io/(?!mark-scheme-method-pilot)(?![\s"\'])',
+              'https://devontallman.github.io/mark-scheme-method-pilot/',
+              fixed
+          )
 
-          with open('index.html', 'w', encoding='utf-8') as f:
-              f.write(fixed)
+          if fixed != content:
+              print("\n=== CHANGES MADE ===")
+              orig_links = re.findall(r'(?:href|src)=["\']([^"\']+)["\']', content)
+              new_links = re.findall(r'(?:href|src)=["\']([^"\']+)["\']', fixed)
+              for o, n in zip(orig_links, new_links):
+                  if o != n:
+                      print(f"  {o}  →  {n}")
+              with open('index.html', 'w', encoding='utf-8') as f:
+                  f.write(fixed)
+              print("\nindex.html updated.")
+          else:
+              print("\nNo changes needed — paths already correct.")
           PYEOF
 
       - name: Commit and push
         run: |
           git add index.html
-          git diff --staged --quiet && echo "No changes needed — paths already correct." && exit 0
-          git commit -m "Fix: correct absolute nav paths in index.html to include /mark-scheme-method-pilot/ subpath"
+          git diff --staged --quiet && echo "Nothing to commit." && exit 0
+          git commit -m "Fix: correct root-relative nav paths in index.html for GitHub Pages subpath"
           git push origin main
