@@ -22,5 +22,6 @@ const db  = getFirestore(app);
 // ─────────────────────────────────────────────────────────────
 window.MSM_FIREBASE_CONFIG = MSM_FIREBASE_CONFIG;
 window.MSM_DB = db;
+window.MSM_APP = app;
 
 export { app, db };
