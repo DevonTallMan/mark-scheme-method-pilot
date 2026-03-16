@@ -172,6 +172,15 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .ae-prog-not_started{background:rgba(127,140,141,.2);color:#7f8c8d;border:1px solid rgba(127,140,141,.3)}
 .ae-prog-in_progress{background:rgba(212,160,23,.15);color:#d4a017;border:1px solid rgba(212,160,23,.3)}
 .ae-prog-complete{background:rgba(30,132,73,.15);color:#1e8449;border:1px solid rgba(30,132,73,.3)}
+
+/* CALLSIGN CARD */
+.callsign-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;grid-column:span 3;}
+.callsign-card label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;flex-basis:100%;}
+.callsign-card input{flex:1;background:var(--void);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--link);font-family:'Share Tech Mono',monospace;font-size:13px;min-width:0;}
+.callsign-card input::placeholder{color:var(--muted);}
+.callsign-card button{background:var(--green);color:#000;border:none;border-radius:6px;padding:6px 14px;font-family:'Share Tech Mono',monospace;font-size:11px;cursor:pointer;white-space:nowrap;}
+.callsign-card button:hover{opacity:0.85;}
+.callsign-saved{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green);letter-spacing:1px;margin-left:4px;}
 </style>
 </head>
 <body>
@@ -233,6 +242,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       <div class="sc-val" id="scImpact">--</div>
       <div class="sc-lbl">IMPACT MARK RATE</div>
     </div>
+  </div>
+
+  <!-- CALLSIGN CARD -->
+  <div class="callsign-card" id="callsignCard">
+    <label>⚡ LEADERBOARD DISPLAY NAME (optional)</label>
+    <input id="dashCallsignInput" type="text" maxlength="20" placeholder="Set your callsign…" />
+    <button onclick="window.saveDashCallsign()">SAVE</button>
+    <span class="callsign-saved" id="callsignSaved"></span>
   </div>
 
   <!-- ── XP HISTORY CHART ── -->
@@ -730,6 +747,37 @@ async function run(){
 if(document.readyState==='loading'){
   document.addEventListener('DOMContentLoaded',run);
 }else{run();}
+
+  // Populate callsign input from localStorage
+  (function initCallsignInput(){
+    const inp = document.getElementById('dashCallsignInput');
+    if(!inp) return;
+    const saved = localStorage.getItem('msm_callsign');
+    if(saved) inp.value = saved;
+  })();
+
+  window.saveDashCallsign = async function(){
+    const inp = document.getElementById('dashCallsignInput');
+    const saved = document.getElementById('callsignSaved');
+    if(!inp) return;
+    const cs = inp.value.trim().slice(0,20);
+    localStorage.setItem('msm_callsign', cs || '');
+    const uid = localStorage.getItem('msm_uid');
+    const db = window.MSM_DB;
+    if(uid && db && cs){
+      const cc = (typeof CLASS_CODE !== 'undefined' && CLASS_CODE)
+        ? CLASS_CODE
+        : (new URLSearchParams(window.location.search).get('class') || '5MFH4P');
+      try{
+        const { doc: docFn, getDoc, setDoc, updateDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+        const ref = docFn(db,'classes',cc,'students',uid);
+        const snap = await getDoc(ref);
+        if(snap.exists()) await updateDoc(ref,{callsign:cs});
+        else await setDoc(ref,{callsign:cs},{merge:true});
+      }catch(e){console.warn('saveDashCallsign error',e);}
+    }
+    if(saved){ saved.textContent = cs ? '✓ SAVED' : '✓ CLEARED'; setTimeout(()=>{ saved.textContent=''; },2000); }
+  };
 </script>
 
 <script type="module" id="msm-stage2b-auth">
