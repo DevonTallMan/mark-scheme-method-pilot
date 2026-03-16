@@ -731,5 +731,117 @@ if(document.readyState==='loading'){
   document.addEventListener('DOMContentLoaded',run);
 }else{run();}
 </script>
+
+<script type="module" id="msm-stage2b-auth">
+import { getAuth, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+(function waitForApp() {
+  if (!window.MSM_APP || !window.MSM_DB) { setTimeout(waitForApp, 80); return; }
+  const auth = getAuth(window.MSM_APP);
+  const db   = window.MSM_DB;
+  onAuthStateChanged(auth, async user => {
+    if (!user) { const cred = await signInAnonymously(auth); user = cred.user; }
+    const uid = user.uid;
+    localStorage.setItem('msm_uid', uid);
+    const xp      = parseInt(localStorage.getItem('msm_xp') || '0');
+    const badges  = JSON.parse(localStorage.getItem('msm_badges') || '[]');
+    const modules = JSON.parse(localStorage.getItem('msm_completedModules') || '[]');
+    const MODULE_BADGE_KEYS = ['raw_signal','market_intelligence','signal_mapper','data_architect','systems_analyst','compliance_officer'];
+    const ca6Count = badges.filter(b => MODULE_BADGE_KEYS.includes(b)).length;
+    const neiRaw = {};
+    ['6-1-1','6-1-2','6-1-3','6-1-4'].forEach(ca => {
+      const n = parseFloat(localStorage.getItem('msm_nei_' + ca + '_n') || '0');
+      const e = parseFloat(localStorage.getItem('msm_nei_' + ca + '_e') || '0');
+      const i = parseFloat(localStorage.getItem('msm_nei_' + ca + '_i') || '0');
+      neiRaw[ca] = { n, e, i };
+    });
+    const classCode = (typeof CLASS_CODE !== 'undefined' && CLASS_CODE)
+      ? CLASS_CODE
+      : (new URLSearchParams(window.location.search).get('class') || '5MFH4P');
+    const callsign = localStorage.getItem('msm_callsign') || null;
+    const snapshot = {
+      uid, xp, badges,
+      completedModules: modules,
+      ca6Count,
+      neiProfile: neiRaw,
+      lastSeen: new Date().toISOString(),
+      classCode
+    };
+    if (callsign) snapshot.callsign = callsign;
+    try {
+      await setDoc(doc(db, 'classes', classCode, 'students', uid), snapshot, { merge: true });
+    } catch(err) { console.warn('Stage2b auth: Firestore write failed', err); }
+  });
+})();
+</script>
+
+<script id="msm-stage2b-nei">
+(function injectNEIMap() {
+  function pctClass(v) { return v >= 70 ? 'high' : v >= 45 ? 'med' : 'low'; }
+  const CAs = ['6-1-1','6-1-2','6-1-3','6-1-4'];
+  const rows = CAs.map(ca => {
+    const n = parseFloat(localStorage.getItem('msm_nei_' + ca + '_n') || '0');
+    const e = parseFloat(localStorage.getItem('msm_nei_' + ca + '_e') || '0');
+    const i = parseFloat(localStorage.getItem('msm_nei_' + ca + '_i') || '0');
+    return { ca, n, e, i };
+  });
+  function buildGrid() {
+    let html = '<div class="nei-map-grid">'
+      + '<div class="nei-col-head n">N — NAME</div>'
+      + '<div class="nei-col-head e">E — EXPLAIN</div>'
+      + '<div class="nei-col-head i">I — IMPACT</div>';
+    rows.forEach(r => {
+      ['n','e','i'].forEach(k => {
+        const v   = Math.round(r[k]);
+        const cls = pctClass(v);
+        const hasData = v > 0;
+        html += '<div class="nei-cell"' + (hasData ? '' : ' style="opacity:.3"') + '>'
+          + '<span class="nei-ca">' + r.ca + '</span>'
+          + '<div class="nei-bar-bg"><div class="nei-bar-fill fill-' + cls + '" style="width:' + v + '%"></div></div>'
+          + '<span class="nei-pct-val pct-' + cls + '">' + (hasData ? v + '%' : '--') + '</span>'
+          + '</div>';
+      });
+    });
+    html += '</div>';
+    const lowI = rows.filter(r => r.i < 50 && r.i > 0);
+    if (lowI.length) {
+      html += '<div class="low-impact-alert"><span>🔴</span>'
+        + '<span><strong>VULNERABILITY DETECTED:</strong> Impact mark rate below 50% in '
+        + lowI.map(r => r.ca).join(', ')
+        + '. Complete Impact-focused boosters in Field Training.</span></div>';
+    }
+    return html;
+  }
+  function inject() {
+    const selectors = [
+      '#nei-proficiency-map .panel-body',
+      '.nei-proficiency-map .panel-body',
+      '[data-panel="nei"] .panel-body',
+      '#neiMapBody',
+      '.nei-map-container'
+    ];
+    let container = null;
+    for (const s of selectors) { container = document.querySelector(s); if (container) break; }
+    if (container) { container.innerHTML = buildGrid(); return; }
+    document.querySelectorAll('.panel-title').forEach(el => {
+      if (el.textContent.trim().toUpperCase().includes('NEI PROFICIENCY')) {
+        const body = el.closest('.panel-card') && el.closest('.panel-card').querySelector('.panel-body');
+        if (body) { body.innerHTML = buildGrid(); container = body; }
+      }
+    });
+    if (container) return;
+    const panel = document.createElement('div');
+    panel.className = 'panel-card';
+    panel.style.cssText = 'grid-column:span 1;';
+    panel.innerHTML = '<div class="panel-head"><span class="panel-title">NEI PROFICIENCY</span>'
+      + '<span class="panel-sub">BY CONTENT AREA</span></div>'
+      + '<div class="panel-body" style="padding:12px;">' + buildGrid() + '</div>';
+    const anchor = document.querySelector('.stat-cards') || document.querySelector('.main') || document.body;
+    anchor.insertAdjacentElement('afterend', panel);
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', inject); }
+  else { inject(); }
+})();
+</script>
 </body>
 </html>
