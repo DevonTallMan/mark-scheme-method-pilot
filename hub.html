@@ -151,7 +151,32 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
 .f-lbl{color:var(--muted);}.f-val{color:var(--ink);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--void);}::-webkit-scrollbar-thumb{background:rgba(57,255,20,0.2);border-radius:3px;}
+  /* LIVE LEADERBOARD */
+  #msm-leaderboard-live{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .lb-live-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .lb-live-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:#fff;}
+  .lb-live-dot-wrap{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--green);}
+  .lb-live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:lbPulse 1.5s ease-in-out infinite;}
+  @keyframes lbPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(0.8);}}
+  .lb-class-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--muted);padding:6px 18px 4px;}
+  #lb-tbody tr{display:flex;align-items:center;gap:10px;padding:9px 18px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background .2s;}
+  #lb-tbody tr:hover{background:rgba(255,255,255,0.02);}
+  #lb-tbody tr.lb-you{background:rgba(255,215,0,0.06);border-bottom:1px solid rgba(255,215,0,0.12);}
+  .lb-medal{font-family:'Orbitron',monospace;font-size:13px;width:24px;text-align:center;flex-shrink:0;}
+  .lb-dn{font-size:13px;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .lb-dn .you-tag{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--green);background:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.2);padding:1px 5px;border-radius:3px;margin-left:5px;}
+  .lb-xp-cell{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1px;flex-shrink:0;}
+  .lb-delta{font-size:11px;width:14px;text-align:center;flex-shrink:0;}
+  .lb-delta.up{color:#39FF14;}.lb-delta.down{color:#FF3B3B;}.lb-delta.same{color:var(--muted);}
+  .lb-error{padding:14px 18px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#FF3B3B;letter-spacing:1px;}
+  .lb-callsign-row{padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;}
+  .lb-callsign-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;color:var(--ink);font-family:'Share Tech Mono',monospace;font-size:11px;padding:6px 10px;outline:none;transition:border-color .2s;}
+  .lb-callsign-input:focus{border-color:rgba(57,255,20,0.4);}
+  .lb-callsign-input::placeholder{color:var(--muted);}
+  .lb-callsign-btn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--void);background:var(--green);border:none;border-radius:6px;padding:6px 14px;cursor:pointer;transition:opacity .2s;}
+  .lb-callsign-btn:hover{opacity:.85;}
 </style>
+  <script type="module" src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -300,41 +325,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       </div>
     </div>
 
-    <!-- Class Intel Leaderboard -->
-    <div class="panel-card">
-      <div class="panel-head">
-        <span class="panel-title">CLASS INTEL</span>
-        <span class="panel-badge">LIVE</span>
-      </div>
-      <div class="panel-body">
-        <div class="lb-row">
-          <div class="lb-pos gold">1</div>
-          <div class="lb-avatar">👑</div>
-          <div class="lb-info"><div class="lb-name">Aisha K.</div><div class="lb-rank">SIGNAL ANALYST</div></div>
-          <div class="lb-xp">480 XP</div>
+    <!-- Class Intel Leaderboard — LIVE -->
+        <div id="msm-leaderboard-live">
+          <div class="lb-live-head">
+            <span class="lb-live-title">CLASS INTEL</span>
+            <div class="lb-live-dot-wrap"><div class="lb-live-dot"></div>LIVE</div>
+          </div>
+          <div class="lb-class-label" id="lb-class-label">CLASS: —</div>
+          <table style="width:100%;border-collapse:collapse;"><tbody id="lb-tbody"></tbody></table>
+          <div class="lb-callsign-row">
+            <input id="lb-callsign-input" class="lb-callsign-input" type="text" maxlength="20" placeholder="SET CALLSIGN…">
+            <button class="lb-callsign-btn" onclick="window.lbSaveCallsign()">SAVE</button>
+          </div>
         </div>
-        <div class="lb-row">
-          <div class="lb-pos silver">2</div>
-          <div class="lb-avatar">🎯</div>
-          <div class="lb-info"><div class="lb-name">Remi O.</div><div class="lb-rank">DATA CADET</div></div>
-          <div class="lb-xp">310 XP</div>
-        </div>
-        <div class="lb-row">
-          <div class="lb-pos bronze">3</div>
-          <div class="lb-avatar">⚡</div>
-          <div class="lb-info"><div class="lb-name">Priya S.</div><div class="lb-rank">DATA CADET</div></div>
-          <div class="lb-xp">280 XP</div>
-        </div>
-        <div class="lb-row you">
-          <div class="lb-pos">—</div>
-          <div class="lb-avatar">🧠</div>
-          <div class="lb-info"><div class="lb-name">You <span class="you-tag">YOU</span></div><div class="lb-rank" id="lbMyRank">TRAINEE</div></div>
-          <div class="lb-xp" id="lbMyXP">0 XP</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Examiner Intelligence -->
+        <!-- Examiner Intelligence -->
     <div class="panel-card">
       <div class="panel-head">
         <span class="panel-title">EXAMINER INTEL</span>
@@ -425,6 +430,88 @@ function initPage(){
 }
 
 document.addEventListener('DOMContentLoaded',initPage);
+</script>
+
+<script type="module" id="msm-leaderboard-live-script">
+import { collection, onSnapshot, doc, updateDoc, setDoc, getDoc }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const RANKS=[{l:'TRAINEE',m:0},{l:'DATA CADET',m:100},{l:'SIGNAL ANALYST',m:300},
+  {l:'SYSTEMS OPERATOR',m:600},{l:'INTELLIGENCE LEAD',m:1000},{l:'AXIOM SPECIALIST',m:1500}];
+function getRank(xp){let r=RANKS[0];for(const k of RANKS)if(xp>=k.m)r=k;return r.l;}
+
+const classCode=(new URLSearchParams(location.search).get('class'))||'5MFH4P';
+const myUid=localStorage.getItem('msm_uid')||'';
+const prevRanks=JSON.parse(localStorage.getItem('msm_lb_prev_ranks')||'{}');
+
+const classLbl=document.getElementById('lb-class-label');
+if(classLbl) classLbl.textContent='CLASS: '+classCode;
+
+const csInput=document.getElementById('lb-callsign-input');
+if(csInput){const saved=localStorage.getItem('msm_callsign');if(saved)csInput.value=saved;}
+
+window.lbSaveCallsign=async function(){
+  const input=document.getElementById('lb-callsign-input');
+  if(!input)return;
+  const cs=input.value.trim().slice(0,20);
+  if(!cs)return;
+  localStorage.setItem('msm_callsign',cs);
+  if(!myUid)return;
+  try{
+    const db=window.MSM_DB;
+    const ref=doc(db,'classes',classCode,'students',myUid);
+    const snap=await getDoc(ref);
+    if(snap.exists())await updateDoc(ref,{callsign:cs});
+    else await setDoc(ref,{callsign:cs},{merge:true});
+  }catch(e){console.warn('lbSaveCallsign error',e);}
+};
+
+function attachSnapshot(){
+  const db=window.MSM_DB;
+  if(!db){setTimeout(attachSnapshot,100);return;}
+  const studentsRef=collection(db,'classes',classCode,'students');
+  const tbody=document.getElementById('lb-tbody');
+  onSnapshot(studentsRef,(snap)=>{
+    const students=[];
+    snap.forEach(d=>students.push({uid:d.id,...d.data()}));
+    students.sort((a,b)=>(b.xp||0)-(a.xp||0));
+    const top=students.slice(0,10);
+    if(!tbody)return;
+    const medals=['🥇','🥈','🥉'];
+    const currentRanks={};
+    tbody.innerHTML=top.map((s,i)=>{
+      const xp=s.xp||0;
+      const name=s.callsign||(myUid&&s.uid===myUid&&localStorage.getItem('msm_callsign'))
+        ||(s.uid.length>8?s.uid.slice(0,8)+'…':s.uid);
+      const isYou=myUid&&s.uid===myUid;
+      currentRanks[s.uid]=i+1;
+      const prevPos=prevRanks[s.uid];
+      let deltaHtml='<td class="lb-delta same">—</td>';
+      if(prevPos!==undefined){
+        if(i+1<prevPos)deltaHtml='<td class="lb-delta up">▲</td>';
+        else if(i+1>prevPos)deltaHtml='<td class="lb-delta down">▼</td>';
+      }
+      const youTag=isYou?' <span class="you-tag">(you)</span>':'';
+      return `<tr class="${isYou?'lb-you':''}">
+        <td class="lb-medal">${medals[i]||(i+1)}</td>
+        <td class="lb-dn">${name}${youTag}</td>
+        <td class="lb-xp-cell">${xp} XP</td>
+        ${deltaHtml}
+      </tr>`;
+    }).join('');
+    if(top.length===0)tbody.innerHTML='<tr><td colspan="4" style="padding:14px 18px;color:var(--muted);font-family:Share Tech Mono,monospace;font-size:10px;">NO DATA YET — VISIT DASHBOARD FIRST</td></tr>';
+    window._lbCurrentRanks=currentRanks;
+  },(err)=>{
+    const tbody=document.getElementById('lb-tbody');
+    if(tbody)tbody.innerHTML='<tr><td colspan="4" class="lb-error">⚠ FIRESTORE READ BLOCKED — CHECK RULES</td></tr>';
+    console.error('Leaderboard snapshot error:',err);
+  });
+}
+attachSnapshot();
+
+window.addEventListener('beforeunload',()=>{
+  if(window._lbCurrentRanks)localStorage.setItem('msm_lb_prev_ranks',JSON.stringify(window._lbCurrentRanks));
+});
 </script>
 </body>
 </html>
