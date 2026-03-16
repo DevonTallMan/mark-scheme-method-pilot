@@ -1,0 +1,213 @@
+name: Stage 0 — Class Code Parameterisation
+
+# ─────────────────────────────────────────────────────────────────
+# Replaces every hardcoded '5MFH4P' class code in client-side JS
+# with a dynamic CLASS_CODE constant read from the ?class= URL
+# parameter, falling back to '5MFH4P' so Dave's class keeps working.
+#
+# Run manually from: Actions tab → "Stage 0 — Class Code
+# Parameterisation" → Run workflow → type YES → Run workflow
+# ─────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to run the class code parameterisation'
+        required: true
+        default: ''
+
+jobs:
+  parameterise:
+    name: Inject CLASS_CODE constant and replace hardcoded references
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    permissions:
+      contents: write
+
+    steps:
+
+      # ── 1. Checkout ───────────────────────────────────────────────
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── 2. Sync with remote main (mandatory pattern) ───────────────
+      - name: Sync with latest remote main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge origin/main --ff-only
+
+      # ── 3. Audit: list every file containing '5MFH4P' ─────────────
+      - name: Audit — list files containing hardcoded class code
+        run: |
+          echo "=== Files containing '5MFH4P' before patch ==="
+          grep -rl "5MFH4P" --include="*.html" --include="*.js" . \
+            | grep -v ".git" || echo "(none found)"
+
+      # ── 4. Patch each affected file ────────────────────────────────
+      - name: Inject CLASS_CODE constant and replace references
+        run: |
+          python3 - <<'PYEOF'
+          import os, re, glob
+
+          FALLBACK   = "5MFH4P"
+          PLACEHOLDER = "__MSM_CLASS_FALLBACK__"
+
+          # The constant block to inject — one clean declaration
+          CONST_BLOCK = (
+              "  // ── Class code: read from ?class= URL param, fallback to pilot code\n"
+              "  const params = new URLSearchParams(window.location.search);\n"
+              f"  const CLASS_CODE = params.get('class') || '{FALLBACK}';\n"
+          )
+
+          def already_patched(text):
+              return "const CLASS_CODE" in text
+
+          def inject_const(text):
+              """
+              Insert the CLASS_CODE block at the top of the first <script> tag
+              that already contains a reference to 5MFH4P (i.e. the relevant
+              script block, not a CDN import). Falls back to the first <script>
+              that has any content.
+              """
+              # Find a <script> block that contains 5MFH4P
+              pattern = re.compile(
+                  r'(<script(?:\s[^>]*)?>)(\s*\n)',
+                  re.IGNORECASE
+              )
+
+              # Try to inject after the first <script> tag whose block contains
+              # the class code — walk matches and pick the right one
+              script_tag_re = re.compile(
+                  r'<script(?:\s[^>]*)?>',
+                  re.IGNORECASE
+              )
+              matches = list(script_tag_re.finditer(text))
+
+              for m in matches:
+                  tag_start = m.start()
+                  tag_end   = m.end()
+                  # Find the corresponding </script>
+                  close = text.find('</script>', tag_end)
+                  if close == -1:
+                      continue
+                  block_body = text[tag_end:close]
+                  if FALLBACK in block_body:
+                      # Inject right after the opening tag + newline
+                      insert_at = tag_end
+                      # Skip any leading whitespace/newline after the tag
+                      while insert_at < close and text[insert_at] in (' ', '\t'):
+                          insert_at += 1
+                      return text[:insert_at] + CONST_BLOCK + text[insert_at:]
+
+              # Fallback: inject after the very first <script> tag
+              m = matches[0] if matches else None
+              if m:
+                  return text[:m.end()] + "\n" + CONST_BLOCK + text[m.end():]
+
+              return text  # No script tag found — leave unchanged
+
+          def replace_references(text):
+              """
+              1. Protect the fallback value inside the CLASS_CODE declaration
+                 by swapping it for a placeholder.
+              2. Replace all remaining bare '5MFH4P' string literals with
+                 CLASS_CODE (handles both single and double quotes).
+              3. Restore the placeholder.
+              """
+              # Protect the declaration line
+              text = text.replace(f"|| '{FALLBACK}'", f"|| '{PLACEHOLDER}'")
+              text = text.replace(f'|| "{FALLBACK}"', f'|| "{PLACEHOLDER}"')
+
+              # Replace remaining quoted references
+              text = text.replace(f"'{FALLBACK}'", "CLASS_CODE")
+              text = text.replace(f'"{FALLBACK}"', "CLASS_CODE")
+
+              # Restore the declaration
+              text = text.replace(f"|| '{PLACEHOLDER}'", f"|| '{FALLBACK}'")
+              text = text.replace(f'|| "{PLACEHOLDER}"', f'|| "{FALLBACK}"')
+
+              return text
+
+          # ── Collect candidate files ───────────────────────────────
+          candidates = []
+          for pattern in ["**/*.html", "**/*.js"]:
+              candidates += glob.glob(pattern, recursive=True)
+
+          patched = []
+          skipped = []
+
+          for path in sorted(candidates):
+              # Skip node_modules / .git / vendor dirs
+              if any(p in path for p in ['.git', 'node_modules', 'vendor']):
+                  continue
+
+              with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                  original = f.read()
+
+              if FALLBACK not in original:
+                  continue  # File has no hardcoded class code — skip
+
+              if already_patched(original):
+                  skipped.append(path)
+                  print(f"  SKIP (already patched): {path}")
+                  continue
+
+              # Inject constant
+              updated = inject_const(original)
+              # Replace remaining references
+              updated = replace_references(updated)
+
+              if updated == original:
+                  print(f"  NO CHANGE (nothing to replace): {path}")
+                  continue
+
+              with open(path, 'w', encoding='utf-8') as f:
+                  f.write(updated)
+
+              patched.append(path)
+              print(f"  PATCHED: {path}")
+
+          print()
+          print(f"=== Patched {len(patched)} file(s), skipped {len(skipped)} already-patched file(s) ===")
+          if patched:
+              print("Files patched:")
+              for p in patched:
+                  print(f"  {p}")
+          PYEOF
+
+      # ── 5. Verify: show CLASS_CODE lines in patched files ──────────
+      - name: Verify — show CLASS_CODE declarations in output files
+        run: |
+          echo "=== CLASS_CODE declarations found ==="
+          grep -rn "CLASS_CODE" --include="*.html" --include="*.js" . \
+            | grep -v ".git" || echo "(none — check patch step above)"
+
+          echo ""
+          echo "=== Remaining hardcoded '5MFH4P' references (should only be fallback lines) ==="
+          grep -rn "5MFH4P" --include="*.html" --include="*.js" . \
+            | grep -v ".git" || echo "(none remaining)"
+
+      # ── 6. Commit and push ─────────────────────────────────────────
+      - name: Commit and push
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit — files may already be patched."
+          else
+            git commit -m "Stage 0: parameterise class code — replace hardcoded 5MFH4P with CLASS_CODE
+
+          - Adds CLASS_CODE constant to all affected JS (reads from ?class= URL param)
+          - Falls back to 5MFH4P so Dave Smith's class continues to work unchanged
+          - Replaces all remaining hardcoded '5MFH4P' string references with CLASS_CODE
+          - Firebase paths, display labels, and fetch URLs all use CLASS_CODE
+          - Platform is now multi-tenant: each teacher gets their own ?class= URL"
+
+            git push origin main
+            echo "Pushed successfully."
+          fi
