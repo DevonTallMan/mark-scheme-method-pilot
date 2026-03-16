@@ -1,0 +1,882 @@
+name: Stage 1 — Assignment Engine
+
+# ─────────────────────────────────────────────────────────────────
+# Builds the full Assignment Engine into teacher-dashboard.html
+# and adds assignment awareness to dashboard.html (student side).
+#
+# Covers all 7 teacher-dashboard tasks + student assignment awareness.
+#
+# Run manually: Actions → "Stage 1 — Assignment Engine"
+#               → Run workflow → type YES → Run workflow
+# ─────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to build the Assignment Engine'
+        required: true
+        default: ''
+
+jobs:
+  build-assignment-engine:
+    name: Inject Assignment Engine into teacher and student dashboards
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    permissions:
+      contents: write
+
+    steps:
+
+      # ── 1. Checkout ───────────────────────────────────────────────
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── 2. Sync with remote main (mandatory pattern) ───────────────
+      - name: Sync with latest remote main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge origin/main --ff-only
+
+      # ── 3. Patch teacher-dashboard.html ───────────────────────────
+      - name: Patch teacher-dashboard.html — inject Assignment Engine
+        run: |
+          python3 - <<'PYEOF'
+          import os, re
+
+          TARGET = "teacher-dashboard.html"
+
+          if not os.path.exists(TARGET):
+              # Try to find it
+              import glob
+              found = glob.glob("**/teacher-dashboard.html", recursive=True)
+              if found:
+                  TARGET = found[0]
+              else:
+                  print(f"ERROR: teacher-dashboard.html not found in repo.")
+                  exit(1)
+
+          print(f"Patching: {TARGET}")
+
+          with open(TARGET, "r", encoding="utf-8") as f:
+              html = f.read()
+
+          if "msm-assignment-engine" in html:
+              print("SKIP: Assignment Engine already present.")
+              exit(0)
+
+          # ── Firebase SDK scripts to inject before </head> ──────────
+          FIREBASE_SCRIPTS = """
+    <!-- Firebase SDK (compat) — Assignment Engine -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>"""
+
+          # ── Assignment Engine CSS to inject before </head> ─────────
+          ASSIGNMENT_CSS = """
+    <style id="msm-assignment-engine-css">
+      /* ── Assignment Engine ── */
+      #msm-assignment-engine {
+        font-family: 'Share Tech Mono', 'Courier New', monospace;
+        margin: 24px 0;
+      }
+      .ae-panel {
+        background: rgba(13,27,42,0.85);
+        border: 1px solid rgba(212,160,23,0.35);
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 20px;
+      }
+      .ae-panel-title {
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        color: #d4a017;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(212,160,23,0.2);
+        padding-bottom: 8px;
+      }
+      .ae-form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+      .ae-form-row label {
+        display: flex; flex-direction: column; gap: 4px;
+        font-size: 11px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.1em;
+        flex: 1; min-width: 160px;
+      }
+      .ae-form-row input,
+      .ae-form-row select {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(212,160,23,0.3);
+        border-radius: 4px;
+        color: #ecf0f1;
+        font-family: inherit;
+        font-size: 13px;
+        padding: 8px 10px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .ae-form-row input:focus,
+      .ae-form-row select:focus { border-color: #d4a017; }
+      .ae-form-row select option { background: #0d1b2a; }
+      .ae-btn {
+        background: linear-gradient(135deg, #d4a017, #b8860b);
+        border: none; border-radius: 4px;
+        color: #0d1b2a; cursor: pointer;
+        font-family: inherit; font-size: 12px;
+        font-weight: 700; letter-spacing: 0.1em;
+        padding: 10px 20px; text-transform: uppercase;
+        transition: opacity 0.2s;
+      }
+      .ae-btn:hover { opacity: 0.85; }
+      .ae-btn-danger {
+        background: transparent;
+        border: 1px solid rgba(169,50,38,0.5);
+        border-radius: 4px; color: #e74c3c; cursor: pointer;
+        font-family: inherit; font-size: 11px;
+        padding: 4px 10px;
+        transition: all 0.2s;
+      }
+      .ae-btn-danger:hover { background: rgba(169,50,38,0.15); }
+      .ae-assignment-list { display: flex; flex-direction: column; gap: 10px; }
+      .ae-assignment-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-left: 3px solid #d4a017;
+        border-radius: 6px;
+        padding: 14px 16px;
+        display: flex; align-items: flex-start;
+        justify-content: space-between; gap: 12px;
+      }
+      .ae-card-meta { flex: 1; }
+      .ae-card-title { font-size: 14px; color: #ecf0f1; font-weight: 600; margin-bottom: 4px; }
+      .ae-card-detail { font-size: 11px; color: #7f8c8d; margin-bottom: 6px; }
+      .ae-card-progress {
+        display: inline-block;
+        background: rgba(30,132,73,0.2);
+        border: 1px solid rgba(30,132,73,0.4);
+        border-radius: 3px;
+        color: #1e8449; font-size: 11px;
+        padding: 2px 8px;
+      }
+      .ae-empty {
+        color: #7f8c8d; font-size: 13px;
+        text-align: center; padding: 20px 0;
+      }
+      .ae-status-msg {
+        font-size: 12px; padding: 8px 12px; border-radius: 4px;
+        margin-top: 10px; display: none;
+      }
+      .ae-status-ok  { background: rgba(30,132,73,0.15); color: #1e8449; border: 1px solid rgba(30,132,73,0.3); }
+      .ae-status-err { background: rgba(169,50,38,0.15); color: #e74c3c; border: 1px solid rgba(169,50,38,0.3); }
+    </style>"""
+
+          # ── Assignment Engine HTML block ───────────────────────────
+          ASSIGNMENT_HTML = """
+  <!-- ═══════════════════════════════════════════════════════════
+       MSM ASSIGNMENT ENGINE  — injected by Stage 1 workflow
+  ════════════════════════════════════════════════════════════ -->
+  <section id="msm-assignment-engine">
+
+    <!-- Create Assignment panel -->
+    <div class="ae-panel">
+      <div class="ae-panel-title">◈ Create Assignment</div>
+      <div class="ae-form-row">
+        <label>Assignment Title
+          <input type="text" id="ae-title" placeholder="e.g. NEI Practice — Module 6.1" maxlength="80">
+        </label>
+        <label>Module
+          <select id="ae-module">
+            <option value="">— Select module —</option>
+            <option value="6-1-1">6.1.1 — Big Data</option>
+            <option value="6-1-2">6.1.2 — Data Formats</option>
+            <option value="6-1-3">6.1.3 — How Data is Generated</option>
+            <option value="6-2">6.2 — Data Architecture</option>
+            <option value="6-3">6.3 — (Coming Soon)</option>
+            <option value="6-4">6.4 — (Coming Soon)</option>
+          </select>
+        </label>
+        <label>Due Date
+          <input type="date" id="ae-due">
+        </label>
+        <label>Class Code
+          <input type="text" id="ae-classcode" placeholder="5MFH4P" style="text-transform:uppercase;" maxlength="12">
+        </label>
+      </div>
+      <button class="ae-btn" onclick="aeCreateAssignment()">+ Create Assignment</button>
+      <div id="ae-status" class="ae-status-msg"></div>
+    </div>
+
+    <!-- Active Assignments panel -->
+    <div class="ae-panel">
+      <div class="ae-panel-title">◈ Active Assignments</div>
+      <div class="ae-assignment-list" id="ae-list">
+        <div class="ae-empty" id="ae-empty">No assignments yet — create one above.</div>
+      </div>
+    </div>
+
+  </section>
+  <!-- ═══════════════════════════════════════════════════════════ -->"""
+
+          # ── Assignment Engine JS block ─────────────────────────────
+          ASSIGNMENT_JS = """
+  <script id="msm-assignment-engine-js">
+  // ── MSM Assignment Engine ── injected by Stage 1 workflow ──────
+
+  (function () {
+    // ── Firebase config ──────────────────────────────────────────
+    // NOTE: Replace these placeholder values with your actual Firebase
+    // project config from: Firebase console → Project settings → Your apps
+    const FIREBASE_CONFIG = {
+      apiKey:            "REPLACE_WITH_YOUR_API_KEY",
+      authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+      databaseURL:       "REPLACE_WITH_YOUR_DATABASE_URL",
+      projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+      storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+      messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
+      appId:             "REPLACE_WITH_YOUR_APP_ID"
+    };
+
+    // Initialise (guard against double-init if config already exists in page)
+    let app;
+    try {
+      app = firebase.app('msm-ae');
+    } catch (e) {
+      try {
+        app = firebase.initializeApp(FIREBASE_CONFIG, 'msm-ae');
+      } catch (initErr) {
+        console.error('MSM Assignment Engine: Firebase init failed.', initErr);
+        return;
+      }
+    }
+
+    const db   = firebase.database(app);
+    const auth = firebase.auth(app);
+
+    // ── Class code: read from CLASS_CODE if available, else field ──
+    function getClassCode() {
+      if (typeof CLASS_CODE !== 'undefined' && CLASS_CODE) return CLASS_CODE;
+      const params = new URLSearchParams(window.location.search);
+      return params.get('class') || '5MFH4P';
+    }
+
+    // Pre-fill class code field on load
+    document.addEventListener('DOMContentLoaded', function () {
+      const ccField = document.getElementById('ae-classcode');
+      if (ccField) ccField.value = getClassCode();
+      aeAttachListener();
+    });
+
+    // ── Task 3: Write new assignment to Firebase ──────────────────
+    window.aeCreateAssignment = function () {
+      const title     = (document.getElementById('ae-title').value || '').trim();
+      const module    = document.getElementById('ae-module').value;
+      const dueDate   = document.getElementById('ae-due').value;
+      const classCode = (document.getElementById('ae-classcode').value || '').trim().toUpperCase()
+                        || getClassCode();
+
+      if (!title)    return aeShowStatus('Enter an assignment title.', false);
+      if (!module)   return aeShowStatus('Select a module.', false);
+      if (!dueDate)  return aeShowStatus('Choose a due date.', false);
+
+      const ref = db.ref(`/msm/classes/${classCode}/assignments`);
+      ref.push({
+        title,
+        module,
+        dueDate,
+        classCode,
+        createdAt: Date.now()
+      })
+      .then(function () {
+        aeShowStatus('Assignment created successfully.', true);
+        document.getElementById('ae-title').value = '';
+        document.getElementById('ae-module').value = '';
+        document.getElementById('ae-due').value = '';
+      })
+      .catch(function (err) {
+        console.error('AE create error:', err);
+        aeShowStatus('Failed to create assignment. Check Firebase config.', false);
+      });
+    };
+
+    // ── Task 4: Real-time listener on /assignments node ───────────
+    function aeAttachListener() {
+      const classCode = getClassCode();
+      const ref = db.ref(`/msm/classes/${classCode}/assignments`);
+
+      ref.on('value', function (snapshot) {
+        const list    = document.getElementById('ae-list');
+        const empty   = document.getElementById('ae-empty');
+        if (!list) return;
+
+        const data = snapshot.val();
+
+        // Clear rendered cards (keep the empty placeholder)
+        Array.from(list.querySelectorAll('.ae-assignment-card')).forEach(el => el.remove());
+
+        if (!data) {
+          if (empty) empty.style.display = 'block';
+          return;
+        }
+        if (empty) empty.style.display = 'none';
+
+        const entries = Object.entries(data).sort((a, b) => b[1].createdAt - a[1].createdAt);
+        entries.forEach(function ([id, assignment]) {
+          aeRenderCard(list, classCode, id, assignment);
+        });
+
+      }, function (err) {
+        console.error('AE listener error:', err);
+        aeShowStatus('Could not load assignments. Check Firebase permissions.', false);
+      });
+    }
+
+    // ── Task 5: Render card with completion stats ─────────────────
+    function aeRenderCard(container, classCode, id, assignment) {
+      const card = document.createElement('div');
+      card.className = 'ae-assignment-card';
+      card.dataset.assignmentId = id;
+
+      const due = assignment.dueDate
+        ? new Date(assignment.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+        : 'No due date';
+
+      card.innerHTML = `
+        <div class="ae-card-meta">
+          <div class="ae-card-title">${escHtml(assignment.title)}</div>
+          <div class="ae-card-detail">Module: ${escHtml(assignment.module)} &nbsp;|&nbsp; Due: ${due} &nbsp;|&nbsp; Class: ${escHtml(classCode)}</div>
+          <div class="ae-card-progress" id="ae-prog-${id}">Loading…</div>
+        </div>
+        <button class="ae-btn-danger" onclick="aeDeleteAssignment('${escHtml(classCode)}', '${id}')">Delete</button>`;
+
+      container.appendChild(card);
+
+      // Fetch completion stats for this assignment
+      aeLoadCompletionStats(classCode, id);
+    }
+
+    // ── Task 5 cont: calculate X/Y complete ───────────────────────
+    function aeLoadCompletionStats(classCode, assignmentId) {
+      const studentsRef = db.ref(`/msm/classes/${classCode}/students`);
+      studentsRef.once('value')
+        .then(function (snap) {
+          const students = snap.val();
+          if (!students) {
+            aeSetProgress(assignmentId, '0 students enrolled');
+            return;
+          }
+          const uids    = Object.keys(students);
+          const total   = uids.length;
+          let complete  = 0;
+          let inProg    = 0;
+
+          uids.forEach(function (uid) {
+            const progress = students[uid]
+              && students[uid].assignmentProgress
+              && students[uid].assignmentProgress[assignmentId];
+            if (progress === 'complete')    complete++;
+            else if (progress === 'in_progress') inProg++;
+          });
+
+          aeSetProgress(assignmentId, `${complete}/${total} complete  |  ${inProg} in progress`);
+        })
+        .catch(function () {
+          aeSetProgress(assignmentId, 'Stats unavailable');
+        });
+    }
+
+    function aeSetProgress(assignmentId, text) {
+      const el = document.getElementById(`ae-prog-${assignmentId}`);
+      if (el) el.textContent = text;
+    }
+
+    // ── Task 6: Delete assignment ──────────────────────────────────
+    window.aeDeleteAssignment = function (classCode, assignmentId) {
+      if (!confirm('Delete this assignment? Student progress nodes will also be removed.')) return;
+
+      const assignRef = db.ref(`/msm/classes/${classCode}/assignments/${assignmentId}`);
+      assignRef.remove()
+        .then(function () {
+          // Also remove all student progress nodes for this assignment
+          return db.ref(`/msm/classes/${classCode}/students`).once('value');
+        })
+        .then(function (snap) {
+          const students = snap.val();
+          if (!students) return;
+          const removes = Object.keys(students).map(function (uid) {
+            return db.ref(
+              `/msm/classes/${classCode}/students/${uid}/assignmentProgress/${assignmentId}`
+            ).remove();
+          });
+          return Promise.all(removes);
+        })
+        .then(function () {
+          aeShowStatus('Assignment deleted.', true);
+        })
+        .catch(function (err) {
+          console.error('AE delete error:', err);
+          aeShowStatus('Failed to delete assignment. Check Firebase permissions.', false);
+        });
+    };
+
+    // ── Helpers ───────────────────────────────────────────────────
+    function aeShowStatus(msg, ok) {
+      const el = document.getElementById('ae-status');
+      if (!el) return;
+      el.textContent = msg;
+      el.className   = 'ae-status-msg ' + (ok ? 'ae-status-ok' : 'ae-status-err');
+      el.style.display = 'block';
+      setTimeout(function () { el.style.display = 'none'; }, 4000);
+    }
+
+    function escHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+  }());
+  </script>"""
+
+          # ── Inject Firebase SDK + CSS before </head> ──────────────
+          if "</head>" in html and "firebase-app-compat.js" not in html:
+              html = html.replace("</head>", FIREBASE_SCRIPTS + "\n" + ASSIGNMENT_CSS + "\n</head>")
+          elif "firebase-app-compat.js" not in html:
+              # No </head> — inject at top
+              html = FIREBASE_SCRIPTS + "\n" + ASSIGNMENT_CSS + "\n" + html
+
+          # ── Inject Assignment Engine HTML ──────────────────────────
+          # Try common teacher dashboard container landmarks
+          INJECT_AFTER = [
+              '<div class="dashboard-main"',
+              '<main',
+              '<div class="main-content"',
+              '<div id="main"',
+              '<div class="container"',
+              '<body',
+          ]
+          injected = False
+          for marker in INJECT_AFTER:
+              if marker in html:
+                  # Find end of the opening tag
+                  idx = html.find(marker)
+                  end = html.find('>', idx) + 1
+                  html = html[:end] + "\n" + ASSIGNMENT_HTML + html[end:]
+                  injected = True
+                  print(f"  Injected Assignment Engine HTML after: {marker}>")
+                  break
+
+          if not injected:
+              # Last resort: inject before </body>
+              html = html.replace("</body>", ASSIGNMENT_HTML + "\n</body>")
+              print("  Injected Assignment Engine HTML before </body> (fallback)")
+
+          # ── Inject Assignment Engine JS before </body> ─────────────
+          if "</body>" in html:
+              html = html.replace("</body>", ASSIGNMENT_JS + "\n</body>")
+          else:
+              html += "\n" + ASSIGNMENT_JS
+
+          with open(TARGET, "w", encoding="utf-8") as f:
+              f.write(html)
+
+          print(f"  PATCHED: {TARGET}")
+          PYEOF
+
+      # ── 4. Patch dashboard.html — student assignment awareness ─────
+      - name: Patch dashboard.html — student assignment awareness
+        run: |
+          python3 - <<'PYEOF'
+          import os, glob
+
+          TARGET = "dashboard.html"
+          if not os.path.exists(TARGET):
+              found = glob.glob("**/dashboard.html", recursive=True)
+              if found:
+                  TARGET = found[0]
+              else:
+                  print("ERROR: dashboard.html not found.")
+                  exit(1)
+
+          print(f"Patching: {TARGET}")
+
+          with open(TARGET, "r", encoding="utf-8") as f:
+              html = f.read()
+
+          if "msm-assignment-awareness" in html:
+              print("SKIP: Assignment awareness already present.")
+              exit(0)
+
+          # ── Assignment awareness CSS ───────────────────────────────
+          AWARENESS_CSS = """
+    <style id="msm-assignment-awareness-css">
+      /* ── Assignment awareness badges on topic cards ── */
+      .topic-card { position: relative; }
+      .ae-assigned-badge {
+        position: absolute;
+        top: 8px; right: 8px;
+        background: linear-gradient(135deg, #d4a017, #b8860b);
+        border-radius: 3px;
+        color: #0d1b2a;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        padding: 2px 6px;
+        text-transform: uppercase;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .ae-assignments-panel {
+        background: rgba(13,27,42,0.7);
+        border: 1px solid rgba(212,160,23,0.25);
+        border-left: 3px solid #d4a017;
+        border-radius: 6px;
+        margin: 16px 0;
+        padding: 16px 20px;
+      }
+      .ae-assignments-panel-title {
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        color: #d4a017;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .ae-student-assignment {
+        display: flex; align-items: center; gap: 10px;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 12px;
+        color: #bdc3c7;
+      }
+      .ae-student-assignment:last-child { border-bottom: none; }
+      .ae-prog-pill {
+        font-size: 9px; padding: 2px 7px; border-radius: 10px;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      }
+      .ae-prog-not_started { background: rgba(127,140,141,0.2); color: #7f8c8d; border: 1px solid rgba(127,140,141,0.3); }
+      .ae-prog-in_progress  { background: rgba(212,160,23,0.15); color: #d4a017;  border: 1px solid rgba(212,160,23,0.3); }
+      .ae-prog-complete     { background: rgba(30,132,73,0.15);  color: #1e8449;  border: 1px solid rgba(30,132,73,0.3); }
+    </style>"""
+
+          # ── Assignment awareness JS ────────────────────────────────
+          AWARENESS_JS = """
+  <script id="msm-assignment-awareness">
+  // ── MSM Student Assignment Awareness — injected by Stage 1 workflow ──
+
+  (function () {
+    // ── Firebase init (reuse same config as teacher side if present) ─
+    // Uses the same Firebase app name 'msm-ae' — if teacher-dashboard
+    // already initialised it, we reuse; otherwise init fresh here.
+    // IMPORTANT: Replace these placeholder values with your actual config.
+    const FIREBASE_CONFIG = {
+      apiKey:            "REPLACE_WITH_YOUR_API_KEY",
+      authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+      databaseURL:       "REPLACE_WITH_YOUR_DATABASE_URL",
+      projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+      storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+      messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
+      appId:             "REPLACE_WITH_YOUR_APP_ID"
+    };
+
+    let app, db;
+
+    function initFirebase() {
+      try {
+        app = firebase.app('msm-ae');
+      } catch (e) {
+        try {
+          app = firebase.initializeApp(FIREBASE_CONFIG, 'msm-ae');
+        } catch (err) {
+          console.error('MSM Awareness: Firebase init failed.', err);
+          return false;
+        }
+      }
+      db = firebase.database(app);
+      return true;
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────
+    function getClassCode() {
+      if (typeof CLASS_CODE !== 'undefined' && CLASS_CODE) return CLASS_CODE;
+      const p = new URLSearchParams(window.location.search);
+      return p.get('class') || '5MFH4P';
+    }
+
+    function getStudentUID() {
+      return localStorage.getItem('msm_uid') || null;
+    }
+
+    function getCompletedModules() {
+      // Returns array of module IDs the student has finished
+      const badges = JSON.parse(localStorage.getItem('msm_badges') || '[]');
+      // Map badge IDs to module IDs (e.g. badge '611' → module '6-1-1')
+      const badgeModuleMap = {
+        '611': '6-1-1', '612': '6-1-2', '613': '6-1-3',
+        '62':  '6-2',   '63':  '6-3',   '64':  '6-4'
+      };
+      return badges.map(b => badgeModuleMap[b] || b).filter(Boolean);
+    }
+
+    // ── Main: load assignments and apply awareness ─────────────────
+    function runAssignmentAwareness() {
+      if (!initFirebase()) return;
+
+      const classCode = getClassCode();
+      const uid       = getStudentUID();
+      if (!uid) return; // No student identity yet — nothing to load
+
+      const ref = db.ref(`/msm/classes/${classCode}/assignments`);
+
+      ref.once('value')
+        .then(function (snap) {
+          const assignments = snap.val();
+          if (!assignments) return;
+
+          const entries = Object.entries(assignments);
+
+          // ── Render assignment panel on dashboard ─────────────────
+          renderAssignmentPanel(entries, classCode, uid);
+
+          // ── Badge ASSIGNED on matching topic cards ───────────────
+          badgeTopicCards(entries);
+
+          // ── Auto-write progress for completed modules ─────────────
+          const completed = getCompletedModules();
+          entries.forEach(function ([id, assignment]) {
+            if (completed.includes(assignment.module)) {
+              writeProgress(classCode, uid, id, 'complete');
+            }
+          });
+        })
+        .catch(function (err) {
+          console.error('MSM Awareness: failed to load assignments.', err);
+        });
+    }
+
+    // ── Render the student-facing assignments panel ────────────────
+    function renderAssignmentPanel(entries, classCode, uid) {
+      // Find a good anchor — look for the XP bar, topbar, or a known section
+      const anchors = [
+        document.querySelector('.dashboard-topbar'),
+        document.querySelector('#dashboard-topbar'),
+        document.querySelector('.topic-grid'),
+        document.querySelector('#topic-cards'),
+        document.querySelector('main'),
+        document.querySelector('.container'),
+        document.body,
+      ];
+      const anchor = anchors.find(a => a !== null);
+      if (!anchor) return;
+
+      const existing = document.getElementById('ae-student-panel');
+      if (existing) existing.remove();
+
+      const panel = document.createElement('div');
+      panel.id = 'ae-student-panel';
+      panel.className = 'ae-assignments-panel';
+
+      const title = document.createElement('div');
+      title.className = 'ae-assignments-panel-title';
+      title.textContent = '◈ Assigned Work';
+      panel.appendChild(title);
+
+      if (entries.length === 0) {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'font-size:12px;color:#7f8c8d;';
+        empty.textContent = 'No assignments set yet.';
+        panel.appendChild(empty);
+      } else {
+        entries.forEach(function ([id, assignment]) {
+          // Read current progress for this student
+          db.ref(`/msm/classes/${classCode}/students/${uid}/assignmentProgress/${id}`)
+            .once('value')
+            .then(function (snap) {
+              const progress = snap.val() || 'not_started';
+              const row = document.createElement('div');
+              row.className = 'ae-student-assignment';
+
+              const due = assignment.dueDate
+                ? new Date(assignment.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+                : '';
+
+              const label = document.createElement('span');
+              label.style.flex = '1';
+              label.textContent = `${assignment.title}  |  Module ${assignment.module}${due ? '  |  Due ' + due : ''}`;
+
+              const pill = document.createElement('span');
+              pill.className = `ae-prog-pill ae-prog-${progress}`;
+              pill.textContent = progress.replace('_', ' ');
+
+              row.appendChild(label);
+              row.appendChild(pill);
+              panel.appendChild(row);
+            });
+        });
+      }
+
+      // Insert after the first child of anchor, or prepend
+      if (anchor.firstChild) {
+        anchor.insertBefore(panel, anchor.firstChild.nextSibling || anchor.firstChild);
+      } else {
+        anchor.appendChild(panel);
+      }
+    }
+
+    // ── Badge ASSIGNED on topic cards ────────────────────────────
+    function badgeTopicCards(entries) {
+      const assignedModules = new Set(entries.map(([, a]) => a.module));
+
+      // Topic cards are expected to have data-module="6-1-1" etc.
+      // or a class like .topic-card with an href containing the module id.
+      document.querySelectorAll('[data-module]').forEach(function (card) {
+        if (assignedModules.has(card.dataset.module)) {
+          addAssignedBadge(card);
+        }
+      });
+
+      // Fallback: look for links inside topic cards whose href contains module id
+      document.querySelectorAll('.topic-card, .module-card').forEach(function (card) {
+        const link = card.querySelector('a[href]') || card;
+        const href = link.getAttribute('href') || '';
+        assignedModules.forEach(function (mod) {
+          if (href.includes(mod) || card.textContent.includes(mod)) {
+            addAssignedBadge(card);
+          }
+        });
+      });
+    }
+
+    function addAssignedBadge(card) {
+      if (card.querySelector('.ae-assigned-badge')) return; // Already badged
+      const badge = document.createElement('span');
+      badge.className = 'ae-assigned-badge';
+      badge.textContent = 'Assigned';
+      // Ensure card has position:relative for absolute badge
+      const pos = window.getComputedStyle(card).position;
+      if (pos === 'static') card.style.position = 'relative';
+      card.appendChild(badge);
+    }
+
+    // ── Write progress node to Firebase ──────────────────────────
+    function writeProgress(classCode, uid, assignmentId, status) {
+      if (!db) return;
+      db.ref(`/msm/classes/${classCode}/students/${uid}/assignmentProgress/${assignmentId}`)
+        .set(status)
+        .catch(function (err) {
+          console.warn('MSM Awareness: could not write progress.', err);
+        });
+    }
+
+    // ── Run on DOMContentLoaded ───────────────────────────────────
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', runAssignmentAwareness);
+    } else {
+      runAssignmentAwareness();
+    }
+
+  }());
+  </script>"""
+
+          # ── Inject Firebase SDK if not present ────────────────────
+          FIREBASE_SCRIPTS = """
+    <!-- Firebase SDK (compat) — Assignment Awareness -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>"""
+
+          if "firebase-app-compat.js" not in html:
+              if "</head>" in html:
+                  html = html.replace("</head>", FIREBASE_SCRIPTS + "\n</head>")
+              else:
+                  html = FIREBASE_SCRIPTS + "\n" + html
+
+          # ── Inject awareness CSS before </head> ───────────────────
+          if "</head>" in html:
+              html = html.replace("</head>", AWARENESS_CSS + "\n</head>")
+          else:
+              html = AWARENESS_CSS + "\n" + html
+
+          # ── Inject awareness JS before </body> ────────────────────
+          if "</body>" in html:
+              html = html.replace("</body>", AWARENESS_JS + "\n</body>")
+          else:
+              html += "\n" + AWARENESS_JS
+
+          with open(TARGET, "w", encoding="utf-8") as f:
+              f.write(html)
+
+          print(f"  PATCHED: {TARGET}")
+          PYEOF
+
+      # ── 5. Verify ─────────────────────────────────────────────────
+      - name: Verify — check injection markers present
+        run: |
+          echo "=== Teacher dashboard — Assignment Engine markers ==="
+          for marker in "msm-assignment-engine" "aeCreateAssignment" "aeDeleteAssignment" "ae-list"; do
+            if grep -q "$marker" teacher-dashboard.html 2>/dev/null; then
+              echo "  FOUND: $marker"
+            else
+              # Try finding the file
+              f=$(find . -name "teacher-dashboard.html" | head -1)
+              [ -n "$f" ] && grep -q "$marker" "$f" \
+                && echo "  FOUND: $marker in $f" \
+                || echo "  MISSING: $marker"
+            fi
+          done
+
+          echo ""
+          echo "=== Student dashboard — Awareness markers ==="
+          for marker in "msm-assignment-awareness" "runAssignmentAwareness" "ae-assigned-badge"; do
+            if grep -q "$marker" dashboard.html 2>/dev/null; then
+              echo "  FOUND: $marker"
+            else
+              f=$(find . -name "dashboard.html" | head -1)
+              [ -n "$f" ] && grep -q "$marker" "$f" \
+                && echo "  FOUND: $marker in $f" \
+                || echo "  MISSING: $marker"
+            fi
+          done
+
+          echo ""
+          echo "=== IMPORTANT: Firebase config placeholders to replace ==="
+          echo "  After this workflow runs, open teacher-dashboard.html and"
+          echo "  dashboard.html and replace all REPLACE_WITH_YOUR_* values"
+          echo "  with your actual Firebase project config."
+          echo "  Firebase console → Project settings → Your apps → Firebase SDK snippet"
+
+      # ── 6. Commit and push ─────────────────────────────────────────
+      - name: Commit and push
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit — Assignment Engine may already be present."
+          else
+            git commit -m "Stage 1: Assignment Engine — teacher dashboard + student awareness
+
+          Teacher dashboard (teacher-dashboard.html):
+          - Firebase SDK (compat v9) injected
+          - Assignment Engine CSS and HTML panel injected
+          - Create Assignment form: title, module dropdown, due date, class code
+          - Active Assignments list with real-time Firebase listener (onValue)
+          - Per-assignment completion stats (X/Y complete | N in progress)
+          - Delete Assignment action (removes assignment + all student progress nodes)
+
+          Student dashboard (dashboard.html):
+          - Firebase SDK injected
+          - Assignment awareness JS injected
+          - Loads active assignments from /msm/classes/{classCode}/assignments on page load
+          - Renders assigned-work panel showing progress pill per assignment
+          - Badges matching topic cards with ASSIGNED indicator
+          - Auto-writes 'complete' to assignmentProgress when module badge already earned
+
+          NOTE: Firebase config placeholders must be replaced with real values.
+          See REPLACE_WITH_YOUR_* strings in both patched files."
+
+            git push origin main
+            echo "Pushed successfully."
+          fi
