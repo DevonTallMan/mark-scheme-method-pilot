@@ -1239,6 +1239,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  *
  * USAGE:
  *   const body = buildExaminerRequest(question, studentAnswer, marks, topic);
+  body.uid = localStorage.getItem('msm_uid') || 'anon'; // Stage 5: UID for CF Worker rate limiting
  *   const res  = await fetch(GROQ_ENDPOINT, {
  *     method: "POST",
  *     headers: { "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
