@@ -784,8 +784,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div class="pa-wrap">
 
       <!-- API Key config ────────────────────────────────── -->
-      <div class="pa-config">
-        <div class="pa-config-lbl">◈ GROQ API KEY</div>
+      <!-- Stage 5: API key input removed — key held in CF Worker -->
         <input type="password" class="pa-key-input" id="pa-key-input"
           placeholder="gsk_xxxxxxxxxxxxxxxx — paste your free Groq key"
           oninput="paKeyInput()">
@@ -1675,7 +1674,7 @@ function parseExaminerResponse(raw) {
 // Model: llama-3.3-70b-versatile | Temp: 0.3
 // ════════════════════════════════════════════════════════════════════
 
-const AXIOM_WORKER_URL = 'https://msm-axiom-proxy.YOUR_SUBDOMAIN.workers.dev/api/axiom'; // Stage 5: CF Worker proxy
+const AXIOM_WORKER_URL = 'https://msm-axiom-proxy.morrischristopher675.workers.dev/api/axiom'; // Stage 5: CF Worker proxy
 
 const PA_QUESTIONS = [
   { text:'A smart factory installs sensors on its production line machinery. Explain one benefit this sensor data provides to the business.', marks:3, topic:'6.1.3 How Data is Generated' },
@@ -1688,28 +1687,9 @@ let paCurrentQ = 0;
 let paLastResult = null;
 
 // ─── Key management ──────────────────────────────────────────────────
-function paKeyInput() {
-  const k = document.getElementById('pa-key-input').value.trim();
-  const dot = document.getElementById('pa-dot');
-  const lbl = document.getElementById('pa-key-lbl');
-  const ready = k.startsWith('gsk_') && k.length > 20;
-  dot.className = 'pa-dot' + (ready ? ' live' : '');
-  lbl.textContent = ready ? 'KEY READY' : 'NOT SET';
-  lbl.style.color = ready ? 'var(--green)' : 'var(--muted)';
-}
-function paSaveKey() {
-  const k = document.getElementById('pa-key-input').value.trim();
-  if (!k) return;
-  // Stage 5: key no longer stored client-side
-  const btn = document.querySelector('.pa-key-btn');
-  btn.textContent = 'SAVED ✓'; btn.style.color = 'var(--green)';
-  setTimeout(() => { btn.textContent = 'SAVE'; btn.style.color = ''; }, 2200);
-  paKeyInput();
-}
-function paGetKey() {
-  return (document.getElementById('pa-key-input').value.trim()
-       ''; // Stage 5: key held server-side in CF Worker
-}
+function paKeyInput() {}
+function paSaveKey() {}
+function paGetKey() { return ''; }
 function paInitArena() {
   paRenderMissions && paRenderMissions(); // Stage 5: no key to load
 }
