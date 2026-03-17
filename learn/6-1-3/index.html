@@ -1239,7 +1239,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  *
  * USAGE:
  *   const body = buildExaminerRequest(question, studentAnswer, marks, topic);
-  body.uid = localStorage.getItem('msm_uid') || 'anon'; // Stage 5: UID for CF Worker rate limiting
  *   const res  = await fetch(GROQ_ENDPOINT, {
  *     method: "POST",
  *     headers: { "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
@@ -1793,7 +1792,8 @@ async function paRunAxiom7() {
   paResetHUD();
 
   const controller = new AbortController();
-  const tout = setTimeout(() => controller.abort(), 15000);
+  const tout = setTimeout(() => controlle
+  body.uid = (window.localStorage && localStorage.getItem('msm_uid')) || 'anon'; // Stage 5: UID for CF Worker rate limitingr.abort(), 15000);
 
   try {
     const body = buildExaminerRequest(q.text, answer, q.marks, q.topic);
