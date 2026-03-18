@@ -559,7 +559,69 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
                 </div>
             </div>
 
-            <!-- ======== E STATION: 6.3.2 BUSINESS INFORMATION TOOLS ======== -->
+            
+            <!-- ======== N STATION WORKED EXAMPLE ======== -->
+            <div class="theory-card t-d2d" style="grid-column:1/-1;">
+                <div class="card-tier"><span class="tier-dot"></span>N STATION &mdash; WORKED EXAMPLE &amp; TECHNIQUE</div>
+                <span class="card-icon">&#128221;</span>
+                <div class="card-heading">How to earn Name marks — CA6.3</div>
+
+                <!-- Exam question -->
+                <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,215,0,0.3);border-radius:6px;padding:1rem;margin:0.8rem 0;">
+                    <div style="font-family:var(--display);font-size:0.65rem;color:var(--gold);letter-spacing:0.12em;margin-bottom:0.5rem;">&#9655; EXAM QUESTION [3 MARKS]</div>
+                    <p style="font-size:0.9rem;line-height:1.6;">A hospital trust is preparing to merge patient records from two legacy systems. Describe the process of data wrangling. <strong>[3 marks]</strong></p>
+                </div>
+
+                <!-- Response comparison -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:0.8rem 0;">
+                    <!-- Weak answer -->
+                    <div style="background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.3);border-radius:6px;padding:0.8rem;">
+                        <div style="font-family:var(--display);font-size:0.6rem;color:#FF4444;letter-spacing:0.1em;margin-bottom:0.4rem;">&#9888; WEAK ANSWER &mdash; 1/3 marks</div>
+                        <p style="font-size:0.8rem;font-style:italic;color:rgba(255,255,255,0.75);line-height:1.5;">"Data wrangling is when you clean up data to make it usable. You remove errors and duplicates."</p>
+                        <div style="margin-top:0.5rem;font-size:0.72rem;color:rgba(255,255,255,0.5);">&#10006; Only names the clean stage. Missing structure, enrich, validate and output. No technical terminology for the other stages earns 1 mark maximum.</div>
+                    </div>
+                    <!-- Strong answer -->
+                    <div style="background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.3);border-radius:6px;padding:0.8rem;">
+                        <div style="font-family:var(--display);font-size:0.6rem;color:var(--green);letter-spacing:0.1em;margin-bottom:0.4rem;">&#10003; STRONG ANSWER &mdash; 3/3 marks</div>
+                        <p style="font-size:0.8rem;font-style:italic;color:rgba(255,255,255,0.75);line-height:1.5;">"Data wrangling is the process of preparing raw data for use through five stages: <strong>structuring</strong> (organising fields into a consistent format), <strong>cleaning</strong> (removing errors and duplicates), <strong>enriching</strong> (adding context by merging with additional sources), <strong>validating</strong> (checking accuracy against rules) and <strong>outputting</strong> (exporting the processed data for use)."</p>
+                        <div style="margin-top:0.5rem;font-size:0.72rem;color:rgba(255,255,255,0.5);">&#10003; Names all five stages with technical terms. Each stage correctly identified = marks awarded.</div>
+                    </div>
+                </div>
+
+                <!-- N-Station technique box -->
+                <div style="background:rgba(0,229,255,0.05);border-left:3px solid var(--cyan);padding:0.8rem 1rem;margin:0.8rem 0;border-radius:0 6px 6px 0;">
+                    <div style="font-family:var(--display);font-size:0.65rem;color:var(--cyan);letter-spacing:0.12em;margin-bottom:0.5rem;">&#9993; NAME-IT TECHNIQUE &mdash; EXAMINER TIP</div>
+                    <p style="font-size:0.82rem;line-height:1.6;color:rgba(255,255,255,0.85);">For CA6.3 Name marks: <strong>use the exact spec terminology</strong>. The examiner's mark scheme lists specific terms — "structure", "clean", "enrich", "validate", "output" (wrangling), "conceptual", "logical", "physical" (data models), "BI software", "CRM", "financial planning" (business tools). Using a synonym instead of the spec term risks losing the mark.</p>
+                </div>
+
+                <!-- Rapid-fire glossary -->
+                <div style="margin-top:0.8rem;">
+                    <div style="font-family:var(--display);font-size:0.65rem;color:var(--gold);letter-spacing:0.12em;margin-bottom:0.6rem;">&#128218; CA6.3 NAMING GLOSSARY &mdash; ALL REQUIRED TERMS</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.4rem;">
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Data wrangling</span> &mdash; transforming raw data into usable format</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Structure</span> &mdash; organise fields/records into consistent format</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Clean</span> &mdash; remove errors, duplicates, nulls</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Enrich</span> &mdash; add context by merging additional data sources</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Validate</span> &mdash; check data accuracy against defined rules</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Output</span> &mdash; export processed data for use</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--gold);font-weight:700;">BI software</span> &mdash; analyses data into dashboards/reports</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--gold);font-weight:700;">CRM</span> &mdash; Customer Relationship Management system</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--gold);font-weight:700;">Financial planning</span> &mdash; tools modelling budgets and forecasts</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--green);font-weight:700;">Conceptual model</span> &mdash; high-level entities and relationships</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--green);font-weight:700;">Logical model</span> &mdash; technology-independent structure with keys</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--green);font-weight:700;">Physical model</span> &mdash; DBMS-specific tables, indexes, data types</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--green);font-weight:700;">Hierarchical model</span> &mdash; tree structure, parent-to-child</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--green);font-weight:700;">Relational model</span> &mdash; tables linked by primary/foreign keys</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Feedback loop</span> &mdash; checks outputs against inputs to maintain integrity</div>
+                        <div style="background:rgba(255,255,255,0.04);border-radius:4px;padding:0.4rem 0.6rem;font-size:0.75rem;"><span style="color:var(--cyan);font-weight:700;">Visualisation types</span> &mdash; graphs, charts, tables, reports, infographics</div>
+                    </div>
+                </div>
+                <div class="card-tags" style="margin-top:1rem;">
+                    <span class="ctag">Spec terminology</span><span class="ctag">3-mark question</span><span class="ctag">Naming precision</span><span class="ctag">Mark scheme</span>
+                </div>
+            </div>
+
+<!-- ======== E STATION: 6.3.2 BUSINESS INFORMATION TOOLS ======== -->
             <div class="theory-card t-h2d">
                 <div class="card-tier"><span class="tier-dot"></span>STATION 02 &mdash; EXPLAIN IT</div>
                 <span class="card-icon">&#128218;</span>
