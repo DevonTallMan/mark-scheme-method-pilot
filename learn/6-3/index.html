@@ -96,7 +96,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .nav-dot.active{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 10px var(--cyan);width:24px;border-radius:5px;}
 
 /* ─── SCENE B ─── */
-#scene-b{min-height:calc(100vh - 52px);padding:2.5rem 2rem;}
+#scene-b{min-height:calc(100vh - 52px);padding:2.5rem 2rem;}#scene-c{min-height:calc(100vh - 52px);padding:2.5rem 2rem;}:calc(100vh - 52px);padding:2.5rem 2rem;}:calc(100vh - 52px);padding:2.5rem 2rem;}
 .scene-header{text-align:center;margin-bottom:2.5rem;}
 .scene-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--cyan-dim);border:1px solid rgba(0,229,255,0.25);color:var(--cyan);font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;padding:0.3rem 1rem;border-radius:4px;margin-bottom:1rem;}
 .scene-title{font-family:var(--display);font-size:1.6rem;font-weight:700;color:#fff;margin-bottom:0.3rem;}
@@ -448,7 +448,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div class="header-brand">The Mark Scheme Method&#174; // Field Training 6.3</div>
     <div class="header-status">
         <div class="status-item"><span class="status-dot"></span>SYSTEM ONLINE</div>
-        <div class="status-item">STATION: <span id="station-label" style="color:var(--gold);margin-left:4px;">BRIEFING</span></div>
+        <div class="status-item">STATION: <span id="h" style="color:var(--gold);margin-left:4px;">BRIEFING</span></div>
         <div style="display:flex;flex-direction:column;gap:3px;">
             <div class="status-item">PROGRESS</div>
             <div class="progress-bar"><div class="progress-fill" id="main-progress" style="width:0%"></div></div>
@@ -828,12 +828,170 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div style="margin-top:2rem;font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.3);text-align:center;">
         NEXT: FIELD TRAINING 6.4 &mdash; DATA MANAGEMENT &rarr;</div>
 
-</section><!-- end scene-b -->
+  <section id="scene-c" class="scene">
+        <div class="scene-header">
+                  <div class="scene-badge">&#9632; FIELD TRAINING 6.3 &#8212; E STATION &#9632;</div>
+                  <h2 class="scene-title">Business Tools, Functions &amp; Models</h2>h2>
+                  <p class="scene-sub">EXPLAIN IT &#8212; Describe the mechanism. How does it work?</p>p>
+        </div>
+        <div class="sub-tabs">
+                  <button class="sub-tab active" onclick="switchTabC('theory')">&#128218; Theory</button>button>
+                  <button class="sub-tab" onclick="switchTabC('flashcards')">&#9889; Flashcards</button>button>
+                  <button class="sub-tab" onclick="switchTabC('quiz')">&#128308; Quiz</button>button>
+                  <button class="sub-tab" onclick="switchTabC('discuss')">&#128172; Discussion</button>button>
+                  <button class="sub-tab" onclick="switchTabC('arena')">&#9889; Practice Arena</button>button>
+        </div>
+        <!-- THEORY -->
+        <div id="c-sub-theory" class="sub-content active">
+                  <div class="theory-grid">
+                                <div class="theory-card t-h2d">
+                                                  <div class="card-tier"><span class="tier-dot"></span>span>STATION 02 &#8212; EXPLAIN IT</div>
+                                                  <div class="card-icon">&#128202;</div>
+                                                  <div class="card-heading">How Business Information Tools Work</div>
+                                                  <div class="card-def">BI software (<strong>e.g. Power BI, Tableau</strong>) works by connecting to data sources, processing queries and rendering interactive dashboards. The pipeline is: <strong>ingest data &rarr; transform &rarr; model &rarr; visualise</strong>. Financial planning tools (<strong>e.g. Adaptive Insights</strong>) work by building forecast models from historical data, allowing managers to run &#8220;what-if&#8221; scenarios. CRM systems (<strong>e.g. Salesforce</strong>) work by centralising customer interaction data so sales teams can track leads, schedule follow-ups and analyse pipeline conversion rates.</div>
+                                                <div class="card-example">
+                                                                    <div class="example-label">HOSPITAL SCENARIO &#8212; EXPLAIN THE MECHANISM</div>
+                                                                    <div class="example-text">NorthGen Trust connects its merged patient database to Power BI. The BI tool queries the data warehouse, aggregates readmission rates by ward and renders a live dashboard. Senior managers can drill down to ward level &#8212; this works because the relational model links Patient &rarr; Ward &rarr; Admission records via foreign keys, enabling multi-table aggregation in real time.</div>
+                                                </div>
+                                                <div class="card-tags"><span class="ctag">BI Pipeline</span>span><span class="ctag">Data Ingest</span>span><span class="ctag">Visualise</span>span><span class="ctag">CRM</span>span><span class="ctag">Forecasting</span>span></div>
+                                </div>
+                              <div class="theory-card t-h2d">
+                                              <div class="card-tier"><span class="tier-dot"></span>span>STATION 02b &#8212; EXPLAIN IT</div>
+                                              <div class="card-icon">&#9881;</div>
+                                              <div class="card-heading">How Data System Functions Work</div>
+                                              <div class="card-def">Each core function has a specific mechanism: <strong>Input</strong> works by accepting data via forms, APIs or sensors and writing to a storage layer. <strong>Search</strong> works by executing a query (e.g. SQL SELECT) against indexed fields, returning matching records. <strong>Save</strong> works by serialising data and writing it to persistent storage with a transaction log for recovery. <strong>Integrate</strong> works by mapping fields between systems using an API or ETL pipeline, resolving schema differences. <strong>Organise</strong> works by sorting, grouping or categorising records using defined rules. <strong>Output</strong> works by formatting stored data into reports, exports or API responses for consumers.</div>
+                                              <div class="card-example">
+                                                                  <div class="example-label">HOSPITAL SCENARIO &#8212; EXPLAIN THE MECHANISM</div>
+                                                                  <div class="example-text">When a nurse inputs a patient observation, the <em>Input</em> function writes a timestamped record to the observations table. The <em>Integrate</em> function then maps this to the patient&#8217;s NHS number, linking it to the main record via a foreign key &#8212; enabling the <em>Search</em> function to retrieve all observations for a given patient in milliseconds using an indexed query.</div>
+                                              </div>
+                                              <div class="card-tags"><span class="ctag">SQL</span>span><span class="ctag">API</span>span><span class="ctag">ETL</span>span><span class="ctag">Index</span>span><span class="ctag">Transaction</span>span></div>
+                              </div>
+                              <div class="theory-card t-h2d">
+                                              <div class="card-tier"><span class="tier-dot"></span>span>STATION 02c &#8212; EXPLAIN IT</div>
+                                              <div class="card-icon">&#128203;</div>
+                                              <div class="card-heading">How Data Models Enable Organisation</div>
+                                              <div class="card-def">A <strong>conceptual model</strong> works by defining entities and relationships as a diagram (ERD), giving stakeholders a shared vocabulary before any technical work begins. A <strong>logical model</strong> works by translating entities into tables with attributes and keys, independent of any database platform, so developers can validate structure. A <strong>physical model</strong> works by specifying exact data types, indexes and constraints in a target DBMS (e.g. SQL Server), enabling storage optimisation. A <strong>relational model</strong> works by using primary/foreign key pairs to link tables, so a single query can JOIN multiple tables and retrieve related data without duplication. A <strong>hierarchical model</strong> works by nesting child records under a parent, enabling fast read access for tree-structured data (e.g. an org chart).</div>
+                                              <div class="card-example">
+                                                                  <div class="example-label">HOSPITAL SCENARIO &#8212; EXPLAIN THE MECHANISM</div>
+                                                                  <div class="example-text">The relational model works by linking the Patient table (NHS_Number PK) to the Ward table (Ward_ID FK) and the Admission table (NHS_Number FK, Ward_ID FK). A JOIN query can retrieve all patients in a given ward with one SQL statement &#8212; without duplicating patient demographic data across multiple tables, which would create update anomalies.</div>
+                                              </div>
+                                              <div class="card-tags"><span class="ctag">ERD</span>span><span class="ctag">PRIMARY KEY</span>span><span class="ctag">FOREIGN KEY</span>span><span class="ctag">JOIN</span>span><span class="ctag">Normalisation</span>span></div>
+                              </div>
+                              <div class="theory-card t-h2d">
+                                              <div class="card-tier"><span class="tier-dot"></span>span>E STATION &#8212; WORKED EXAMPLE &amp; TECHNIQUE</div>
+                                              <div class="card-icon">&#9999;</div>
+                                              <div class="card-heading">How to earn Explain marks &#8212; CA6.3</div>
+                                              <div class="card-def"><strong>The Explain mark is earned by describing the MECHANISM &#8212; not repeating the name.</strong><br><br><strong>Weak answer (Name only):</strong> &#8220;The organisation uses a BI tool.&#8221; &#9888; No explain mark &#8212; this just names the tool.<br><br><strong>Strong answer (Explain mark):</strong> &#8220;The BI tool works by connecting to the data warehouse and executing aggregate queries, which are rendered as interactive dashboards so managers can identify trends at ward level.&#8221; &#9989;<br><br><strong>Common student errors on the Explain mark:</strong><br>1. Saying &#8220;it helps the business&#8221; instead of explaining the technical process<br>2. Repeating the definition instead of the mechanism<br>3. Using vague phrases like &#8220;it processes data&#8221; without saying HOW<br>4. Confusing Explain with Impact (explaining a business outcome rather than a technical process)</div>
+                                              <div class="card-example">
+                                                                  <div class="example-label">3-MARK STRUCTURE &#8212; N+E+I</div>
+                                                                  <div class="example-text">[N] &#8220;NorthGen Trust uses a relational data model.&#8221; [E] &#8220;This works by linking the Patient table to the Admission table via a foreign key (NHS_Number), so a single SQL JOIN retrieves all admissions for a patient without duplicating demographic data.&#8221; [I] &#8220;This means the merged 14,000-record database can be queried in real time, enabling clinical staff to access patient history instantly &#8212; reducing decision-making delays and improving patient safety.&#8221;</div>
+                                              </div>
+                                              <div class="card-tags"><span class="ctag">Mechanism</span>span><span class="ctag">How it works</span>span><span class="ctag">Technical process</span>span><span class="ctag">Not business outcome</span>span></div>
+                              </div>
+                  </div>
+        </div>
+      <!-- FLASHCARDS -->
+      <div id="c-sub-flashcards" class="sub-content">
+              <div class="fc-grid">
+                          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                          <div class="front">FLIP TO REVEAL<br>How does a BI tool convert raw data into a dashboard?<br><small>&#128242; tap to flip</small></div>
+                                          <div class="back">It connects to a data source, executes aggregate queries, transforms results into a visual model, then renders interactive charts/tables that update when the underlying data changes.</div>
+                          </div>
+                          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                          <div class="front">FLIP TO REVEAL<br>Explain the MECHANISM of the Integrate function in a data system.<br><small>&#128242; tap to flip</small></div>
+                                          <div class="back">Integrate works by mapping field names between two or more systems (e.g. via an ETL pipeline or API), resolving schema differences, and writing linked records to a shared data store using a common key.</div>
+                          </div>
+                          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                          <div class="front">FLIP TO REVEAL<br>How does a relational model prevent data duplication?<br><small>&#128242; tap to flip</small></div>
+                                          <div class="back">By storing each entity once in its own table and linking related records via primary/foreign key pairs. A JOIN query retrieves combined data at query time, so demographic data is never duplicated across rows.</div>
+                          </div>
+                          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                          <div class="front">FLIP TO REVEAL<br>How does a physical data model differ from a logical model in practice?<br><small>&#128242; tap to flip</small></div>
+                                          <div class="back">A logical model defines structure (tables, keys, attributes) platform-independently. A physical model translates this into a specific DBMS &#8212; specifying data types (e.g. VARCHAR(50)), indexes for performance and storage constraints.</div>
+                          </div>
+                          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                          <div class="front">FLIP TO REVEAL<br>What is the mechanism of a CRM system?<br><small>&#128242; tap to flip</small></div>
+                                          <div class="back">A CRM centralises customer interaction data (calls, emails, purchases) in a single database. It works by logging every touchpoint against a customer record, enabling sales teams to query interaction history, track pipeline stages and trigger automated follow-ups.</div>
+                          </div>
+                          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                          <div class="front">FLIP TO REVEAL<br>Explain the common error students make on the Explain mark.<br><small>&#128242; tap to flip</small></div>
+                                          <div class="back">Students describe a business benefit (&#8220;it improves efficiency&#8221;) rather than the technical mechanism (&#8220;it works by...&#8221;). The Explain mark requires HOW the technology functions &#8212; not WHAT it achieves for the organisation.</div>
+                          </div>
+              </div>
+      </div>
+      <!-- QUIZ -->
+      <div id="c-sub-quiz" class="sub-content">
+              <div id="c-quiz-container">
+                          <div id="c-quiz-progress-text">Question 1 of 6</div>
+                          <div class="progress-bar"><div id="c-quiz-fill" class="progress-fill"></div></div>
+                          <div id="c-quiz-question-text"></div>
+                          <div id="c-quiz-options"></div>
+                          <div id="c-quiz-feedback"></div>
+                          <button id="c-quiz-next-btn" onclick="cQuizNext()" style="display:none">Next &rarr;</button>button>
+                          <div id="c-quiz-result" style="display:none">
+                                          <div id="c-quiz-score-text"></div>
+                                          <button onclick="cQuizRestart()">Retry Quiz</button>button>
+                          </div>
+              </div>
+      </div>
+      <!-- DISCUSSION -->
+      <div id="c-sub-discuss" class="sub-content">
+              <div id="c-discuss-prompt-box">
+                          <div class="discuss-prompt-title">AXIOM-7 DISCUSSION PROMPT</div>
+                          <div id="c-discuss-prompt-text">Loading AXIOM-7 prompt&#8230;</div>
+              </div>
+              <textarea id="c-discuss-input" placeholder="Write your Explain response here&#8230;"></textarea>
+              <button onclick="cSubmitDiscussion()">Submit to AXIOM-7 &rarr;</button>button>
+              <div id="c-discuss-feedback"></div>
+      </div>
+      <!-- PRACTICE ARENA -->
+      <div id="c-sub-arena" class="sub-content">
+              <div class="pa-header">
+                          <div class="pa-title">&#9889; EXPLAIN ARENA &#8212; E COMPONENT</div>
+                          <div class="pa-sub">Powered by AXIOM-7 // Exam-style marking</div>
+              </div>
+              <div class="pa-key-section">
+                          <div class="pa-key-lbl" id="c-pa-key-lbl">NOT SET</div>
+                          <div id="c-pa-dot"></div>
+                          <input type="text" id="c-pa-key-input" class="pa-key-input" placeholder="Enter Groq API key (gsk_...)" oninput="cPaSetKey(this.value)">
+                          <div class="pa-key-note">Free key &rarr; console.groq.com</div>
+              </div>
+              <div class="pa-section-lbl">&#9654; SELECT PRACTICE QUESTION</div>
+              <div id="c-pa-q-selector"></div>
+              <div class="pa-section-lbl" id="c-pa-write-lbl" style="display:none">&#9654; WRITE YOUR EXPLAIN SENTENCE</div>
+              <div id="c-pa-question-display" style="display:none"></div>
+              <div id="c-pa-marks-display" style="display:none"></div>
+              <textarea id="c-pa-answer" class="pa-answer-box" placeholder="Write your Explain sentence here&#8230;" style="display:none"></textarea>
+              <button id="c-pa-submit-btn" class="btn-primary pa-submit" onclick="cPaSubmit()" style="display:none">Submit for AXIOM-7 Marking &rarr;</button>button>
+              <div id="c-pa-result" class="pa-result" style="display:none">
+                          <div class="pa-result-header">
+                                          <span class="pa-result-badge" id="c-pa-result-badge"></span>span>
+                                          <span class="pa-result-score" id="c-pa-result-score"></span>span>
+                          </div>
+                          <div class="pa-result-body" id="c-pa-result-body"></div>
+                          <div class="pa-hs-section" id="c-pa-hs-section" style="display:none">
+                                          <div class="pa-hs-title">HIGHLIGHT SCHEME</div>
+                                          <div class="pa-hs-legend">
+                                                              <span class="hs-swatch hs-name"></span>span>NAME&nbsp;&nbsp;
+                                                              <span class="hs-swatch hs-explain"></span>span>EXPLAIN&nbsp;&nbsp;
+                                                              <span class="hs-swatch hs-impact"></span>span>IMPACT&nbsp;&nbsp;
+                                                              <span class="hs-swatch hs-missing"></span>span>MISSING
+                                          </div>
+                                          <div class="pa-hs-text" id="c-pa-hs-text"></div>
+                          </div>
+                          <button class="btn-primary pa-retry" onclick="cPaRetry()">Try Another &#8594;</button>button>
+              </div>
+      </div>
+  
+      <div style="margin-top:2rem;font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.3);text-align:center;">
+              NEXT: I STATION &#8212; IMPACT IT &rarr;</div>
+  
+</section><!-- end scene-c -->
 
 <script>
 const state = { currentScene:'a', quizScore:0, quizAnswered:0, activeScenario:'airport' };
-const sceneOrder = ['a','b','e'];
-const stationLabels = {a:'BRIEFING',b:'STATIONS',e:'COMPLETE'};
+const sceneOrder = ['a','b','c','e'];
+const stationLabels = {a:'BRIEFING',b:'N STATION',c:'E STATION',e:'COMPLETE'};
 
 function goToScene(id) {
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
@@ -853,6 +1011,165 @@ function switchTab(id) {
   document.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
   document.getElementById('sub-'+id).classList.add('active');
 }
+
+  // ═══ SCENE-C (E STATION) FUNCTIONS ═══
+  function switchTabC(id) {
+      const ids=['theory','flashcards','quiz','discuss','arena'];
+      document.querySelectorAll('#scene-c .sub-tab').forEach((t,i) => t.classList.toggle('active',ids[i]===id));
+      document.querySelectorAll('#scene-c .sub-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('c-sub-'+id).classList.add('active');
+  }
+
+  // Scene-C Quiz
+  const cQuizData = [
+    {q:'A BI tool creates a dashboard. Which step comes FIRST in the process?',opts:['Display to user','Execute aggregate query','Connect to data source','Format as chart'],correct:2,fb:'The BI pipeline starts with CONNECTING to the data source before any querying or display can occur.'},
+    {q:'A student writes: "The hospital uses a relational model." Which mark does this earn?',opts:['Name mark only','Explain mark only','Impact mark only','Name and Explain marks'],correct:0,fb:'This earns only the Name mark. An Explain mark requires describing the MECHANISM — how the relational model works (e.g. using PK/FK links and JOIN queries).'},
+    {q:'Which phrase best demonstrates an Explain mark answer?',opts:['It helps the business make better decisions','It works by linking tables via foreign keys so JOIN queries retrieve related data without duplication','It is used by large organisations','It is a type of data structure'],correct:1,fb:'The Explain mark requires describing the MECHANISM — "it works by..." with technical detail about HOW it functions.'},
+    {q:'How does the Integrate function in a data system work?',opts:['It deletes duplicate records','It maps fields between systems via an API or ETL pipeline to link records using a common key','It converts data into charts','It stores data in a backup location'],correct:1,fb:'Integrate works by MAPPING fields between systems and writing linked records using a common key — resolving schema differences between different data sources.'},
+    {q:'What is the mechanism of a CRM system?',opts:['It creates marketing materials','It stores product inventory data','It centralises customer interaction data and logs every touchpoint against a customer record enabling pipeline tracking','It generates financial reports automatically'],correct:2,fb:'A CRM works by CENTRALISING customer data and LOGGING interactions — enabling query, tracking and automated follow-ups. This is the mechanism, not just the name.'},
+    {q:'A student confuses Explain and Impact marks. Which answer demonstrates this common error?',opts:['The relational model works by linking tables via foreign keys','SQL JOIN queries retrieve data across multiple tables simultaneously','Using a BI tool enables managers to make faster decisions — this earns the E mark','The physical model specifies data types and indexes for the target DBMS'],correct:2,fb:'The answer about "enabling managers to make faster decisions" is an IMPACT mark, not Explain. Explain describes the TECHNICAL mechanism, Impact describes the BUSINESS consequence.'}
+    ];
+  let cQuizIdx=0, cQuizScore=0, cQuizAnswered=0;
+  function cQuizInit(){
+      cQuizIdx=0; cQuizScore=0; cQuizAnswered=0;
+      document.getElementById('c-quiz-result').style.display='none';
+      document.getElementById('c-quiz-container').style.display='block';
+      cQuizRender();
+  }
+  function cQuizRender(){
+      const q=cQuizData[cQuizIdx];
+      document.getElementById('c-quiz-progress-text').textContent='Question '+(cQuizIdx+1)+' of '+cQuizData.length;
+      document.getElementById('c-quiz-fill').style.width=(cQuizIdx/cQuizData.length*100)+'%';
+      document.getElementById('c-quiz-question-text').textContent=q.q;
+      document.getElementById('c-quiz-options').innerHTML=q.opts.map((o,i)=>`<button class="quiz-opt" data-qi="${i}" onclick="cQuizAnswer(${i})">${o}</button>`).join('');
+    document.getElementById('c-quiz-feedback').textContent='';
+      document.getElementById('c-quiz-next-btn').style.display='none';
+  }
+  function cQuizAnswer(i){
+      const q=cQuizData[cQuizIdx];
+      const fb=document.getElementById('c-quiz-feedback');
+      document.querySelectorAll('#c-sub-quiz [data-qi]').forEach(b=>b.disabled=true);
+      document.querySelectorAll(`#c-sub-quiz [data-qi="${i}"]`)[0].classList.add(i===q.correct?'correct':'incorrect');
+      document.querySelectorAll(`#c-sub-quiz [data-qi="${q.correct}"]`)[0].classList.add('correct');
+      fb.className='q-feedback '+(i===q.correct?'correct-fb':'incorrect-fb');
+      fb.textContent=(i===q.correct?'✓ ':'✗ ')+q.fb;
+      if(i===q.correct) cQuizScore++;
+      cQuizAnswered++;
+      if(cQuizAnswered===cQuizData.length){
+            document.getElementById('c-quiz-score-text').textContent='Score: '+cQuizScore+'/'+cQuizData.length;
+            document.getElementById('c-quiz-result').style.display='block';
+      } else {
+            document.getElementById('c-quiz-next-btn').style.display='block';
+      }
+  }
+  function cQuizNext(){ cQuizIdx++; cQuizRender(); }
+  function cQuizRestart(){ cQuizInit(); }
+
+  // Scene-C Discussion
+  const cDiscussPrompt = 'AXIOM-7 EXPLAIN CHALLENGE: A hospital data analyst says: "We use a relational data model." Write a single sentence that earns the Explain mark by describing HOW the relational model works — include the technical mechanism.';
+  function cInitDiscuss(){
+      const el = document.getElementById('c-discuss-prompt-text');
+      if(el) el.textContent = cDiscussPrompt;
+  }
+  function cSubmitDiscussion(){
+      const input=document.getElementById('c-discuss-input').value.trim();
+      const fb=document.getElementById('c-discuss-feedback');
+      if(!input){fb.textContent='Write your response first.';return;}
+      const hasHow=input.toLowerCase().includes('works by')||input.toLowerCase().includes('how it')||input.toLowerCase().includes('mechanism');
+      const hasTech=input.toLowerCase().includes('key')||input.toLowerCase().includes('join')||input.toLowerCase().includes('query')||input.toLowerCase().includes('link');
+      if(hasHow&&hasTech){
+            fb.className='q-feedback correct-fb';
+            fb.textContent='✓ Strong Explain answer — you described the MECHANISM with technical detail.';
+      } else if(hasHow||hasTech){
+            fb.className='q-feedback incorrect-fb';
+            fb.textContent='Partially correct — include both HOW it works AND a technical term (e.g. foreign key, JOIN, query).';
+      } else {
+            fb.className='q-feedback incorrect-fb';
+            fb.textContent='✗ This describes a business benefit, not a mechanism. Start with "This works by..." and include technical detail.';
+      }
+  }
+
+  // Scene-C Practice Arena
+  const cPaQuestions = [
+    {label:'Hospital',q:'Explain how a Business Intelligence (BI) tool processes data. [1 mark]',marks:1,context:'NorthGen Trust uses Power BI to analyse patient readmission data.'},
+    {label:'Retail',q:'Explain how a relational data model enables queries across multiple tables. [1 mark]',marks:1,context:'SmartRetail Ltd uses a relational database linking Products, Sales and Customer tables.'},
+    {label:'Airport',q:'Explain the mechanism of the Integrate function in a data system. [1 mark]',marks:1,context:'Heathrow Airport integrates passenger, flight and baggage systems.'},
+    {label:'General',q:'Explain how a CRM system manages customer data. [1 mark]',marks:1,context:'A financial services firm uses Salesforce CRM to track client interactions.'}
+    ];
+  let cPaActiveQ=null, cPaKey='', cPaLastResult=null;
+  function cPaInit(){
+      const sel=document.getElementById('c-pa-q-selector');
+      if(!sel)return;
+      sel.innerHTML=cPaQuestions.map((q,i)=>`<button class="pa-q-btn" onclick="cPaSelectQ(${i})">${q.label}</button>`).join('');
+  }
+  function cPaSelectQ(i){
+      cPaActiveQ=cPaQuestions[i];
+      document.getElementById('c-pa-write-lbl').style.display='block';
+      document.getElementById('c-pa-question-display').style.display='block';
+      document.getElementById('c-pa-question-display').textContent=cPaActiveQ.context+' — '+cPaActiveQ.q;
+    document.getElementById('c-pa-marks-display').style.display='block';
+      document.getElementById('c-pa-marks-display').textContent='['+cPaActiveQ.marks+' mark]';
+      document.getElementById('c-pa-answer').style.display='block';
+      document.getElementById('c-pa-answer').value='';
+      document.getElementById('c-pa-submit-btn').style.display='block';
+      document.getElementById('c-pa-result').style.display='none';
+  }
+  function cPaSetKey(val){
+      cPaKey=val.trim();
+      const lbl=document.getElementById('c-pa-key-lbl');
+      const dot=document.getElementById('c-pa-dot');
+      if(cPaKey.startsWith('gsk_')){lbl.textContent='KEY SET';if(dot)dot.style.background='var(--green)';}
+      else{lbl.textContent='NOT SET';if(dot)dot.style.background='var(--red)';}
+  }
+  async function cPaSubmit(){
+      const answer=document.getElementById('c-pa-answer').value.trim();
+      if(!answer||!cPaActiveQ)return;
+      document.getElementById('c-pa-submit-btn').disabled=true;
+      document.getElementById('c-pa-result').style.display='block';
+      document.getElementById('c-pa-result-badge').textContent='⏳ MARKING...';
+      document.getElementById('c-pa-result-body').textContent='';
+      document.getElementById('c-pa-hs-section').style.display='none';
+      if(!cPaKey.startsWith('gsk_')){
+            const hasHow=answer.toLowerCase().includes('works by')||answer.toLowerCase().includes('by ');
+            const hasTech=answer.toLowerCase().includes('key')||answer.toLowerCase().includes('join')||answer.toLowerCase().includes('query')||answer.toLowerCase().includes('connect')||answer.toLowerCase().includes('map')||answer.toLowerCase().includes('link');
+            const scored=hasHow&&hasTech;
+            document.getElementById('c-pa-result-badge').textContent=scored?'✓ EXPLAIN MARK AWARDED':'✗ NO EXPLAIN MARK';
+            document.getElementById('c-pa-result-score').textContent=scored?'1/1':'0/1';
+            document.getElementById('c-pa-result-body').textContent=scored?'Good — you described the MECHANISM using technical language.':'Include HOW the technology works (mechanism) with a technical term. E.g. "works by connecting to a data source and executing queries..."';
+            cPaLastResult={answer,scored};
+            document.getElementById('c-pa-submit-btn').disabled=false;
+            return;
+      }
+      try{
+            const sys='You are an examiner marking a T-Level Digital exam Explain mark. The Explain mark is awarded ONLY when the student describes the technical mechanism (HOW the technology works), not just naming it or describing business benefits. Give 1 mark if the answer describes the mechanism, 0 if not. Respond in JSON: {"score":0or1,"feedback":"one sentence why"}';
+            const prompt=`Question: ${cPaActiveQ.q}\nContext: ${cPaActiveQ.context}\nStudent answer: ${answer}`;
+            const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+cPaKey,'Content-Type':'application/json'},body:JSON.stringify({model:'llama3-8b-8192',messages:[{role:'system',content:sys},{role:'user',content:prompt}],temperature:0.1})});
+            const data=await res.json();
+            const raw=data.choices[0].message.content;
+            const parsed=JSON.parse(raw.replace(/```json|```/g,'').trim());
+            document.getElementById('c-pa-result-badge').textContent=parsed.score?'✓ EXPLAIN MARK':'✗ NO MARK';
+            document.getElementById('c-pa-result-score').textContent=parsed.score+'/1';
+            document.getElementById('c-pa-result-body').textContent=parsed.feedback||'';
+            cPaLastResult={answer,scored:parsed.score===1};
+      }catch(e){
+            document.getElementById('c-pa-result-badge').textContent='⚠ ERROR';
+            document.getElementById('c-pa-result-body').textContent='Could not connect to AXIOM-7. Check your API key.';
+  }
+   document.getElementById('c-pa-submit-btn').disabled=false;
+  }
+  function cPaRetry(){
+      document.getElementById('c-pa-result').style.display='none';
+      document.getElementById('c-pa-answer').value='';
+      cPaInit();
+  }
+
+  // Init scene-c components on page load
+  document.addEventListener('DOMContentLoaded', function(){
+      cQuizInit();
+      cInitDiscuss();
+      cPaInit();
+  });
+  // END SCENE-C FUNCTIONS
 
 // Terminal
 const script = [
