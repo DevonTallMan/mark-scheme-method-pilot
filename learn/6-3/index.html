@@ -999,7 +999,7 @@ function goToScene(id) {
   state.currentScene = id;
   const idx = sceneOrder.indexOf(id);
   document.getElementById('main-progress').style.width = (idx/(sceneOrder.length-1)*100)+'%';
-  document.getElementById('station-label').textContent = stationLabels[id]||'';
+  document.getElementById('h').textContent = stationLabels[id]||'';
   document.querySelectorAll('.nav-dot').forEach(d => d.classList.toggle('active', d.dataset.scene===id));
   window.scrollTo(0,0);    if(id==='e') msmCheckBadges_l63();
 }
@@ -1280,11 +1280,11 @@ function answerQuiz(qi,oi) {
   const fb=document.getElementById('qfb-'+qi);
   if(oi===q.correct){
     document.querySelectorAll(`[data-qi="${qi}"]`)[oi].classList.add('correct');
-    fb.className='q-feedback correct-fb';fb.textContent='✓ '+q.feedback;state.quizScore++;
+    fb.className='q-feedback correct-fb';fb.textContent='✓ '+q.explanation;state.quizScore++;
   } else {
     document.querySelectorAll(`[data-qi="${qi}"]`)[oi].classList.add('incorrect');
     document.querySelectorAll(`[data-qi="${qi}"]`)[q.correct].classList.add('correct');
-    fb.className='q-feedback incorrect-fb';fb.textContent='✗ '+q.feedback;
+    fb.className='q-feedback incorrect-fb';fb.textContent='✗ '+q.explanation;
   }
   state.quizAnswered++;
   if(state.quizAnswered===quizData.length){
@@ -1974,10 +1974,10 @@ async function paRunAxiom7() {
 
   const controller = new AbortController();
   const tout = setTimeout(() => controller.abort(), 15000);
-  body.uid = (window.localStorage && localStorage.getItem('msm_uid')) || 'anon'; // Stage 5: UID for CF Worker rate limiting
 
   try {
     const body = buildExaminerRequest(q.text, answer, q.marks, q.topic);
+body.uid = (window.localStorage && localStorage.getItem('msm_uid')) || 'anon'; // Stage 5: UID for CF Worker rate limiting
 
     const res = await fetch(AXIOM_WORKER_URL, {
       method: 'POST',
