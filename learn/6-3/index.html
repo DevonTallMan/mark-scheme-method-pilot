@@ -1288,8 +1288,8 @@ function answerQuiz(qi,oi) {
   }
   state.quizAnswered++;
   if(state.quizAnswered===quizData.length){
-    document.getElementById('quiz-final').textContent=state.quizScore;
-    document.getElementById('quiz-score-row').style.display='block';
+    document.getElementById('quiz-score-text').textContent=state.quizScore;
+    document.getElementById('quiz-result').style.display='block';
   }
 }
 
