@@ -73,7 +73,7 @@ jobs:
               print("Merged jest config into existing package.json")
           PYEOF
 
-      - name: Patch teacher.html â inject teacher-logic.js script tag
+      - name: Patch teacher.html — inject teacher-logic.js script tag
         run: |
           python3 - << 'PYEOF'
           import base64
