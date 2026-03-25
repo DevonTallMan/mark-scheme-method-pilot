@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -47,9 +47,9 @@ jobs:
       - name: Commit and push
         run: |
           git add 6-1-2/index.html
-          git diff --cached --quiet && echo "Nothing to commit — already clean." || \
+          git diff --cached --quiet && echo "Nothing to commit â already clean." || \
             git commit -m "fix: correct Module 6.3 link in 6-1-2/index.html (../6-3/ to ../6-1-3/)"
           git push
 
       - name: Summary
-        run: echo "Done — 6-1-2/index.html Module 6.3 link now points to ../6-1-3/index.html"
+        run: echo "Done â 6-1-2/index.html Module 6.3 link now points to ../6-1-3/index.html"
