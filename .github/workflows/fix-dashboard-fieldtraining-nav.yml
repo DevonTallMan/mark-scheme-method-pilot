@@ -1,4 +1,4 @@
-name: Fix Dashboard Navbar — Add FIELD TRAINING Link
+name: Fix Dashboard Navbar â Add FIELD TRAINING Link
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -41,10 +41,10 @@ jobs:
         run: |
           if grep -q 'learn/index.html' dashboard.html; then
             echo "already_done=true" >> $GITHUB_OUTPUT
-            echo "FIELD TRAINING link already present — skipping."
+            echo "FIELD TRAINING link already present â skipping."
           else
             echo "already_done=false" >> $GITHUB_OUTPUT
-            echo "FIELD TRAINING link missing — will inject."
+            echo "FIELD TRAINING link missing â will inject."
           fi
 
       - name: Inject FIELD TRAINING link into navbar
@@ -87,4 +87,4 @@ jobs:
           git push
 
       - name: Summary
-        run: echo "Done — FIELD TRAINING link added to dashboard.html navbar."
+        run: echo "Done â FIELD TRAINING link added to dashboard.html navbar."
