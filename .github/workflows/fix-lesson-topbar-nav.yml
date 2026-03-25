@@ -1,4 +1,4 @@
-name: Fix Lesson Pages — Add Top Navigation Bar
+name: Fix Lesson Pages â Add Top Navigation Bar
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -101,9 +101,9 @@ jobs:
       - name: Commit and push
         run: |
           git add content-areas/classroom-611-v3.html content-areas/6-1-2-why-organisations-need-data.html
-          git diff --cached --quiet && echo "Nothing to commit — already clean." || \
+          git diff --cached --quiet && echo "Nothing to commit â already clean." || \
             git commit -m "fix: inject sticky topbar nav into both lesson pages"
           git push
 
       - name: Summary
-        run: echo "Done — both lesson pages now have a sticky top navigation bar."
+        run: echo "Done â both lesson pages now have a sticky top navigation bar."
