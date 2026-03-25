@@ -1,4 +1,4 @@
-name: Restructure — Move Extras to /content-areas/
+name: Restructure â Move Extras to /content-areas/
 
 # When this runs:
 # Trigger manually from the GitHub website.
@@ -24,7 +24,7 @@ jobs:
     steps:
 
       - name: Check out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
