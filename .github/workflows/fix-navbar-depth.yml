@@ -1,4 +1,4 @@
-name: Fix Navbar Depth — 6-1-1 HUB Link
+name: Fix Navbar Depth â 6-1-1 HUB Link
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -41,10 +41,10 @@ jobs:
         run: |
           if grep -q '\.\./\.\.' 6-1-1/index.html; then
             echo "needs_fix=true" >> $GITHUB_OUTPUT
-            echo "Found depth-2 paths (../../) in 6-1-1/index.html — fix will be applied."
+            echo "Found depth-2 paths (../../) in 6-1-1/index.html â fix will be applied."
           else
             echo "needs_fix=false" >> $GITHUB_OUTPUT
-            echo "No depth-2 paths found — file is already correct. No changes needed."
+            echo "No depth-2 paths found â file is already correct. No changes needed."
           fi
 
       - name: Apply navbar depth fix
@@ -68,5 +68,5 @@ jobs:
           if [ "${{ steps.check.outputs.needs_fix }}" == "true" ]; then
             echo "Fix applied and pushed."
           else
-            echo "No fix needed — file was already correct."
+            echo "No fix needed â file was already correct."
           fi
