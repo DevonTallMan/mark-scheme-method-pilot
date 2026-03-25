@@ -1,13 +1,13 @@
-name: Stage 0 — Class Code Parameterisation
+name: Stage 0 â Class Code Parameterisation
 
-# ─────────────────────────────────────────────────────────────────
+# âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 # Replaces every hardcoded '5MFH4P' class code in client-side JS
 # with a dynamic CLASS_CODE constant read from the ?class= URL
 # parameter, falling back to '5MFH4P' so Dave's class keeps working.
 #
-# Run manually from: Actions tab → "Stage 0 — Class Code
-# Parameterisation" → Run workflow → type YES → Run workflow
-# ─────────────────────────────────────────────────────────────────
+# Run manually from: Actions tab â "Stage 0 â Class Code
+# Parameterisation" â Run workflow â type YES â Run workflow
+# âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 on:
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
 
     steps:
 
-      # ── 1. Checkout ───────────────────────────────────────────────
+      # ââ 1. Checkout âââââââââââââââââââââââââââââââââââââââââââââââ
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      # ── 2. Sync with remote main (mandatory pattern) ───────────────
+      # ââ 2. Sync with remote main (mandatory pattern) âââââââââââââââ
       - name: Sync with latest remote main
         run: |
           git config user.name  "github-actions[bot]"
@@ -42,14 +42,14 @@ jobs:
           git fetch origin main
           git merge origin/main --ff-only
 
-      # ── 3. Audit: list every file containing '5MFH4P' ─────────────
-      - name: Audit — list files containing hardcoded class code
+      # ââ 3. Audit: list every file containing '5MFH4P' âââââââââââââ
+      - name: Audit â list files containing hardcoded class code
         run: |
           echo "=== Files containing '5MFH4P' before patch ==="
           grep -rl "5MFH4P" --include="*.html" --include="*.js" . \
             | grep -v ".git" || echo "(none found)"
 
-      # ── 4. Patch each affected file ────────────────────────────────
+      # ââ 4. Patch each affected file ââââââââââââââââââââââââââââââââ
       - name: Inject CLASS_CODE constant and replace references
         run: |
           python3 - <<'PYEOF'
@@ -58,9 +58,9 @@ jobs:
           FALLBACK   = "5MFH4P"
           PLACEHOLDER = "__MSM_CLASS_FALLBACK__"
 
-          # The constant block to inject — one clean declaration
+          # The constant block to inject â one clean declaration
           CONST_BLOCK = (
-              "  // ── Class code: read from ?class= URL param, fallback to pilot code\n"
+              "  // ââ Class code: read from ?class= URL param, fallback to pilot code\n"
               "  const params = new URLSearchParams(window.location.search);\n"
               f"  const CLASS_CODE = params.get('class') || '{FALLBACK}';\n"
           )
@@ -82,7 +82,7 @@ jobs:
               )
 
               # Try to inject after the first <script> tag whose block contains
-              # the class code — walk matches and pick the right one
+              # the class code â walk matches and pick the right one
               script_tag_re = re.compile(
                   r'<script(?:\s[^>]*)?>',
                   re.IGNORECASE
@@ -110,7 +110,7 @@ jobs:
               if m:
                   return text[:m.end()] + "\n" + CONST_BLOCK + text[m.end():]
 
-              return text  # No script tag found — leave unchanged
+              return text  # No script tag found â leave unchanged
 
           def replace_references(text):
               """
@@ -134,7 +134,7 @@ jobs:
 
               return text
 
-          # ── Collect candidate files ───────────────────────────────
+          # ââ Collect candidate files âââââââââââââââââââââââââââââââ
           candidates = []
           for pattern in ["**/*.html", "**/*.js"]:
               candidates += glob.glob(pattern, recursive=True)
@@ -151,7 +151,7 @@ jobs:
                   original = f.read()
 
               if FALLBACK not in original:
-                  continue  # File has no hardcoded class code — skip
+                  continue  # File has no hardcoded class code â skip
 
               if already_patched(original):
                   skipped.append(path)
@@ -181,26 +181,26 @@ jobs:
                   print(f"  {p}")
           PYEOF
 
-      # ── 5. Verify: show CLASS_CODE lines in patched files ──────────
-      - name: Verify — show CLASS_CODE declarations in output files
+      # ââ 5. Verify: show CLASS_CODE lines in patched files ââââââââââ
+      - name: Verify â show CLASS_CODE declarations in output files
         run: |
           echo "=== CLASS_CODE declarations found ==="
           grep -rn "CLASS_CODE" --include="*.html" --include="*.js" . \
-            | grep -v ".git" || echo "(none — check patch step above)"
+            | grep -v ".git" || echo "(none â check patch step above)"
 
           echo ""
           echo "=== Remaining hardcoded '5MFH4P' references (should only be fallback lines) ==="
           grep -rn "5MFH4P" --include="*.html" --include="*.js" . \
             | grep -v ".git" || echo "(none remaining)"
 
-      # ── 6. Commit and push ─────────────────────────────────────────
+      # ââ 6. Commit and push âââââââââââââââââââââââââââââââââââââââââ
       - name: Commit and push
         run: |
           git add -A
           if git diff --cached --quiet; then
-            echo "Nothing to commit — files may already be patched."
+            echo "Nothing to commit â files may already be patched."
           else
-            git commit -m "Stage 0: parameterise class code — replace hardcoded 5MFH4P with CLASS_CODE
+            git commit -m "Stage 0: parameterise class code â replace hardcoded 5MFH4P with CLASS_CODE
 
           - Adds CLASS_CODE constant to all affected JS (reads from ?class= URL param)
           - Falls back to 5MFH4P so Dave Smith's class continues to work unchanged
