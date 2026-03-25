@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -47,9 +47,9 @@ jobs:
       - name: Commit and push
         run: |
           git add content-areas/classroom-611-v3.html
-          git diff --cached --quiet && echo "Nothing to commit — already clean." || \
+          git diff --cached --quiet && echo "Nothing to commit â already clean." || \
             git commit -m "fix: correct EXAM PRACTICE link in classroom-611-v3.html (../../6-1-1/ to ../6-1-1/)"
           git push
 
       - name: Summary
-        run: echo "Done — EXAM PRACTICE link now correctly points to ../6-1-1/index.html"
+        run: echo "Done â EXAM PRACTICE link now correctly points to ../6-1-1/index.html"
