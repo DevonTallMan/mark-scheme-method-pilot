@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.confirm == 'YES' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -40,7 +40,7 @@ jobs:
               print(f"  {link}")
 
           # Fix 1: root-relative paths missing the subpath
-          # e.g. href="/topics.html" → href="/mark-scheme-method-pilot/topics.html"
+          # e.g. href="/topics.html" â href="/mark-scheme-method-pilot/topics.html"
           fixed = re.sub(
               r'(href|src)="(/(?!mark-scheme-method-pilot)(?!#)(?!\w+://)([^"]+))"',
               r'\1="/mark-scheme-method-pilot/\3"',
@@ -61,12 +61,12 @@ jobs:
               new_links = re.findall(r'(?:href|src)=["\']([^"\']+)["\']', fixed)
               for o, n in zip(orig_links, new_links):
                   if o != n:
-                      print(f"  {o}  →  {n}")
+                      print(f"  {o}  â  {n}")
               with open('index.html', 'w', encoding='utf-8') as f:
                   f.write(fixed)
               print("\nindex.html updated.")
           else:
-              print("\nNo changes needed — paths already correct.")
+              print("\nNo changes needed â paths already correct.")
           PYEOF
 
       - name: Commit and push
