@@ -1,4 +1,4 @@
-name: Fix 6-1-2 Lesson — Add Navigation Buttons
+name: Fix 6-1-2 Lesson â Add Navigation Buttons
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -41,10 +41,10 @@ jobs:
         run: |
           if grep -q 'msm-lesson-nav' content-areas/6-1-2-why-organisations-need-data.html; then
             echo "already_done=true" >> $GITHUB_OUTPUT
-            echo "Navigation buttons already present — skipping."
+            echo "Navigation buttons already present â skipping."
           else
             echo "already_done=false" >> $GITHUB_OUTPUT
-            echo "No nav buttons found — will inject."
+            echo "No nav buttons found â will inject."
           fi
 
       - name: Inject navigation buttons before </body>
@@ -97,7 +97,7 @@ jobs:
           </div>
           '''
 
-          # Use simple string replacement for hover — avoid shell escaping issues
+          # Use simple string replacement for hover â avoid shell escaping issues
           nav_html = nav_html.replace('chr(39)', chr(39))
 
           if '</body>' in content:
@@ -120,4 +120,4 @@ jobs:
           git push
 
       - name: Summary
-        run: echo "Done — 6-1-2 lesson now has Back to Hub and Exam Practice navigation buttons."
+        run: echo "Done â 6-1-2 lesson now has Back to Hub and Exam Practice navigation buttons."
