@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6.1 — Data & Information | The Mark Scheme Method®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #0D1117;
+  --panel: rgba(255,255,255,0.04);
+  --panel-border: rgba(255,255,255,0.08);
+  --green: #39FF14;
+  --gold: #FFD700;
+  --muted: #8B949E;
+  --ink: #E6EDF3;
+  --display: 'Orbitron', monospace;
+  --mono: 'Share Tech Mono', monospace;
+  --body: 'Inter', sans-serif;
+  --accent: #39FF14;
+  --accent-dim: rgba(57,255,20,0.08);
+  --n-col: #FF4C4C;
+  --e-col: #FFD700;
+  --i-col: #39FF14;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(57,255,20,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 80%, rgba(255,215,0,0.03) 0%, transparent 55%),
+    linear-gradient(rgba(57,255,20,0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.01) 1px, transparent 1px);
+  background-size: auto, auto, 60px 60px, 60px 60px;
+  font-family:var(--body);color:var(--ink);min-height:100vh;
+}
+body::after{content:"";position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9999;}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:200;background:rgba(13,17,23,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--panel-border);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.header-brand{font-family:var(--display);font-size:0.58rem;letter-spacing:0.14em;color:var(--green);text-shadow:0 0 12px rgba(57,255,20,0.5);white-space:nowrap;}
+.header-nav{display:flex;align-items:center;gap:0.5rem;}
+.nav-tab{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;color:var(--muted);padding:0.35rem 0.9rem;border-radius:4px;border:1px solid transparent;cursor:pointer;transition:all 0.2s;background:none;}
+.nav-tab.active,.nav-tab:hover{color:var(--green);border-color:rgba(57,255,20,0.3);background:rgba(57,255,20,0.06);}
+.header-back{font-family:var(--mono);font-size:0.58rem;color:var(--muted);text-decoration:none;padding:0.3rem 0.8rem;border:1px solid var(--panel-border);border-radius:4px;transition:all 0.2s;}
+.header-back:hover{color:var(--ink);border-color:rgba(255,255,255,0.2);}
+
+/* HERO */
+.hero{padding:4rem 2rem 2rem;max-width:1100px;margin:0 auto;text-align:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--accent-dim);border:1px solid rgba(57,255,20,0.25);padding:0.4rem 1.2rem;border-radius:4px;font-family:var(--mono);font-size:0.62rem;color:var(--green);letter-spacing:0.1em;margin-bottom:1.5rem;}
+.hero h1{font-family:var(--display);font-size:clamp(1.8rem,5vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:0.75rem;}
+.hero h1 span{color:var(--green);text-shadow:0 0 30px rgba(57,255,20,0.4);}
+.hero-sub{color:var(--muted);font-size:0.95rem;max-width:600px;margin:0 auto 2rem;}
+
+/* NEI STRIP */
+.nei-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;border:1px solid var(--panel-border);border-radius:8px;overflow:hidden;max-width:800px;margin:0 auto 3rem;}
+.nei-cell{padding:1rem 1.25rem;background:var(--panel);}
+.nei-cell:last-child{background:rgba(57,255,20,0.06);border-left:3px solid var(--green);}
+.nei-label{font-family:var(--display);font-size:0.7rem;font-weight:700;letter-spacing:0.1em;margin-bottom:0.4rem;}
+.nei-desc{font-size:0.78rem;color:var(--muted);}
+.nei-cell:nth-child(1) .nei-label{color:var(--n-col);}
+.nei-cell:nth-child(2) .nei-label{color:var(--e-col);}
+.nei-cell:nth-child(3) .nei-label{color:var(--i-col);}
+
+/* SECTION TABS */
+.section-tabs{display:flex;gap:0;border-bottom:1px solid var(--panel-border);max-width:1100px;margin:0 auto;padding:0 2rem;}
+.s-tab{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;color:var(--muted);padding:0.75rem 1.5rem;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.s-tab.active{color:var(--green);border-bottom-color:var(--green);}
+.s-tab:hover{color:var(--ink);}
+
+/* CONTENT PANELS */
+.content-panel{display:none;max-width:1100px;margin:0 auto;padding:2.5rem 2rem;}
+.content-panel.active{display:block;}
+
+/* SECTION HEADING */
+.sec-heading{margin-bottom:2rem;}
+.sec-heading h2{font-family:var(--display);font-size:1.4rem;font-weight:700;color:var(--ink);margin-bottom:0.4rem;}
+.sec-heading p{color:var(--muted);font-size:0.9rem;}
+.sec-heading .spec-ref{font-family:var(--mono);font-size:0.62rem;color:var(--green);background:var(--accent-dim);border:1px solid rgba(57,255,20,0.2);padding:0.2rem 0.6rem;border-radius:3px;display:inline-block;margin-top:0.5rem;}
+
+/* CONTENT CARDS */
+.card{background:var(--panel);border:1px solid var(--panel-border);border-radius:8px;padding:1.5rem;margin-bottom:1.25rem;}
+.card h3{font-family:var(--display);font-size:0.85rem;font-weight:700;color:var(--green);letter-spacing:0.05em;margin-bottom:0.75rem;}
+.card p{font-size:0.88rem;color:var(--ink);line-height:1.7;margin-bottom:0.75rem;}
+.card p:last-child{margin-bottom:0;}
+.card ul{padding-left:1.2rem;margin-top:0.5rem;}
+.card ul li{font-size:0.87rem;color:var(--ink);line-height:1.7;margin-bottom:0.35rem;}
+.card ul li::marker{color:var(--green);}
+
+/* FORMULA BOX */
+.formula-box{background:rgba(57,255,20,0.05);border:1px solid rgba(57,255,20,0.2);border-radius:6px;padding:1rem 1.5rem;text-align:center;margin:1rem 0;}
+.formula-box .formula-text{font-family:var(--mono);font-size:1rem;color:var(--green);}
+
+/* KEY TERMS */
+.key-terms{background:var(--panel);border:1px solid var(--panel-border);border-radius:8px;overflow:hidden;margin-bottom:1.25rem;}
+.key-terms-header{background:rgba(255,255,255,0.06);border-bottom:1px solid var(--panel-border);padding:0.6rem 1.25rem;font-family:var(--display);font-size:0.65rem;font-weight:700;color:var(--green);letter-spacing:0.1em;}
+.key-term-row{padding:0.75rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:0.75rem;align-items:baseline;}
+.key-term-row:last-child{border-bottom:none;}
+.key-term-row:nth-child(odd){background:rgba(255,255,255,0.02);}
+.kt-name{font-family:var(--mono);font-size:0.75rem;color:var(--gold);font-weight:700;min-width:200px;flex-shrink:0;}
+.kt-def{font-size:0.83rem;color:var(--ink);line-height:1.6;}
+
+/* DATA TABLE */
+.data-table{width:100%;border-collapse:collapse;margin:1rem 0;}
+.data-table th{background:rgba(255,255,255,0.08);border:1px solid var(--panel-border);padding:0.6rem 0.9rem;text-align:left;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;color:var(--green);}
+.data-table td{border:1px solid rgba(255,255,255,0.05);padding:0.6rem 0.9rem;font-size:0.83rem;color:var(--ink);vertical-align:top;line-height:1.55;}
+.data-table tr:nth-child(odd) td{background:rgba(255,255,255,0.02);}
+.data-table tr:nth-child(even) td{background:rgba(255,255,255,0.01);}
+.data-table td:first-child{font-family:var(--mono);font-size:0.75rem;color:var(--gold);font-weight:700;}
+.data-table .num-cell{text-align:center;font-family:var(--display);font-size:0.8rem;color:var(--green);}
+
+/* EXAMINER TIP */
+.examiner-tip{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-left:4px solid var(--gold);border-radius:0 6px 6px 0;padding:1rem 1.25rem;margin:1.25rem 0;}
+.examiner-tip .tip-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.5rem;}
+.examiner-tip p{font-size:0.85rem;color:var(--ink);line-height:1.65;}
+
+/* NEI WORKED EXAMPLE */
+.nei-worked{background:var(--panel);border:1px solid var(--panel-border);border-radius:8px;overflow:hidden;margin:1.5rem 0;}
+.nei-worked-header{background:rgba(255,255,255,0.07);border-bottom:1px solid var(--panel-border);padding:0.7rem 1.25rem;font-family:var(--display);font-size:0.65rem;font-weight:700;color:var(--green);letter-spacing:0.1em;display:flex;align-items:center;gap:0.5rem;}
+.nei-worked-header::before{content:"⧡";font-size:0.8rem;}
+.nei-question{padding:1rem 1.25rem;background:rgba(57,255,20,0.03);border-bottom:1px solid rgba(255,255,255,0.04);}
+.nei-question .q-label{font-family:var(--mono);font-size:0.62rem;color:var(--muted);margin-bottom:0.4rem;letter-spacing:0.08em;}
+.nei-question p{font-size:0.87rem;color:var(--ink);font-style:italic;line-height:1.6;}
+.nei-answer-block{padding:0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.answer-label-bar{padding:0.55rem 1.25rem;background:rgba(255,255,255,0.04);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.08em;}
+.answer-label-bar.weak{color:#FF6B6B;}
+.answer-label-bar.strong{color:var(--green);}
+.answer-label-bar.annotation{color:var(--gold);}
+.answer-text{padding:0.85rem 1.25rem;border-left:3px solid rgba(255,255,255,0.1);margin:0;font-size:0.87rem;color:var(--ink);line-height:1.7;}
+.answer-text.weak{border-left-color:#FF4C4C;}
+.answer-text.strong{border-left-color:var(--green);}
+.answer-text.annotation{border-left-color:var(--gold);color:var(--muted);font-style:italic;}
+.tag-n{background:rgba(255,76,76,0.15);color:#FF6B6B;padding:0.1em 0.35em;border-radius:3px;font-family:var(--mono);font-size:0.72em;font-weight:700;}
+.tag-e{background:rgba(255,215,0,0.12);color:var(--gold);padding:0.1em 0.35em;border-radius:3px;font-family:var(--mono);font-size:0.72em;font-weight:700;}
+.tag-i{background:rgba(57,255,20,0.12);color:var(--green);padding:0.1em 0.35em;border-radius:3px;font-family:var(--mono);font-size:0.72em;font-weight:700;}
+
+/* SPEC LINK */
+.spec-link{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(255,255,255,0.04);border:1px solid var(--panel-border);border-radius:4px;padding:0.35rem 0.8rem;font-family:var(--mono);font-size:0.62rem;color:var(--muted);margin:0.75rem 0;}
+.spec-link::before{content:"↗";color:var(--green);}
+
+/* PRACTICE QUESTIONS */
+.practice-section{border-top:1px solid var(--panel-border);margin-top:2rem;padding-top:2rem;}
+.practice-section h3{font-family:var(--display);font-size:0.85rem;font-weight:700;color:var(--green);letter-spacing:0.08em;margin-bottom:1rem;}
+.pq{background:var(--panel);border:1px solid var(--panel-border);border-radius:8px;margin-bottom:1rem;overflow:hidden;}
+.pq-header{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;}
+.pq-num{font-family:var(--display);font-size:0.75rem;font-weight:700;color:var(--void);background:var(--green);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pq-text{font-size:0.87rem;color:var(--ink);line-height:1.55;flex:1;}
+.pq-marks{font-family:var(--mono);font-size:0.65rem;color:var(--gold);background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);padding:0.2rem 0.5rem;border-radius:3px;white-space:nowrap;}
+.pq-input-area{padding:0.5rem 1rem 0.75rem;}
+.pq-textarea{width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:6px;padding:0.75rem;font-family:var(--body);font-size:0.85rem;color:var(--ink);resize:vertical;min-height:100px;outline:none;transition:border-color 0.2s;}
+.pq-textarea:focus{border-color:rgba(57,255,20,0.4);}
+.pq-submit-row{display:flex;justify-content:flex-end;gap:0.75rem;margin-top:0.5rem;}
+.btn-submit{font-family:var(--display);font-size:0.58rem;font-weight:700;letter-spacing:0.1em;background:var(--green);color:var(--void);border:none;border-radius:4px;padding:0.5rem 1.2rem;cursor:pointer;transition:all 0.2s;}
+.btn-submit:hover{box-shadow:0 0 20px rgba(57,255,20,0.3);}
+.btn-submit:disabled{opacity:0.4;cursor:not-allowed;}
+.feedback-panel{margin:0.5rem 0 0;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.15);border-radius:6px;padding:1rem;font-size:0.84rem;color:var(--ink);line-height:1.65;display:none;}
+.feedback-panel.show{display:block;}
+.feedback-loading{color:var(--muted);font-family:var(--mono);font-size:0.75rem;animation:blink 1s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* GRID */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+@media(max-width:700px){.two-col{grid-template-columns:1fr;}.nei-strip{grid-template-columns:1fr;}.section-tabs{overflow-x:auto;}.header-nav{display:none;}}
+
+/* FOOTER */
+.page-footer{border-top:1px solid var(--panel-border);margin-top:4rem;padding:1.5rem 2rem;max-width:1100px;margin-left:auto;margin-right:auto;display:flex;align-items:center;justify-content:space-between;}
+.footer-brand{font-family:var(--display);font-size:0.55rem;letter-spacing:0.12em;color:var(--muted);}
+.footer-nei{font-family:var(--mono);font-size:0.6rem;color:var(--green);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-brand">THE MARK SCHEME METHOD® // 6.1 DATA &amp; INFORMATION</div>
+  <nav class="header-nav">
+    <button class="nav-tab active" onclick="showSection('s611')">6.1.1 DIKW</button>
+    <button class="nav-tab" onclick="showSection('s612')">6.1.2 WHY DATA</button>
+    <button class="nav-tab" onclick="showSection('s613')">6.1.3 HOW DATA</button>
+    <button class="nav-tab" onclick="showSection('practice')">PRACTICE</button>
+  </nav>
+  <a href="../learn/index.html" class="header-back">← FIELD HUB</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⧡ CONTENT AREA 6.1 // T-LEVEL DIGITAL: CORE // CLEARANCE: STANDARD</div>
+  <h1>DATA &amp;<br><span>INFORMATION</span></h1>
+  <p class="hero-sub">The foundation of the Data content area. Understand what data is, why organisations need it, and how it is generated — before the exam does.</p>
+  <div class="nei-strip">
+    <div class="nei-cell">
+      <div class="nei-label">N — NAME</div>
+      <div class="nei-desc">Identify the concept, tool or term correctly.</div>
+    </div>
+    <div class="nei-cell">
+      <div class="nei-label">E — EXPLAIN</div>
+      <div class="nei-desc">Describe how it works or what it does.</div>
+    </div>
+    <div class="nei-cell">
+      <div class="nei-label">I — IMPACT</div>
+      <div class="nei-desc">State the consequence for the organisation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION TABS -->
+<div class="section-tabs">
+  <button class="s-tab active" onclick="showSection('s611')">6.1.1 — DATA, INFORMATION &amp; KNOWLEDGE</button>
+  <button class="s-tab" onclick="showSection('s612')">6.1.2 — WHY ORGANISATIONS NEED DATA</button>
+  <button class="s-tab" onclick="showSection('s613')">6.1.3 — HOW DATA IS GENERATED</button>
+  <button class="s-tab" onclick="showSection('practice')">AXIOM-7 PRACTICE</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     6.1.1
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="s611" class="content-panel active">
+  <div class="sec-heading">
+    <h2>6.1.1 — The Differences and Links Between Data, Information and Knowledge</h2>
+    <p>The DIKW model is one of the most consistently examined topics in Content Area 6. Know the definitions precisely and practise the Impact component.</p>
+    <span class="spec-ref">SPEC: 6.1.1</span>
+  </div>
+
+  <div class="card">
+    <h3>WHAT IS DATA?</h3>
+    <p>Data is raw facts and figures before they have been processed. On its own, data has no meaning. The string <code style="font-family:var(--mono);color:var(--gold);">NAT23%7</code> is data — without context, it is meaningless.</p>
+    <p>Data can be <strong>qualitative</strong> (non-numerical: colours, names, opinions) or <strong>quantitative</strong> (numerical: temperatures, prices, counts). It can consist of letters, numbers, symbols, graphics, and sound.</p>
+  </div>
+
+  <div class="key-terms">
+    <div class="key-terms-header">KEY TERMS — 6.1.1</div>
+    <div class="key-term-row"><span class="kt-name">Data</span><span class="kt-def">Raw facts and figures that have no meaning until they are processed.</span></div>
+    <div class="key-term-row"><span class="kt-name">Qualitative data</span><span class="kt-def">Non-numerical data — for example a customer review or a product colour.</span></div>
+    <div class="key-term-row"><span class="kt-name">Quantitative data</span><span class="kt-def">Numerical data — for example a sale price or a stock level.</span></div>
+    <div class="key-term-row"><span class="kt-name">Information</span><span class="kt-def">Data that has been given structure, context and meaning.</span></div>
+    <div class="key-term-row"><span class="kt-name">Knowledge</span><span class="kt-def">The ability to use information to understand something, form judgements, make predictions and take decisions.</span></div>
+    <div class="key-term-row"><span class="kt-name">Wisdom</span><span class="kt-def">The ability to apply knowledge to make sound, long-term decisions.</span></div>
+  </div>
+
+  <div class="card">
+    <h3>FROM DATA TO INFORMATION</h3>
+    <p>Information is created when data is given structure, context and meaning. The formula is:</p>
+    <div class="formula-box">
+      <span class="formula-text">Information = Data + Structure + Context + Meaning</span>
+    </div>
+    <p>Example: <em>15, cabbages, rabbits</em> is data with no meaning. In context — <em>&quot;15 cabbage plants were eaten by the rabbits&quot;</em> — it becomes information because you now understand what happened.</p>
+    <p>Structure also matters. The date <code style="font-family:var(--mono);color:var(--gold);">24/04/2017</code> follows the structure DD/MM/YYYY. Without knowing that structure, you cannot use the data reliably.</p>
+  </div>
+
+  <div class="examiner-tip">
+    <div class="tip-label">// EXAMINER TIP</div>
+    <p>The exam frequently asks for the difference between data and information. The key distinction is <strong>context</strong> — data has none; information does. Do not just write &quot;information has been processed&quot; — explain what processing <em>adds</em>: structure, context and meaning. That earns the Explain mark.</p>
+  </div>
+
+  <div class="card">
+    <h3>THE DIKW PYRAMID</h3>
+    <p>The relationship between data, information, knowledge and wisdom is represented as a pyramid. Each layer depends on the layer below it. As you move up, the level of understanding and usefulness increases.</p>
+    <table class="data-table">
+      <thead><tr><th>LEVEL</th><th>DEFINITION</th><th>EXAMPLE (WEATHER SCENARIO)</th></tr></thead>
+      <tbody>
+        <tr><td>Data</td><td>Raw facts and figures with no meaning.</td><td>17, 23, 08, cold</td></tr>
+        <tr><td>Information</td><td>Data processed with structure, context and meaning.</td><td>The temperature was 8°C at 5pm on 17th March, rising to 23°C by midday.</td></tr>
+        <tr><td>Knowledge</td><td>Information stored and applied to form judgements and make predictions.</td><td>Temperatures rise sharply by midday in spring — outdoor events should avoid the early morning.</td></tr>
+        <tr><td>Wisdom</td><td>The ability to apply knowledge to make sound, long-term decisions.</td><td>The business schedules all outdoor events between 11am and 3pm from March onwards.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nei-worked">
+    <div class="nei-worked-header">N·E·I WORKED EXAMPLE 1 — DATA TO INFORMATION</div>
+    <div class="nei-question">
+      <div class="q-label">EXAM QUESTION [4 MARKS]</div>
+      <p>Explain how data becomes information and explain one impact on an organisation of failing to convert data into information.</p>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar weak">✗ WEAK STUDENT ANSWER — identify where marks are lost</div>
+      <div class="answer-text weak">Data is raw facts and figures. Information is data that has been processed. Organisations use information to make decisions. If they only had data they might make bad decisions.</div>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar annotation">// EXAMINER ANNOTATION</div>
+      <div class="answer-text annotation">N: &quot;raw facts and figures&quot; earns the Name mark. E: &quot;processed&quot; is too vague — the answer does not say what processing adds (structure, context, meaning). I: &quot;bad decisions&quot; is not a specific impact. No type of decision is named; no consequence is stated. 2/4 marks maximum.</div>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar strong">✓ FULL-MARK ANSWER — this is what earns all 4 marks</div>
+      <div class="answer-text strong">
+        Data is raw facts and figures that have no meaning on their own <span class="tag-n">[N]</span>. Information is created when data is given structure, context and meaning — for example, a set of numbers becomes a sales report once it is organised by date, product and region <span class="tag-e">[E]</span>. If an organisation cannot convert its data into information, it will be unable to identify trends or monitor performance, meaning strategic decisions cannot be made from evidence — this could result in poor resource allocation or a failure to respond to changes in the market <span class="tag-i">[I]</span>.
+      </div>
+    </div>
+  </div>
+
+  <div class="practice-section">
+    <h3>// QUICK CHECK — 6.1.1</h3>
+    <div class="pq"><div class="pq-header"><div class="pq-num">1</div><div class="pq-text">Identify two differences between data and information.</div><div class="pq-marks">[2]</div></div></div>
+    <div class="pq"><div class="pq-header"><div class="pq-num">2</div><div class="pq-text">Using the DIKW pyramid, explain the relationship between information and knowledge.</div><div class="pq-marks">[2]</div></div></div>
+    <div class="pq"><div class="pq-header"><div class="pq-num">3</div><div class="pq-text">Explain how data becomes knowledge and explain one impact on an organisation of decisions being made from data alone rather than from knowledge.</div><div class="pq-marks">[4]</div></div></div>
+  </div>
+</div>
+
+<!-- 6.1.2 -->
+<div id="s612" class="content-panel">
+  <div class="sec-heading">
+    <h2>6.1.2 — Why Organisations Need Data and Information and How They Use It</h2>
+    <p>The decision-making tier table (strategic / tactical / operational) is one of the highest-frequency exam topics. The Impact mark goes to students who name the consequence — not just the tier.</p>
+    <span class="spec-ref">SPEC: 6.1.2</span>
+  </div>
+  <div class="card">
+    <h3>DATA AS AN ORGANISATIONAL ASSET</h3>
+    <p>Data is described as an organisation's most valuable asset. All organisations need data and information to make correct decisions. Without it, an organisation cannot monitor performance, understand its customers, or plan for the future.</p>
+    <p>Organisations use data and information to:</p>
+    <ul>
+      <li>Analyse market trends to identify patterns that inform decisions</li>
+      <li>Analyse system performance to maintain digital infrastructure</li>
+      <li>Monitor users to improve the experience of their digital systems</li>
+      <li>Use targeted marketing to reach specific customer groups</li>
+      <li>Inform strategic, tactical and operational decision making</li>
+      <li>Carry out threat and opportunity assessment — break-even analysis, predictive models, cost analysis, market trends</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>STRATEGIC, TACTICAL AND OPERATIONAL DECISIONS</h3>
+    <p>Organisations use data to make three types of decision. These are linked and depend on each other — operational decisions feed into tactical ones, which in turn inform strategic ones.</p>
+    <table class="data-table">
+      <thead><tr><th>DECISION TYPE</th><th>DESCRIPTION</th><th>LEVEL</th><th>EXAMPLE</th></tr></thead>
+      <tbody>
+        <tr><td>Strategic</td><td>Long-term, complex decisions that shape the direction of the organisation.</td><td style="font-family:var(--mono);font-size:0.72rem;color:var(--muted);">Senior managers / directors</td><td>Negotiating new supplier contracts based on long-term cost analysis and market trend data.</td></tr>
+        <tr><td>Tactical</td><td>Medium-term decisions that implement the strategy. Made within departments.</td><td style="font-family:var(--mono);font-size:0.72rem;color:var(--muted);">Middle managers / heads of department</td><td>Increasing or decreasing the number of employees in a department based on performance reports.</td></tr>
+        <tr><td>Operational</td><td>Short-term, routine, day-to-day decisions. Simple and repetitive.</td><td style="font-family:var(--mono);font-size:0.72rem;color:var(--muted);">Junior managers / supervisors</td><td>Creating staff rotas for the week based on bookings data and shift availability.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="examiner-tip">
+    <div class="tip-label">// EXAMINER TIP — DECISION TIERS</div>
+    <p>This is the highest-frequency topic in 6.1. Students lose marks by only identifying the decision type and the level. The Impact mark requires you to explain what happens to the organisation <strong>if the wrong level makes the decision</strong> — for example, a junior supervisor making a strategic decision without the authority or long-term data needed could result in costly contractual commitments or supply chain failures.</p>
+  </div>
+  <div class="two-col">
+    <div class="card"><h3>MARKET TRENDS</h3><p>Market analysis is the assessment of quantitative and qualitative characteristics of a specific market. Organisations spot trends and respond before competitors do. Trends can change rapidly, particularly those driven by social media.</p></div>
+    <div class="card"><h3>TARGETED MARKETING</h3><p>Rather than broadcasting to everyone, targeted marketing uses purchase history, browsing behaviour, and demographic data to send relevant promotions to specific customer segments. More cost-effective than mass marketing.</p></div>
+  </div>
+  <div class="two-col">
+    <div class="card"><h3>SYSTEM PERFORMANCE</h3><p>Organisations monitor CPU utilisation, cache miss rates, response times and user request completion rates using a <strong>dashboard</strong> — a graphical interface presenting metrics in real time. Trends allow engineers to anticipate failures.</p></div>
+    <div class="card"><h3>MONITORING USERS</h3><p>Website traffic data reveals how long users spend on a page, how many clicks they take to complete a task, and where they abandon a process. This data drives improvements to the user experience and recovers lost sales.</p></div>
+  </div>
+  <div class="key-terms">
+    <div class="key-terms-header">KEY TERMS — 6.1.2</div>
+    <div class="key-term-row"><span class="kt-name">Metrics</span><span class="kt-def">A set of numbers that gives information about a particular process or activity.</span></div>
+    <div class="key-term-row"><span class="kt-name">Dashboard</span><span class="kt-def">A type of graphical user interface providing simple visualisation of data related to performance indicators, capable of showing real-time data updates.</span></div>
+  </div>
+  <div class="nei-worked">
+    <div class="nei-worked-header">N·E·I WORKED EXAMPLE 2 — DECISION TIERS</div>
+    <div class="nei-question">
+      <div class="q-label">EXAM QUESTION [4 MARKS]</div>
+      <p>A junior supervisor at a sports retailer decides to terminate the contract with the company's main stock supplier. Identify the type of decision this is, explain why it is inappropriate for a supervisor to make this decision, and explain one impact on the organisation.</p>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar weak">✗ WEAK ANSWER</div>
+      <div class="answer-text weak">This is a strategic decision. Strategic decisions are made by senior managers. A supervisor should not be making strategic decisions because it is not their job. This could cause problems for the business.</div>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar annotation">// EXAMINER ANNOTATION</div>
+      <div class="answer-text annotation">N: correct. E: weak — &quot;not their job&quot; does not explain what a strategic decision involves or why it requires senior authority and data access. I: too vague — &quot;problems for the business&quot; names no specific consequence. 2/4 marks.</div>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar strong">✓ FULL-MARK ANSWER</div>
+      <div class="answer-text strong">This is a strategic decision <span class="tag-n">[N]</span>. Strategic decisions are long-term and complex — terminating a supplier contract has financial and operational implications that require analysis of cost data, market alternatives and long-term supply chain planning, which only senior management have the authority and information to carry out <span class="tag-e">[E]</span>. If a junior supervisor makes this decision without the required data and authority, the organisation could find itself without a reliable supply of stock, leading to product shortages, loss of sales and reputational damage with customers <span class="tag-i">[I]</span>.</div>
+    </div>
+  </div>
+  <div class="practice-section">
+    <h3>// QUICK CHECK — 6.1.2</h3>
+    <div class="pq"><div class="pq-header"><div class="pq-num">4</div><div class="pq-text">A supermarket uses sales data to increase its order of garden furniture each March. Explain what type of decision this is and explain one impact on the organisation of having accurate trend data to inform it.</div><div class="pq-marks">[3]</div></div></div>
+    <div class="pq"><div class="pq-header"><div class="pq-num">5</div><div class="pq-text">Explain how an organisation could use targeted marketing data and explain one impact on the organisation of using targeted rather than mass marketing.</div><div class="pq-marks">[4]</div></div></div>
+  </div>
+</div>
+
+<!-- 6.1.3 -->
+<div id="s613" class="content-panel">
+  <div class="sec-heading">
+    <h2>6.1.3 — How Data Is Generated</h2>
+    <p>The ML life cycle is a near-certain exam topic. The IoT and transactional data sections require applied N·E·I answers — not just definitions.</p>
+    <span class="spec-ref">SPEC: 6.1.3</span>
+  </div>
+  <div class="card">
+    <h3>SOURCES OF DATA</h3>
+    <table class="data-table">
+      <thead><tr><th>SOURCE</th><th>DESCRIPTION</th></tr></thead>
+      <tbody>
+        <tr><td>Human generated</td><td>Data created by people using digital systems — emails, social media posts, form submissions, documents. The Conversation (2021) estimated 500 million tweets and 294 billion emails are sent every day.</td></tr>
+        <tr><td>AI / Machine Learning</td><td>Data produced or labelled by AI systems as they learn from and process information.</td></tr>
+        <tr><td>Sensors</td><td>Physical devices that measure environmental or physical properties and convert them to digital signals.</td></tr>
+        <tr><td>Internet of Things (IoT)</td><td>Networks of connected smart devices that collect and transmit data automatically.</td></tr>
+        <tr><td>Transactional data</td><td>Data created when a transaction occurs between an organisation and a customer or another organisation.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>AI VS ML — THE DISTINCTION THAT LOSES MARKS</h3>
+    <p><strong>Artificial Intelligence (AI)</strong> is the science of training machines to perform tasks that would normally require human intelligence — speech recognition, image identification, decision making.</p>
+    <p><strong>Machine Learning (ML)</strong> is a subset of AI. Rather than being programmed with explicit rules, an ML system learns patterns from large amounts of data and uses those patterns to draw conclusions — just as a person reasons from experience.</p>
+  </div>
+  <div class="examiner-tip">
+    <div class="tip-label">// EXAMINER TIP — AI vs ML</div>
+    <p>Students frequently conflate AI and ML or treat them as identical. In an exam, always state that ML is a <strong>subset of AI</strong> and then describe what makes ML distinct: it learns from data rather than following fixed, pre-programmed rules. Both points are needed for full marks on a distinction question.</p>
+  </div>
+  <div class="card">
+    <h3>THE MACHINE LEARNING LIFE CYCLE</h3>
+    <p>ML systems are built through a structured, iterative process. Errors at any stage affect the reliability of the final model's outputs — this is the most important thing to understand for the exam.</p>
+    <table class="data-table">
+      <thead><tr><th class="num-cell">STAGE</th><th>NAME</th><th>WHAT HAPPENS / WHY IT MATTERS</th></tr></thead>
+      <tbody>
+        <tr><td class="num-cell">1</td><td>Gathering data</td><td>Relevant data is collected from sources such as sensors, user inputs and databases. Quality and relevance here determines everything — irrelevant data wastes processing and distorts outputs.</td></tr>
+        <tr><td class="num-cell">2</td><td>Data preparation</td><td>Raw data is cleaned and formatted into a consistent structure. Missing values, errors and inconsistent formats are corrected here.</td></tr>
+        <tr><td class="num-cell">3</td><td>Data wrangling</td><td>Data is transformed and organised to meet the specific requirements of the analysis. May involve combining datasets, recategorising values, or removing outliers that could skew results.</td></tr>
+        <tr><td class="num-cell">4</td><td>Analyse data</td><td>Patterns, correlations and insights are identified. Statistical techniques and algorithms are applied to the prepared data.</td></tr>
+        <tr><td class="num-cell">5</td><td>Train model</td><td>The ML algorithm is fed the prepared data and begins learning patterns. The cleaner and more relevant the data, the more accurately the model learns.</td></tr>
+        <tr><td class="num-cell">6</td><td>Test model</td><td>The trained model is tested against a separate dataset it has not seen before. This reveals whether it has learned real patterns or just memorised the training data.</td></tr>
+        <tr><td class="num-cell">7</td><td>Deployment</td><td>The validated model is released for use with real incoming data to make predictions or classifications.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="nei-worked">
+    <div class="nei-worked-header">N·E·I WORKED EXAMPLE 3 — ML LIFE CYCLE</div>
+    <div class="nei-question">
+      <div class="q-label">EXAM QUESTION [4 MARKS]</div>
+      <p>Explain the role of the data wrangling stage in the machine learning life cycle and explain one impact on the organisation if this stage is skipped before the model is deployed.</p>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar weak">✗ WEAK ANSWER</div>
+      <div class="answer-text weak">Data wrangling is the third stage of the ML life cycle. It involves organising and transforming data. If it is skipped, the model might not work properly and could give wrong answers.</div>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar annotation">// EXAMINER ANNOTATION</div>
+      <div class="answer-text annotation">N: correct. E: vague — &quot;organising and transforming&quot; is present but the answer does not explain why transformation is necessary or what it involves. I: &quot;wrong answers&quot; is too vague — no specific organisational consequence is named. 2/4 marks.</div>
+    </div>
+    <div class="nei-answer-block">
+      <div class="answer-label-bar strong">✓ FULL-MARK ANSWER</div>
+      <div class="answer-text strong">Data wrangling is the stage in the ML life cycle where raw, unstructured data is transformed and reorganised to meet the specific requirements of the model being trained <span class="tag-n">[N]</span>. This involves combining datasets from different sources, removing outliers that could distort results, recategorising values for consistency, and structuring the data so the algorithm can process it effectively <span class="tag-e">[E]</span>. If this stage is skipped, the model will be trained on disorganised, inconsistent data, meaning it learns incorrect or irrelevant patterns — when deployed, it will generate unreliable predictions, for example a stock recommendation system could suggest incorrect reorder quantities, leading to product shortages or overstock and significant financial loss for the organisation <span class="tag-i">[I]</span>.</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>IoT — THE INTERNET OF THINGS</h3>
+    <p>The Internet of Things is a network of smart physical devices connected to each other and to the internet, exchanging data without requiring direct human intervention.</p>
+    <p>All smart IoT devices have four core components:</p>
+    <ul>
+      <li><strong>Sensors</strong> — to collect data from the physical environment</li>
+      <li><strong>Connectivity</strong> — to transmit data to other devices or the internet</li>
+      <li><strong>Data processing</strong> — to analyse the data collected</li>
+      <li><strong>A user interface (UI)</strong> — to present information or allow control</li>
+    </ul>
+  </div>
+  <div class="key-terms">
+    <div class="key-terms-header">KEY TERMS — 6.1.3</div>
+    <div class="key-term-row"><span class="kt-name">AI</span><span class="kt-def">The science of training machines to perform tasks that typically require human intelligence, such as speech recognition, visual identification and decision making.</span></div>
+    <div class="key-term-row"><span class="kt-name">Machine Learning (ML)</span><span class="kt-def">A subset of AI in which a system learns patterns from data rather than following explicitly programmed rules, enabling it to make predictions and draw conclusions.</span></div>
+    <div class="key-term-row"><span class="kt-name">IoT</span><span class="kt-def">A collection of smart devices that connect to each other and exchange data using the internet.</span></div>
+    <div class="key-term-row"><span class="kt-name">D2D / M2M</span><span class="kt-def">Device-to-device or machine-to-machine communication — data transferred directly between devices without human involvement.</span></div>
+    <div class="key-term-row"><span class="kt-name">Smart City</span><span class="kt-def">An urban area that uses IoT and digital devices to collect data, enabling well-informed decisions that improve quality of life for those who live and work there.</span></div>
+    <div class="key-term-row"><span class="kt-name">Transactional data</span><span class="kt-def">Data about transactions that occur between an organisation and its customers, or between organisations.</span></div>
+  </div>
+  <div class="practice-section">
+    <h3>// QUICK CHECK — 6.1.3</h3>
+    <div class="pq"><div class="pq-header"><div class="pq-num">6</div><div class="pq-text">What is the difference between AI and ML?</div><div class="pq-marks">[2]</div></div></div>
+    <div class="pq"><div class="pq-header"><div class="pq-num">7</div><div class="pq-text">Explain the role of the 'Test model' stage in the ML life cycle and explain one impact on the organisation if a model is deployed without being tested.</div><div class="pq-marks">[4]</div></div></div>
+    <div class="pq"><div class="pq-header"><div class="pq-num">8</div><div class="pq-text">Explain what is meant by the Internet of Things (IoT) and explain one impact on a manufacturing organisation of connecting its production equipment to the IoT.</div><div class="pq-marks">[4]</div></div></div>
+  </div>
+</div>
+
+<!-- AXIOM-7 PRACTICE -->
+<div id="practice" class="content-panel">
+  <div class="sec-heading">
+    <h2>AXIOM-7 Practice Arena — Section 6.1</h2>
+    <p>Write your answers below. AXIOM-7 will analyse your response against the N·E·I framework, tell you which component is missing, and explain how to recover the mark.</p>
+    <span class="spec-ref">POWERED BY AXIOM-7 // GROQ LLM // llama-3.3-70b-versatile</span>
+  </div>
+  <div class="pq">
+    <div class="pq-header"><div class="pq-num">A</div><div class="pq-text">Explain how data becomes knowledge and explain one impact on an organisation of making decisions from data alone rather than from knowledge. [4 marks]</div><div class="pq-marks">[4]</div></div>
+    <div class="pq-input-area">
+      <textarea class="pq-textarea" id="ans-a" placeholder="Write your answer here using the N·E·I framework..."></textarea>
+      <div class="pq-submit-row"><button class="btn-submit" onclick="submitAnswer('ans-a','fb-a','btn-a','6.1.1','Explain how data becomes knowledge and explain one impact on an organisation of making decisions from data alone rather than from knowledge.')" id="btn-a">SUBMIT TO AXIOM-7 →</button></div>
+      <div class="feedback-panel" id="fb-a"></div>
+    </div>
+  </div>
+  <div class="pq">
+    <div class="pq-header"><div class="pq-num">B</div><div class="pq-text">A junior supervisor at a logistics company decides to change the company's primary delivery partner without consulting senior management. Identify the type of decision, explain why this is inappropriate, and explain one organisational impact. [4 marks]</div><div class="pq-marks">[4]</div></div>
+    <div class="pq-input-area">
+      <textarea class="pq-textarea" id="ans-b" placeholder="Write your answer here using the N·E·I framework..."></textarea>
+      <div class="pq-submit-row"><button class="btn-submit" onclick="submitAnswer('ans-b','fb-b','btn-b','6.1.2','A junior supervisor at a logistics company decides to change the primary delivery partner without consulting senior management. Identify the type of decision, explain why this is inappropriate, and explain one organisational impact.')" id="btn-b">SUBMIT TO AXIOM-7 →</button></div>
+      <div class="feedback-panel" id="fb-b"></div>
+    </div>
+  </div>
+  <div class="pq">
+    <div class="pq-header"><div class="pq-num">C</div><div class="pq-text">Explain the role of the data wrangling stage in the ML life cycle and explain one impact on a business if this stage is skipped before the model is deployed. [4 marks]</div><div class="pq-marks">[4]</div></div>
+    <div class="pq-input-area">
+      <textarea class="pq-textarea" id="ans-c" placeholder="Write your answer here using the N·E·I framework..."></textarea>
+      <div class="pq-submit-row"><button class="btn-submit" onclick="submitAnswer('ans-c','fb-c','btn-c','6.1.3','Explain the role of the data wrangling stage in the ML life cycle and explain one impact on a business if this stage is skipped before the model is deployed.')" id="btn-c">SUBMIT TO AXIOM-7 →</button></div>
+      <div class="feedback-panel" id="fb-c"></div>
+    </div>
+  </div>
+  <div class="pq">
+    <div class="pq-header"><div class="pq-num">D</div><div class="pq-text">A healthcare organisation uses IoT wearable sensors to monitor patients remotely. Explain the role of the sensors in generating this data and explain one impact on the organisation of collecting patient data in real time. [4 marks]</div><div class="pq-marks">[4]</div></div>
+    <div class="pq-input-area">
+      <textarea class="pq-textarea" id="ans-d" placeholder="Write your answer here using the N·E·I framework..."></textarea>
+      <div class="pq-submit-row"><button class="btn-submit" onclick="submitAnswer('ans-d','fb-d','btn-d','6.1.3','A healthcare organisation uses IoT wearable sensors to monitor patients remotely. Explain the role of the sensors in generating this data and explain one impact on the organisation of collecting patient data in real time.')" id="btn-d">SUBMIT TO AXIOM-7 →</button></div>
+      <div class="feedback-panel" id="fb-d"></div>
+    </div>
+  </div>
+  <div class="pq">
+    <div class="pq-header"><div class="pq-num">E</div><div class="pq-text">A supermarket collects transactional data every time a customer uses a loyalty card. Explain how the supermarket could use this data and explain one impact on the supermarket of analysing it to inform purchasing decisions. [4 marks]</div><div class="pq-marks">[4]</div></div>
+    <div class="pq-input-area">
+      <textarea class="pq-textarea" id="ans-e" placeholder="Write your answer here using the N·E·I framework..."></textarea>
+      <div class="pq-submit-row"><button class="btn-submit" onclick="submitAnswer('ans-e','fb-e','btn-e','6.1.3','A supermarket collects transactional data every time a customer uses a loyalty card. Explain how the supermarket could use this data and explain one impact on the supermarket of analysing it to inform purchasing decisions.')" id="btn-e">SUBMIT TO AXIOM-7 →</button></div>
+      <div class="feedback-panel" id="fb-e"></div>
+    </div>
+  </div>
+</div>
+
+<footer class="page-footer">
+  <div class="footer-brand">THE MARK SCHEME METHOD® // CONTENT AREA 6.1</div>
+  <div class="footer-nei">N · E · I // NAME · EXPLAIN · IMPACT · ALWAYS</div>
+</footer>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = ['s611','s612','s613','practice'].indexOf(id);
+  document.querySelectorAll('.s-tab')[idx]?.classList.add('active');
+  document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+async function submitAnswer(ansId, fbId, btnId, section, question) {
+  const answer = document.getElementById(ansId).value.trim();
+  if (!answer || answer.length < 20) { alert('Please write a full answer before submitting.'); return; }
+  const fb = document.getElementById(fbId);
+  const btn = document.getElementById(btnId);
+  btn.disabled = true;
+  fb.className = 'feedback-panel show';
+  fb.innerHTML = '<span class="feedback-loading">AXIOM-7 ANALYSING RESPONSE...</span>';
+  const apiKey = localStorage.getItem('AXIOM7_KEY') || '';
+  if (!apiKey) {
+    fb.innerHTML = '<strong style="color:var(--gold)">AXIOM-7 KEY NOT SET</strong><br>Ask your teacher to provide your AXIOM-7 key, then save it via the dashboard settings.';
+    btn.disabled = false; return;
+  }
+  const systemPrompt = `You are AXIOM-7, an AI examiner assistant for The Mark Scheme Method, a T-Level Digital exam preparation platform. You evaluate student answers using the N·E·I framework (Name, Explain, Impact).
+
+CONTEXT: T-Level Digital Production, Design and Development — Content Area ${section}.
+QUESTION: ${question}
+
+Your job:
+1. Check whether the student has correctly included all three N·E·I components.
+2. Identify which component(s) are missing or underdeveloped.
+3. Give ONE specific, actionable instruction to improve the answer.
+4. Be direct and examiner-like — no praise padding, no waffle.
+
+Format your response as:
+N [Name]: ✓ or ✗ — brief note
+E [Explain]: ✓ or ✗ — brief note
+I [Impact]: ✓ or ✗ — brief note
+
+VERDICT: [1-2 sentences on overall mark likelihood]
+FIX: [One specific sentence the student should add or rewrite to earn the missing mark]`;
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile', temperature: 0.3, max_tokens: 400,
+        messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: answer }]
+      })
+    });
+    const data = await res.json();
+    const text = data.choices?.[0]?.message?.content || 'No response received.';
+    fb.innerHTML = text.replace(/\n/g, '<br>').replace(/(✓)/g, '<span style="color:var(--green)">✓</span>').replace(/(✗)/g, '<span style="color:#FF4C4C">✗</span>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  } catch (err) {
+    fb.innerHTML = `<span style="color:#FF4C4C">CONNECTION ERROR: ${err.message}</span>`;
+  }
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>
