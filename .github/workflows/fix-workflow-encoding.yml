@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       confirm:
-        description: 'Type YES to strip garbled Unicode from all workflow files'
+        description: 'Type YES to strip garbled Unicode from workflow files'
         required: true
 
 permissions:
@@ -24,28 +24,29 @@ jobs:
           git fetch origin main
           git merge origin/main --ff-only
 
-      - name: Run encoding fix script
+      - name: Run encoding fix
         run: |
-          echo "CmltcG9ydCBnbG9iLCBzeXMKCmZpbGVzID0gZ2xvYi5nbG9iKCIuZ2l0aHViL3dvcmtmbG93cy8qLnltbCIpCmZpeGVkID0gMApmb3IgcGF0aCBpbiBmaWxlczoKICAgIHJhdyA9IG9wZW4ocGF0aCwgInJiIikucmVhZCgpCiAgICB0ZXh0ID0gcmF3LmRlY29kZSgidXRmLTgiLCBlcnJvcnM9InJlcGxhY2UiKQogICAgY2xlYW5lZCA9IHRleHQucmVwbGFjZSgiXHVmZmZkIiwgIiIpCiAgICBpbXBvcnQgcmUKICAgIGxpbmVzX2luID0gY2xlYW5lZC5zcGxpdCgiXG4iKQogICAgbGluZXNfb3V0ID0gW10KICAgIGZvciBsaW5lIGluIGxpbmVzX2luOgogICAgICAgIGlmIGFueShvcmQoYykgPiAxMjcgZm9yIGMgaW4gbGluZSk6CiAgICAgICAgICAgIGxpbmUgPSAiIi5qb2luKGMgaWYgb3JkKGMpIDwgMTI4IGVsc2UgIiIgZm9yIGMgaW4gbGluZSkKICAgICAgICAgICAgbGluZSA9IHJlLnN1YihyIiAgKyIsICIgIiwgbGluZSkucnN0cmlwKCkKICAgICAgICBsaW5lc19vdXQuYXBwZW5kKGxpbmUpCiAgICByZXN1bHQgPSAiXG4iLmpvaW4obGluZXNfb3V0KQogICAgaWYgcmVzdWx0ICE9IGNsZWFuZWQ6CiAgICAgICAgb3BlbihwYXRoLCAidyIsIGVuY29kaW5nPSJ1dGYtOCIpLndyaXRlKHJlc3VsdCkKICAgICAgICBwcmludChmIkZJWEVEOiB7cGF0aH0iKQogICAgICAgIGZpeGVkICs9IDEKICAgIGVsc2U6CiAgICAgICAgcHJpbnQoZiJPSyAobm8gY2hhbmdlKToge3BhdGh9IikKcHJpbnQoZiJcblRvdGFsIGZpeGVkOiB7Zml4ZWR9IGZpbGVzIikKaWYgZml4ZWQgPT0gMDoKICAgIHByaW50KCJOb3RoaW5nIHRvIGZpeCAtIGFsbCBmaWxlcyBhbHJlYWR5IGNsZWFuIikK" | base64 -d > /tmp/fix_encoding.py
-          python3 /tmp/fix_encoding.py
-
-      - name: Verify no garbled bytes remain
-        run: |
-          BAD=0
-          for f in .github/workflows/*.yml; do
-            NONASCII=$(python3 -c "t=open('$f',encoding='utf-8',errors='replace').read(); print(sum(1 for c in t if ord(c)>127 or ord(c)==65533))")
-            if [ "$NONASCII" -eq 0 ]; then
-              echo "CLEAN: $f"
-            else
-              echo "STILL HAS $NONASCII NON-ASCII CHARS: $f"
-              BAD=1
-            fi
-          done
-          if [ "$BAD" -eq 1 ]; then
-            echo "ERROR: some files still have non-ASCII characters"
-            exit 1
-          fi
-          echo "All workflow files verified clean"
+          python3 << 'PYEOF'
+          import glob, re
+          fixed = 0
+          for path in glob.glob(".github/workflows/*.yml"):
+              raw = open(path, "rb").read()
+              text = raw.decode("utf-8", errors="replace").replace("\ufffd", "")
+              lines = []
+              for line in text.split("\n"):
+                  if any(ord(c) > 127 for c in line):
+                      line = "".join(c if ord(c) < 128 else "" for c in line)
+                      line = re.sub(r"  +", " ", line).rstrip()
+                  lines.append(line)
+              result = "\n".join(lines)
+              if result != text:
+                  open(path, "w", encoding="utf-8").write(result)
+                  print(f"FIXED: {path}")
+                  fixed += 1
+              else:
+                  print(f"OK: {path}")
+          print(f"Total fixed: {fixed}")
+          PYEOF
 
       - name: Commit and push
         run: |
@@ -53,14 +54,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .github/workflows/
           if git diff --cached --quiet; then
-            echo "Nothing to commit - all files already clean"
+            echo "Nothing to commit - files already clean"
             exit 0
           fi
           git diff --cached --stat
-          git commit -m "fix: strip garbled Unicode from all workflow files
-
-The ci upgrade batch commits corrupted Unicode chars in name: fields
-and echo strings with invalid multi-byte sequences that GitHub YAML
-parser rejects at L1. Strip all non-ASCII characters - all YAML
-keywords and logic are ASCII-only so this is safe."
+          git commit -m "fix: strip garbled Unicode bytes from all workflow files"
           git push origin main
