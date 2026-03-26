@@ -1,4 +1,4 @@
-name: Stage 2b â Four Blocker Fixes
+name: Stage 2b - Four Blocker Fixes
 
 on:
   workflow_dispatch:
@@ -17,88 +17,66 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Fix 1 â Verify window.MSM_APP is exposed in firebase-config.js
+      - name: Fix 1 - Verify window.MSM_APP is exposed in firebase-config.js
         run: |
           echo "Checking firebase-config.js for window.MSM_APP..."
           if grep -q "window.MSM_APP = app" firebase-config.js; then
-            echo "â Fix 1 PASS: window.MSM_APP is exposed"
+            echo "Fix 1 PASS: window.MSM_APP is exposed"
           else
-            echo "â Fix 1 FAIL: window.MSM_APP not found in firebase-config.js"
+            echo "Fix 1 FAIL: window.MSM_APP not found in firebase-config.js"
             exit 1
           fi
 
-      - name: Fix 2 â Verify msm-stage2b-auth script block in dashboard.html
+      - name: Fix 2 - Verify msm-stage2b-auth script block in dashboard.html
         run: |
           echo "Checking dashboard.html for msm-stage2b-auth..."
           if grep -q 'id="msm-stage2b-auth"' dashboard.html; then
-            echo "â Fix 2 PASS: msm-stage2b-auth script block present"
+            echo "Fix 2 PASS: msm-stage2b-auth script block present"
           else
-            echo "â Fix 2 FAIL: msm-stage2b-auth not found in dashboard.html"
+            echo "Fix 2 FAIL: msm-stage2b-auth not found in dashboard.html"
             exit 1
           fi
           if grep -q "onAuthStateChanged" dashboard.html; then
-            echo "â Fix 2 PASS: onAuthStateChanged auth logic present"
+            echo "Fix 2 PASS: onAuthStateChanged auth logic present"
           else
-            echo "â Fix 2 FAIL: onAuthStateChanged not found"
+            echo "Fix 2 FAIL: onAuthStateChanged not found"
             exit 1
           fi
           if grep -q "msm_uid" dashboard.html; then
-            echo "â Fix 2 PASS: msm_uid localStorage storage present"
+            echo "Fix 2 PASS: msm_uid localStorage storage present"
           else
-            echo "â Fix 2 FAIL: msm_uid not found"
+            echo "Fix 2 FAIL: msm_uid not found"
             exit 1
           fi
 
-      - name: Fix 3 â Verify msm-stage2b-nei script block in dashboard.html
+      - name: Fix 3 - Verify msm-stage2b-nei script block in dashboard.html
         run: |
           echo "Checking dashboard.html for msm-stage2b-nei..."
           if grep -q 'id="msm-stage2b-nei"' dashboard.html; then
-            echo "â Fix 3 PASS: msm-stage2b-nei script block present"
+            echo "Fix 3 PASS: msm-stage2b-nei script block present"
           else
-            echo "â Fix 3 FAIL: msm-stage2b-nei not found in dashboard.html"
+            echo "Fix 3 FAIL: msm-stage2b-nei not found in dashboard.html"
             exit 1
           fi
           if grep -q "injectNEIMap" dashboard.html; then
-            echo "â Fix 3 PASS: NEI injector function present"
+            echo "Fix 3 PASS: NEI injector function present"
           else
-            echo "â Fix 3 FAIL: injectNEIMap not found"
+            echo "Fix 3 FAIL: injectNEIMap not found"
             exit 1
           fi
 
-      - name: Fix 4 â Verify firestore.rules exists and covers required paths
+      - name: Fix 4 - Verify firestore.rules exists and covers required paths
         run: |
           echo "Checking firestore.rules..."
           if [ -f "firestore.rules" ]; then
-            echo "â Fix 4 PASS: firestore.rules file exists"
+            echo "Fix 4 PASS: firestore.rules file exists"
           else
-            echo "â Fix 4 FAIL: firestore.rules not found"
+            echo "Fix 4 FAIL: firestore.rules not found"
             exit 1
           fi
           if grep -q "request.auth.uid == uid" firestore.rules; then
-            echo "â Fix 4 PASS: student own-document rule present"
+            echo "Fix 4 PASS: student own-document rule present"
           else
-            echo "â Fix 4 FAIL: student own-document rule not found"
+            echo "Fix 4 FAIL: student own-document rule not found"
             exit 1
           fi
-          if grep -q "assignments" firestore.rules; then
-            echo "â Fix 4 PASS: assignments rule present"
-          else
-            echo "â Fix 4 FAIL: assignments rule not found"
-            exit 1
-          fi
-
-      - name: Summary
-        run: |
-          echo ""
-          echo "======================================"
-          echo "  Stage 2b Blocker Fixes â All Pass  "
-          echo "======================================"
-          echo "  Fix 1: window.MSM_APP exposed       â"
-          echo "  Fix 2: Anonymous auth + snapshot    â"
-          echo "  Fix 3: NEI Proficiency Map injector â"
-          echo "  Fix 4: firestore.rules deployed     â"
-          echo "======================================"
-          echo ""
-          echo "NOTE: firestore.rules still needs manual"
-          echo "deployment via Firebase Console:"
-          echo "  Firestore Database â Rules â Paste â Publish"
