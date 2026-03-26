@@ -1,0 +1,65 @@
+name: Wire 6.1 Study Guide into Navigation
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to patch topics.html and learn/index.html'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  wire-nav:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: |
+          git fetch origin main
+          git merge origin/main --ff-only
+
+      - name: Verify content page exists
+        run: |
+          FILE="content-areas/6-1-data-fundamentals.html"
+          if [ ! -f "$FILE" ]; then
+            echo "ERROR: $FILE not found"
+            echo "Run the add-61-content.yml workflow first, then re-run this one"
+            exit 1
+          fi
+          echo "OK: content page confirmed"
+
+      - name: Run nav patch script
+        run: |
+          echo "aW1wb3J0IHJlLCBwYXRobGliLCBzeXMKCnRvcGljcyA9IHBhdGhsaWIuUGF0aCgidG9waWNzLmh0bWwiKQpodWIgICAgPSBwYXRobGliLlBhdGgoImh1Yi5odG1sIikKbGVhcm4gID0gcGF0aGxpYi5QYXRoKCJsZWFybi9pbmRleC5odG1sIikKClRBUkdFVF9IUkVGID0gImNvbnRlbnQtYXJlYXMvNi0xLWRhdGEtZnVuZGFtZW50YWxzLmh0bWwiCkxJTktfSFRNTCAgID0gKAogICAgIiIiPGEgaHJlZj0iY29udGVudC1hcmVhcy82LTEtZGF0YS1mdW5kYW1lbnRhbHMuaHRtbCIgIiIiCiAgICAiIiJjbGFzcz1cImJ0bi1leHRyYVwiICIiIgogICAgIiIic3R5bGU9XCJkaXNwbGF5OmlubGluZS1mbGV4O2FsaWduLWl0ZW1zOmNlbnRlcjtnYXA6MC40cmVtOyIiIgogICAgIiIiZm9udC1mYW1pbHk6J1NoYXJlIFRlY2ggTW9ubycsbW9ub3NwYWNlO2ZvbnQtc2l6ZTowLjYycmVtOyIiIgogICAgIiIibGV0dGVyLXNwYWNpbmc6MC4wOGVtO2NvbG9yOiM4Qjk0OUU7Ym9yZGVyOjFweCBzb2xpZCAiIiIKICAgICIiInJnYmEoMjU1LDI1NSwyNTUsMC4xKTtiYWNrZ3JvdW5kOnJnYmEoMjU1LDI1NSwyNTUsMC4wMyk7IiIiCiAgICAiIiJwYWRkaW5nOjAuNHJlbSAwLjlyZW07Ym9yZGVyLXJhZGl1czo0cHg7dGV4dC1kZWNvcmF0aW9uOm5vbmU7IiIiCiAgICAiIiJ0cmFuc2l0aW9uOmFsbCAwLjJzO1wiIiIiCiAgICAiIiIgb25tb3VzZW92ZXI9XCJ0aGlzLnN0eWxlLmNvbG9yPScjMzlGRjE0Jzt0aGlzLnN0eWxlLmJvcmRlckNvbG9yPSdyZ2JhKDU3LDI1NSwyMCwwLjMpJ1wiIiIiCiAgICAiIiIgb25tb3VzZW91dD1cInRoaXMuc3R5bGUuY29sb3I9JyM4Qjk0OUUnO3RoaXMuc3R5bGUuYm9yZGVyQ29sb3I9J3JnYmEoMjU1LDI1NSwyNTUsMC4xKSdcIj4iIiIKICAgICIiIiYjOTYzNTsgNi4xIFNUVURZIEdVSURFPC9hPiIiIgopCgppZiBub3QgdG9waWNzLmV4aXN0cygpOgogICAgcHJpbnQoIlNLSVA6IHRvcGljcy5odG1sIG5vdCBmb3VuZCIpCmVsc2U6CiAgICBzcmMgPSB0b3BpY3MucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCiAgICBpZiBUQVJHRVRfSFJFRiBpbiBzcmM6CiAgICAgICAgcHJpbnQoIk9LOiB0b3BpY3MuaHRtbCBhbHJlYWR5IGNvbnRhaW5zIGxpbmsiKQogICAgZWxzZToKICAgICAgICBwYXRjaGVkID0gc3JjCiAgICAgICAgaW5qZWN0ZWQgPSAwCiAgICAgICAgZm9yIGNhIGluIFsiNi0xLTEiLCAiNi0xLTIiLCAiNi0xLTMiXToKICAgICAgICAgICAgbWFya2VyID0gZiJsZWFybi97Y2F9L2luZGV4Lmh0bWwiCiAgICAgICAgICAgIHBvcyA9IHBhdGNoZWQuZmluZChtYXJrZXIpCiAgICAgICAgICAgIGlmIHBvcyA9PSAtMToKICAgICAgICAgICAgICAgIHByaW50KGYiICBXQVJOOiBtYXJrZXIgbm90IGZvdW5kIGZvciB7Y2F9IikKICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgIGRpdl9wb3MgPSBwYXRjaGVkLmZpbmQoIjwvZGl2PiIsIHBvcykKICAgICAgICAgICAgaWYgZGl2X3BvcyA9PSAtMToKICAgICAgICAgICAgICAgIHByaW50KGYiICBXQVJOOiBubyBjbG9zaW5nIGRpdiBmb3VuZCBhZnRlciB7Y2F9IikKICAgICAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgICAgIHBhdGNoZWQgPSBwYXRjaGVkWzpkaXZfcG9zXSArICJcbiAgICAgICAgIiArIExJTktfSFRNTCArICJcbiAgICAgICIgKyBwYXRjaGVkW2Rpdl9wb3M6XQogICAgICAgICAgICBpbmplY3RlZCArPSAxCiAgICAgICAgICAgIHByaW50KGYiICBJTkpFQ1RFRDoge2NhfSIpCiAgICAgICAgaWYgaW5qZWN0ZWQgPT0gMDoKICAgICAgICAgICAgaW1wb3J0IHN5cwogICAgICAgICAgICBwcmludCgiRVJST1I6IG5vIG1hcmtlcnMgZm91bmQiKQogICAgICAgICAgICBzeXMuZXhpdCgxKQogICAgICAgIHRvcGljcy53cml0ZV90ZXh0KHBhdGNoZWQsIGVuY29kaW5nPSJ1dGYtOCIpCiAgICAgICAgcHJpbnQoZiJPSzoge2luamVjdGVkfSBpbmplY3Rpb24ocykiKQppZiBub3QgbGVhcm4uZXhpc3RzKCk6CiAgICBwcmludCgiU0tJUDogbGVhcm4vaW5kZXguaHRtbCBub3QgZm91bmQiKQplbHNlOgogICAgc3JjID0gbGVhcm4ucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCiAgICBpZiBUQVJHRVRfSFJFRiBpbiBzcmM6CiAgICAgICAgcHJpbnQoIk9LOiBsZWFybi9pbmRleC5odG1sIGFscmVhZHkgY29udGFpbnMgbGluayIpCiAgICBlbHNlOgogICAgICAgIHBvcyA9IHNyYy5maW5kKCI2LTEtMSIpCiAgICAgICAgaWYgcG9zID09IC0xOgogICAgICAgICAgICBwcmludCgiU0tJUDogbm8gNi0xLTEgcmVmZXJlbmNlIikKICAgICAgICBlbHNlOgogICAgICAgICAgICBkaXZfcG9zID0gc3JjLmZpbmQoIjwvZGl2PiIsIHBvcykKICAgICAgICAgICAgaWYgZGl2X3BvcyAhPSAtMToKICAgICAgICAgICAgICAgIHBhdGNoZWQgPSBzcmNbOmRpdl9wb3NdICsgIlxuICAgICAgICAiICsgTElOS19IVE1MICsgIlxuICAgICAgIiArIHNyY1tkaXZfcG9zOl0KICAgICAgICAgICAgICAgIGxlYXJuLndyaXRlX3RleHQocGF0Y2hlZCwgZW5jb2Rpbmc9InV0Zi04IikKICAgICAgICAgICAgICAgIHByaW50KCJPSzogbGVhcm4vaW5kZXguaHRtbCBwYXRjaGVkIikKcHJpbnQoIlBhdGNoIHNjcmlwdCBjb21wbGV0ZS4iKQo=" | base64 -d > /tmp/patch_nav.py
+          python3 /tmp/patch_nav.py
+
+      - name: Verify patch
+        run: |
+          if ! grep -q '6-1-data-fundamentals' topics.html 2>/dev/null; then
+            echo 'ERROR: link not found in topics.html after patch'
+            grep -n '6-1' topics.html | head -20 || echo 'No matches'
+            exit 1
+          fi
+          COUNT=$(grep -c '6-1-data-fundamentals' topics.html)
+          echo "VERIFIED: $COUNT link(s) injected into topics.html"
+          grep -n '6-1-data-fundamentals' topics.html | head -10
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add topics.html
+          git add learn/index.html 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo 'Nothing to commit - links already present'
+            exit 0
+          fi
+          git diff --cached --stat
+          git commit -m 'feat: wire 6.1 study guide into topic card navigation'
+          git push origin main
