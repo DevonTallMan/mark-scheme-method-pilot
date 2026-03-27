@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard — The Mark Scheme Method®</title>
+<title>Student Dashboard â The Mark Scheme MethodÂ®</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -38,7 +38,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .span2{grid-column:span 2;}
 .span3{grid-column:span 3;}
 
-/* ── STAT CARDS ROW ── */
+/* ââ STAT CARDS ROW ââ */
 .stat-cards{display:flex;gap:16px;grid-column:span 3;}
 .stat-card{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s;}
 .stat-card:hover{transform:translateY(-2px);}
@@ -57,7 +57,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sc-impact .sc-val{color:var(--amber);}
 .sc-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px;}
 
-/* ── EXAM COUNTDOWN BANNER ── */
+/* ââ EXAM COUNTDOWN BANNER ââ */
 .countdown-banner{grid-column:span 3;background:rgba(255,59,59,0.06);border:1px solid rgba(255,59,59,0.25);border-radius:12px;padding:16px 24px;display:flex;align-items:center;gap:24px;overflow:hidden;position:relative;}
 .countdown-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,59,59,0.04),transparent);}
 .cd-icon{font-size:28px;flex-shrink:0;}
@@ -68,14 +68,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .cd-number{font-family:'Orbitron',monospace;font-size:52px;font-weight:900;color:var(--red);text-shadow:0 0 30px rgba(255,59,59,0.5);letter-spacing:2px;flex-shrink:0;line-height:1;}
 .cd-unit{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,59,59,0.6);margin-top:4px;text-align:center;}
 
-/* ── PANEL CARD ── */
+/* ââ PANEL CARD ââ */
 .panel-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .panel-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .panel-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:#fff;}
 .panel-sub{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);}
 .panel-body{padding:18px;}
 
-/* ── XP HISTORY CHART ── */
+/* ââ XP HISTORY CHART ââ */
 .chart-wrap{position:relative;height:140px;}
 .chart-svg{width:100%;height:100%;overflow:visible;}
 .chart-line{fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(57,255,20,0.5));}
@@ -86,7 +86,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .chart-label{font-family:'Share Tech Mono',monospace;font-size:8px;fill:rgba(232,237,243,0.3);}
 .chart-val{font-family:'Share Tech Mono',monospace;font-size:8px;fill:var(--green);}
 
-/* ── NEI PROFICIENCY MAP ── */
+/* ââ NEI PROFICIENCY MAP ââ */
 .nei-map-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
 .nei-col-head{background:rgba(255,255,255,0.03);padding:8px 6px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;}
 .nei-col-head.n{color:var(--green);} .nei-col-head.e{color:var(--gold);} .nei-col-head.i{color:var(--amber);}
@@ -108,7 +108,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .low-impact-alert{margin-top:10px;padding:10px 12px;background:rgba(255,59,59,0.07);border:1px solid rgba(255,59,59,0.25);border-radius:6px;font-size:12px;color:var(--dim);display:flex;gap:6px;align-items:flex-start;}
 .low-impact-alert strong{color:var(--red);}
 
-/* ── RANK PROGRESSION ── */
+/* ââ RANK PROGRESSION ââ */
 .rank-journey{display:flex;align-items:center;gap:0;position:relative;padding:12px 0;}
 .rj-node{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:2;}
 .rj-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .3s;}
@@ -127,7 +127,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .rp-bar-bg{height:6px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden;}
 .rp-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width 1.2s cubic-bezier(.22,1,.36,1);}
 
-/* ── MODULE COMPLETION GRID ── */
+/* ââ MODULE COMPLETION GRID ââ */
 .mod-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .mod-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:10px 12px;position:relative;overflow:hidden;}
 .mod-item.done::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--mod-accent,var(--green));box-shadow:0 0 8px var(--mod-accent,var(--green));}
@@ -137,7 +137,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .mod-bar-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.22,1,.36,1);}
 .mod-pct{font-family:'Share Tech Mono',monospace;font-size:9px;}
 
-/* ── BADGE CABINET ── */
+/* ââ BADGE CABINET ââ */
 .badge-cabinet{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;}
 .badge-tile{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .25s;text-align:center;}
 .badge-tile.earned{border-color:rgba(255,215,0,0.2);background:rgba(255,215,0,0.04);}
@@ -186,7 +186,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <body>
 
 <nav class="topbar">
-  <div class="logo">MSM<span>®</span></div>
+  <div class="logo">MSM<span>Â®</span></div>
   <div class="topnav">
     <a href="hub.html" class="navlink">HUB</a>
     <a href="topics.html" class="navlink">TOPICS</a>
@@ -197,16 +197,16 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div class="page-header">
   <div class="page-eyebrow">PERSONAL ANALYTICS</div>
   <div class="page-title">STUDENT DASHBOARD</div>
-  <p class="page-sub">Your full performance view — NEI proficiency, rank progression, and module completion all in one place.</p>
+  <p class="page-sub">Your full performance view â NEI proficiency, rank progression, and module completion all in one place.</p>
 </div>
 
 <div class="main">
 
-  <!-- ── EXAM COUNTDOWN ── -->
+  <!-- ââ EXAM COUNTDOWN ââ -->
   <div class="countdown-banner span3">
-    <div class="cd-icon">⚡</div>
+    <div class="cd-icon">â¡</div>
     <div class="cd-content">
-      <div class="cd-label">EXAM COUNTDOWN — T-LEVEL DIGITAL ASSESSMENT</div>
+      <div class="cd-label">EXAM COUNTDOWN â T-LEVEL DIGITAL ASSESSMENT</div>
       <p class="cd-msg"><strong id="urgencyMsg">Start now.</strong> Every module completed is another 3-mark question you own. The examiner rewards structure. N.E.I. is the structure.</p>
     </div>
     <div>
@@ -215,30 +215,30 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
   </div>
 
-  <!-- ── STAT CARDS ── -->
+  <!-- ââ STAT CARDS ââ -->
   <div class="stat-cards">
     <div class="stat-card sc-rank">
-      <div class="sc-icon">🎖️</div>
+      <div class="sc-icon">ðï¸</div>
       <div class="sc-val" id="scRank">TRAINEE</div>
       <div class="sc-lbl">CURRENT RANK</div>
     </div>
     <div class="stat-card sc-xp">
-      <div class="sc-icon">⚡</div>
+      <div class="sc-icon">â¡</div>
       <div class="sc-val" id="scXP">0</div>
       <div class="sc-lbl">TOTAL XP EARNED</div>
     </div>
     <div class="stat-card sc-badges">
-      <div class="sc-icon">🏅</div>
+      <div class="sc-icon">ð</div>
       <div class="sc-val" id="scBadges">0 / 12</div>
       <div class="sc-lbl">BADGES UNLOCKED</div>
     </div>
     <div class="stat-card sc-modules">
-      <div class="sc-icon">📦</div>
+      <div class="sc-icon">ð¦</div>
       <div class="sc-val" id="scModules">0 / 6</div>
       <div class="sc-lbl">MODULES COMPLETE</div>
     </div>
     <div class="stat-card sc-impact">
-      <div class="sc-icon">💥</div>
+      <div class="sc-icon">ð¥</div>
       <div class="sc-val" id="scImpact">--</div>
       <div class="sc-lbl">IMPACT MARK RATE</div>
     </div>
@@ -246,13 +246,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
   <!-- CALLSIGN CARD -->
   <div class="callsign-card" id="callsignCard">
-    <label>⚡ LEADERBOARD DISPLAY NAME (optional)</label>
-    <input id="dashCallsignInput" type="text" maxlength="20" placeholder="Set your callsign…" />
+    <label>â¡ LEADERBOARD DISPLAY NAME (optional)</label>
+    <input id="dashCallsignInput" type="text" maxlength="20" placeholder="Set your callsignâ¦" />
     <button onclick="window.saveDashCallsign()">SAVE</button>
     <span class="callsign-saved" id="callsignSaved"></span>
   </div>
 
-  <!-- ── XP HISTORY CHART ── -->
+  <!-- ââ XP HISTORY CHART ââ -->
   <div class="panel-card span2">
     <div class="panel-head">
       <span class="panel-title">XP HISTORY</span>
@@ -307,7 +307,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
   </div>
 
-  <!-- ── NEI PROFICIENCY MAP ── -->
+  <!-- ââ NEI PROFICIENCY MAP ââ -->
   <div class="panel-card">
     <div class="panel-head">
       <span class="panel-title">NEI PROFICIENCY</span>
@@ -315,9 +315,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
     <div class="panel-body" style="padding:12px;">
       <div class="nei-map-grid">
-        <div class="nei-col-head n">N — NAME</div>
-        <div class="nei-col-head e">E — EXPLAIN</div>
-        <div class="nei-col-head i">I — IMPACT</div>
+        <div class="nei-col-head n">N â NAME</div>
+        <div class="nei-col-head e">E â EXPLAIN</div>
+        <div class="nei-col-head i">I â IMPACT</div>
 
         <!-- 6.1.1 -->
         <div class="nei-cell">
@@ -359,13 +359,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="nei-cell" style="opacity:.3"><span class="nei-ca">6.1.3</span><div class="nei-bar-bg"><div class="nei-bar-fill" style="width:0%;background:var(--muted)"></div></div><span class="nei-pct-val" style="color:var(--muted)">--</span></div>
       </div>
       <div class="low-impact-alert">
-        <span>🔴</span>
+        <span>ð´</span>
         <span><strong>VULNERABILITY DETECTED:</strong> Your Impact mark rate is below 50% in both active modules. Complete the Impact-focused booster in Field Training to address this.</span>
       </div>
     </div>
   </div>
 
-  <!-- ── RANK PROGRESSION ── -->
+  <!-- ââ RANK PROGRESSION ââ -->
   <div class="panel-card span3">
     <div class="panel-head">
       <span class="panel-title">RANK PROGRESSION</span>
@@ -374,37 +374,37 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div class="panel-body">
       <div class="rank-journey">
         <div class="rj-node" id="rn0">
-          <div class="rj-dot current">🎯</div>
+          <div class="rj-dot current">ð¯</div>
           <div class="rj-connector" id="rc0"></div>
           <span class="rj-label">TRAINEE</span>
           <span class="rj-xp">0 XP</span>
         </div>
         <div class="rj-node" id="rn1">
-          <div class="rj-dot locked">📡</div>
+          <div class="rj-dot locked">ð¡</div>
           <div class="rj-connector" id="rc1"></div>
           <span class="rj-label">DATA CADET</span>
           <span class="rj-xp">100 XP</span>
         </div>
         <div class="rj-node" id="rn2">
-          <div class="rj-dot locked">📊</div>
+          <div class="rj-dot locked">ð</div>
           <div class="rj-connector" id="rc2"></div>
           <span class="rj-label">SIGNAL ANALYST</span>
           <span class="rj-xp">300 XP</span>
         </div>
         <div class="rj-node" id="rn3">
-          <div class="rj-dot locked">🔬</div>
+          <div class="rj-dot locked">ð¬</div>
           <div class="rj-connector" id="rc3"></div>
           <span class="rj-label">SYSTEMS OPERATOR</span>
           <span class="rj-xp">600 XP</span>
         </div>
         <div class="rj-node" id="rn4">
-          <div class="rj-dot locked">🧠</div>
+          <div class="rj-dot locked">ð§ </div>
           <div class="rj-connector" id="rc4"></div>
           <span class="rj-label">INTEL LEAD</span>
           <span class="rj-xp">1000 XP</span>
         </div>
         <div class="rj-node" id="rn5">
-          <div class="rj-dot locked">⚡</div>
+          <div class="rj-dot locked">â¡</div>
           <span class="rj-label">AXIOM SPECIALIST</span>
           <span class="rj-xp">1500 XP</span>
         </div>
@@ -419,7 +419,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
   </div>
 
-  <!-- ── MODULE COMPLETION ── -->
+  <!-- ââ MODULE COMPLETION ââ -->
   <div class="panel-card span2">
     <div class="panel-head">
       <span class="panel-title">MODULE COMPLETION</span>
@@ -465,7 +465,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
   </div>
 
-  <!-- ── BADGE CABINET ── -->
+  <!-- ââ BADGE CABINET ââ -->
   <div class="panel-card">
     <div class="panel-head">
       <span class="panel-title">BADGE CABINET</span>
@@ -474,62 +474,62 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div class="panel-body">
       <div class="badge-cabinet" id="badgeCabinet">
         <div class="badge-tile" data-key="raw_signal">
-          <div class="badge-icon">📡</div>
+          <div class="badge-icon">ð¡</div>
           <div class="badge-name-sm">RAW SIGNAL</div>
           <div class="badge-rarity r-common">COMMON</div>
         </div>
         <div class="badge-tile" data-key="market_intelligence">
-          <div class="badge-icon">📊</div>
+          <div class="badge-icon">ð</div>
           <div class="badge-name-sm">MARKET INTEL</div>
           <div class="badge-rarity r-common">COMMON</div>
         </div>
         <div class="badge-tile" data-key="signal_mapper">
-          <div class="badge-icon">🗺️</div>
+          <div class="badge-icon">ðºï¸</div>
           <div class="badge-name-sm">SIGNAL MAPPER</div>
           <div class="badge-rarity r-common">COMMON</div>
         </div>
         <div class="badge-tile" data-key="data_architect">
-          <div class="badge-icon">🏗️</div>
+          <div class="badge-icon">ðï¸</div>
           <div class="badge-name-sm">DATA ARCHITECT</div>
           <div class="badge-rarity r-common">COMMON</div>
         </div>
         <div class="badge-tile" data-key="systems_analyst">
-          <div class="badge-icon">🔬</div>
+          <div class="badge-icon">ð¬</div>
           <div class="badge-name-sm">SYS ANALYST</div>
           <div class="badge-rarity r-rare">RARE</div>
         </div>
         <div class="badge-tile" data-key="compliance_officer">
-          <div class="badge-icon">🛡️</div>
+          <div class="badge-icon">ð¡ï¸</div>
           <div class="badge-name-sm">COMPLIANCE</div>
           <div class="badge-rarity r-rare">RARE</div>
         </div>
         <div class="badge-tile" data-key="first_strike">
-          <div class="badge-icon">⚡</div>
+          <div class="badge-icon">â¡</div>
           <div class="badge-name-sm">FIRST STRIKE</div>
           <div class="badge-rarity r-common">COMMON</div>
         </div>
         <div class="badge-tile" data-key="impact_specialist">
-          <div class="badge-icon">💥</div>
+          <div class="badge-icon">ð¥</div>
           <div class="badge-name-sm">IMPACT SPEC</div>
           <div class="badge-rarity r-epic">EPIC</div>
         </div>
         <div class="badge-tile" data-key="precision_writer">
-          <div class="badge-icon">✍️</div>
+          <div class="badge-icon">âï¸</div>
           <div class="badge-name-sm">PRECISION</div>
           <div class="badge-rarity r-rare">RARE</div>
         </div>
         <div class="badge-tile" data-key="resilient_analyst">
-          <div class="badge-icon">🔄</div>
+          <div class="badge-icon">ð</div>
           <div class="badge-name-sm">RESILIENT</div>
           <div class="badge-rarity r-rare">RARE</div>
         </div>
         <div class="badge-tile" data-key="signal_recovered">
-          <div class="badge-icon">📶</div>
+          <div class="badge-icon">ð¶</div>
           <div class="badge-name-sm">SIGNAL RECV</div>
           <div class="badge-rarity r-rare">RARE</div>
         </div>
         <div class="badge-tile" data-key="full_clearance">
-          <div class="badge-icon">🏆</div>
+          <div class="badge-icon">ð</div>
           <div class="badge-name-sm">FULL CLEARANCE</div>
           <div class="badge-rarity r-legendary">LEGENDARY</div>
         </div>
@@ -564,7 +564,7 @@ function initAll(){
   // Stat cards
   document.getElementById('scRank').textContent=rank.l;
   document.getElementById('scXP').textContent=xp;
-  document.getElementById('scBadges').textContent=badges.length+' / 12';
+  document.getElementById('scBadges').textContent=(Array.isArray(badges)?badges.length:0)+' / 12';
   const modsDone=MODULE_BADGES.filter(b=>badges.includes(b)).length;
   document.getElementById('scModules').textContent=modsDone+' / 6';
   document.getElementById('scImpact').textContent='42%';// demo
@@ -573,7 +573,7 @@ function initAll(){
   const exam=new Date('2026-05-11');
   const days=Math.ceil((exam-new Date())/864e5);
   document.getElementById('cdDays').textContent=days>0?days:'0';
-  const msg=days>90?'Focus now — every module is an investment.':days>30?'Time is narrowing. Prioritise your weakest modules.':'<strong>Final push.</strong> Every mark counts now.';
+  const msg=days>90?'Focus now â every module is an investment.':days>30?'Time is narrowing. Prioritise your weakest modules.':'<strong>Final push.</strong> Every mark counts now.';
   document.getElementById('urgencyMsg').innerHTML=msg;
 
   // Session date
@@ -775,7 +775,7 @@ if(document.readyState==='loading'){
         else await setDoc(ref,{callsign:cs},{merge:true});
       }catch(e){console.warn('saveDashCallsign error',e);}
     }
-    if(saved){ saved.textContent = cs ? '✓ SAVED' : '✓ CLEARED'; setTimeout(()=>{ saved.textContent=''; },2000); }
+    if(saved){ saved.textContent = cs ? 'â SAVED' : 'â CLEARED'; setTimeout(()=>{ saved.textContent=''; },2000); }
   };
 </script>
 
@@ -834,9 +834,9 @@ import { doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase
   });
   function buildGrid() {
     let html = '<div class="nei-map-grid">'
-      + '<div class="nei-col-head n">N — NAME</div>'
-      + '<div class="nei-col-head e">E — EXPLAIN</div>'
-      + '<div class="nei-col-head i">I — IMPACT</div>';
+      + '<div class="nei-col-head n">N â NAME</div>'
+      + '<div class="nei-col-head e">E â EXPLAIN</div>'
+      + '<div class="nei-col-head i">I â IMPACT</div>';
     rows.forEach(r => {
       ['n','e','i'].forEach(k => {
         const v   = Math.round(r[k]);
@@ -852,7 +852,7 @@ import { doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase
     html += '</div>';
     const lowI = rows.filter(r => r.i < 50 && r.i > 0);
     if (lowI.length) {
-      html += '<div class="low-impact-alert"><span>🔴</span>'
+      html += '<div class="low-impact-alert"><span>ð´</span>'
         + '<span><strong>VULNERABILITY DETECTED:</strong> Impact mark rate below 50% in '
         + lowI.map(r => r.ca).join(', ')
         + '. Complete Impact-focused boosters in Field Training.</span></div>';
@@ -889,6 +889,14 @@ import { doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase
   if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', inject); }
   else { inject(); }
 })();
+
+  // Standalone countdown
+  (function(){
+    const exam=new Date('2026-05-11');
+    const days=Math.ceil((exam-new Date())/864e5);
+    const el=document.getElementById('cdDays');
+    if(el&&el.textContent==='--')el.textContent=days>0?days:'0';
+  })();
 </script>
 </body>
 </html>
