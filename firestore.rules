@@ -2,30 +2,28 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ── Students: own document only ──────────────────────────
+    // Students: own document only
     match /classes/{classCode}/students/{uid} {
       allow read, write: if request.auth != null
-                         && request.auth.uid == uid;
+        && request.auth.uid == uid;
     }
 
-    // ── Assignments: all authenticated users can read ────────
+    // Assignments: any authenticated user can read
     match /classes/{classCode}/assignments/{assignmentId} {
       allow read: if request.auth != null;
-      // Write: teacher role OR matching class code claim
       allow write: if request.auth != null
-                   && (request.auth.token.role == 'teacher'
-                       || request.auth.token.classCode == classCode);
+        && (request.auth.token.role == 'teacher'
+        || request.auth.token.classCode == classCode);
     }
 
-    // ── Leaderboard: scoped to same class ────────────────────
+    // Leaderboard: any authenticated user can read (anonymous auth is sufficient)
     match /classes/{classCode}/leaderboard/{entry} {
-      allow read: if request.auth != null
-                  && (request.auth.token.classCode == classCode
-                      || get(/databases/$(database)/documents/classes/$(classCode)/students/$(request.auth.uid)).data.classCode == classCode);
-      allow write: if false; // server-side only
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.auth.uid != null;
     }
 
-    // ── Default deny ─────────────────────────────────────────
+    // Default deny
     match /{document=**} {
       allow read, write: if false;
     }
