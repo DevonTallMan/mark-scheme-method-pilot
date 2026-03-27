@@ -34,22 +34,3 @@ jobs:
             echo "ERROR: 6-1-2/index.html not found. Aborting."
             exit 1
           fi
-          echo "Target file found: 6-1-2/index.html"
-
-      - name: Apply link fix
-        run: |
-          # Fix broken module 6.3 link: ../6-3/index.html -> ../6-1-3/index.html
-          sed -i 's|\.\./6-3/index\.html|../6-1-3/index.html|g' 6-1-2/index.html
-
-          echo "Fix applied. Verifying:"
-          grep -n '6-1-3\|6-3' 6-1-2/index.html || echo "No matching lines found."
-
-      - name: Commit and push
-        run: |
-          git add 6-1-2/index.html
-          git diff --cached --quiet && echo "Nothing to commit â already clean." || \
-            git commit -m "fix: correct Module 6.3 link in 6-1-2/index.html (../6-3/ to ../6-1-3/)"
-          git push
-
-      - name: Summary
-        run: echo "Done â 6-1-2/index.html Module 6.3 link now points to ../6-1-3/index.html"
