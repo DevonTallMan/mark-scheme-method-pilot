@@ -1,8 +1,8 @@
-name: Restructure Move Extras to /content-areas/
+name: Restructure - Move Extras to content-areas
 
-# When this runs:
 # Trigger manually from the GitHub website.
 # Go to: Actions tab > "Restructure" > Run workflow > Run workflow (green button)
+
 on:
   workflow_dispatch:
     inputs:
@@ -15,56 +15,65 @@ jobs:
   restructure:
     name: Move extras files and update all links
     runs-on: ubuntu-latest
-
     if: github.event.inputs.confirm == 'YES'
 
     permissions:
       contents: write
 
     steps:
-
       - name: Check out repo
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - name: Create /content-areas/ folder and move extras files
+      - name: Sync with latest remote main
+        run: |
+          git fetch origin main
+          git merge origin/main --ff-only
+
+      - name: Create content-areas folder and move extras files
         run: |
           mkdir -p content-areas
 
           if [ -f "6-1-1/classroom-611-v3.html" ]; then
             git mv "6-1-1/classroom-611-v3.html" "content-areas/classroom-611-v3.html"
-# When this runs:
-# Trigger manually from the GitHub website.
-# Go to: Actions tab > "Restructure" > Run workflow > Run workflow (green button)
-on:
-  workflow_dispatch:
-    inputs:
-      confirm:
-        description: 'Type YES to confirm you want to run the restructure'
-        required: true
-        default: ''
+            echo "Moved: 6-1-1/classroom-611-v3.html"
+          else
+            echo "Not found (skipping): 6-1-1/classroom-611-v3.html"
+          fi
 
-jobs:
-  restructure:
-    name: Move extras files and update all links
-    runs-on: ubuntu-latest
+          if [ -f "6-1-2/6-1-2-why-organisations-need-data.html" ]; then
+            git mv "6-1-2/6-1-2-why-organisations-need-data.html" "content-areas/6-1-2-why-organisations-need-data.html"
+            echo "Moved: 6-1-2/6-1-2-why-organisations-need-data.html"
+          else
+            echo "Not found (skipping): 6-1-2/6-1-2-why-organisations-need-data.html"
+          fi
 
-    if: github.event.inputs.confirm == 'YES'
+          if [ -f "6-1-3/6-1-3-how-data-is-generated.html" ]; then
+            git mv "6-1-3/6-1-3-how-data-is-generated.html" "content-areas/6-1-3-how-data-is-generated.html"
+            echo "Moved: 6-1-3/6-1-3-how-data-is-generated.html"
+          else
+            echo "Not found (skipping): 6-1-3/6-1-3-how-data-is-generated.html"
+          fi
 
-    permissions:
-      contents: write
-
-    steps:
-
-      - name: Check out repo
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Create /content-areas/ folder and move extras files
+      - name: Fix asset paths in moved files
         run: |
-          mkdir -p content-areas
+          for f in content-areas/*.html; do
+            [ -f "$f" ] || continue
+            sed -i 's|href="../|href="../../|g' "$f"
+            sed -i 's|src="../|src="../../|g' "$f"
+            echo "Patched paths in: $f"
+          done
 
-          if [ -f "6-1-1/classroom-611-v3.html" ]; then
-            git mv "6-1-1/classroom-611-v3.html" "content-areas/classroom-611-v3.html"
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add content-areas/
+          if git diff --cached --quiet; then
+            echo "Nothing to commit - files already moved or not found"
+            exit 0
+          fi
+          git diff --cached --stat
+          git commit -m "chore: move extras files to content-areas via restructure workflow"
+          git push origin main
