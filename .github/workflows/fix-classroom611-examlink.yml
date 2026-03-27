@@ -34,22 +34,3 @@ jobs:
             echo "ERROR: content-areas/classroom-611-v3.html not found. Aborting."
             exit 1
           fi
-          echo "Target file found: content-areas/classroom-611-v3.html"
-
-      - name: Apply link fix
-        run: |
-          # Fix broken EXAM PRACTICE link: ../../6-1-1/index.html -> ../6-1-1/index.html
-          sed -i 's|\.\./\.\./6-1-1/index\.html|../6-1-1/index.html|g' content-areas/classroom-611-v3.html
-
-          echo "Fix applied. Verifying:"
-          grep -n '6-1-1' content-areas/classroom-611-v3.html || echo "No matching lines found."
-
-      - name: Commit and push
-        run: |
-          git add content-areas/classroom-611-v3.html
-          git diff --cached --quiet && echo "Nothing to commit â already clean." || \
-            git commit -m "fix: correct EXAM PRACTICE link in classroom-611-v3.html (../../6-1-1/ to ../6-1-1/)"
-          git push
-
-      - name: Summary
-        run: echo "Done â EXAM PRACTICE link now correctly points to ../6-1-1/index.html"
