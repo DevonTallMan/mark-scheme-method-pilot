@@ -508,7 +508,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <div class="footer-bar">
   <div class="f-item"><div class="f-dot"></div><span class="f-lbl">LIVE</span></div>
-  <div class="f-item"><span class="f-lbl">CLASS CODE</span><span class="f-val">5MFH4P</span></div>
+  <div class="f-item"><span class="f-lbl">CLASS CODE</span><span class="f-val" id="footer-cc">5MFH4P</span></div>
   <div class="f-item"><span class="f-lbl">SESSION</span><span class="f-val" id="sessionDate">--</span></div>
 </div>
 
@@ -863,6 +863,12 @@ import { doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase
     var days=Math.ceil((exam-new Date())/864e5);
     var el=document.getElementById('cdDays');
     if(el&&el.textContent==='--')el.textContent=days>0?days:'0';
+  })();
+
+  // Dynamic footer class code
+  (function(){
+    var el=document.getElementById('footer-cc');
+    if(el){var cc=new URLSearchParams(window.location.search).get('class')||'';if(cc)el.textContent=cc;}
   })();
 </script>
 </body>
