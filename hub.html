@@ -371,7 +371,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <div class="footer-bar">
   <div class="f-item"><div class="f-dot"></div><span class="f-lbl">LIVE</span></div>
-  <div class="f-item"><span class="f-lbl">CLASS CODE</span><span class="f-val">5MFH4P</span></div>
+  <div class="f-item"><span class="f-lbl">CLASS CODE</span><span class="f-val" id="footer-cc">5MFH4P</span></div>
   <div class="f-item"><span class="f-lbl">NEI API</span><span class="f-val">ONLINE</span></div>
 </div>
 
@@ -516,6 +516,12 @@ attachSnapshot();
 window.addEventListener('beforeunload',()=>{
   if(window._lbCurrentRanks)localStorage.setItem('msm_lb_prev_ranks',JSON.stringify(window._lbCurrentRanks));
 });
+
+  // Dynamic footer class code
+  (function(){
+    var el=document.getElementById('footer-cc');
+    if(el){var cc=new URLSearchParams(window.location.search).get('class')||'';if(cc)el.textContent=cc;}
+  })();
 </script>
 </body>
 </html>
