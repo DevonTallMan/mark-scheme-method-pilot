@@ -1710,28 +1710,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // nextStep calls renderStep(currentStep) — we intercept via MutationObserver
   }
 
-  // MutationObserver on theory-panel to re-apply badges when content changes
+  // MutationObserver on theory-panel — disconnect before injecting to prevent infinite loop
   var tp = document.getElementById('theory-panel');
+  var _obs = null;
+  var _obsLock = false;
+  function _applyEnhancements() {
+    if (_obsLock) return;
+    _obsLock = true;
+    if (_obs) _obs.disconnect();
+    renderNamedDots();
+    injectTimeBadge(currentStep);
+    injectCheckQ(currentStep);
+    updateNextLock(currentStep);
+    if (_obs && tp) _obs.observe(tp, { childList: true, subtree: false });
+    _obsLock = false;
+  }
   if (tp) {
-    var obs = new MutationObserver(function(muts) {
-      var hasAddedNodes = muts.some(function(m) { return m.addedNodes.length > 0; });
-      if (hasAddedNodes) {
-        renderNamedDots();
-        injectTimeBadge(currentStep);
-        injectCheckQ(currentStep);
-        updateNextLock(currentStep);
-      }
+    _obs = new MutationObserver(function(muts) {
+      var hasAddedNodes = muts.some(function(m) { return m.addedNodes.length > 0 && !m.addedNodes[0].classList?.contains('time-badge') && m.addedNodes[0].id !== 'cq-gate'; });
+      if (hasAddedNodes) _applyEnhancements();
     });
-    obs.observe(tp, { childList: true, subtree: false });
+    _obs.observe(tp, { childList: true, subtree: false });
   }
 
   // Initial application
   setTimeout(function() {
-    renderNamedDots();
-    injectTimeBadge(typeof currentStep !== 'undefined' ? currentStep : 0);
-    injectCheckQ(typeof currentStep !== 'undefined' ? currentStep : 0);
-    updateNextLock(typeof currentStep !== 'undefined' ? currentStep : 0);
-  }, 300);
+    _applyEnhancements();
+  }, 400);
 });
 
 </script>
