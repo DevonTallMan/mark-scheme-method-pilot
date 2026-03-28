@@ -3,7 +3,7 @@ name: Stage 0 Class Code Parameterisation
 #
 # Replaces every hardcoded '5MFH4P' class code in client-side JS
 # with a dynamic CLASS_CODE constant read from the ?class= URL
-# parameter, falling back to '5MFH4P' so Dave's class keeps working.
+# parameter, falling back to '5MFH4P' so the default class keeps working.
 #
 # Run manually from: Actions tab "Stage 0 Class Code
 # Parameterisation" Run workflow type YES Run workflow
