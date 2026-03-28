@@ -618,6 +618,14 @@ function initRec(){
 document.addEventListener('DOMContentLoaded',()=>{
   initTopBar();initRings();initCoverage();initCountdown();initFilters();initRec();initPathStatuses();
 });
+
+  // Standalone countdown — runs independently of Firestore
+  (function(){
+    var exam=new Date('2026-05-11');
+    var days=Math.ceil((exam-new Date())/864e5);
+    var el=document.getElementById('daysLeft');
+    if(el&&el.textContent==='--')el.textContent=days>0?days:'0';
+  })();
 </script>
 </body>
 </html>
