@@ -260,48 +260,15 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
     <div class="panel-body">
       <div class="chart-wrap">
-        <svg class="chart-svg" viewBox="0 0 500 130" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#39FF14" stop-opacity="0.4"/>
-              <stop offset="100%" stop-color="#39FF14" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <!-- Grid lines -->
-          <line class="chart-gridline" x1="0" y1="25" x2="500" y2="25"/>
-          <line class="chart-gridline" x1="0" y1="55" x2="500" y2="55"/>
-          <line class="chart-gridline" x1="0" y1="85" x2="500" y2="85"/>
-          <line class="chart-gridline" x1="0" y1="115" x2="500" y2="115"/>
-          <!-- Y labels -->
-          <text class="chart-label" x="0" y="23">150</text>
-          <text class="chart-label" x="0" y="53">100</text>
-          <text class="chart-label" x="0" y="83">50</text>
-          <text class="chart-label" x="0" y="113">0</text>
-          <!-- Chart area -->
-          <path class="chart-fill" d="M40,115 L110,115 L180,90 L250,70 L320,50 L390,30 L460,30 L460,115 Z"/>
-          <path class="chart-line" d="M40,115 L110,115 L180,90 L250,70 L320,50 L390,30 L460,30"/>
-          <!-- Dots -->
-          <circle class="chart-dot" cx="40" cy="115" r="3"/>
-          <circle class="chart-dot" cx="110" cy="115" r="3"/>
-          <circle class="chart-dot" cx="180" cy="90" r="3"/>
-          <circle class="chart-dot" cx="250" cy="70" r="3"/>
-          <circle class="chart-dot" cx="320" cy="50" r="3"/>
-          <circle class="chart-dot" cx="390" cy="30" r="3"/>
-          <circle class="chart-dot" cx="460" cy="30" r="3"/>
-          <!-- X labels -->
-          <text class="chart-label" x="30" y="128">W1</text>
-          <text class="chart-label" x="100" y="128">W2</text>
-          <text class="chart-label" x="170" y="128">W3</text>
-          <text class="chart-label" x="240" y="128">W4</text>
-          <text class="chart-label" x="310" y="128">W5</text>
-          <text class="chart-label" x="380" y="128">W6</text>
-          <text class="chart-label" x="450" y="128">W7</text>
-          <!-- Values -->
-          <text class="chart-val" x="100" y="108">0</text>
-          <text class="chart-val" x="170" y="83">+50</text>
-          <text class="chart-val" x="240" y="63">+75</text>
-          <text class="chart-val" x="310" y="43">+100</text>
-          <text class="chart-val" x="380" y="23">+150</text>
+        <svg class="chart" viewBox="0 0 600 160" preserveAspectRatio="none">
+          <!-- baseline grid -->
+          <line x1="0" y1="40" x2="600" y2="40" stroke="rgba(57,255,20,0.08)" stroke-width="1"/>
+          <line x1="0" y1="80" x2="600" y2="80" stroke="rgba(57,255,20,0.08)" stroke-width="1"/>
+          <line x1="0" y1="120" x2="600" y2="120" stroke="rgba(57,255,20,0.08)" stroke-width="1"/>
+          <!-- flat baseline -->
+          <polyline points="0,140 600,140" fill="none" stroke="rgba(57,255,20,0.3)" stroke-width="2"/>
+          <!-- empty state label -->
+          <text x="300" y="85" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="11" fill="rgba(255,255,255,0.3)">No sessions yet — complete a module to start tracking</text>
         </svg>
       </div>
     </div>
