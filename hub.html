@@ -434,6 +434,7 @@ document.addEventListener('DOMContentLoaded',initPage);
 <script type="module" id="msm-leaderboard-live-script">
 import { collection, onSnapshot, doc, updateDoc, setDoc, getDoc }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 const RANKS=[{l:'TRAINEE',m:0},{l:'DATA CADET',m:100},{l:'SIGNAL ANALYST',m:300},
   {l:'SYSTEMS OPERATOR',m:600},{l:'INTELLIGENCE LEAD',m:1000},{l:'AXIOM SPECIALIST',m:1500}];
@@ -470,6 +471,8 @@ function attachSnapshot(){
   if(!db){setTimeout(attachSnapshot,100);return;}
   const studentsRef=collection(db,'classes',classCode,'students');
   const tbody=document.getElementById('lb-tbody');
+  onAuthStateChanged(getAuth(), (user) => {
+    if (!user) return;
   onSnapshot(studentsRef,(snap)=>{
     const students=[];
     snap.forEach(d=>students.push({uid:d.id,...d.data()}));
@@ -505,6 +508,8 @@ function attachSnapshot(){
     if(tbody)tbody.innerHTML='<tr><td colspan="4" class="lb-error">⚠ FIRESTORE READ BLOCKED — CHECK RULES</td></tr>';
     console.error('Leaderboard snapshot error:',err);
   });
+  });
+
 }
 attachSnapshot();
 
