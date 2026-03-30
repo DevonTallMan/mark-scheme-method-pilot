@@ -519,6 +519,8 @@ body::after{content:"";position:fixed;inset:0;background:repeating-linear-gradie
 </footer>
 
 <script>
+window.AXIOM7_PROXY_URL='https://msm-axiom-proxy.morrischristopher675.workers.dev';
+
 function showSection(id) {
   document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
@@ -538,7 +540,7 @@ async function submitAnswer(ansId, fbId, btnId, section, question) {
   btn.disabled = true;
   fb.className = 'feedback-panel show';
   fb.innerHTML = '<span class="feedback-loading">AXIOM-7 ANALYSING RESPONSE...</span>';
-  const apiKey = localStorage.getItem('AXIOM7_KEY') || '';
+  const apiKey = null /* key removed — use proxy */ || '';
   if (!apiKey) {
     fb.innerHTML = '<strong style="color:var(--gold)">AXIOM-7 KEY NOT SET</strong><br>Ask your teacher to provide your AXIOM-7 key, then save it via the dashboard settings.';
     btn.disabled = false; return;
@@ -562,9 +564,9 @@ I [Impact]: ✓ or ✗ — brief note
 VERDICT: [1-2 sentences on overall mark likelihood]
 FIX: [One specific sentence the student should add or rewrite to earn the missing mark]`;
   try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch('https://msm-axiom-proxy.morrischristopher675.workers.dev/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      headers: { 'Content-Type': 'application/json', },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile', temperature: 0.3, max_tokens: 400,
         messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: answer }]
