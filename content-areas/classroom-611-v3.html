@@ -1195,6 +1195,15 @@ function showComplete() {
   document.querySelectorAll('.sdot').forEach(d => d.className = 'sdot done');
 
   loadLeaderboard();
+
+  // Return Mission: schedule first review on module completion
+  try {
+    if (window.MSM_ReturnMission) {
+      var _pct = typeof totalXP !== 'undefined' ? Math.min(Math.round(totalXP / 6 * 100), 100) : 0;
+      window.MSM_ReturnMission.writeFirstCompletion('ca-611', 'Data, Information and Knowledge', _pct, {n:0,e:0,i:0})
+        .catch(function(e){ console.warn('[ReturnMission]', e); });
+    }
+  } catch(e) { console.warn('[ReturnMission]', e); }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1740,5 +1749,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
+<script src="../return-mission-scheduler.js"></script>
 </body>
 </html>
