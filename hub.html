@@ -1,3 +1,4 @@
+<div id="rm-due-panel"></div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,6 +176,22 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   .lb-callsign-input::placeholder{color:var(--muted);}
   .lb-callsign-btn{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--void);background:var(--green);border:none;border-radius:6px;padding:6px 14px;cursor:pointer;transition:opacity .2s;}
   .lb-callsign-btn:hover{opacity:.85;}
+
+/* RETURN MISSION PANEL */
+.rm-panel{margin-bottom:24px}
+.rm-panel-heading{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.rm-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;transition:border-color .2s}
+.rm-card:hover{border-color:rgba(57,255,20,.3)}
+.rm-card-left{display:flex;flex-direction:column;gap:4px}
+.rm-card-module{font-family:'Share Tech Mono',monospace;font-size:13px;color:#fff;font-weight:600}
+.rm-card-meta{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.4)}
+.rm-badge-pill{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:4px}
+.rm-badge-pill.overdue{background:rgba(255,56,56,.15);color:#ff3838;border:1px solid rgba(255,56,56,.3)}
+.rm-badge-pill.today{background:rgba(255,149,0,.15);color:#ff9500;border:1px solid rgba(255,149,0,.3)}
+.rm-score-trend{font-family:'Share Tech Mono',monospace;font-size:11px}
+.rm-score-trend.up{color:#39ff14}.rm-score-trend.down{color:#ff3838}.rm-score-trend.same{color:rgba(255,255,255,.4)}
+.rm-start-btn{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:rgba(57,255,20,.1);color:#39ff14;border:1px solid rgba(57,255,20,.3);border-radius:6px;padding:8px 14px;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .2s}
+.rm-start-btn:hover{background:rgba(57,255,20,.2)}
 </style>
   <script type="module" src="firebase-config.js"></script>
 </head>
@@ -523,5 +540,7 @@ window.addEventListener('beforeunload',()=>{
     if(el){var cc=new URLSearchParams(window.location.search).get('class')||'';if(cc)el.textContent=cc;}
   })();
 </script>
+<script src="return-mission-scheduler.js"></script>
+<script src="hub-return-mission-panel.js"></script>
 </body>
 </html>
