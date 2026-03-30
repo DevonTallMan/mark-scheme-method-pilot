@@ -981,6 +981,8 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <script>
+window.AXIOM7_PROXY_URL='https://msm-axiom-proxy.morrischristopher675.workers.dev';
+
 const state = { currentScene:'a', quizScore:0, quizAnswered:0, activeScenario:'airport' };
 const sceneOrder = ['a','b','e'];
 const stationLabels = {a:'BRIEFING',b:'STATIONS',e:'COMPLETE'};
@@ -1230,7 +1232,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  * ============================================================================
  *
  * TECHNICAL CONFIGURATION (non-negotiable):
- *   Endpoint    : https://api.groq.com/openai/v1/chat/completions
+ *   Endpoint    : https://msm-axiom-proxy.morrischristopher675.workers.dev/api/chat
  *   Model       : llama-3.3-70b-versatile   ← DO NOT substitute with 8b
  *   Temperature : 0.3                        ← DO NOT exceed 0.4
  *   Max Tokens  : 1024
@@ -1240,7 +1242,7 @@ document.addEventListener('DOMContentLoaded',()=>{
  *   const body = buildExaminerRequest(question, studentAnswer, marks, topic);
  *   const res  = await fetch(GROQ_ENDPOINT, {
  *     method: "POST",
- *     headers: { "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+ *     headers: { 
  *                "Content-Type": "application/json" },
  *     body: JSON.stringify(body)
  *   });
