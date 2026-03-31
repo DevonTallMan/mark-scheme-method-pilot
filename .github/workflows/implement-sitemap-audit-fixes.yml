@@ -16,66 +16,41 @@ jobs:
       - name: Sync with latest remote main
         run: git fetch origin main && git merge origin/main --ff-only
 
-      - name: Create Return Mission review pages (6.1.2 / 6.1.3 / 6.2 / 6.3)
+      - name: Create Return Mission review pages
         run: |
-          echo "aW1wb3J0IHJlLCBzeXMKCndpdGggb3BlbigncmV2aWV3LTYxMS5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgdGVtcGxhdGUgPSBmLnJlYWQoKQoKbW9kdWxlcyA9IFsKICAgICgnNjEyJywgJzYuMS4yJywgJzYtMS0yJywgJ1doeSBPcmdhbmlzYXRpb25zIE5lZWQgRGF0YScpLAogICAgKCc2MTMnLCAnNi4xLjMnLCAnNi0xLTMnLCAnVHlwZXMgb2YgRGF0YScpLAogICAgKCc2MicsICAnNi4yJywgICAnNi0yJywgICAnRGF0YSBDb2xsZWN0aW9uIGFuZCBTdG9yYWdlJyksCiAgICAoJzYzJywgICc2LjMnLCAgICc2LTMnLCAgICdIb3cgRGF0YSBTdXBwb3J0cyBPcmdhbmlzYXRpb25zJyksCl0KCmZvciAoc2hvcnQsIGRvdHRlZCwgZGFzaGVkLCB0aXRsZSkgaW4gbW9kdWxlczoKICAgIGNvbnRlbnQgPSB0ZW1wbGF0ZQogICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnNi0xLTEnLCBkYXNoZWQpCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc2LjEuMScsIGRvdHRlZCkKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ3Jldmlldy02MTEnLCBmJ3Jldmlldy17c2hvcnR9JykKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ0RhdGEsIEluZm9ybWF0aW9uIGFuZCBLbm93bGVkZ2UnLCB0aXRsZSkKICAgIGNvbnRlbnQgPSByZS5zdWIocidcYjYxMVxiJywgc2hvcnQsIGNvbnRlbnQpCiAgICB3aXRoIG9wZW4oZidyZXZpZXcte3Nob3J0fS5odG1sJywgJ3cnLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGYud3JpdGUoY29udGVudCkKICAgIHByaW50KGYnQ3JlYXRlZCByZXZpZXcte3Nob3J0fS5odG1sICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/create_review_pages.py
-          python3 /tmp/create_review_pages.py
+          echo "aW1wb3J0IHJlLCBzeXMKCndpdGggb3BlbigncmV2aWV3LTYxMS5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgdGVtcGxhdGUgPSBmLnJlYWQoKQoKbW9kdWxlcyA9IFsKICAgICgnNjEyJywgJzYuMS4yJywgJzYtMS0yJywgJ1doeSBPcmdhbmlzYXRpb25zIE5lZWQgRGF0YScpLAogICAgKCc2MTMnLCAnNi4xLjMnLCAnNi0xLTMnLCAnVHlwZXMgb2YgRGF0YScpLAogICAgKCc2MicsICAnNi4yJywgICAnNi0yJywgICAnRGF0YSBDb2xsZWN0aW9uIGFuZCBTdG9yYWdlJyksCiAgICAoJzYzJywgICc2LjMnLCAgICc2LTMnLCAgICdIb3cgRGF0YSBTdXBwb3J0cyBPcmdhbmlzYXRpb25zJyksCl0KCmZvciAoc2hvcnQsIGRvdHRlZCwgZGFzaGVkLCB0aXRsZSkgaW4gbW9kdWxlczoKICAgIGNvbnRlbnQgPSB0ZW1wbGF0ZQogICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnNi0xLTEnLCBkYXNoZWQpCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc2LjEuMScsIGRvdHRlZCkKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ3Jldmlldy02MTEnLCBmJ3Jldmlldy17c2hvcnR9JykKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ0RhdGEsIEluZm9ybWF0aW9uIGFuZCBLbm93bGVkZ2UnLCB0aXRsZSkKICAgIGNvbnRlbnQgPSByZS5zdWIocidcYjYxMVxiJywgc2hvcnQsIGNvbnRlbnQpCiAgICB3aXRoIG9wZW4oZidyZXZpZXcte3Nob3J0fS5odG1sJywgJ3cnLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGYud3JpdGUoY29udGVudCkKICAgIHByaW50KGYnQ3JlYXRlZCByZXZpZXcte3Nob3J0fS5odG1sICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/s1.py
+          python3 /tmp/s1.py
 
-      - name: Patch hub.html - add static anchors for all Return Mission pages
+      - name: Patch hub.html static anchors
         run: |
-          echo "d2l0aCBvcGVuKCdodWIuaHRtbCcsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQoKTUFSS0VSID0gJ3Jldmlldy02MTIuaHRtbCcKaWYgTUFSS0VSIGluIGNvbnRlbnQ6CiAgICBwcmludCgnaHViLmh0bWwgYWxyZWFkeSBoYXMgc3RhdGljIGFuY2hvcnMgLS0gc2tpcHBpbmcnKQplbHNlOgogICAgYW5jaG9ycyA9ICgKICAgICAgICAnXG48IS0tIFN0YXRpYyBhbmNob3JzOiBSZXR1cm4gTWlzc2lvbiBwYWdlcyAoY3Jhd2xlci9zY3JlZW4tcmVhZGVyIGRpc2NvdmVyeSkgLS0+XG4nCiAgICAgICAgJzxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSIgYXJpYS1oaWRkZW49InRydWUiPlxuJwogICAgICAgICcgIDxhIGhyZWY9InJldmlldy02MTEuaHRtbCIgdGFiaW5kZXg9Ii0xIj5SZXR1cm4gTWlzc2lvbiA2LjEuMTwvYT5cbicKICAgICAgICAnICA8YSBocmVmPSJyZXZpZXctNjEyLmh0bWwiIHRhYmluZGV4PSItMSI+UmV0dXJuIE1pc3Npb24gNi4xLjI8L2E+XG4nCiAgICAgICAgJyAgPGEgaHJlZj0icmV2aWV3LTYxMy5odG1sIiB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMS4zPC9hPlxuJwogICAgICAgICcgIDxhIGhyZWY9InJldmlldy02Mi5odG1sIiAgdGFiaW5kZXg9Ii0xIj5SZXR1cm4gTWlzc2lvbiA2LjI8L2E+XG4nCiAgICAgICAgJyAgPGEgaHJlZj0icmV2aWV3LTYzLmh0bWwiICB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMzwvYT5cbicKICAgICAgICAnPC9kaXY+XG4nCiAgICApCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc8L2JvZHk+JywgYW5jaG9ycyArICc8L2JvZHk+JywgMSkKICAgIHdpdGggb3BlbignaHViLmh0bWwnLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoZidQYXRjaGVkIGh1Yi5odG1sICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/patch_hub.py
-          python3 /tmp/patch_hub.py
+          echo "d2l0aCBvcGVuKCdodWIuaHRtbCcsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQppZiAncmV2aWV3LTYxMi5odG1sJyBpbiBjb250ZW50OgogICAgcHJpbnQoJ2h1YiBhbHJlYWR5IHBhdGNoZWQnKQplbHNlOgogICAgYSA9ICdcbjwhLS0gU3RhdGljIGFuY2hvcnM6IFJldHVybiBNaXNzaW9uIC0tPlxuPGRpdiBzdHlsZT0iZGlzcGxheTpub25lIiBhcmlhLWhpZGRlbj0idHJ1ZSI+XG4gIDxhIGhyZWY9InJldmlldy02MTEuaHRtbCIgdGFiaW5kZXg9Ii0xIj5SZXR1cm4gTWlzc2lvbiA2LjEuMTwvYT5cbiAgPGEgaHJlZj0icmV2aWV3LTYxMi5odG1sIiB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMS4yPC9hPlxuICA8YSBocmVmPSJyZXZpZXctNjEzLmh0bWwiIHRhYmluZGV4PSItMSI+UmV0dXJuIE1pc3Npb24gNi4xLjM8L2E+XG4gIDxhIGhyZWY9InJldmlldy02Mi5odG1sIiB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMjwvYT5cbiAgPGEgaHJlZj0icmV2aWV3LTYzLmh0bWwiIHRhYmluZGV4PSItMSI+UmV0dXJuIE1pc3Npb24gNi4zPC9hPlxuPC9kaXY+XG4nCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc8L2JvZHk+JywgYSArICc8L2JvZHk+JywgMSkKICAgIG9wZW4oJ2h1Yi5odG1sJywgJ3cnLCBlbmNvZGluZz0ndXRmLTgnKS53cml0ZShjb250ZW50KQogICAgcHJpbnQoZidQYXRjaGVkICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/s2.py
+          python3 /tmp/s2.py
 
-      - name: Patch index.html - add subtle teacher footer link
+      - name: Patch index.html teacher link
         run: |
-          echo "d2l0aCBvcGVuKCdpbmRleC5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgY29udGVudCA9IGYucmVhZCgpCgppZiAndGVhY2hlci5odG1sJyBpbiBjb250ZW50OgogICAgcHJpbnQoJ2luZGV4Lmh0bWwgYWxyZWFkeSBoYXMgdGVhY2hlciBsaW5rIC0tIHNraXBwaW5nJykKZWxzZToKICAgIGxpbmsgPSAoCiAgICAgICAgJ1xuPCEtLSBUZWFjaGVyIGFjY2VzczogcXVpZXQgZm9vdGVyIGVudHJ5IHBvaW50IC0tPlxuJwogICAgICAgICc8ZGl2IHN0eWxlPSJ0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjE2cHggMCA2cHg7b3BhY2l0eTowLjM7JwogICAgICAgICdmb250LXNpemU6MTFweDtmb250LWZhbWlseTptb25vc3BhY2U7Ij5cbicKICAgICAgICAnICA8YSBocmVmPSJ0ZWFjaGVyLmh0bWwiIHN0eWxlPSJjb2xvcjojODg4O3RleHQtZGVjb3JhdGlvbjpub25lOycKICAgICAgICAnbGV0dGVyLXNwYWNpbmc6MC4wOGVtOyI+VGVhY2hlciBBY2Nlc3M8L2E+XG4nCiAgICAgICAgJzwvZGl2PlxuJwogICAgKQogICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnPC9ib2R5PicsIGxpbmsgKyAnPC9ib2R5PicsIDEpCiAgICB3aXRoIG9wZW4oJ2luZGV4Lmh0bWwnLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoZidQYXRjaGVkIGluZGV4Lmh0bWwgKHtsZW4oY29udGVudCl9IGJ5dGVzKScpCg==" | base64 -d > /tmp/patch_index.py
-          python3 /tmp/patch_index.py
+          echo "d2l0aCBvcGVuKCdpbmRleC5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgY29udGVudCA9IGYucmVhZCgpCmlmICd0ZWFjaGVyLmh0bWwnIGluIGNvbnRlbnQ6CiAgICBwcmludCgnaW5kZXggYWxyZWFkeSBwYXRjaGVkJykKZWxzZToKICAgIGxpbmsgPSAnXG48IS0tIFRlYWNoZXIgYWNjZXNzIC0tPlxuPGRpdiBzdHlsZT0idGV4dC1hbGlnbjpjZW50ZXI7cGFkZGluZzoxNnB4IDAgNnB4O29wYWNpdHk6MC4zO2ZvbnQtc2l6ZToxMXB4O2ZvbnQtZmFtaWx5Om1vbm9zcGFjZTsiPjxhIGhyZWY9InRlYWNoZXIuaHRtbCIgc3R5bGU9ImNvbG9yOiM4ODg7dGV4dC1kZWNvcmF0aW9uOm5vbmU7bGV0dGVyLXNwYWNpbmc6MC4wOGVtOyI+VGVhY2hlciBBY2Nlc3M8L2E+PC9kaXY+XG4nCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc8L2JvZHk+JywgbGluayArICc8L2JvZHk+JywgMSkKICAgIG9wZW4oJ2luZGV4Lmh0bWwnLCAndycsIGVuY29kaW5nPSd1dGYtOCcpLndyaXRlKGNvbnRlbnQpCiAgICBwcmludChmJ1BhdGNoZWQgKHtsZW4oY29udGVudCl9IGJ5dGVzKScpCg==" | base64 -d > /tmp/s3.py
+          python3 /tmp/s3.py
 
-      - name: Patch return-mission-scheduler.js - register new modules
+      - name: Patch return-mission-scheduler.js
         run: |
-          python3 - << 'PYEOF'
-import sys
-with open('return-mission-scheduler.js', 'r', encoding='utf-8') as f:
-    content = f.read()
-if '6-1-2' in content:
-    print('Already patched -- skipping')
-    sys.exit(0)
-new_block = """
-
-// Return Mission module registry -- extended by sitemap-audit sprint
-export const RETURN_MISSION_MODULES = [
-  { moduleId: '6-1-1', label: '6.1.1', reviewPath: 'review-611.html', title: 'Data, Information and Knowledge' },
-  { moduleId: '6-1-2', label: '6.1.2', reviewPath: 'review-612.html', title: 'Why Organisations Need Data' },
-  { moduleId: '6-1-3', label: '6.1.3', reviewPath: 'review-613.html', title: 'Types of Data' },
-  { moduleId: '6-2', label: '6.2', reviewPath: 'review-62.html', title: 'Data Collection and Storage' },
-  { moduleId: '6-3', label: '6.3', reviewPath: 'review-63.html', title: 'How Data Supports Organisations' },
-];
-"""
-content += new_block
-with open('return-mission-scheduler.js', 'w', encoding='utf-8') as f:
-    f.write(content)
-print(f'Appended RETURN_MISSION_MODULES ({len(content)} bytes)')
-PYEOF
+          echo "d2l0aCBvcGVuKCdyZXR1cm4tbWlzc2lvbi1zY2hlZHVsZXIuanMnLCAncicsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICBjb250ZW50ID0gZi5yZWFkKCkKCmlmICc2LTEtMicgaW4gY29udGVudDoKICAgIHByaW50KCdTY2hlZHVsZXIgYWxyZWFkeSBoYXMgbmV3IG1vZHVsZXMgLS0gc2tpcHBpbmcnKQplbHNlOgogICAgbmV3X2VudHJpZXMgPSAoCiAgICAgICAgIiAgeyBtb2R1bGVJZDogJzYtMS0yJywgbGFiZWw6ICc2LjEuMicsIHJldmlld1BhdGg6ICdyZXZpZXctNjEyLmh0bWwnLCB0aXRsZTogJ1doeSBPcmdhbmlzYXRpb25zIE5lZWQgRGF0YScgfSxcbiIKICAgICAgICAiICB7IG1vZHVsZUlkOiAnNi0xLTMnLCBsYWJlbDogJzYuMS4zJywgcmV2aWV3UGF0aDogJ3Jldmlldy02MTMuaHRtbCcsIHRpdGxlOiAnVHlwZXMgb2YgRGF0YScgfSxcbiIKICAgICAgICAiICB7IG1vZHVsZUlkOiAnNi0yJywgICBsYWJlbDogJzYuMicsICAgcmV2aWV3UGF0aDogJ3Jldmlldy02Mi5odG1sJywgIHRpdGxlOiAnRGF0YSBDb2xsZWN0aW9uIGFuZCBTdG9yYWdlJyB9LFxuIgogICAgICAgICIgIHsgbW9kdWxlSWQ6ICc2LTMnLCAgIGxhYmVsOiAnNi4zJywgICByZXZpZXdQYXRoOiAncmV2aWV3LTYzLmh0bWwnLCAgdGl0bGU6ICdIb3cgRGF0YSBTdXBwb3J0cyBPcmdhbmlzYXRpb25zJyB9LFxuIgogICAgKQogICAgY29udGVudCArPSAoCiAgICAgICAgIlxuXG4vLyBSZXR1cm4gTWlzc2lvbiBtb2R1bGUgcmVnaXN0cnkgLS0gZXh0ZW5kZWQgYnkgc2l0ZW1hcC1hdWRpdCBzcHJpbnRcbiIKICAgICAgICAiZXhwb3J0IGNvbnN0IFJFVFVSTl9NSVNTSU9OX01PRFVMRVMgPSBbXG4iCiAgICAgICAgIiAgeyBtb2R1bGVJZDogJzYtMS0xJywgbGFiZWw6ICc2LjEuMScsIHJldmlld1BhdGg6ICdyZXZpZXctNjExLmh0bWwnLCB0aXRsZTogJ0RhdGEsIEluZm9ybWF0aW9uIGFuZCBLbm93bGVkZ2UnIH0sXG4iCiAgICAgICAgKyBuZXdfZW50cmllcwogICAgICAgICsgIl07XG4iCiAgICApCiAgICB3aXRoIG9wZW4oJ3JldHVybi1taXNzaW9uLXNjaGVkdWxlci5qcycsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICBmLndyaXRlKGNvbnRlbnQpCiAgICBwcmludChmJ0FwcGVuZGVkIFJFVFVSTl9NSVNTSU9OX01PRFVMRVMgZXhwb3J0ICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQo=" | base64 -d > /tmp/s4.py
+          python3 /tmp/s4.py
 
       - name: Generate sitemap.xml
         run: |
-          echo "QkFTRSA9ICdodHRwczovL2RldnludGFsbG1hbi5naXRodWIuaW8vbWFyay1zY2hlbWUtbWV0aG9kLXBpbG90JwoKcGFnZXMgPSBbCiAgICAoJy8nLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICcxLjAnLCAnd2Vla2x5JyksCiAgICAoJy9kYXNoYm9hcmQuaHRtbCcsICAgICAgICAgICAgICAgICAgICcwLjgnLCAnd2Vla2x5JyksCiAgICAoJy9odWIuaHRtbCcsICAgICAgICAgICAgICAgICAgICAgICAgICcwLjgnLCAnd2Vla2x5JyksCiAgICAoJy9jb250ZW50LWFyZWFzL2NsYXNzcm9vbS02MTEtdjMuaHRtbCcsICcwLjcnLCAnbW9udGhseScpLAogICAgKCcvY29udGVudC1hcmVhcy82LTEtMi13aHktb3JnYW5pc2F0aW9ucy1uZWVkLWRhdGEuaHRtbCcsICcwLjcnLCAnbW9udGhseScpLAogICAgKCcvbGVhcm4vNi0xLTEvaW5kZXguaHRtbCcsICAgICAgICAgJzAuNycsICdtb250aGx5JyksCiAgICAoJy9sZWFybi82LTEtMi9pbmRleC5odG1sJywgICAgICAgICAnMC43JywgJ21vbnRobHknKSwKICAgICgnL2xlYXJuLzYtMS0zL2luZGV4Lmh0bWwnLCAgICAgICAgICcwLjcnLCAnbW9udGhseScpLAogICAgKCcvbGVhcm4vNi0yL2luZGV4Lmh0bWwnLCAgICAgICAgICAgJzAuNycsICdtb250aGx5JyksCiAgICAoJy9sZWFybi82LTMvaW5kZXguaHRtbCcsICAgICAgICAgICAnMC43JywgJ21vbnRobHknKSwKICAgICgnL3Jldmlldy02MTEuaHRtbCcsICAgICAgICAgICAgICAgICAnMC42JywgJ3dlZWtseScpLAogICAgKCcvcmV2aWV3LTYxMi5odG1sJywgICAgICAgICAgICAgICAgICcwLjYnLCAnd2Vla2x5JyksCiAgICAoJy9yZXZpZXctNjEzLmh0bWwnLCAgICAgICAgICAgICAgICAgJzAuNicsICd3ZWVrbHknKSwKICAgICgnL3Jldmlldy02Mi5odG1sJywgICAgICAgICAgICAgICAgICAnMC42JywgJ3dlZWtseScpLAogICAgKCcvcmV2aWV3LTYzLmh0bWwnLCAgICAgICAgICAgICAgICAgICcwLjYnLCAnd2Vla2x5JyksCl0KCmxpbmVzID0gWyc8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PicsCiAgICAgICAgICc8dXJsc2V0IHhtbG5zPSJodHRwOi8vd3d3LnNpdGVtYXBzLm9yZy9zY2hlbWFzL3NpdGVtYXAvMC45Ij4nXQpmb3IgKHBhdGgsIHByaSwgZnJlcSkgaW4gcGFnZXM6CiAgICBsaW5lcy5hcHBlbmQoJyAgPHVybD4nKQogICAgbGluZXMuYXBwZW5kKGYnICAgIDxsb2M+e0JBU0V9e3BhdGh9PC9sb2M+JykKICAgIGxpbmVzLmFwcGVuZChmJyAgICA8cHJpb3JpdHk+e3ByaX08L3ByaW9yaXR5PicpCiAgICBsaW5lcy5hcHBlbmQoZicgICAgPGNoYW5nZWZyZXE+e2ZyZXF9PC9jaGFuZ2VmcmVxPicpCiAgICBsaW5lcy5hcHBlbmQoJyAgPC91cmw+JykKbGluZXMuYXBwZW5kKCc8L3VybHNldD4nKQoKd2l0aCBvcGVuKCdzaXRlbWFwLnhtbCcsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGYud3JpdGUoJ1xuJy5qb2luKGxpbmVzKSArICdcbicpCnByaW50KGYnR2VuZXJhdGVkIHNpdGVtYXAueG1sICh7bGVuKGxpbmVzKX0gbGluZXMpJykK" | base64 -d > /tmp/gen_sitemap.py
-          python3 /tmp/gen_sitemap.py
+          echo "QkFTRSA9ICdodHRwczovL2RldnludGFsbG1hbi5naXRodWIuaW8vbWFyay1zY2hlbWUtbWV0aG9kLXBpbG90JwpwYWdlcyA9IFsKICAgICgnLycsJzEuMCcsJ3dlZWtseScpLCgnL2Rhc2hib2FyZC5odG1sJywnMC44Jywnd2Vla2x5JyksCiAgICAoJy9odWIuaHRtbCcsJzAuOCcsJ3dlZWtseScpLAogICAgKCcvY29udGVudC1hcmVhcy9jbGFzc3Jvb20tNjExLXYzLmh0bWwnLCcwLjcnLCdtb250aGx5JyksCiAgICAoJy9jb250ZW50LWFyZWFzLzYtMS0yLXdoeS1vcmdhbmlzYXRpb25zLW5lZWQtZGF0YS5odG1sJywnMC43JywnbW9udGhseScpLAogICAgKCcvbGVhcm4vNi0xLTEvaW5kZXguaHRtbCcsJzAuNycsJ21vbnRobHknKSwKICAgICgnL2xlYXJuLzYtMS0yL2luZGV4Lmh0bWwnLCcwLjcnLCdtb250aGx5JyksCiAgICAoJy9sZWFybi82LTEtMy9pbmRleC5odG1sJywnMC43JywnbW9udGhseScpLAogICAgKCcvbGVhcm4vNi0yL2luZGV4Lmh0bWwnLCcwLjcnLCdtb250aGx5JyksCiAgICAoJy9sZWFybi82LTMvaW5kZXguaHRtbCcsJzAuNycsJ21vbnRobHknKSwKICAgICgnL3Jldmlldy02MTEuaHRtbCcsJzAuNicsJ3dlZWtseScpLAogICAgKCcvcmV2aWV3LTYxMi5odG1sJywnMC42Jywnd2Vla2x5JyksCiAgICAoJy9yZXZpZXctNjEzLmh0bWwnLCcwLjYnLCd3ZWVrbHknKSwKICAgICgnL3Jldmlldy02Mi5odG1sJywnMC42Jywnd2Vla2x5JyksCiAgICAoJy9yZXZpZXctNjMuaHRtbCcsJzAuNicsJ3dlZWtseScpLApdCmxpbmVzPVsnPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4nLCc8dXJsc2V0IHhtbG5zPSJodHRwOi8vd3d3LnNpdGVtYXBzLm9yZy9zY2hlbWFzL3NpdGVtYXAvMC45Ij4nXQpmb3IgcCxwcixmciBpbiBwYWdlczoKICAgIGxpbmVzKz1bJyAgPHVybD4nLGYnICAgIDxsb2M+e0JBU0V9e3B9PC9sb2M+JyxmJyAgICA8cHJpb3JpdHk+e3ByfTwvcHJpb3JpdHk+JyxmJyAgICA8Y2hhbmdlZnJlcT57ZnJ9PC9jaGFuZ2VmcmVxPicsJyAgPC91cmw+J10KbGluZXMuYXBwZW5kKCc8L3VybHNldD4nKQpvcGVuKCdzaXRlbWFwLnhtbCcsJ3cnKS53cml0ZSgnXG4nLmpvaW4obGluZXMpKQpwcmludChmJ0dlbmVyYXRlZCB7bGVuKGxpbmVzKX0gbGluZXMnKQo=" | base64 -d > /tmp/s5.py
+          python3 /tmp/s5.py
 
       - name: Verify all changes
         run: |
           FAIL=0
           for f in review-612.html review-613.html review-62.html review-63.html sitemap.xml; do
-            if [ ! -f "$f" ]; then
-              echo "FAIL - missing: $f"; FAIL=1
-            else
-              echo "OK - $f ($(wc -c < $f) bytes)"
-            fi
+            [ -f "$f" ] && echo "OK $f ($(wc -c < $f) bytes)" || { echo "FAIL missing $f"; FAIL=1; }
           done
-          grep -q 'Teacher Access' index.html && echo "OK - teacher link in index.html" || { echo "FAIL - teacher link missing"; FAIL=1; }
-          grep -q 'review-612.html' hub.html && echo "OK - static anchors in hub.html" || { echo "FAIL - static anchors missing"; FAIL=1; }
-          grep -q '6-1-2' return-mission-scheduler.js && echo "OK - scheduler updated" || { echo "FAIL - scheduler not updated"; FAIL=1; }
-          grep -q 'urlset' sitemap.xml && echo "OK - sitemap.xml valid" || { echo "FAIL - sitemap.xml empty"; FAIL=1; }
+          grep -q 'Teacher Access' index.html && echo "OK teacher link" || { echo "FAIL teacher link"; FAIL=1; }
+          grep -q 'review-612.html' hub.html && echo "OK static anchors" || { echo "FAIL static anchors"; FAIL=1; }
+          grep -q '6-1-2' return-mission-scheduler.js && echo "OK scheduler" || { echo "FAIL scheduler"; FAIL=1; }
+          grep -q 'urlset' sitemap.xml && echo "OK sitemap" || { echo "FAIL sitemap"; FAIL=1; }
           [ $FAIL -eq 0 ] || exit 1
 
       - name: Commit and push
