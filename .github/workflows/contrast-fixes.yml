@@ -1,0 +1,37 @@
+name: Contrast Fixes
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to deploy'
+        required: true
+
+jobs:
+  contrast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Apply contrast fixes
+        run: |
+          echo "aW1wb3J0IHN1YnByb2Nlc3MsIHN5cywgb3MKCiMgRml4IDE6IGJ1bXAgYWxsIHJnYmEoMjMyLCAyMzcsIDI0MywgMC4yNSkgLT4gcmdiYSgyMzIsIDIzNywgMjQzLCAwLjYwKQojIFRoaXMgY292ZXJzIGV2ZXJ5IGxhYmVsL21ldGFkYXRhIGVsZW1lbnQgYWNyb3NzIGFsbCBwYWdlcyBpbiBvbmUgcGFzcwpyZXN1bHQgPSBzdWJwcm9jZXNzLnJ1bigKICAgIFsnZ3JlcCcsICctcmwnLCAncmdiYSgyMzIsIDIzNywgMjQzLCAwLjI1KScsICcuJ10sCiAgICBjYXB0dXJlX291dHB1dD1UcnVlLCB0ZXh0PVRydWUKKQpmaWxlcyA9IFtmLnN0cmlwKCkgZm9yIGYgaW4gcmVzdWx0LnN0ZG91dC5zdHJpcCgpLnNwbGl0KCdcbicpIGlmIGYuc3RyaXAoKSBhbmQgZi5lbmRzd2l0aCgnLmh0bWwnKV0KcHJpbnQoZidGb3VuZCB7bGVuKGZpbGVzKX0gSFRNTCBmaWxlcyB3aXRoIHJnYmEoMjMyLCAyMzcsIDI0MywgMC4yNSk6IHtmaWxlc30nKQoKcGF0Y2hlZCA9IDAKZM8yIHBhdGggaW4gZmlsZXM6CiAgICB3aXRoIG9wZW4ocGF0aCwgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGNvbnRlbnQgPSBmLnJlYWQoKQogICAgY291bnQgPSBjb250ZW50LmNvdW50KCdyZ2JhKDIzMiwgMjM3LCAyNDMsIDAuMjUpJykKICAgIGlmIGNvdW50ID09IDA6CiAgICAgICAgY29udGludWUKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ3JnYmEoMjMyLCAyMzcsIDI0MywgMC4yNSknLCAncmdiYSgyMzIsIDIzNywgMjQzLCAwLjYwKScpCiAgICB3aXRoIG9wZW4ocGF0aCwgJ3cnLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGYud3JpdGUoY29udGVudCkKICAgIHByaW50KGYnICB7cGF0aH06IHJlcGxhY2VkIHtjb3VudH0gb2NjdXJyZW5jZXMnKQogICAgcGF0Y2hlZCArPSAxCgojIEZpeDogUmV0dXJuIE1pc3Npb24gYW5jaG9yIGxpbmtzIC0gYWRkIGNvbG9yIHRvIHRoZSBoaWRkZW4gZGl2CmZvciBodG1sX2ZpbGUgaW4gWydodWIuaHRtbCddOgogICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKGh0bWxfZmlsZSk6CiAgICAgICAgY29udGludWUKICAgIHdpdGggb3BlbihodG1sX2ZpbGUsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICBjb250ZW50ID0gZi5yZWFkKCkKICAgIG9sZCA9ICc8ZGl2IHN0eWxlPSJkaXNwbGF5Om5vbmUiIGFyaWEtaGlkZGVuPSJ0cnVlIj4nCiAgICBuZXcgPSAnPGRpdiBzdHlsZT0iZGlzcGxheTpub25lO2NvbG9yOmluaGVyaXQiIGFyaWEtaGlkZGVuPSJ0cnVlIj4nCiAgICBpZiBvbGQgaW4gY29udGVudDoKICAgICAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKG9sZCwgbmV3LCAxKQogICAgICAgIHdpdGggb3BlbihodG1sX2ZpbGUsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgICAgIHByaW50KGYnICBodWIuaHRtbDogZml4ZWQgaGlkZGVuIGFuY2hvciBkaXYgY29sb3VyJykKICAgIGVsc2U6CiAgICAgICAgcHJpbnQoZicgIGh1Yi5odG1sOiBoaWRkZW4gZGl2IHBhdHRlcm4gbm90IGZvdW5kJykKCnByaW50KGYnRG9uZS4gUGF0Y2hlZCB7cGF0Y2hlZH0gZmlsZXMuJykK" | base64 -d > /tmp/contrast_fix.py
+          python3 /tmp/contrast_fix.py
+
+      - name: Verify contrast fixes
+        run: |
+          FAIL=0
+          grep -rl 'rgba(232, 237, 243, 0.60)' . --include='*.html' | grep -v .git | grep -q . && echo "OK - new colour present" || { echo "FAIL - new colour not found"; FAIL=1; }
+          [ $FAIL -eq 0 ] || exit 1
+
+      - name: Commit and push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "fix: a11y contrast - bump label alpha 0.25->0.60, fix anchor colour"
+          git push origin main
