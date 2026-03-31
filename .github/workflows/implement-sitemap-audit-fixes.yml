@@ -1,0 +1,68 @@
+name: Implement Sitemap Audit Fixes
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to deploy'
+        required: true
+
+jobs:
+  implement:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Create Return Mission review pages (6.1.2 / 6.1.3 / 6.2 / 6.3)
+        run: |
+          echo "aW1wb3J0IHJlLCBzeXMKCndpdGggb3BlbigncmV2aWV3LTYxMS5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgdGVtcGxhdGUgPSBmLnJlYWQoKQoKbW9kdWxlcyA9IFsKICAgICgnNjEyJywgJzYuMS4yJywgJzYtMS0yJywgJ1doeSBPcmdhbmlzYXRpb25zIE5lZWQgRGF0YScpLAogICAgKCc2MTMnLCAnNi4xLjMnLCAnNi0xLTMnLCAnVHlwZXMgb2YgRGF0YScpLAogICAgKCc2MicsICAnNi4yJywgICAnNi0yJywgICAnRGF0YSBDb2xsZWN0aW9uIGFuZCBTdG9yYWdlJyksCiAgICAoJzYzJywgICc2LjMnLCAgICc2LTMnLCAgICdIb3cgRGF0YSBTdXBwb3J0cyBPcmdhbmlzYXRpb25zJyksCl0KCmZvciAoc2hvcnQsIGRvdHRlZCwgZGFzaGVkLCB0aXRsZSkgaW4gbW9kdWxlczoKICAgIGNvbnRlbnQgPSB0ZW1wbGF0ZQogICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnNi0xLTEnLCBkYXNoZWQpCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc2LjEuMScsIGRvdHRlZCkKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ3Jldmlldy02MTEnLCBmJ3Jldmlldy17c2hvcnR9JykKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ0RhdGEsIEluZm9ybWF0aW9uIGFuZCBLbm93bGVkZ2UnLCB0aXRsZSkKICAgIGNvbnRlbnQgPSByZS5zdWIocidcYjYxMVxiJywgc2hvcnQsIGNvbnRlbnQpCiAgICB3aXRoIG9wZW4oZidyZXZpZXcte3Nob3J0fS5odG1sJywgJ3cnLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGYud3JpdGUoY29udGVudCkKICAgIHByaW50KGYnQ3JlYXRlZCByZXZpZXcte3Nob3J0fS5odG1sICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/create_review_pages.py
+          python3 /tmp/create_review_pages.py
+
+      - name: Patch hub.html — add static anchors for all Return Mission pages
+        run: |
+          echo "d2l0aCBvcGVuKCdodWIuaHRtbCcsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQoKTUFSS0VSID0gJ3Jldmlldy02MTIuaHRtbCcKaWYgTUFSS0VSIGluIGNvbnRlbnQ6CiAgICBwcmludCgnaHViLmh0bWwgYWxyZWFkeSBoYXMgc3RhdGljIGFuY2hvcnMgLS0gc2tpcHBpbmcnKQplbHNlOgogICAgYW5jaG9ycyA9ICgKICAgICAgICAnXG48IS0tIFN0YXRpYyBhbmNob3JzOiBSZXR1cm4gTWlzc2lvbiBwYWdlcyAoY3Jhd2xlci9zY3JlZW4tcmVhZGVyIGRpc2NvdmVyeSkgLS0+XG4nCiAgICAgICAgJzxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSIgYXJpYS1oaWRkZW49InRydWUiPlxuJwogICAgICAgICcgIDxhIGhyZWY9InJldmlldy02MTEuaHRtbCIgdGFiaW5kZXg9Ii0xIj5SZXR1cm4gTWlzc2lvbiA2LjEuMTwvYT5cbicKICAgICAgICAnICA8YSBocmVmPSJyZXZpZXctNjEyLmh0bWwiIHRhYmluZGV4PSItMSI+UmV0dXJuIE1pc3Npb24gNi4xLjI8L2E+XG4nCiAgICAgICAgJyAgPGEgaHJlZj0icmV2aWV3LTYxMy5odG1sIiB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMS4zPC9hPlxuJwogICAgICAgICcgIDxhIGhyZWY9InJldmlldy02Mi5odG1sIiAgdGFiaW5kZXg9Ii0xIj5SZXR1cm4gTWlzc2lvbiA2LjI8L2E+XG4nCiAgICAgICAgJyAgPGEgaHJlZj0icmV2aWV3LTYzLmh0bWwiICB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMzwvYT5cbicKICAgICAgICAnPC9kaXY+XG4nCiAgICApCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc8L2JvZHk+JywgYW5jaG9ycyArICc8L2JvZHk+JywgMSkKICAgIHdpdGggb3BlbignaHViLmh0bWwnLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoZidQYXRjaGVkIGh1Yi5odG1sICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/patch_hub.py
+          python3 /tmp/patch_hub.py
+
+      - name: Patch index.html — add subtle teacher footer link
+        run: |
+          echo "d2l0aCBvcGVuKCdpbmRleC5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgY29udGVudCA9IGYucmVhZCgpCgppZiAndGVhY2hlci5odG1sJyBpbiBjb250ZW50OgogICAgcHJpbnQoJ2luZGV4Lmh0bWwgYWxyZWFkeSBoYXMgdGVhY2hlciBsaW5rIC0tIHNraXBwaW5nJykKZWxzZToKICAgIGxpbmsgPSAoCiAgICAgICAgJ1xuPCEtLSBUZWFjaGVyIGFjY2VzczogcXVpZXQgZm9vdGVyIGVudHJ5IHBvaW50IC0tPlxuJwogICAgICAgICc8ZGl2IHN0eWxlPSJ0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjE2cHggMCA2cHg7b3BhY2l0eTowLjM7JwogICAgICAgICdmb250LXNpemU6MTFweDtmb250LWZhbWlseTptb25vc3BhY2U7Ij5cbicKICAgICAgICAnICA8YSBocmVmPSJ0ZWFjaGVyLmh0bWwiIHN0eWxlPSJjb2xvcjojODg4O3RleHQtZGVjb3JhdGlvbjpub25lOycKICAgICAgICAnbGV0dGVyLXNwYWNpbmc6MC4wOGVtOyI+VGVhY2hlciBBY2Nlc3M8L2E+XG4nCiAgICAgICAgJzwvZGl2PlxuJwogICAgKQogICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnPC9ib2R5PicsIGxpbmsgKyAnPC9ib2R5PicsIDEpCiAgICB3aXRoIG9wZW4oJ2luZGV4Lmh0bWwnLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoZidQYXRjaGVkIGluZGV4Lmh0bWwgKHtsZW4oY29udGVudCl9IGJ5dGVzKScpCg==" | base64 -d > /tmp/patch_index.py
+          python3 /tmp/patch_index.py
+
+      - name: Patch return-mission-scheduler.js — register new modules
+        run: |
+          echo "aW1wb3J0IHJlCgp3aXRoIG9wZW4oJ3JldHVybi1taXNzaW9uLXNjaGVkdWxlci5qcycsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQoKaWYgJzYtMS0yJyBpbiBjb250ZW50OgogICAgcHJpbnQoJ1NjaGVkdWxlciBhbHJlYWR5IGhhcyBuZXcgbW9kdWxlcyAtLSBza2lwcGluZycpCmVsc2U6CiAgICBuZXdfZW50cmllcyA9ICgKICAgICAgICAiICB7IG1vZHVsZUlkOiAnNi0xLTInLCBsYWJlbDogJzYuMS4yJywgcmV2aWV3UGF0aDogJ3Jldmlldy02MTIuaHRtbCcsIHRpdGxlOiAnV2h5IE9yZ2FuaXNhdGlvbnMgTmVlZCBEYXRhJyB9LFxuIgogICAgICAgICIgIHsgbW9kdWxlSWQ6ICc2LTEtMycsIGxhYmVsOiAnNi4xLjMnLCByZXZpZXdQYXRoOiAncmV2aWV3LTYxMy5odG1sJywgdGl0bGU6ICdUeXBlcyBvZiBEYXRhJyB9LFxuIgogICAgICAgICIgIHsgbW9kdWxlSWQ6ICc2LTInLCAgIGxhYmVsOiAnNi4yJywgICByZXZpZXdQYXRoOiAncmV2aWV3LTYyLmh0bWwnLCAgdGl0bGU6ICdEYXRhIENvbGxlY3Rpb24gYW5kIFN0b3JhZ2UnIH0sXG4iCiAgICAgICAgIiAgeyBtb2R1bGVJZDogJzYtMycsICAgbGFiZWw6ICc2LjMnLCAgIHJldmlld1BhdGg6ICdyZXZpZXctNjMuaHRtbCcsICB0aXRsZTogJ0hvdyBEYXRhIFN1cHBvcnRzIE9yZ2FuaXNhdGlvbnMnIH0sXG4iCiAgICApCgogICAgcGF0MSA9IHJlLmNvbXBpbGUocichezdbXn1dKic2LTEtMSdbXn1dKlx9KScsIHJlLkRPVEFMTCkKICAgIHBhdDIgPSByZS5jb21waWxlKHIiKFsnXCI2LTEtMVsnXCJdKSIpCiAgICBwYXQzID0gcmUuY29tcGlsZShyJyhjb25zdHxsZXR8dmFyKVxzK1x3KltNbV1vZHVsZXM/XHcqXHMqPVxzKlxbJykKCiAgICBpZiBwYXQxLnNlYXJjaChjb250ZW50KToKICAgICAgICBjb250ZW50ID0gcGF0MS5zdWIobGFtYmRhIG06IG0uZ3JvdXAoMCkgKyAnLFxuJyArIG5ld19lbnRyaWVzLnJzdHJpcCgnLFxuJyksIGNvbnRlbnQsIGNvdW50PTEpCiAgICAgICAgcHJpbnQoJ1BhdGNoZWQgdmlhIHBhdHRlcm4gMScpCiAgICBlbGlmIHBhdDIuc2VhcmNoKGNvbnRlbnQpOgogICAgICAgIGNvbnRlbnQgPSBwYXQyLnN1YihsYW1iZGEgbTogbS5ncm91cCgwKSArICcsXG4nICsgbmV3X2VudHJpZXMucnN0cmlwKCcsXG4nKSwgY29udGVudCwgY291bnQ9MSkKICAgICAgICBwcmludCgnUGF0Y2hlZCB2aWEgcGF0dGVybiAyJykKICAgIGVsaWYgcGF0My5zZWFyY2goY29udGVudCk6CiAgICAgICAgY29udGVudCA9IHBhdDMuc3ViKGxhbWJkYSBtOiBtLmdyb3VwKDApICsgJ1xuJyArIG5ld19lbnRyaWVzLCBjb250ZW50LCBjb3VudD0xKQogICAgICAgIHByaW50KCdQYXRjaGVkIHZpYSBwYXR0ZXJuIDMnKQogICAgZWxzZToKICAgICAgICBjb250ZW50ICs9ICgKICAgICAgICAgICAgIlxuXG4vLyBSZXR1cm4gTWlzc2lvbiBtb2R1bGUgcmVnaXN0cnkgKGV4dGVuZGVkIGJ5IHNpdGVtYXAtYXVkaXQgc3ByaW50KVxuIgogICAgICAgICAgICAiZXhwb3J0IGNvbnN0IFJFVFVSTV9NSVNTSU9OX01PRFVMRVMgPSBbXG4iCiAgICAgICAgICAgICIgIHsgbW9kdWxlSWQ6ICc2LTEtMScsIGxhYmVsOiAnNi4xLjEnLCByZXZpZXdQYXRoOiAncmV2aWV3LTYxMS5odG1sJywgdGl0bGU6ICdEYXRhLCBJbmZvcm1hdGlvbiBhbmQgS25vd2xlZGdlJyB9LFxuIgogICAgICAgICAgICArIG5ld19lbnRyaWVzICsKICAgICAgICAgICAgIl07XG4iCiAgICAgICAgKQogICAgICAgIHByaW50KCdObyBrbm93biBwYXR0ZXJuIC0tIGFwcGVuZGVkIFJFVFVSTl9NSVNTSU9OX01PRFVMRVMgZXhwb3J0JykKCiAgICB3aXRoIG9wZW4oJ3JldHVybi1taXNzaW9uLXNjaGVkdWxlci5qcycsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICBmLndyaXRlKGNvbnRlbnQpCiAgICBwcmludChmJ1dyb3RlIHJldHVybi1taXNzaW9uLXNjaGVkdWxlci5qcyAoe2xlbihjb250ZW50KX0gYnl0ZXMpJykK" | base64 -d > /tmp/patch_scheduler.py
+          python3 /tmp/patch_scheduler.py
+
+      - name: Generate sitemap.xml
+        run: |
+          echo "QkFTRSA9ICdodHRwczovL2RldnludGFsbG1hbi5naXRodWIuaW8vbWFyay1zY2hlbWUtbWV0aG9kLXBpbG90JwoKcGFnZXMgPSBbCiAgICAoJy8nLCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICcxLjAnLCAnd2Vla2x5JyksCiAgICAoJy9kYXNoYm9hcmQuaHRtbCcsICAgICAgICAgICAgICAgICAgICcwLjgnLCAnd2Vla2x5JyksCiAgICAoJy9odWIuaHRtbCcsICAgICAgICAgICAgICAgICAgICAgICAgICcwLjgnLCAnd2Vla2x5JyksCiAgICAoJy9jb250ZW50LWFyZWFzL2NsYXNzcm9vbS02MTEtdjMuaHRtbCcsICcwLjcnLCAnbW9udGhseScpLAogICAgKCcvY29udGVudC1hcmVhcy82LTEtMi13aHktb3JnYW5pc2F0aW9ucy1uZWVkLWRhdGEuaHRtbCcsICcwLjcnLCAnbW9udGhseScpLAogICAgKCcvbGVhcm4vNi0xLTEvaW5kZXguaHRtbCcsICAgICAgICAgJzAuNycsICdtb250aGx5JyksCiAgICAoJy9sZWFybi82LTEtMi9pbmRleC5odG1sJywgICAgICAgICAnMC43JywgJ21vbnRobHknKSwKICAgICgnL2xlYXJuLzYtMS0zL2luZGV4Lmh0bWwnLCAgICAgICAgICcwLjcnLCAnbW9udGhseScpLAogICAgKCcvbGVhcm4vNi0yL2luZGV4Lmh0bWwnLCAgICAgICAgICAgJzAuNycsICdtb250aGx5JyksCiAgICAoJy9sZWFybi82LTMvaW5kZXguaHRtbCcsICAgICAgICAgICAnMC43JywgJ21vbnRobHknKSwKICAgICgnL3Jldmlldy02MTEuaHRtbCcsICAgICAgICAgICAgICAgICAnMC42JywgJ3dlZWtseScpLAogICAgKCcvcmV2aWV3LTYxMi5odG1sJywgICAgICAgICAgICAgICAgICcwLjYnLCAnd2Vla2x5JyksCiAgICAoJy9yZXZpZXctNjEzLmh0bWwnLCAgICAgICAgICAgICAgICAgJzAuNicsICd3ZWVrbHknKSwKICAgICgnL3Jldmlldy02Mi5odG1sJywgICAgICAgICAgICAgICAgICAnMC42JywgJ3dlZWtseScpLAogICAgKCcvcmV2aWV3LTYzLmh0bWwnLCAgICAgICAgICAgICAgICAgICcwLjYnLCAnd2Vla2x5JyksCl0KCmxpbmVzID0gWyc8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PicsCiAgICAgICAgICc8dXJsc2V0IHhtbG5zPSJodHRwOi8vd3d3LnNpdGVtYXBzLm9yZy9zY2hlbWFzL3NpdGVtYXAvMC45Ij4nXQpmb3IgKHBhdGgsIHByaSwgZnJlcSkgaW4gcGFnZXM6CiAgICBsaW5lcy5hcHBlbmQoJyAgPHVybD4nKQogICAgbGluZXMuYXBwZW5kKGYnICAgIDxsb2M+e0JBU0V9e3BhdGh9PC9sb2M+JykKICAgIGxpbmVzLmFwcGVuZChmJyAgICA8cHJpb3JpdHk+e3ByaX08L3ByaW9yaXR5PicpCiAgICBsaW5lcy5hcHBlbmQoZicgICAgPGNoYW5nZWZyZXE+e2ZyZXF9PC9jaGFuZ2VmcmVxPicpCiAgICBsaW5lcy5hcHBlbmQoJyAgPC91cmw+JykKbGluZXMuYXBwZW5kKCc8L3VybHNldD4nKQoKd2l0aCBvcGVuKCdzaXRlbWFwLnhtbCcsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGYud3JpdGUoJ1xuJy5qb2luKGxpbmVzKSArICdcbicpCnByaW50KGYnR2VuZXJhdGVkIHNpdGVtYXAueG1sICh7bGVuKGxpbmVzKX0gbGluZXMpJykK" | base64 -d > /tmp/gen_sitemap.py
+          python3 /tmp/gen_sitemap.py
+
+      - name: Verify all changes
+        run: |
+          FAIL=0
+          for f in review-612.html review-613.html review-62.html review-63.html sitemap.xml; do
+            if [ ! -f "$f" ]; then
+              echo "FAIL — missing: $f"; FAIL=1
+            else
+              echo "OK — $f ($(wc -c < $f) bytes)"
+            fi
+          done
+          grep -q 'Teacher Access' index.html && echo "OK — teacher link in index.html" || { echo "FAIL — teacher link missing from index.html"; FAIL=1; }
+          grep -q 'review-612.html' hub.html     && echo "OK — static anchors in hub.html"          || { echo "FAIL — static anchors missing from hub.html"; FAIL=1; }
+          grep -q '6-1-2' return-mission-scheduler.js && echo "OK — scheduler updated" || { echo "FAIL — scheduler not updated"; FAIL=1; }
+          grep -q 'sitemap.xml' sitemap.xml && echo "OK — sitemap.xml valid" || { echo "FAIL — sitemap.xml empty"; FAIL=1; }
+          [ $FAIL -eq 0 ] || exit 1
+
+      - name: Commit and push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add review-612.html review-613.html review-62.html review-63.html \
+                  sitemap.xml hub.html index.html return-mission-scheduler.js
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "feat: sitemap audit — Return Mission x4, teacher link, static anchors, sitemap.xml"
+          git push origin main
