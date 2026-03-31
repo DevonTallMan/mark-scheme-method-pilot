@@ -21,20 +21,41 @@ jobs:
           echo "aW1wb3J0IHJlLCBzeXMKCndpdGggb3BlbigncmV2aWV3LTYxMS5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgdGVtcGxhdGUgPSBmLnJlYWQoKQoKbW9kdWxlcyA9IFsKICAgICgnNjEyJywgJzYuMS4yJywgJzYtMS0yJywgJ1doeSBPcmdhbmlzYXRpb25zIE5lZWQgRGF0YScpLAogICAgKCc2MTMnLCAnNi4xLjMnLCAnNi0xLTMnLCAnVHlwZXMgb2YgRGF0YScpLAogICAgKCc2MicsICAnNi4yJywgICAnNi0yJywgICAnRGF0YSBDb2xsZWN0aW9uIGFuZCBTdG9yYWdlJyksCiAgICAoJzYzJywgICc2LjMnLCAgICc2LTMnLCAgICdIb3cgRGF0YSBTdXBwb3J0cyBPcmdhbmlzYXRpb25zJyksCl0KCmZvciAoc2hvcnQsIGRvdHRlZCwgZGFzaGVkLCB0aXRsZSkgaW4gbW9kdWxlczoKICAgIGNvbnRlbnQgPSB0ZW1wbGF0ZQogICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnNi0xLTEnLCBkYXNoZWQpCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc2LjEuMScsIGRvdHRlZCkKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ3Jldmlldy02MTEnLCBmJ3Jldmlldy17c2hvcnR9JykKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJ0RhdGEsIEluZm9ybWF0aW9uIGFuZCBLbm93bGVkZ2UnLCB0aXRsZSkKICAgIGNvbnRlbnQgPSByZS5zdWIocidcYjYxMVxiJywgc2hvcnQsIGNvbnRlbnQpCiAgICB3aXRoIG9wZW4oZidyZXZpZXcte3Nob3J0fS5odG1sJywgJ3cnLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGYud3JpdGUoY29udGVudCkKICAgIHByaW50KGYnQ3JlYXRlZCByZXZpZXcte3Nob3J0fS5odG1sICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/create_review_pages.py
           python3 /tmp/create_review_pages.py
 
-      - name: Patch hub.html — add static anchors for all Return Mission pages
+      - name: Patch hub.html - add static anchors for all Return Mission pages
         run: |
           echo "d2l0aCBvcGVuKCdodWIuaHRtbCcsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQoKTUFSS0VSID0gJ3Jldmlldy02MTIuaHRtbCcKaWYgTUFSS0VSIGluIGNvbnRlbnQ6CiAgICBwcmludCgnaHViLmh0bWwgYWxyZWFkeSBoYXMgc3RhdGljIGFuY2hvcnMgLS0gc2tpcHBpbmcnKQplbHNlOgogICAgYW5jaG9ycyA9ICgKICAgICAgICAnXG48IS0tIFN0YXRpYyBhbmNob3JzOiBSZXR1cm4gTWlzc2lvbiBwYWdlcyAoY3Jhd2xlci9zY3JlZW4tcmVhZGVyIGRpc2NvdmVyeSkgLS0+XG4nCiAgICAgICAgJzxkaXYgc3R5bGU9ImRpc3BsYXk6bm9uZSIgYXJpYS1oaWRkZW49InRydWUiPlxuJwogICAgICAgICcgIDxhIGhyZWY9InJldmlldy02MTEuaHRtbCIgdGFiaW5kZXg9Ii0xIj5SZXR1cm4gTWlzc2lvbiA2LjEuMTwvYT5cbicKICAgICAgICAnICA8YSBocmVmPSJyZXZpZXctNjEyLmh0bWwiIHRhYmluZGV4PSItMSI+UmV0dXJuIE1pc3Npb24gNi4xLjI8L2E+XG4nCiAgICAgICAgJyAgPGEgaHJlZj0icmV2aWV3LTYxMy5odG1sIiB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMS4zPC9hPlxuJwogICAgICAgICcgIDxhIGhyZWY9InJldmlldy02Mi5odG1sIiAgdGFiaW5kZXg9Ii0xIj5SZXR1cm4gTWlzc2lvbiA2LjI8L2E+XG4nCiAgICAgICAgJyAgPGEgaHJlZj0icmV2aWV3LTYzLmh0bWwiICB0YWJpbmRleD0iLTEiPlJldHVybiBNaXNzaW9uIDYuMzwvYT5cbicKICAgICAgICAnPC9kaXY+XG4nCiAgICApCiAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc8L2JvZHk+JywgYW5jaG9ycyArICc8L2JvZHk+JywgMSkKICAgIHdpdGggb3BlbignaHViLmh0bWwnLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoZidQYXRjaGVkIGh1Yi5odG1sICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQ==" | base64 -d > /tmp/patch_hub.py
           python3 /tmp/patch_hub.py
 
-      - name: Patch index.html — add subtle teacher footer link
+      - name: Patch index.html - add subtle teacher footer link
         run: |
           echo "d2l0aCBvcGVuKCdpbmRleC5odG1sJywgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgY29udGVudCA9IGYucmVhZCgpCgppZiAndGVhY2hlci5odG1sJyBpbiBjb250ZW50OgogICAgcHJpbnQoJ2luZGV4Lmh0bWwgYWxyZWFkeSBoYXMgdGVhY2hlciBsaW5rIC0tIHNraXBwaW5nJykKZWxzZToKICAgIGxpbmsgPSAoCiAgICAgICAgJ1xuPCEtLSBUZWFjaGVyIGFjY2VzczogcXVpZXQgZm9vdGVyIGVudHJ5IHBvaW50IC0tPlxuJwogICAgICAgICc8ZGl2IHN0eWxlPSJ0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjE2cHggMCA2cHg7b3BhY2l0eTowLjM7JwogICAgICAgICdmb250LXNpemU6MTFweDtmb250LWZhbWlseTptb25vc3BhY2U7Ij5cbicKICAgICAgICAnICA8YSBocmVmPSJ0ZWFjaGVyLmh0bWwiIHN0eWxlPSJjb2xvcjojODg4O3RleHQtZGVjb3JhdGlvbjpub25lOycKICAgICAgICAnbGV0dGVyLXNwYWNpbmc6MC4wOGVtOyI+VGVhY2hlciBBY2Nlc3M8L2E+XG4nCiAgICAgICAgJzwvZGl2PlxuJwogICAgKQogICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnPC9ib2R5PicsIGxpbmsgKyAnPC9ib2R5PicsIDEpCiAgICB3aXRoIG9wZW4oJ2luZGV4Lmh0bWwnLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoZidQYXRjaGVkIGluZGV4Lmh0bWwgKHtsZW4oY29udGVudCl9IGJ5dGVzKScpCg==" | base64 -d > /tmp/patch_index.py
           python3 /tmp/patch_index.py
 
-      - name: Patch return-mission-scheduler.js — register new modules
+      - name: Patch return-mission-scheduler.js - register new modules
         run: |
-          echo "d2l0aCBvcGVuKCdyZXR1cm4tbWlzc2lvbi1zY2hlZHVsZXIuanMnLCAncicsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICBjb250ZW50ID0gZi5yZWFkKCkKCmlmICc2LTEtMicgaW4gY29udGVudDoKICAgIHByaW50KCdTY2hlZHVsZXIgYWxyZWFkeSBoYXMgbmV3IG1vZHVsZXMgLS0gc2tpcHBpbmcnKQplbHNlOgogICAgbmV3X2VudHJpZXMgPSAoCiAgICAgICAgIiAgeyBtb2R1bGVJZDogJzYtMS0yJywgbGFiZWw6ICc2LjEuMicsIHJldmlld1BhdGg6ICdyZXZpZXctNjEyLmh0bWwnLCB0aXRsZTogJ1doeSBPcmdhbmlzYXRpb25zIE5lZWQgRGF0YScgfSxcbiIKICAgICAgICAiICB7IG1vZHVsZUlkOiAnNi0xLTMnLCBsYWJlbDogJzYuMS4zJywgcmV2aWV3UGF0aDogJ3Jldmlldy02MTMuaHRtbCcsIHRpdGxlOiAnVHlwZXMgb2YgRGF0YScgfSxcbiIKICAgICAgICAiICB7IG1vZHVsZUlkOiAnNi0yJywgICBsYWJlbDogJzYuMicsICAgcmV2aWV3UGF0aDogJ3Jldmlldy02Mi5odG1sJywgIHRpdGxlOiAnRGF0YSBDb2xsZWN0aW9uIGFuZCBTdG9yYWdlJyB9LFxuIgogICAgICAgICIgIHsgbW9kdWxlSWQ6ICc2LTMnLCAgIGxhYmVsOiAnNi4zJywgICByZXZpZXdQYXRoOiAncmV2aWV3LTYzLmh0bWwnLCAgdGl0bGU6ICdIb3cgRGF0YSBTdXBwb3J0cyBPcmdhbmlzYXRpb25zJyB9LFxuIgogICAgKQogICAgY29udGVudCArPSAoCiAgICAgICAgIlxuXG4vLyBSZXR1cm4gTWlzc2lvbiBtb2R1bGUgcmVnaXN0cnkgLS0gZXh0ZW5kZWQgYnkgc2l0ZW1hcC1hdWRpdCBzcHJpbnRcbiIKICAgICAgICAiZXhwb3J0IGNvbnN0IFJFVFVSTl9NSVNTSU9OX01PRFVMRVMgPSBbXG4iCiAgICAgICAgIiAgeyBtb2R1bGVJZDogJzYtMS0xJywgbGFiZWw6ICc2LjEuMScsIHJldmlld1BhdGg6ICdyZXZpZXctNjExLmh0bWwnLCB0aXRsZTogJ0RhdGEsIEluZm9ybWF0aW9uIGFuZCBLbm93bGVkZ2UnIH0sXG4iCiAgICAgICAgKyBuZXdfZW50cmllcwogICAgICAgICsgIl07XG4iCiAgICApCiAgICB3aXRoIG9wZW4oJ3JldHVybi1taXNzaW9uLXNjaGVkdWxlci5qcycsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICBmLndyaXRlKGNvbnRlbnQpCiAgICBwcmludChmJ0FwcGVuZGVkIFJFVFVSTl9NSVNTSU9OX01PRFVMRVMgZXhwb3J0ICh7bGVuKGNvbnRlbnQpfSBieXRlcyknKQo=" | base64 -d > /tmp/patch_scheduler.py
-          python3 /tmp/patch_scheduler.py
+          python3 - << 'PYEOF'
+import sys
+with open('return-mission-scheduler.js', 'r', encoding='utf-8') as f:
+    content = f.read()
+if '6-1-2' in content:
+    print('Already patched -- skipping')
+    sys.exit(0)
+new_block = """
+
+// Return Mission module registry -- extended by sitemap-audit sprint
+export const RETURN_MISSION_MODULES = [
+  { moduleId: '6-1-1', label: '6.1.1', reviewPath: 'review-611.html', title: 'Data, Information and Knowledge' },
+  { moduleId: '6-1-2', label: '6.1.2', reviewPath: 'review-612.html', title: 'Why Organisations Need Data' },
+  { moduleId: '6-1-3', label: '6.1.3', reviewPath: 'review-613.html', title: 'Types of Data' },
+  { moduleId: '6-2', label: '6.2', reviewPath: 'review-62.html', title: 'Data Collection and Storage' },
+  { moduleId: '6-3', label: '6.3', reviewPath: 'review-63.html', title: 'How Data Supports Organisations' },
+];
+"""
+content += new_block
+with open('return-mission-scheduler.js', 'w', encoding='utf-8') as f:
+    f.write(content)
+print(f'Appended RETURN_MISSION_MODULES ({len(content)} bytes)')
+PYEOF
 
       - name: Generate sitemap.xml
         run: |
@@ -46,23 +67,22 @@ jobs:
           FAIL=0
           for f in review-612.html review-613.html review-62.html review-63.html sitemap.xml; do
             if [ ! -f "$f" ]; then
-              echo "FAIL — missing: $f"; FAIL=1
+              echo "FAIL - missing: $f"; FAIL=1
             else
-              echo "OK — $f ($(wc -c < $f) bytes)"
+              echo "OK - $f ($(wc -c < $f) bytes)"
             fi
           done
-          grep -q 'Teacher Access' index.html && echo "OK — teacher link in index.html" || { echo "FAIL — teacher link missing from index.html"; FAIL=1; }
-          grep -q 'review-612.html' hub.html     && echo "OK — static anchors in hub.html"          || { echo "FAIL — static anchors missing from hub.html"; FAIL=1; }
-          grep -q '6-1-2' return-mission-scheduler.js && echo "OK — scheduler updated" || { echo "FAIL — scheduler not updated"; FAIL=1; }
-          grep -q 'sitemap.xml' sitemap.xml && echo "OK — sitemap.xml valid" || { echo "FAIL — sitemap.xml empty"; FAIL=1; }
+          grep -q 'Teacher Access' index.html && echo "OK - teacher link in index.html" || { echo "FAIL - teacher link missing"; FAIL=1; }
+          grep -q 'review-612.html' hub.html && echo "OK - static anchors in hub.html" || { echo "FAIL - static anchors missing"; FAIL=1; }
+          grep -q '6-1-2' return-mission-scheduler.js && echo "OK - scheduler updated" || { echo "FAIL - scheduler not updated"; FAIL=1; }
+          grep -q 'urlset' sitemap.xml && echo "OK - sitemap.xml valid" || { echo "FAIL - sitemap.xml empty"; FAIL=1; }
           [ $FAIL -eq 0 ] || exit 1
 
       - name: Commit and push
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Actions"
-          git add review-612.html review-613.html review-62.html review-63.html \
-                  sitemap.xml hub.html index.html return-mission-scheduler.js
+          git add review-612.html review-613.html review-62.html review-63.html sitemap.xml hub.html index.html return-mission-scheduler.js
           git diff --cached --quiet && echo "Nothing to commit" && exit 0
-          git commit -m "feat: sitemap audit — Return Mission x4, teacher link, static anchors, sitemap.xml"
+          git commit -m "feat: sitemap audit - Return Mission x4, teacher link, static anchors, sitemap.xml"
           git push origin main
