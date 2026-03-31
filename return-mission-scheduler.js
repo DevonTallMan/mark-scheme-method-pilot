@@ -56,3 +56,12 @@ async function loadAllReviews(){
 window.MSM_ReturnMission={writeFirstCompletion:writeFirstCompletion,writeReviewResult:writeReviewResult,
   loadDueReviews:loadDueReviews,loadAllReviews:loadAllReviews,passThreshold:passThreshold,INTERVALS:INTERVALS};
 })();
+
+// Return Mission module registry -- extended by sitemap-audit sprint
+export const RETURN_MISSION_MODULES = [
+  { moduleId: '6-1-1', label: '6.1.1', reviewPath: 'review-611.html', title: 'Data, Information and Knowledge' },
+  { moduleId: '6-1-2', label: '6.1.2', reviewPath: 'review-612.html', title: 'Why Organisations Need Data' },
+  { moduleId: '6-1-3', label: '6.1.3', reviewPath: 'review-613.html', title: 'Types of Data' },
+  { moduleId: '6-2',   label: '6.2',   reviewPath: 'review-62.html',  title: 'Data Collection and Storage' },
+  { moduleId: '6-3',   label: '6.3',   reviewPath: 'review-63.html',  title: 'How Data Supports Organisations' },
+];
