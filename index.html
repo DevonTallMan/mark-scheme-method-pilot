@@ -168,10 +168,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32
 
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--void);}::-webkit-scrollbar-thumb{background:rgba(57,255,20,0.2);border-radius:3px;}
 </style>
+
+<style id="a11y-focus">
+*:focus-visible{outline:2px solid #00FF88;outline-offset:3px;}
+.skip-link{position:absolute;left:-9999px;top:0;background:#00FF88;color:#000;padding:8px 16px;font-family:monospace;font-size:13px;z-index:9999;text-decoration:none;}
+.skip-link:focus{left:0;}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
-<nav class="nav">
+
+<nav role="navigation" aria-label="Main navigation" class="nav">
   <div class="logo-wrap">
     <div class="logo">MSM<span>®</span></div>
     <div class="logo-sub">T-LEVEL DIGITAL REVISION</div>
@@ -191,7 +199,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32
     <div class="cd-left">
       <div class="cd-dot"></div>
       <div>
-        <div class="cd-label">T-LEVEL DIGITAL EXAM DATE</div>
+        <div class="cd-label"><span id="main-content"></span>T-LEVEL DIGITAL EXAM DATE</div>
         <div class="cd-date">11 MAY 2026 — CORE PAPER 2</div>
       </div>
     </div>
@@ -464,5 +472,7 @@ document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 
 <!-- Teacher access -->
 <div style="text-align:center;padding:16px 0 6px;opacity:0.3;font-size:11px;font-family:monospace;"><a href="teacher.html" style="color:#888;text-decoration:none;letter-spacing:0.08em;">Teacher Access</a></div>
+
+<!-- a11y-patched -->
 </body>
 </html>

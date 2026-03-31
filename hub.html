@@ -194,10 +194,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .rm-start-btn:hover{background:rgba(57,255,20,.2)}
 </style>
   <script type="module" src="firebase-config.js"></script>
+
+<style id="a11y-focus">
+*:focus-visible{outline:2px solid #00FF88;outline-offset:3px;}
+.skip-link{position:absolute;left:-9999px;top:0;background:#00FF88;color:#000;padding:8px 16px;font-family:monospace;font-size:13px;z-index:9999;text-decoration:none;}
+.skip-link:focus{left:0;}
+</style>
+<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
-<nav class="topbar">
+
+<nav role="navigation" aria-label="Main navigation" class="topbar">
   <div class="logo">MSM<span>®</span></div>
   <div class="topnav">
     <a href="hub.html" class="navlink active">HUB</a>
@@ -214,7 +223,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       <div class="avatar">🧠</div>
     </div>
     <div class="hero-text">
-      <div class="hero-eyebrow">STUDENT COMMAND CENTRE</div>
+      <div class="hero-eyebrow"><span id="main-content"></span>STUDENT COMMAND CENTRE</div>
       <div class="hero-name">WELCOME BACK, <span id="heroName">SPECIALIST</span></div>
       <p class="hero-sub">Your NEI proficiency is being tracked. Examiners award the third mark for Impact — that's where most marks are lost. Let's change that.</p>
       <div class="hero-stats">
@@ -551,5 +560,7 @@ window.addEventListener('beforeunload',()=>{
   <a href="review-62.html" tabindex="-1">Return Mission 6.2</a>
   <a href="review-63.html" tabindex="-1">Return Mission 6.3</a>
 </div>
+
+<!-- a11y-patched -->
 </body>
 </html>
