@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Return Mission: 6.1.1 // MSM</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--void:#0D1117;--green:#39FF14;--gold:#FFD700;--red:#FF3838;--amber:#FF9500;--dim:rgba(232,237,243,0.45);--border:rgba(255,255,255,0.08);--panel:rgba(255,255,255,0.04)}
 *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:var(--void);color:#fff;font-family:'Rajdhani',sans-serif;overflow:hidden}
@@ -98,5 +98,7 @@ document.getElementById("rs").innerHTML='<div class="ri"><div class="rh">'+(pass
 document.getElementById("rs").classList.add("show");}
 document.addEventListener("DOMContentLoaded",function(){document.getElementById("bsk").addEventListener("click",function(){if(!answered){clearInterval(tmr);answered=true;qRes.push({ok:false,pts:0});}adv();});document.getElementById("bn").onclick=adv;setTimeout(function(){document.getElementById("lo").style.display="none";renderQ(0);},800);});
 </script>
+
+<!-- perf-patched -->
 </body>
 </html>
