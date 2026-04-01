@@ -1,0 +1,52 @@
+name: Nav Optimisation
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to deploy'
+        required: true
+
+jobs:
+  nav:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Standardise global nav - hub, topics, dashboard
+        run: |
+          echo "aW1wb3J0IHJlLCBvcwoKQkFTRSA9ICdodHRwczovL2Rldm9udGFsbG1hbi5naXRodWIuaW8vbWFyay1zY2hlbWUtbWV0aG9kLXBpbG90JwoKZGVmIHBhdGNoX2dsb2JhbF9uYXYocGF0aCwgYWN0aXZlX3BhZ2UpOgogICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKHBhdGgpOgogICAgICAgIHByaW50KCdTS0lQIChub3QgZm91bmQpOicsIHBhdGgpCiAgICAgICAgcmV0dXJuCiAgICB3aXRoIG9wZW4ocGF0aCwgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGNvbnRlbnQgPSBmLnJlYWQoKQogICAgaWYgJ25hdi1vcHRpbWlzZWQnIGluIGNvbnRlbnQ6CiAgICAgICAgcHJpbnQoJ1NLSVAgKGFscmVhZHkgcGF0Y2hlZCk6JywgcGF0aCkKICAgICAgICByZXR1cm4KICAgIGh1Yl9hY3RpdmUgICA9ICcgYXJpYS1jdXJyZW50PSJwYWdlIicgaWYgYWN0aXZlX3BhZ2UgPT0gJ2h1YicgZWxzZSAnJwogICAgdG9wX2FjdGl2ZSAgID0gJyBhcmlhLWN1cnJlbnQ9InBhZ2UiJyBpZiBhY3RpdmVfcGFnZSA9PSAndG9waWNzJyBlbHNlICcnCiAgICBkYXNoX2FjdGl2ZSAgPSAnIGFyaWEtY3VycmVudD0icGFnZSInIGlmIGFjdGl2ZV9wYWdlID09ICdkYXNoYm9hcmQnIGVsc2UgJycKICAgIG5ld19uYXYgPSAoCiAgICAgICAgJzxuYXYgcm9sZT0ibmF2aWdhdGlvbiIgYXJpYS1sYWJlbD0iTWFpbiBuYXZpZ2F0aW9uIiBjbGFzcz0idG9wbmF2Ij4nCiAgICAgICAgJzxhIGhyZWY9IicgKyBCQVNFICsgJy8iIGNsYXNzPSJuYXZsaW5rIGJyYW5kLWxpbmsiPk1TTVx4YWU8L2E+JwogICAgICAgICc8YSBocmVmPSInICsgQkFTRSArICcvaHViLmh0bWwiIGNsYXNzPSJuYXZsaW5rIicgKyBodWJfYWN0aXZlICsgJz5IVUI8L2E+JwogICAgICAgICc8YSBocmVmPSInICsgQkFTRSArICcvdG9waWNzLmh0bWwiIGNsYXNzPSJuYXZsaW5rIicgKyB0b3BfYWN0aXZlICsgJz5UT1BJQ1M8L2E+JwogICAgICAgICc8YSBocmVmPSInICsgQkFTRSArICcvZGFzaGJvYXJkLmh0bWwiIGNsYXNzPSJuYXZsaW5rIicgKyBkYXNoX2FjdGl2ZSArICc+REFTSEJPQVJEPC9hPicKICAgICAgICAnPC9uYXY+JwogICAgKQogICAgY29udGVudCA9IHJlLnN1YihyJzxuYXZcYltePl0qY2xhc3M9WyJcJ110b3BuYXZbIlwnXVtePl0qPltcc1xTXSo/PC9uYXY+JywgbmV3X25hdiwgY29udGVudCwgY291bnQ9MSkKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJzwvYm9keT4nLCAnXG48IS0tIG5hdi1vcHRpbWlzZWQgLS0+XG48L2JvZHk+JywgMSkKICAgIHdpdGggb3BlbihwYXRoLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoJ1BhdGNoZWQgZ2xvYmFsIG5hdjonLCBwYXRoKQoKcGF0Y2hfZ2xvYmFsX25hdignaHViLmh0bWwnLCAgICAgICAnaHViJykKcGF0Y2hfZ2xvYmFsX25hdigndG9waWNzLmh0bWwnLCAgICAndG9waWNzJykKcGF0Y2hfZ2xvYmFsX25hdignZGFzaGJvYXJkLmh0bWwnLCAnZGFzaGJvYXJkJykK" | base64 -d > /tmp/nav1.py
+          python3 /tmp/nav1.py
+
+      - name: Add breadcrumbs to leaf pages
+        run: |
+          echo "aW1wb3J0IHJlLCBvcwoKQlJFQURDUlVNQl9DU1MgPSAoCiAgICAnPHN0eWxlIGlkPSJtc20tYnJlYWRjcnVtYi1zdHlsZSI+JwogICAgJy5tc20tYnJlYWRjcnVtYntmb250LWZhbWlseTptb25vc3BhY2U7Zm9udC1zaXplOjExcHg7cGFkZGluZzoxMHB4IDIwcHggMDsnCiAgICAnY29sb3I6cmdiYSgyMzIsMjM3LDI0MywwLjY1KTtsZXR0ZXItc3BhY2luZzowLjA2ZW07fScKICAgICcubXNtLWJyZWFkY3J1bWIgYXtjb2xvcjpyZ2JhKDU3LDI1NSwyMCwwLjg1KTt0ZXh0LWRlY29yYXRpb246bm9uZTt9JwogICAgJy5tc20tYnJlYWRjcnVtYiBhOmhvdmVye3RleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmU7fScKICAgICc8L3N0eWxlPicKKQoKZGVmIGFkZF9icmVhZGNydW1iKHBhdGgsIGNydW1iX2h0bWwsIG1hcmtlcj0nbXNtLWJyZWFkY3J1bWInKToKICAgIGlmIG5vdCBvcy5wYXRoLmV4aXN0cyhwYXRoKToKICAgICAgICBwcmludCgnU0tJUCAobm90IGZvdW5kKTonLCBwYXRoKQogICAgICAgIHJldHVybgogICAgd2l0aCBvcGVuKHBhdGgsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICBjb250ZW50ID0gZi5yZWFkKCkKICAgIGlmIG1hcmtlciBpbiBjb250ZW50OgogICAgICAgIHByaW50KCdTS0lQIChhbHJlYWR5IHBhdGNoZWQpOicsIHBhdGgpCiAgICAgICAgcmV0dXJuCiAgICBpZiBCUkVBRENSVU1CX0NTUyBub3QgaW4gY29udGVudDoKICAgICAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc8L2hlYWQ+JywgQlJFQURDUlVNQl9DU1MgKyAnPC9oZWFkPicsIDEpCiAgICBjb250ZW50ID0gcmUuc3ViKHInKDxib2R5W14+XSo+KScsIHInXDFcbicgKyBjcnVtYl9odG1sICsgJ1xuJywgY29udGVudCwgY291bnQ9MSkKICAgIHdpdGggb3BlbihwYXRoLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgcHJpbnQoJ0FkZGVkIGJyZWFkY3J1bWI6JywgcGF0aCkKCkJBU0UgPSAnaHR0cHM6Ly9kZXZvbnRhbGxtYW4uZ2l0aHViLmlvL21hcmstc2NoZW1lLW1ldGhvZC1waWxvdCcKCkZJRUxEX1RSQUlOSU5HX1BBR0VTID0gWwogICAgKCdsZWFybi82LTEtMS9pbmRleC5odG1sJywgJ0NBIDYuMS4xJywgJzYtMS0xJyksCiAgICAoJ2xlYXJuLzYtMS0yL2luZGV4Lmh0bWwnLCAnQ0EgNi4xLjInLCAnNi0xLTInKSwKICAgICgnbGVhcm4vNi0xLTMvaW5kZXguaHRtbCcsICdDQSA2LjEuMycsICc2LTEtMycpLAogICAgKCdsZWFybi82LTIvaW5kZXguaHRtbCcsICAgJ0NBIDYuMicsICAgJzYtMicpLAogICAgKCdsZWFybi82LTMvaW5kZXguaHRtbCcsICAgJ0NBIDYuMycsICAgJzYtMycpLApdCgpmb3IgKHBhdGgsIGxhYmVsLCBfKSBpbiBGSUVMRF9UUkFJTklOR19QQUdFUzoKICAgIGNydW1iID0gKAogICAgICAgICc8ZGl2IGNsYXNzPSJtc20tYnJlYWRjcnVtYiIgYXJpYS1sYWJlbD0iQnJlYWRjcnVtYiI+JwogICAgICAgICc8YSBocmVmPSInICsgQkFTRSArICcvdG9waWNzLmh0bWwiPiZsYXJyOyBUT1BJQ1M8L2E+JwogICAgICAgICcgJnJzYXF1bzsgJyArIGxhYmVsICsgJyAmcnNhcXVvOyBGaWVsZCBUcmFpbmluZycKICAgICAgICAnPC9kaXY+JwogICAgKQogICAgYWRkX2JyZWFkY3J1bWIocGF0aCwgY3J1bWIpCgpDTEFTU1JPT01fUEFHRVMgPSBbCiAgICAoJ2NvbnRlbnQtYXJlYXMvY2xhc3Nyb29tLTYxMS12My5odG1sJywgJ0NBIDYuMS4xJyksCiAgICAoJ2NvbnRlbnQtYXJlYXMvNi0xLTItd2h5LW9yZ2FuaXNhdGlvbnMtbmVlZC1kYXRhLmh0bWwnLCAnQ0EgNi4xLjInKSwKXQoKZm9yIChwYXRoLCBsYWJlbCkgaW4gQ0xBU1NST09NX1BBR0VTOgogICAgY3J1bWIgPSAoCiAgICAgICAgJzxkaXYgY2xhc3M9Im1zbS1icmVhZGNydW1iIiBhcmlhLWxhYmVsPSJCcmVhZGNydW1iIj4nCiAgICAgICAgJzxhIGhyZWY9IicgKyBCQVNFICsgJy90b3BpY3MuaHRtbCI+JmxhcnI7IFRPUElDUzwvYT4nCiAgICAgICAgJyAmcnNhcXVvOyAnICsgbGFiZWwgKyAnICZyc2FxdW87IENsYXNzcm9vbScKICAgICAgICAnPC9kaXY+JwogICAgKQogICAgYWRkX2JyZWFkY3J1bWIocGF0aCwgY3J1bWIpCgpSRVRVUk5fTUlTU0lPTl9QQUdFUyA9IFsKICAgICdyZXZpZXctNjExLmh0bWwnLAogICAgJ3Jldmlldy02MTIuaHRtbCcsCiAgICAncmV2aWV3LTYxMy5odG1sJywKICAgICdyZXZpZXctNjIuaHRtbCcsCiAgICAncmV2aWV3LTYzLmh0bWwnLApdCgpmb3IgcGF0aCBpbiBSRVRVUk5fTUlTU0lPTl9QQUdFUzoKICAgIG1vZHVsZSA9IHBhdGgucmVwbGFjZSgncmV2aWV3LScsICcnKS5yZXBsYWNlKCcuaHRtbCcsICcnKQogICAgY3J1bWIgPSAoCiAgICAgICAgJzxkaXYgY2xhc3M9Im1zbS1icmVhZGNydW1iIiBhcmlhLWxhYmVsPSJCcmVhZGNydW1iIj4nCiAgICAgICAgJzxhIGhyZWY9IicgKyBCQVNFICsgJy9odWIuaHRtbCI+JmxhcnI7IEhVQjwvYT4nCiAgICAgICAgJyAmcnNhcXVvOyBSZXR1cm4gTWlzc2lvbiAnICsgbW9kdWxlLnVwcGVyKCkKICAgICAgICArICc8L2Rpdj4nCiAgICApCiAgICBhZGRfYnJlYWRjcnVtYihwYXRoLCBjcnVtYikK" | base64 -d > /tmp/nav2.py
+          python3 /tmp/nav2.py
+
+      - name: Fix broken classroom exam link
+        run: |
+          echo "aW1wb3J0IG9zCgpCUk9LRU4gPSAnaHR0cHM6Ly9kZXZvbnRhbGxtYW4uZ2l0aHViLmlvLzYtMS0xL2luZGV4Lmh0bWwnCkZJWEVEICA9ICdodHRwczovL2Rldm9udGFsbG1hbi5naXRodWIuaW8vbWFyay1zY2hlbWUtbWV0aG9kLXBpbG90LzYtMS0xL2luZGV4Lmh0bWwnCgp0YXJnZXRzID0gWwogICAgJ2NvbnRlbnQtYXJlYXMvY2xhc3Nyb29tLTYxMS12My5odG1sJywKXQoKZm9yIHBhdGggaW4gdGFyZ2V0czoKICAgIGlmIG5vdCBvcy5wYXRoLmV4aXN0cyhwYXRoKToKICAgICAgICBwcmludCgnU0tJUCAobm90IGZvdW5kKTonLCBwYXRoKQogICAgICAgIGNvbnRpbnVlCiAgICB3aXRoIG9wZW4ocGF0aCwgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGNvbnRlbnQgPSBmLnJlYWQoKQogICAgaWYgQlJPS0VOIGluIGNvbnRlbnQ6CiAgICAgICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZShCUk9LRU4sIEZJWEVEKQogICAgICAgIHdpdGggb3BlbihwYXRoLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgICAgIGYud3JpdGUoY29udGVudCkKICAgICAgICBwcmludCgnRml4ZWQgYnJva2VuIGxpbmsgaW46JywgcGF0aCkKICAgIGVsc2U6CiAgICAgICAgcHJpbnQoJ0Jyb2tlbiBsaW5rIG5vdCBmb3VuZCAobWF5IGFscmVhZHkgYmUgZml4ZWQpOicsIHBhdGgpCg==" | base64 -d > /tmp/nav3.py
+          python3 /tmp/nav3.py
+
+      - name: Verify
+        run: |
+          FAIL=0
+          grep -q 'nav-optimised' hub.html      && echo "OK hub nav"      || { echo "FAIL hub nav";      FAIL=1; }
+          grep -q 'nav-optimised' topics.html   && echo "OK topics nav"   || { echo "FAIL topics nav";   FAIL=1; }
+          grep -q 'nav-optimised' dashboard.html && echo "OK dash nav"    || { echo "FAIL dash nav";     FAIL=1; }
+          grep -q 'msm-breadcrumb' learn/6-1-1/index.html && echo "OK ft 611 breadcrumb" || { echo "FAIL ft 611 breadcrumb"; FAIL=1; }
+          grep -q 'msm-breadcrumb' review-611.html && echo "OK rm 611 breadcrumb" || { echo "FAIL rm 611 breadcrumb"; FAIL=1; }
+          grep -q 'mark-scheme-method-pilot' content-areas/classroom-611-v3.html && echo "OK broken link fixed" || { echo "FAIL broken link"; FAIL=1; }
+          [ $FAIL -eq 0 ] || exit 1
+
+      - name: Commit and push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "feat: nav optimisation - 3-item global nav, breadcrumbs, broken link fix"
+          git push origin main
