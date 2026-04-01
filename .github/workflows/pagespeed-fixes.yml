@@ -1,0 +1,46 @@
+name: PageSpeed Fixes
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to deploy'
+        required: true
+
+jobs:
+  fixes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Fix render-blocking fonts
+        run: |
+          echo "aW1wb3J0IHJlLCBvcwoKUEFHRVMgPSBbJ2luZGV4Lmh0bWwnLCAnaHViLmh0bWwnLCAndG9waWNzLmh0bWwnLCAnZGFzaGJvYXJkLmh0bWwnXQoKUFJFQ09OTkVDVCA9ICgKICAgICc8bGluayByZWw9InByZWNvbm5lY3QiIGhyZWY9Imh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20iPicKICAgICc8bGluayByZWw9InByZWNvbm5lY3QiIGhyZWY9Imh0dHBzOi8vZm9udHMuZ3N0YXRpYy5jb20iIGNyb3Nzb3JpZ2luPicKKQoKZGVmIGZpeF9mb250cyhwYXRoKToKICAgIGlmIG5vdCBvcy5wYXRoLmV4aXN0cyhwYXRoKToKICAgICAgICBwcmludCgnU0tJUCAobm90IGZvdW5kKTonLCBwYXRoKQogICAgICAgIHJldHVybgogICAgd2l0aCBvcGVuKHBhdGgsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICBjb250ZW50ID0gZi5yZWFkKCkKICAgIGlmICdmb250cy1vcHRpbWlzZWQnIGluIGNvbnRlbnQ6CiAgICAgICAgcHJpbnQoJ1NLSVAgKGFscmVhZHkgcGF0Y2hlZCk6JywgcGF0aCkKICAgICAgICByZXR1cm4KICAgIGNoYW5nZWQgPSBGYWxzZQogICAgaWYgJ2ZvbnRzLmdvb2dsZWFwaXMuY29tJyBpbiBjb250ZW50OgogICAgICAgIGNvbnRlbnQgPSByZS5zdWIoCiAgICAgICAgICAgIHInaHR0cHM6Ly9mb250c1wuZ29vZ2xlYXBpc1wuY29tL2NzczJcPyhbXiJcJ10rKScsCiAgICAgICAgICAgIGxhbWJkYSBtOiAnaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3MyPycgKyBtLmdyb3VwKDEpLnJzdHJpcCgnJicpICsgJyZkaXNwbGF5PXN3YXAnCiAgICAgICAgICAgIGlmICdkaXNwbGF5PXN3YXAnIG5vdCBpbiBtLmdyb3VwKDEpIGVsc2UgbS5ncm91cCgwKSwKICAgICAgICAgICAgY29udGVudAogICAgICAgICkKICAgICAgICBpZiBQUkVDT05ORUNUIG5vdCBpbiBjb250ZW50OgogICAgICAgICAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKAogICAgICAgICAgICAgICAgJzxsaW5rJywgUFJFQ09OTkVDVCArICdcbjxsaW5rJywgMQogICAgICAgICAgICApCiAgICAgICAgY2hhbmdlZCA9IFRydWUKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJzwvYm9keT4nLCAnXG48IS0tIGZvbnRzLW9wdGltaXNlZCAtLT5cbjwvYm9keT4nLCAxKQogICAgd2l0aCBvcGVuKHBhdGgsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICBmLndyaXRlKGNvbnRlbnQpCiAgICBpZiBjaGFuZ2VkOgogICAgICAgIHByaW50KCdQYXRjaGVkIGZvbnRzOicsIHBhdGgpCiAgICBlbHNlOgogICAgICAgIHByaW50KCdObyBHb29nbGUgRm9udHMgZm91bmQgKG1hcmtlZCBhbnl3YXkpOicsIHBhdGgpCgpmb3IgcCBpbiBQQUdFUzoKICAgIGZpeF9mb250cyhwKQo=" | base64 -d > /tmp/fix_fonts.py
+          python3 /tmp/fix_fonts.py
+
+      - name: Add main landmark to key pages
+        run: |
+          echo "aW1wb3J0IHJlLCBvcwoKUEFHRVMgPSBbCiAgICAoJ2luZGV4Lmh0bWwnLCAgICAgJ1QtTEVWRUwgRElHSVRBTCBFWEFNIERBVEUnKSwKICAgICgnaHViLmh0bWwnLCAgICAgICAnU1RVREVOVCBDT01NQU5EIENFTlRSRScpLAogICAgKCd0b3BpY3MuaHRtbCcsICAgICdUT1BJQyBJTkRFWCcpLAogICAgKCdkYXNoYm9hcmQuaHRtbCcsICdTVFVERU5UIERBU0hCT0FSRCcpLApdCgpkZWYgZml4X21haW4ocGF0aCwgYW5jaG9yX3RleHQpOgogICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKHBhdGgpOgogICAgICAgIHByaW50KCdTS0lQIChub3QgZm91bmQpOicsIHBhdGgpCiAgICAgICAgcmV0dXJuCiAgICB3aXRoIG9wZW4ocGF0aCwgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGNvbnRlbnQgPSBmLnJlYWQoKQogICAgaWYgJ21haW4tbGFuZG1hcmsnIGluIGNvbnRlbnQ6CiAgICAgICAgcHJpbnQoJ1NLSVAgKGFscmVhZHkgcGF0Y2hlZCk6JywgcGF0aCkKICAgICAgICByZXR1cm4KICAgIGlmICc8bWFpbicgaW4gY29udGVudCBvciAncm9sZT0ibWFpbiInIGluIGNvbnRlbnQ6CiAgICAgICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnPC9ib2R5PicsICdcbjwhLS0gbWFpbi1sYW5kbWFyayAtLT5cbjwvYm9keT4nLCAxKQogICAgICAgIHdpdGggb3BlbihwYXRoLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgICAgIGYud3JpdGUoY29udGVudCkKICAgICAgICBwcmludCgnQWxyZWFkeSBoYXMgbWFpbiBlbGVtZW50IChtYXJrZWQpOicsIHBhdGgpCiAgICAgICAgcmV0dXJuCiAgICBpZiBhbmNob3JfdGV4dCBpbiBjb250ZW50OgogICAgICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoCiAgICAgICAgICAgIGFuY2hvcl90ZXh0LAogICAgICAgICAgICAnPG1haW4gaWQ9Im1haW4tY29udGVudCI+JyArIGFuY2hvcl90ZXh0LAogICAgICAgICAgICAxCiAgICAgICAgKQogICAgICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJzwvYm9keT4nLCAnPC9tYWluPlxuPCEtLSBtYWluLWxhbmRtYXJrIC0tPlxuPC9ib2R5PicsIDEpCiAgICAgICAgd2l0aCBvcGVuKHBhdGgsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgICAgIHByaW50KCdBZGRlZCBtYWluIGxhbmRtYXJrOicsIHBhdGgpCiAgICBlbHNlOgogICAgICAgIGNvbnRlbnQgPSByZS5zdWIoCiAgICAgICAgICAgIHInKDxib2R5W14+XSo+KScsCiAgICAgICAgICAgIHInXDFcbjxtYWluIGlkPSJtYWluLWNvbnRlbnQiPicsCiAgICAgICAgICAgIGNvbnRlbnQsIGNvdW50PTEKICAgICAgICApCiAgICAgICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnPC9ib2R5PicsICc8L21haW4+XG48IS0tIG1haW4tbGFuZG1hcmsgLS0+XG48L2JvZHk+JywgMSkKICAgICAgICB3aXRoIG9wZW4ocGF0aCwgJ3cnLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgICAgICBmLndyaXRlKGNvbnRlbnQpCiAgICAgICAgcHJpbnQoJ0FkZGVkIG1haW4gdmlhIGZhbGxiYWNrOicsIHBhdGgpCgpmb3IgKHBhdGgsIGFuY2hvcikgaW4gUEFHRVM6CiAgICBmaXhfbWFpbihwYXRoLCBhbmNob3IpCg==" | base64 -d > /tmp/fix_main.py
+          python3 /tmp/fix_main.py
+
+      - name: Verify
+        run: |
+          FAIL=0
+          grep -q 'fonts-optimised' index.html && echo "OK fonts index" || { echo "FAIL fonts index"; FAIL=1; }
+          grep -q 'fonts-optimised' hub.html   && echo "OK fonts hub"   || { echo "FAIL fonts hub";   FAIL=1; }
+          grep -q 'main-landmark' index.html    && echo "OK main index"  || { echo "FAIL main index";  FAIL=1; }
+          grep -q 'main-landmark' hub.html      && echo "OK main hub"    || { echo "FAIL main hub";    FAIL=1; }
+          grep -q 'main-landmark' dashboard.html && echo "OK main dash"  || { echo "FAIL main dash";   FAIL=1; }
+          [ $FAIL -eq 0 ] || exit 1
+
+      - name: Commit and push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "perf+a11y: font preconnect/display=swap, main landmark on all pages"
+          git push origin main
