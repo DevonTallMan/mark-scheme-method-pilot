@@ -1,0 +1,39 @@
+name: Contrast2 Fixes
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to deploy'
+        required: true
+
+jobs:
+  contrast2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Fix Teacher Access link colour and body background
+        run: |
+          echo "aW1wb3J0IHJlLCBvcwoKZGVmIHBhdGNoKHBhdGgpOgogICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKHBhdGgpOgogICAgICAgIHByaW50KCdTS0lQOicsIHBhdGgpCiAgICAgICAgcmV0dXJuCiAgICB3aXRoIG9wZW4ocGF0aCwgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGNvbnRlbnQgPSBmLnJlYWQoKQogICAgaWYgJ2NvbnRyYXN0Mi1wYXRjaGVkJyBpbiBjb250ZW50OgogICAgICAgIHByaW50KCdTS0lQIGFscmVhZHkgcGF0Y2hlZDonLCBwYXRoKQogICAgICAgIHJldHVybgogICAgY2hhbmdlZCA9IEZhbHNlCgogICAgIyBGaXggMTogVGVhY2hlciBBY2Nlc3MgbGluayBjb2xvcjojODg4IC0+IGNvbG9yOiNhYWEgKDQuOToxIG9uIHZvaWQgYmcpCiAgICBpZiAnY29sb3I6Izg4OCcgaW4gY29udGVudDoKICAgICAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCdjb2xvcjojODg4JywgJ2NvbG9yOiNhYWEnKQogICAgICAgIGNoYW5nZWQgPSBUcnVlCiAgICAgICAgcHJpbnQoJ0ZpeGVkICM4ODggLT4gI2FhYSBpbjonLCBwYXRoKQoKICAgICMgRml4IDI6IEFkZCBleHBsaWNpdCBiYWNrZ3JvdW5kLWNvbG9yIHRvIGJvZHkgdGFnIGlmIG1pc3NpbmcKICAgIGlmIHJlLnNlYXJjaChyJzxib2R5XGIoPyFbXj5dKmJhY2tncm91bmQpJywgY29udGVudCk6CiAgICAgICAgY29udGVudCA9IHJlLnN1YigKICAgICAgICAgICAgcicoPGJvZHlcYikoW14+XSo+KScsCiAgICAgICAgICAgIHInXDEgc3R5bGU9ImJhY2tncm91bmQtY29sb3I6IzBhMGEwZiJcMicsCiAgICAgICAgICAgIGNvbnRlbnQsIGNvdW50PTEKICAgICAgICApCiAgICAgICAgIyBJZiBib2R5IGFscmVhZHkgaGFzIGEgc3R5bGUgYXR0cmlidXRlLCBtZXJnZSBpbnN0ZWFkCiAgICAgICAgY29udGVudCA9IHJlLnN1YigKICAgICAgICAgICAgcicoPGJvZHlcYltePl0qc3R5bGU9IikoW14iXSoiKShbXj5dKj4pJywKICAgICAgICAgICAgbGFtYmRhIG06IG0uZ3JvdXAoMSkgKyAnYmFja2dyb3VuZC1jb2xvcjojMGEwYTBmOycgKyBtLmdyb3VwKDIpICsgbS5ncm91cCgzKSwKICAgICAgICAgICAgY29udGVudCwgY291bnQ9MQogICAgICAgICkKICAgICAgICBjaGFuZ2VkID0gVHJ1ZQogICAgICAgIHByaW50KCdBZGRlZCBib2R5IGJhY2tncm91bmQtY29sb3IgaW46JywgcGF0aCkKCiAgICBpZiBjaGFuZ2VkOgogICAgICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJzwvYm9keT4nLCAnXG48IS0tIGNvbnRyYXN0Mi1wYXRjaGVkIC0tPlxuPC9ib2R5PicsIDEpCiAgICAgICAgd2l0aCBvcGVuKHBhdGgsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICAgICAgZi53cml0ZShjb250ZW50KQoKZm9yIHAgaW4gWydpbmRleC5odG1sJywgJ2h1Yi5odG1sJywgJ3RvcGljcy5odG1sJywgJ2Rhc2hib2FyZC5odG1sJ106CiAgICBwYXRjaChwKQo=" | base64 -d > /tmp/c2.py
+          python3 /tmp/c2.py
+
+      - name: Verify
+        run: |
+          FAIL=0
+          grep -q 'contrast2-patched' index.html && echo "OK index" || { echo "FAIL index"; FAIL=1; }
+          grep -q 'color:#aaa' index.html && echo "OK teacher link colour" || { echo "FAIL teacher link colour"; FAIL=1; }
+          grep -q 'background-color:#0a0a0f' index.html && echo "OK body background" || { echo "FAIL body background"; FAIL=1; }
+          [ $FAIL -eq 0 ] || exit 1
+
+      - name: Commit and push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "fix: a11y contrast - teacher link #888->#aaa, explicit body background"
+          git push origin main
