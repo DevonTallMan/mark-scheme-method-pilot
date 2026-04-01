@@ -1,0 +1,48 @@
+name: PageSpeed Fixes
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to deploy'
+        required: true
+
+jobs:
+  psi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Fix render-blocking fonts - preconnect and display=swap
+        run: |
+          echo "aW1wb3J0IHJlLCBvcwoKRk9OVF9QUkVDT05ORUNUID0gKAogICAgJzxsaW5rIHJlbD0icHJlY29ubmVjdCIgaHJlZj0iaHR0cHM6Ly9mb250cy5nb29nbGVhcGlzLmNvbSI+JwogICAgJzxsaW5rIHJlbD0icHJlY29ubmVjdCIgaHJlZj0iaHR0cHM6Ly9mb250cy5nc3RhdGljLmNvbSIgY3Jvc3NvcmlnaW4+JwopCgpkZWYgcGF0Y2hfZm9udHMocGF0aCk6CiAgICBpZiBub3Qgb3MucGF0aC5leGlzdHMocGF0aCk6CiAgICAgICAgcHJpbnQoJ1NLSVAgKG5vdCBmb3VuZCk6JywgcGF0aCkKICAgICAgICByZXR1cm4KICAgIHdpdGggb3BlbihwYXRoLCAncicsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgY29udGVudCA9IGYucmVhZCgpCiAgICBpZiAncGVyZi1wYXRjaGVkJyBpbiBjb250ZW50OgogICAgICAgIHByaW50KCdTS0lQIChhbHJlYWR5IHBhdGNoZWQpOicsIHBhdGgpCiAgICAgICAgcmV0dXJuCiAgICBjaGFuZ2VkID0gRmFsc2UKICAgICMgQWRkIHByZWNvbm5lY3QgaGludHMgYmVmb3JlIGZpcnN0IGZvbnQgc3R5bGVzaGVldCBsaW5rCiAgICBpZiAnZm9udHMuZ29vZ2xlYXBpcy5jb20nIGluIGNvbnRlbnQgYW5kIEZPTlRfUFJFQ09OTkVDVCBub3QgaW4gY29udGVudDoKICAgICAgICBjb250ZW50ID0gcmUuc3ViKAogICAgICAgICAgICByJyg8bGlua1tePl0qZm9udHNcLmdvb2dsZWFwaXNcLmNvbVtePl0qPiknLAogICAgICAgICAgICBGT05UX1BSRUNPTk5FQ1QgKyByJ1wxJywKICAgICAgICAgICAgY29udGVudCwgY291bnQ9MQogICAgICAgICkKICAgICAgICBjaGFuZ2VkID0gVHJ1ZQogICAgIyBBZGQgZGlzcGxheT1zd2FwIHRvIGFsbCBHb29nbGUgRm9udCBVUkxzIHRoYXQgbGFjayBpdAogICAgZGVmIGFkZF9zd2FwKG0pOgogICAgICAgIHVybCA9IG0uZ3JvdXAoMCkKICAgICAgICBpZiAnZGlzcGxheT0nIG5vdCBpbiB1cmw6CiAgICAgICAgICAgIHNlcCA9ICcmJyBpZiAnPycgaW4gdXJsIGVsc2UgJz8nCiAgICAgICAgICAgIHVybCA9IHVybC5yc3RyaXAoJyJcJycpICsgc2VwICsgJ2Rpc3BsYXk9c3dhcCcKICAgICAgICAgICAgIyByZXN0b3JlIGNsb3NpbmcgcXVvdGUKICAgICAgICAgICAgcmV0dXJuIHVybAogICAgICAgIHJldHVybiB1cmwKICAgIG5ld19jb250ZW50ID0gcmUuc3ViKHInaHR0cHM6Ly9mb250c1wuZ29vZ2xlYXBpc1wuY29tL2Nzc1teIlwnXSsnLCBhZGRfc3dhcCwgY29udGVudCkKICAgIGlmIG5ld19jb250ZW50ICE9IGNvbnRlbnQ6CiAgICAgICAgY29udGVudCA9IG5ld19jb250ZW50CiAgICAgICAgY2hhbmdlZCA9IFRydWUKICAgIGlmIGNoYW5nZWQ6CiAgICAgICAgY29udGVudCA9IGNvbnRlbnQucmVwbGFjZSgnPC9ib2R5PicsICdcbjwhLS0gcGVyZi1wYXRjaGVkIC0tPlxuPC9ib2R5PicsIDEpCiAgICAgICAgd2l0aCBvcGVuKHBhdGgsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgICAgICAgICAgZi53cml0ZShjb250ZW50KQogICAgICAgIHByaW50KCdQYXRjaGVkIGZvbnRzOicsIHBhdGgpCiAgICBlbHNlOgogICAgICAgIHByaW50KCdObyBmb250IGxpbmtzIGZvdW5kOicsIHBhdGgpCgpIVE1MX0ZJTEVTID0gWwogICAgJ2luZGV4Lmh0bWwnLCAnaHViLmh0bWwnLCAndG9waWNzLmh0bWwnLCAnZGFzaGJvYXJkLmh0bWwnLAogICAgJ3Jldmlldy02MTEuaHRtbCcsICdyZXZpZXctNjEyLmh0bWwnLCAncmV2aWV3LTYxMy5odG1sJywKICAgICdyZXZpZXctNjIuaHRtbCcsICdyZXZpZXctNjMuaHRtbCcsCiAgICAnY29udGVudC1hcmVhcy9jbGFzc3Jvb20tNjExLXYzLmh0bWwnLAogICAgJ2NvbnRlbnQtYXJlYXMvNi0xLTItd2h5LW9yZ2FuaXNhdGlvbnMtbmVlZC1kYXRhLmh0bWwnLAogICAgJ2xlYXJuLzYtMS0xL2luZGV4Lmh0bWwnLCAnbGVhcm4vNi0xLTIvaW5kZXguaHRtbCcsCiAgICAnbGVhcm4vNi0xLTMvaW5kZXguaHRtbCcsICdsZWFybi82LTIvaW5kZXguaHRtbCcsICdsZWFybi82LTMvaW5kZXguaHRtbCcsCl0KZm9yIHAgaW4gSFRNTF9GSUxFUzoKICAgIHBhdGNoX2ZvbnRzKHApCg==" | base64 -d > /tmp/fix_perf.py
+          python3 /tmp/fix_perf.py
+
+      - name: Add main landmark to hub, topics, dashboard, index
+        run: |
+          echo "aW1wb3J0IHJlLCBvcwoKZGVmIGFkZF9tYWluX2xhbmRtYXJrKHBhdGgpOgogICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKHBhdGgpOgogICAgICAgIHByaW50KCdTS0lQIChub3QgZm91bmQpOicsIHBhdGgpCiAgICAgICAgcmV0dXJuCiAgICB3aXRoIG9wZW4ocGF0aCwgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGNvbnRlbnQgPSBmLnJlYWQoKQogICAgaWYgJ2xhbmRtYXJrLXBhdGNoZWQnIGluIGNvbnRlbnQ6CiAgICAgICAgcHJpbnQoJ1NLSVAgKGFscmVhZHkgcGF0Y2hlZCk6JywgcGF0aCkKICAgICAgICByZXR1cm4KICAgICMgQWxyZWFkeSBoYXMgYSBwcm9wZXIgPG1haW4+IHRhZyAtIHNraXAKICAgIGlmIHJlLnNlYXJjaChyJzxtYWluW1xzPl0nLCBjb250ZW50KToKICAgICAgICBwcmludCgnU0tJUCAobWFpbiB0YWcgZXhpc3RzKTonLCBwYXRoKQogICAgICAgIHJldHVybgogICAgIyBTdHJhdGVneTogZmluZCB0aGUgZmlyc3QgbGFyZ2UgY29udGVudCBkaXYgYWZ0ZXIgdGhlIG5hdi90b3BiYXIKICAgICMgYW5kIGFkZCByb2xlPSJtYWluIiB0byBpdC4gQWxzbyBhZGQgaWQ9Im1haW4tY29udGVudCIgaWYgbWlzc2luZy4KICAgICMgV2UgbG9vayBmb3IgdGhlIGZpcnN0IGRpdiB0aGF0IGNvbWVzIGFmdGVyIDwvbmF2PiB3aXRoIGEgY2xhc3MKICAgIGNoYW5nZWQgPSBGYWxzZQogICAgIyBBcHByb2FjaCAxOiB3cmFwIGV2ZXJ5dGhpbmcgYWZ0ZXIgPC9uYXY+IG9wZW5pbmcgdGFnIGluIDxtYWluPgogICAgIyBGaW5kIHBvc2l0aW9uIG9mIGNsb3NpbmcgPC9uYXY+IGFuZCBpbnNlcnQgPG1haW4+IGFmdGVyIGl0CiAgICBuYXZfZW5kID0gcmUuc2VhcmNoKHInPC9uYXY+JywgY29udGVudCkKICAgIGlmIG5hdl9lbmQ6CiAgICAgICAgaW5zZXJ0X3BvcyA9IG5hdl9lbmQuZW5kKCkKICAgICAgICBmb290ZXJfc3RhcnQgPSBjb250ZW50LnJmaW5kKCc8L21haW4+JywgaW5zZXJ0X3BvcykKICAgICAgICAjIENoZWNrIGlmIHRoZXJlJ3MgYSBmb290ZXIvYm90dG9tIG5hdiBkaXYgd2Ugc2hvdWxkIGV4Y2x1ZGUKICAgICAgICAjIFNpbXBsZSBhcHByb2FjaDogaW5zZXJ0IDxtYWluPiB0YWcgYWZ0ZXIgPC9uYXY+IGFuZCA8L21haW4+IGJlZm9yZSA8L2JvZHk+CiAgICAgICAgY29udGVudCA9ICgKICAgICAgICAgICAgY29udGVudFs6aW5zZXJ0X3Bvc10KICAgICAgICAgICAgKyAnXG48bWFpbiBpZD0ibWFpbi1jb250ZW50IiByb2xlPSJtYWluIj5cbicKICAgICAgICAgICAgKyBjb250ZW50W2luc2VydF9wb3M6XQogICAgICAgICkKICAgICAgICAjIEluc2VydCBjbG9zaW5nIDwvbWFpbj4gYmVmb3JlIDwvYm9keT4KICAgICAgICBjb250ZW50ID0gY29udGVudC5yZXBsYWNlKCc8L2JvZHk+JywgJzwvbWFpbj5cbjwhLS0gbGFuZG1hcmstcGF0Y2hlZCAtLT5cbjwvYm9keT4nLCAxKQogICAgICAgIGNoYW5nZWQgPSBUcnVlCiAgICBpZiBjaGFuZ2VkOgogICAgICAgIHdpdGggb3BlbihwYXRoLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgICAgIGYud3JpdGUoY29udGVudCkKICAgICAgICBwcmludCgnQWRkZWQgbWFpbiBsYW5kbWFyazonLCBwYXRoKQogICAgZWxzZToKICAgICAgICBwcmludCgnTm8gbmF2IGZvdW5kIHRvIGFuY2hvciBtYWluIGFmdGVyOicsIHBhdGgpCgpmb3IgcCBpbiBbJ2luZGV4Lmh0bWwnLCAnaHViLmh0bWwnLCAndG9waWNzLmh0bWwnLCAnZGFzaGJvYXJkLmh0bWwnXToKICAgIGFkZF9tYWluX2xhbmRtYXJrKHApCg==" | base64 -d > /tmp/fix_main.py
+          python3 /tmp/fix_main.py
+
+      - name: Verify
+        run: |
+          FAIL=0
+          grep -q 'perf-patched' index.html && echo "OK font fix index" || { echo "FAIL font fix index"; FAIL=1; }
+          grep -q 'perf-patched' hub.html && echo "OK font fix hub" || { echo "FAIL font fix hub"; FAIL=1; }
+          grep -q 'landmark-patched' index.html && echo "OK main landmark index" || { echo "FAIL main landmark index"; FAIL=1; }
+          grep -q 'landmark-patched' hub.html && echo "OK main landmark hub" || { echo "FAIL main landmark hub"; FAIL=1; }
+          grep -q 'landmark-patched' dashboard.html && echo "OK main landmark dashboard" || { echo "FAIL main landmark dashboard"; FAIL=1; }
+          grep -q 'display=swap' index.html && echo "OK display=swap" || { echo "FAIL display=swap missing"; FAIL=1; }
+          grep -q 'preconnect' index.html && echo "OK preconnect hints" || { echo "FAIL preconnect missing"; FAIL=1; }
+          [ $FAIL -eq 0 ] || exit 1
+
+      - name: Commit and push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "perf/a11y: font preconnect + display=swap, main landmark on core pages"
+          git push origin main
