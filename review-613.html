@@ -50,7 +50,7 @@
 <div class="msm-breadcrumb" aria-label="Breadcrumb"><a href="https://devontallman.github.io/mark-scheme-method-pilot/hub.html">&larr; HUB</a> &rsaquo; Return Mission 613</div>
 
 <div class="lo" id="lo"><div class="spin"></div><div class="lo-txt">Loading Return Mission...</div></div>
-<nav class="topbar"><span class="tb-brand">MSM</span><div class="tb-div"></div><span class="tb-title">RETURN MISSION - CA 6.1.3 DATA INFORMATION AND KNOWLEDGE</span><div class="tb-right"><span class="tb-qcount" id="tq">Q 1 of 5</span><div class="tb-div"></div><span class="tb-score" id="ts">0 pts</span><div class="tb-div"></div><span class="tb-timer" id="tt">45</span></div></nav>
+<nav class="topbar"><span class="tb-brand">MSM</span><div class="tb-div"></div><span class="tb-title">RETURN MISSION - CA 6.1.3 HOW DATA IS GENERATED</span><div class="tb-right"><span class="tb-qcount" id="tq">Q 1 of 5</span><div class="tb-div"></div><span class="tb-score" id="ts">0 pts</span><div class="tb-div"></div><span class="tb-timer" id="tt">45</span></div></nav>
 <div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
 <div class="main"><div class="qp" id="qp"></div><div class="fbp" id="fbp"><div class="fb-ph"><div class="fb-ph-icon">!</div><div class="fb-ph-txt">Answer to get AXIOM-7 feedback.</div></div></div></div>
 <div class="bbar"><span class="bbar-s" id="bs">Answer before continuing</span><button class="btn btn-s" id="bsk">Skip</button><button class="btn btn-p" id="bn" disabled>Next</button></div>
@@ -61,11 +61,11 @@
 window.AXIOM7_PROXY_URL="https://msm-axiom-proxy.morrischristopher675.workers.dev";
 var MID="ca-613",MN="Types of Data";
 var QS=[
-  {t:"mcq",q:"A GPS records 51.5074 -0.1278. Which is correct?",opts:["Information - shows a location","Data - raw numbers no context","Knowledge - used for navigation","Wisdom - system learned"],a:1},
-  {t:"mcq",q:"What converts data into information in the DIKW hierarchy?",opts:["Storing in a database","Encrypting it","Adding context, structure or meaning","Sharing with others"],a:2},
-  {t:"mcq",q:"A supermarket predicts the customer will buy milk Tuesday from 47 purchases. What DIKW level?",opts:["Data","Information","Knowledge","Wisdom"],a:3},
-  {t:"mcq",q:"Why is NAT23 56GHS56 102.4 described as data not information?",opts:["Too small to be useful","Not processed or given context","Wrong format","Cannot be read by a computer"],a:1},
-  {t:"nei",q:"A sensor records 38.7C at 14:23:01. Explain what makes this data and how it becomes useful information for a manager.",ph:"Name the concept, Explain the mechanism, state the business Impact..."}
+  {t:"mcq",q:"A supermarket uses RFID tags to automatically update stock levels when items pass through checkout. What type of data generation is this?",opts:["Human-to-Device (H2D)","Device-to-Device (D2D)","Manual data entry","Secondary data collection"],a:1},
+  {t:"mcq",q:"Which is an example of Human-to-Device (H2D) data generation?",opts:["A temperature sensor logging readings every 60 seconds","A GPS tracker updating location automatically","A customer entering their postcode on a website form","A smart meter sending energy usage data to a supplier"],a:2},
+  {t:"mcq",q:"A smart warehouse has 847 IoT sensors monitoring temperature, humidity and stock. What is the primary advantage of automated collection over manual methods?",opts:["The data is always 100% accurate","It eliminates all human staff","It generates continuous real-time data without human intervention, reducing errors and labour costs","It automatically makes business decisions"],a:2},
+  {t:"mcq",q:"A hospital records patient vitals every 5 minutes using automated equipment. When does this raw sensor data become information?",opts:["When stored in the database","When processed and contextualised - e.g. temperature is 38.9degC above normal range","When a doctor reads it","As soon as the sensor records it"],a:1},
+  {t:"nei",q:"A smart warehouse uses IoT sensors to track temperature and inventory levels automatically. Explain one way this automatically generated data benefits the organisation.",ph:"Name the data generation method, Explain how the sensor data is captured automatically, state the measurable business Impact..."}
 ];
 var curQ=0,score=0,totPts=0,tmr=null,tLeft=45,answered=false,neiBreakdown={n:0,e:0,i:0},qRes=[];
 function startTimer(){clearInterval(tmr);tLeft=45;updTimer();tmr=setInterval(function(){tLeft--;updTimer();if(tLeft<=0){clearInterval(tmr);autoSkip();}},1000);}
@@ -100,5 +100,7 @@ document.addEventListener("DOMContentLoaded",function(){document.getElementById(
 </script>
 
 <!-- perf-patched -->
+
+<!-- rmv2-613-final -->
 </body>
 </html>
