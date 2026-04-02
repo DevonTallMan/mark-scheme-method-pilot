@@ -50,7 +50,7 @@
 <div class="msm-breadcrumb" aria-label="Breadcrumb"><a href="https://devontallman.github.io/mark-scheme-method-pilot/hub.html">&larr; HUB</a> &rsaquo; Return Mission 63</div>
 
 <div class="lo" id="lo"><div class="spin"></div><div class="lo-txt">Loading Return Mission...</div></div>
-<nav class="topbar"><span class="tb-brand">MSM</span><div class="tb-div"></div><span class="tb-title">RETURN MISSION - CA 6.3 DATA INFORMATION AND KNOWLEDGE</span><div class="tb-right"><span class="tb-qcount" id="tq">Q 1 of 5</span><div class="tb-div"></div><span class="tb-score" id="ts">0 pts</span><div class="tb-div"></div><span class="tb-timer" id="tt">45</span></div></nav>
+<nav class="topbar"><span class="tb-brand">MSM</span><div class="tb-div"></div><span class="tb-title">RETURN MISSION - CA 6.3 DATA SYSTEMS</span><div class="tb-right"><span class="tb-qcount" id="tq">Q 1 of 5</span><div class="tb-div"></div><span class="tb-score" id="ts">0 pts</span><div class="tb-div"></div><span class="tb-timer" id="tt">45</span></div></nav>
 <div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
 <div class="main"><div class="qp" id="qp"></div><div class="fbp" id="fbp"><div class="fb-ph"><div class="fb-ph-icon">!</div><div class="fb-ph-txt">Answer to get AXIOM-7 feedback.</div></div></div></div>
 <div class="bbar"><span class="bbar-s" id="bs">Answer before continuing</span><button class="btn btn-s" id="bsk">Skip</button><button class="btn btn-p" id="bn" disabled>Next</button></div>
@@ -61,11 +61,11 @@
 window.AXIOM7_PROXY_URL="https://msm-axiom-proxy.morrischristopher675.workers.dev";
 var MID="ca-63",MN="How Data Supports Organisations";
 var QS=[
-  {t:"mcq",q:"A GPS records 51.5074 -0.1278. Which is correct?",opts:["Information - shows a location","Data - raw numbers no context","Knowledge - used for navigation","Wisdom - system learned"],a:1},
-  {t:"mcq",q:"What converts data into information in the DIKW hierarchy?",opts:["Storing in a database","Encrypting it","Adding context, structure or meaning","Sharing with others"],a:2},
-  {t:"mcq",q:"A supermarket predicts the customer will buy milk Tuesday from 47 purchases. What DIKW level?",opts:["Data","Information","Knowledge","Wisdom"],a:3},
-  {t:"mcq",q:"Why is NAT23 56GHS56 102.4 described as data not information?",opts:["Too small to be useful","Not processed or given context","Wrong format","Cannot be read by a computer"],a:1},
-  {t:"nei",q:"A sensor records 38.7C at 14:23:01. Explain what makes this data and how it becomes useful information for a manager.",ph:"Name the concept, Explain the mechanism, state the business Impact..."}
+  {t:"mcq",q:"A data entry clerk accidentally types a patient date of birth as 19/04/2199 instead of 19/04/1999. What type of error is this?",opts:["Transcription error","Transposition error","Validation failure","Verification failure"],a:0},
+  {t:"mcq",q:"A form validation rule rejects any postcode not matching UK format (e.g. SW1A 1AA). A user enters LONDON and sees an error. What has the validation rule done?",opts:["Verified the postcode is correct","Confirmed the postcode exists in the Royal Mail database","Checked the postcode matches the expected format pattern","Encrypted the postcode for security"],a:2},
+  {t:"mcq",q:"A hospital merges 14000 patient records from two legacy systems. Many contain duplicate entries and formatting inconsistencies. Which process would address this?",opts:["Data validation","Data encryption","Data wrangling","Data archiving"],a:2},
+  {t:"mcq",q:"Which best describes the GIGO principle?",opts:["Good Input Generates Output - quality data always produces useful results","Garbage In Garbage Out - if input data is poor quality the output will also be poor quality","Global Input Global Output - data systems must work internationally","Guaranteed Input Guaranteed Output - validated data always produces correct results"],a:1},
+  {t:"nei",q:"A hospital is merging patient records from two legacy systems, resulting in duplicate entries and formatting inconsistencies. Explain one way data wrangling would benefit this organisation.",ph:"Name the data wrangling technique, Explain how it addresses the specific problem, state the measurable business Impact..."}
 ];
 var curQ=0,score=0,totPts=0,tmr=null,tLeft=45,answered=false,neiBreakdown={n:0,e:0,i:0},qRes=[];
 function startTimer(){clearInterval(tmr);tLeft=45;updTimer();tmr=setInterval(function(){tLeft--;updTimer();if(tLeft<=0){clearInterval(tmr);autoSkip();}},1000);}
@@ -100,5 +100,7 @@ document.addEventListener("DOMContentLoaded",function(){document.getElementById(
 </script>
 
 <!-- perf-patched -->
+
+<!-- rmv2-63-final -->
 </body>
 </html>
