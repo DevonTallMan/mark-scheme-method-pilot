@@ -50,7 +50,7 @@
 <div class="msm-breadcrumb" aria-label="Breadcrumb"><a href="https://devontallman.github.io/mark-scheme-method-pilot/hub.html">&larr; HUB</a> &rsaquo; Return Mission 612</div>
 
 <div class="lo" id="lo"><div class="spin"></div><div class="lo-txt">Loading Return Mission...</div></div>
-<nav class="topbar"><span class="tb-brand">MSM</span><div class="tb-div"></div><span class="tb-title">RETURN MISSION - CA 6.1.2 DATA INFORMATION AND KNOWLEDGE</span><div class="tb-right"><span class="tb-qcount" id="tq">Q 1 of 5</span><div class="tb-div"></div><span class="tb-score" id="ts">0 pts</span><div class="tb-div"></div><span class="tb-timer" id="tt">45</span></div></nav>
+<nav class="topbar"><span class="tb-brand">MSM</span><div class="tb-div"></div><span class="tb-title">RETURN MISSION - CA 6.1.2 WHY ORGANISATIONS NEED DATA</span><div class="tb-right"><span class="tb-qcount" id="tq">Q 1 of 5</span><div class="tb-div"></div><span class="tb-score" id="ts">0 pts</span><div class="tb-div"></div><span class="tb-timer" id="tt">45</span></div></nav>
 <div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
 <div class="main"><div class="qp" id="qp"></div><div class="fbp" id="fbp"><div class="fb-ph"><div class="fb-ph-icon">!</div><div class="fb-ph-txt">Answer to get AXIOM-7 feedback.</div></div></div></div>
 <div class="bbar"><span class="bbar-s" id="bs">Answer before continuing</span><button class="btn btn-s" id="bsk">Skip</button><button class="btn btn-p" id="bn" disabled>Next</button></div>
@@ -61,11 +61,11 @@
 window.AXIOM7_PROXY_URL="https://msm-axiom-proxy.morrischristopher675.workers.dev";
 var MID="ca-612",MN="Why Organisations Need Data";
 var QS=[
-  {t:"mcq",q:"A GPS records 51.5074 -0.1278. Which is correct?",opts:["Information - shows a location","Data - raw numbers no context","Knowledge - used for navigation","Wisdom - system learned"],a:1},
-  {t:"mcq",q:"What converts data into information in the DIKW hierarchy?",opts:["Storing in a database","Encrypting it","Adding context, structure or meaning","Sharing with others"],a:2},
-  {t:"mcq",q:"A supermarket predicts the customer will buy milk Tuesday from 47 purchases. What DIKW level?",opts:["Data","Information","Knowledge","Wisdom"],a:3},
-  {t:"mcq",q:"Why is NAT23 56GHS56 102.4 described as data not information?",opts:["Too small to be useful","Not processed or given context","Wrong format","Cannot be read by a computer"],a:1},
-  {t:"nei",q:"A sensor records 38.7C at 14:23:01. Explain what makes this data and how it becomes useful information for a manager.",ph:"Name the concept, Explain the mechanism, state the business Impact..."}
+  {t:"mcq",q:"An e-commerce business uses customer purchase history to adjust stock levels for the next quarter. What level of decision is this?",opts:["Operational decision","Tactical decision","Strategic decision","Unstructured decision"],a:1},
+  {t:"mcq",q:"Which best describes why organisations collect and use data?",opts:["To comply with GDPR regulations","To replace human employees","To support informed decision-making at operational, tactical and strategic levels","To automatically generate competitive products"],a:2},
+  {t:"mcq",q:"A logistics company analyses GPS data from its own vehicles to identify routes causing delays. What type of data source is this?",opts:["External secondary data","Internal primary data","External primary data","Internal secondary data"],a:1},
+  {t:"mcq",q:"A retail chain plans to open stores in three new cities over five years based on sales trend analysis. What level of decision is this?",opts:["Operational decision","Tactical decision","Strategic decision","Reactive decision"],a:2},
+  {t:"nei",q:"An e-commerce business collects customer purchase data from its recommendation engine. Explain one way this data is used to support a tactical business decision.",ph:"Name the type of decision, Explain how the purchase data informs it, state the measurable business Impact..."}
 ];
 var curQ=0,score=0,totPts=0,tmr=null,tLeft=45,answered=false,neiBreakdown={n:0,e:0,i:0},qRes=[];
 function startTimer(){clearInterval(tmr);tLeft=45;updTimer();tmr=setInterval(function(){tLeft--;updTimer();if(tLeft<=0){clearInterval(tmr);autoSkip();}},1000);}
@@ -100,5 +100,7 @@ document.addEventListener("DOMContentLoaded",function(){document.getElementById(
 </script>
 
 <!-- perf-patched -->
+
+<!-- rmv2-612-final -->
 </body>
 </html>
