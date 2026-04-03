@@ -810,5 +810,104 @@ if(document.readyState==='loading'){
   document.addEventListener('DOMContentLoaded',init);
 }else{init();}
 </script>
+
+<!-- MSM TEACHER ONBOARDING OVERLAY
+     Shows once on first visit via localStorage flag msm_teacher_onboarded -->
+<div id="msm-teacher-onboarding" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(13,17,23,0.96);backdrop-filter:blur(12px);align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;">
+  <div style="max-width:600px;width:90%;background:#111820;border:1px solid rgba(57,255,20,0.25);border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(57,255,20,0.12);">
+    <div style="background:rgba(57,255,20,0.06);border-bottom:1px solid rgba(57,255,20,0.15);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:9px;letter-spacing:2px;color:rgba(57,255,20,0.7);margin-bottom:4px;">THE MARK SCHEME METHOD® // EDUCATOR PORTAL</div>
+        <div style="font-size:18px;font-weight:700;color:#E8EDF3;letter-spacing:1px;">WELCOME, TEACHER</div>
+      </div>
+      <div style="font-size:28px;">🎓</div>
+    </div>
+    <div style="padding:16px 28px 0;display:flex;gap:8px;">
+      <div class="ob-step" style="flex:1;height:3px;background:rgba(57,255,20,0.8);border-radius:2px;transition:background .3s;"></div>
+      <div class="ob-step" style="flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;transition:background .3s;"></div>
+      <div class="ob-step" style="flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;transition:background .3s;"></div>
+      <div class="ob-step" style="flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;transition:background .3s;"></div>
+    </div>
+    <div style="padding:28px;">
+      <div id="ob-step-1">
+        <div style="font-size:11px;letter-spacing:1.5px;color:#39FF14;margin-bottom:12px;">STEP 01 / 04 — ORIENTATION</div>
+        <h2 style="font-size:20px;color:#E8EDF3;margin:0 0 14px;font-weight:700;">You're inside the MSM Teacher Portal</h2>
+        <p style="color:rgba(232,237,243,0.75);font-size:13px;line-height:1.7;margin:0 0 14px;">This portal gives you visibility into your class's exam preparation and lets you send soft module recommendations.</p>
+        <div style="background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.18);border-radius:8px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#39FF14;margin-bottom:6px;">▸ WHAT THIS PORTAL IS NOT</div>
+          <p style="color:rgba(232,237,243,0.7);font-size:12px;line-height:1.6;margin:0;">This is not an assignment tool or control panel. Students self-direct their revision. You observe, suggest and track — they decide.</p>
+        </div>
+        <p style="color:rgba(232,237,243,0.45);font-size:11px;margin:0;">Students cannot see this page. It is not in the student navigation.</p>
+      </div>
+      <div id="ob-step-2" style="display:none;">
+        <div style="font-size:11px;letter-spacing:1.5px;color:#FFD700;margin-bottom:12px;">STEP 02 / 04 — CLASS CODE</div>
+        <h2 style="font-size:20px;color:#E8EDF3;margin:0 0 14px;font-weight:700;">Your Class Code Routes Everything</h2>
+        <p style="color:rgba(232,237,243,0.75);font-size:13px;line-height:1.7;margin:0 0 14px;">Every student session, score and NEI mark is stored under your class code in Firebase. Students join your class by loading the platform with <code style="background:rgba(255,215,0,0.1);color:#FFD700;padding:2px 6px;border-radius:4px;">?class=YOUR_CODE</code> in the URL.</p>
+        <div style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:14px;margin-bottom:12px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#FFD700;margin-bottom:8px;">▸ YOUR STUDENT LINK</div>
+          <div id="ob-class-link" style="font-size:12px;color:#E8EDF3;word-break:break-all;">Loading...</div>
+        </div>
+        <p style="color:rgba(232,237,243,0.5);font-size:12px;margin:0;">To change your class code, update it in the Class Settings panel below after this tour.</p>
+      </div>
+      <div id="ob-step-3" style="display:none;">
+        <div style="font-size:11px;letter-spacing:1.5px;color:#FF9500;margin-bottom:12px;">STEP 03 / 04 — WHAT YOU CAN DO</div>
+        <h2 style="font-size:20px;color:#E8EDF3;margin:0 0 14px;font-weight:700;">Three Tools, One Purpose</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:rgba(255,255,255,0.04);border-left:3px solid #39FF14;border-radius:0 8px 8px 0;padding:12px 14px;">
+            <div style="font-size:11px;letter-spacing:1px;color:#39FF14;margin-bottom:3px;">01 — RECOMMEND MODULE</div>
+            <p style="color:rgba(232,237,243,0.7);font-size:12px;line-height:1.5;margin:0;">Suggest a content area. A dismissible card appears on students' Topic Index — they choose whether to follow it.</p>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border-left:3px solid #FFD700;border-radius:0 8px 8px 0;padding:12px 14px;">
+            <div style="font-size:11px;letter-spacing:1px;color:#FFD700;margin-bottom:3px;">02 — CLASS LEADERBOARD</div>
+            <p style="color:rgba(232,237,243,0.7);font-size:12px;line-height:1.5;margin:0;">Live XP rankings from classroom sessions. Updates in real time during lessons.</p>
+          </div>
+          <div style="background:rgba(255,255,255,0.04);border-left:3px solid #FF9500;border-radius:0 8px 8px 0;padding:12px 14px;">
+            <div style="font-size:11px;letter-spacing:1px;color:#FF9500;margin-bottom:3px;">03 — NEI PROFICIENCY DATA</div>
+            <p style="color:rgba(232,237,243,0.7);font-size:12px;line-height:1.5;margin:0;">See which students are earning Name, Explain and Impact marks — and who's consistently missing the Impact mark.</p>
+          </div>
+        </div>
+      </div>
+      <div id="ob-step-4" style="display:none;">
+        <div style="font-size:11px;letter-spacing:1.5px;color:#39FF14;margin-bottom:12px;">STEP 04 / 04 — READY</div>
+        <h2 style="font-size:20px;color:#E8EDF3;margin:0 0 14px;font-weight:700;">You're Set Up</h2>
+        <p style="color:rgba(232,237,243,0.75);font-size:13px;line-height:1.7;margin:0 0 16px;">Share the student link with your class. Return here any time to monitor progress and send module recommendations.</p>
+        <div style="background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.18);border-radius:8px;padding:14px;">
+          <div style="font-size:10px;letter-spacing:1.5px;color:#39FF14;margin-bottom:6px;">▸ QUICK REMINDER</div>
+          <p style="color:rgba(232,237,243,0.6);font-size:12px;line-height:1.5;margin:0;">This portal is accessed via the low-opacity link in the footer of the main platform page. Students won't find it unless they know where to look. Reset this tour anytime with <code style="background:rgba(57,255,20,0.1);color:#39FF14;padding:1px 4px;border-radius:3px;">?reset_onboarding=1</code>.</p>
+        </div>
+      </div>
+    </div>
+    <div style="padding:0 28px 24px;display:flex;justify-content:space-between;align-items:center;">
+      <button id="ob-prev" onclick="obPrev()" style="display:none;background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(232,237,243,0.6);padding:10px 20px;border-radius:8px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;">← BACK</button>
+      <div></div>
+      <button id="ob-next" onclick="obNext()" style="background:rgba(57,255,20,0.9);border:none;color:#0D1117;padding:11px 26px;border-radius:8px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-weight:700;font-size:13px;letter-spacing:1.5px;">NEXT →</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  if(localStorage.getItem('msm_teacher_onboarded')==='1')return;
+  var p=new URLSearchParams(window.location.search);
+  if(p.get('reset_onboarding')==='1')localStorage.removeItem('msm_teacher_onboarded');
+  var ov=document.getElementById('msm-teacher-onboarding');
+  if(!ov)return;
+  ov.style.display='flex';
+  var step=1,total=4;
+  function show(n){
+    for(var i=1;i<=total;i++){var el=document.getElementById('ob-step-'+i);if(el)el.style.display=i===n?'block':'none';}
+    var dots=document.querySelectorAll('.ob-step');
+    dots.forEach(function(d,idx){d.style.background=idx<n?'rgba(57,255,20,0.8)':'rgba(255,255,255,0.1)';});
+    var prev=document.getElementById('ob-prev');if(prev)prev.style.display=n>1?'block':'none';
+    var nxt=document.getElementById('ob-next');
+    if(nxt){if(n===total){nxt.textContent='GET STARTED ✓';nxt.style.boxShadow='0 0 20px rgba(57,255,20,0.4)';}else{nxt.textContent='NEXT →';nxt.style.boxShadow='none';}}
+    if(n===2){var cc=p.get('class')||localStorage.getItem('msm_cc')||'5MFH4P';var base=location.origin+location.pathname.replace('teacher.html','');var lk=document.getElementById('ob-class-link');if(lk)lk.textContent=base+'topics.html?class='+cc;}
+    step=n;
+  }
+  window.obNext=function(){if(step<total){show(step+1);}else{localStorage.setItem('msm_teacher_onboarded','1');ov.style.transition='opacity .4s';ov.style.opacity='0';setTimeout(function(){ov.style.display='none';},400);}};
+  window.obPrev=function(){if(step>1)show(step-1);};
+  show(1);
+})();
+</script>
+<!-- END MSM TEACHER ONBOARDING -->
 </body>
 </html>
