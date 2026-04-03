@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Training 6.4 — Data Security and Management // The Mark Scheme Method®</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#0D1117;
+  --void2:#0A0E14;
+  --panel-bg:rgba(255,255,255,0.04);
+  --panel-border:rgba(255,255,255,0.08);
+  --green:#39FF14;
+  --green-dim:rgba(57,255,20,0.12);
+  --gold:#FFD700;
+  --gold-dim:rgba(255,215,0,0.12);
+  --red:#FF4444;
+  --amber:#FF9900;
+  --blue:#00D4FF;
+  --ink:#D4DDE8;
+  --muted:#556070;
+  --mono:'Share Tech Mono',monospace;
+  --display:'Orbitron',monospace;
+  --body:'Rajdhani',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(57,255,20,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(255,215,0,0.04) 0%, transparent 50%),
+    linear-gradient(rgba(57,255,20,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.015) 1px, transparent 1px);
+  background-size: auto, auto, 60px 60px, 60px 60px;
+  font-family:var(--body);
+  color:var(--ink);
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* ─── SCANLINES OVERLAY ─────────────────────────────── */
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+  pointer-events:none;z-index:9999;
+}
+
+/* ─── HEADER ─────────────────────────────────────────── */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,17,23,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--panel-border);
+  padding:0.75rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.header-brand{
+  font-family:var(--display);font-size:0.62rem;
+  letter-spacing:0.15em;color:var(--green);
+  text-shadow:0 0 10px var(--green);
+  text-transform:uppercase;
+}
+.header-status{
+  display:flex;align-items:center;gap:1.5rem;
+}
+.status-item{
+  font-family:var(--mono);font-size:0.6rem;
+  color:var(--muted);display:flex;align-items:center;gap:0.4rem;
+}
+.status-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 8px var(--green);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.progress-bar{
+  width:160px;height:4px;
+  background:rgba(255,255,255,0.06);
+  border-radius:2px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--green),var(--gold));
+  border-radius:2px;
+  transition:width 0.6s ease;
+}
+
+/* ─── SCENE WRAPPER ──────────────────────────────────── */
+.scene{display:none;}
+.scene.active{display:block;}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE A — OPERATIONAL BRIEFING
+═══════════════════════════════════════════════════════ */
+#scene-a{
+  min-height:calc(100vh - 52px);
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:3rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+#scene-a.active{display:flex;}
+
+.briefing-bg-fx{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(57,255,20,0.04) 0%, transparent 65%);
+}
+.briefing-bg-fx::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-conic-gradient(rgba(57,255,20,0.02) 0deg 1deg, transparent 1deg 30deg);
+  animation:rotate 60s linear infinite;
+  transform-origin:center;
+}
+@keyframes rotate{to{transform:rotate(360deg);}}
+
+.briefing-container{
+  position:relative;z-index:2;
+  max-width:860px;width:100%;
+  text-align:center;
+}
+.mission-badge{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  background:rgba(57,255,20,0.07);
+  border:1px solid rgba(57,255,20,0.25);
+  padding:0.4rem 1.2rem;
+  border-radius:4px;
+  font-family:var(--mono);font-size:0.62rem;
+  color:var(--green);letter-spacing:0.15em;
+  margin-bottom:2rem;
+  animation:fadeIn 0.5s ease both;
+}
+.mission-badge::before{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 10px var(--green);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+
+/* Data Architect Avatar */
+.avatar-frame{
+  width:160px;height:160px;
+  margin:0 auto 2rem;
+  position:relative;
+  animation:fadeIn 0.6s 0.1s ease both;
+}
+.avatar-hex{
+  width:160px;height:160px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,rgba(57,255,20,0.15),rgba(255,215,0,0.1));
+  border:2px solid transparent;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.avatar-hex::before{
+  content:'';position:absolute;inset:-2px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,var(--green),var(--gold));
+  z-index:-1;
+}
+.avatar-inner{
+  font-size:5rem;line-height:1;
+  filter:drop-shadow(0 0 20px rgba(57,255,20,0.6));
+}
+.avatar-ring{
+  position:absolute;inset:-12px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  border:1px solid rgba(57,255,20,0.2);
+  animation:ringPulse 3s ease-in-out infinite;
+}
+@keyframes ringPulse{
+  0%,100%{transform:scale(1);opacity:0.2;}
+  50%{transform:scale(1.08);opacity:0.6;}
+}
+
+.briefing-title{
+  font-family:var(--display);font-size:2rem;font-weight:900;
+  color:#fff;line-height:1.1;
+  letter-spacing:-0.02em;
+  margin-bottom:0.5rem;
+  animation:fadeIn 0.6s 0.2s ease both;
+}
+.briefing-title span{
+  background:linear-gradient(135deg,var(--green),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.briefing-sub{
+  font-size:0.9rem;color:var(--muted);
+  letter-spacing:0.05em;margin-bottom:2.5rem;
+  animation:fadeIn 0.6s 0.3s ease both;
+}
+
+/* Terminal transcript */
+.terminal{
+  background:rgba(0,0,0,0.6);
+  border:1px solid rgba(57,255,20,0.2);
+  border-radius:12px;
+  overflow:hidden;
+  margin-bottom:2rem;
+  text-align:left;
+  animation:fadeIn 0.6s 0.4s ease both;
+  box-shadow:0 0 40px rgba(57,255,20,0.08),0 20px 60px rgba(0,0,0,0.6);
+}
+.terminal-bar{
+  background:rgba(57,255,20,0.06);
+  border-bottom:1px solid rgba(57,255,20,0.15);
+  padding:0.6rem 1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.t-dot{width:8px;height:8px;border-radius:50%;}
+.t-red{background:#FF5F57;}.t-amber{background:#FEBC2E;}.t-green{background:#28C840;}
+.terminal-label{
+  margin-left:auto;font-family:var(--mono);
+  font-size:0.55rem;color:var(--green);letter-spacing:0.1em;
+}
+.terminal-body{padding:1.5rem 1.5rem 1.8rem;}
+.terminal-line{
+  font-family:var(--mono);font-size:0.82rem;
+  line-height:1.7;color:rgba(255,255,255,0.75);
+  margin-bottom:0.3rem;
+}
+.terminal-line .prompt{color:var(--green);margin-right:0.6rem;}
+.terminal-line .hl-gold{color:var(--gold);font-weight:600;}
+.terminal-line .hl-green{color:var(--green);}
+.terminal-line .hl-dim{color:var(--muted);}
+.terminal-cursor{
+  display:inline-block;width:8px;height:14px;
+  background:var(--green);vertical-align:middle;
+  animation:blink 1s step-end infinite;
+  margin-left:2px;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.briefing-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+  margin-bottom:2rem;
+  animation:fadeIn 0.6s 0.5s ease both;
+}
+.stat-card{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:10px;padding:1rem;
+  backdrop-filter:blur(10px);
+  text-align:center;
+}
+.stat-num{
+  font-family:var(--display);font-size:1.4rem;
+  font-weight:700;color:var(--gold);
+  text-shadow:0 0 15px rgba(255,215,0,0.4);
+}
+.stat-label{font-size:0.72rem;color:var(--muted);margin-top:0.25rem;letter-spacing:0.05em;}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:0.75rem;
+  background:linear-gradient(135deg,var(--green),#2DD60F);
+  color:#000;
+  font-family:var(--display);font-size:0.72rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;
+  padding:0.9rem 2.5rem;border-radius:6px;border:none;cursor:pointer;
+  box-shadow:0 0 30px rgba(57,255,20,0.3),0 4px 20px rgba(0,0,0,0.5);
+  transition:all 0.2s;
+  animation:fadeIn 0.6s 0.6s ease both;
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 50px rgba(57,255,20,0.5),0 8px 30px rgba(0,0,0,0.6);
+}
+.btn-primary .btn-arrow{font-size:1rem;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE B — THEORY PANELS + DRAG & DROP
+═══════════════════════════════════════════════════════ */
+#scene-b{
+  min-height:calc(100vh - 52px);
+  display:none;
+  padding:2.5rem 2rem;
+}
+#scene-b.active{display:block;}
+
+.scene-header{
+  text-align:center;margin-bottom:2.5rem;
+}
+.scene-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--gold-dim);border:1px solid rgba(255,215,0,0.25);
+  color:var(--gold);font-family:var(--mono);font-size:0.58rem;
+  letter-spacing:0.15em;padding:0.3rem 1rem;border-radius:4px;
+  margin-bottom:1rem;
+}
+.scene-title{
+  font-family:var(--display);font-size:1.6rem;font-weight:700;
+  color:#fff;margin-bottom:0.3rem;
+}
+.scene-sub{font-size:0.9rem;color:var(--muted);}
+
+/* Theory cards */
+.theory-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+  max-width:1100px;margin:0 auto 3rem;
+}
+.theory-card{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:14px;padding:1.5rem;
+  backdrop-filter:blur(12px);
+  position:relative;overflow:hidden;
+  transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s;
+}
+.theory-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(57,255,20,0.2);
+  box-shadow:0 0 30px rgba(57,255,20,0.08);
+}
+.theory-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:2px;
+}
+.theory-card.t-data::before{background:linear-gradient(90deg,var(--blue),transparent);}
+.theory-card.t-info::before{background:linear-gradient(90deg,var(--gold),transparent);}
+.theory-card.t-know::before{background:linear-gradient(90deg,var(--green),transparent);}
+
+.card-tier{
+  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;
+  text-transform:uppercase;margin-bottom:0.8rem;
+  display:flex;align-items:center;gap:0.4rem;
+}
+.t-data .card-tier{color:var(--blue);}
+.t-info .card-tier{color:var(--gold);}
+.t-know .card-tier{color:var(--green);}
+.tier-dot{width:6px;height:6px;border-radius:50%;}
+.t-data .tier-dot{background:var(--blue);}
+.t-info .tier-dot{background:var(--gold);}
+.t-know .tier-dot{background:var(--green);}
+
+.card-icon{font-size:2.2rem;margin-bottom:0.8rem;display:block;}
+.card-heading{
+  font-family:var(--display);font-size:1rem;font-weight:700;
+  color:#fff;margin-bottom:0.6rem;
+}
+.card-def{font-size:0.83rem;color:var(--muted);line-height:1.6;}
+.card-example{
+  margin-top:1rem;
+  background:rgba(0,0,0,0.3);
+  border-radius:8px;padding:0.75rem;
+  border-left:2px solid var(--panel-border);
+}
+.example-label{font-family:var(--mono);font-size:0.55rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.4rem;}
+.example-text{font-size:0.78rem;color:rgba(255,255,255,0.6);}
+.t-data .card-example{border-left-color:var(--blue);}
+.t-info .card-example{border-left-color:var(--gold);}
+.t-know .card-example{border-left-color:var(--green);}
+
+/* Hierarchy drag section */
+.dnd-section{
+  max-width:900px;margin:0 auto;
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:16px;padding:2rem;
+  backdrop-filter:blur(12px);
+}
+.dnd-intro{
+  text-align:center;margin-bottom:2rem;
+}
+.dnd-intro h3{
+  font-family:var(--display);font-size:1rem;color:#fff;margin-bottom:0.5rem;
+}
+.dnd-intro p{font-size:0.82rem;color:var(--muted);}
+
+.dnd-layout{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  gap:2rem;align-items:start;
+}
+.dnd-pool-label,
+.dnd-targets-label{
+  font-family:var(--mono);font-size:0.58rem;
+  letter-spacing:0.12em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:1rem;
+  text-align:center;
+}
+.drag-item{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;
+  padding:0.65rem 1rem;
+  margin-bottom:0.6rem;
+  font-size:0.82rem;font-family:var(--mono);
+  color:rgba(255,255,255,0.8);
+  cursor:grab;
+  transition:all 0.2s;
+  user-select:none;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.drag-item:active{cursor:grabbing;}
+.drag-item:hover{
+  background:rgba(57,255,20,0.08);
+  border-color:rgba(57,255,20,0.3);
+  color:#fff;
+  transform:translateX(3px);
+}
+.drag-item.dragging{
+  opacity:0.4;cursor:grabbing;
+}
+.drag-item.placed{
+  background:rgba(57,255,20,0.1);
+  border-color:rgba(57,255,20,0.3);
+  color:var(--green);
+  cursor:default;
+}
+.drag-handle{color:var(--muted);font-size:0.7rem;}
+
+.dnd-arrow{
+  display:flex;align-items:center;
+  font-family:var(--mono);font-size:1.2rem;
+  color:rgba(255,255,255,0.15);padding-top:2rem;
+}
+
+.drop-zone{
+  border:1px dashed rgba(255,255,255,0.12);
+  border-radius:10px;
+  padding:1.2rem;
+  margin-bottom:1rem;
+  min-height:64px;
+  transition:all 0.2s;
+  position:relative;
+}
+.drop-zone:hover,.drop-zone.drag-over{
+  border-color:rgba(57,255,20,0.4);
+  background:rgba(57,255,20,0.04);
+}
+.drop-label{
+  font-family:var(--mono);font-size:0.58rem;
+  color:var(--muted);letter-spacing:0.1em;
+  display:block;margin-bottom:0.5rem;
+}
+.drop-value-hint{
+  font-size:0.72rem;color:rgba(255,255,255,0.25);
+  font-style:italic;
+}
+.drop-zone.correct{
+  border-color:rgba(57,255,20,0.5);
+  background:rgba(57,255,20,0.06);
+}
+.drop-zone.incorrect{
+  border-color:rgba(255,68,68,0.5);
+  background:rgba(255,68,68,0.06);
+  animation:shake 0.3s ease;
+}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}};
+
+.dnd-submit-row{
+  text-align:center;margin-top:2rem;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE C — HUD PRACTICE MODE
+═══════════════════════════════════════════════════════ */
+#scene-c{
+  min-height:calc(100vh - 52px);
+  display:none;
+  padding:2.5rem 2rem;
+}
+#scene-c.active{display:block;}
+
+.hud-layout{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 280px;gap:1.5rem;
+  align-items:start;
+}
+
+/* NEI Method Ribbon */
+.nei-ribbon{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:14px;
+  padding:1.5rem;
+  backdrop-filter:blur(12px);
+  position:sticky;top:70px;
+}
+.ribbon-header{
+  font-family:var(--mono);font-size:0.58rem;
+  letter-spacing:0.15em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.ribbon-header::before{
+  content:'';width:12px;height:1px;background:var(--gold);
+}
+
+.nei-block{
+  display:flex;align-items:flex-start;gap:1rem;
+  margin-bottom:1.2rem;padding-bottom:1.2rem;
+  border-bottom:1px solid var(--panel-border);
+  opacity:0.4;transition:opacity 0.3s,transform 0.3s;
+}
+.nei-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.nei-block.detected{opacity:1;transform:translateX(3px);}
+.nei-block.detected .nei-icon{box-shadow:0 0 20px rgba(57,255,20,0.4);}
+
+.nei-icon{
+  width:40px;height:40px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:0.9rem;font-weight:900;
+  flex-shrink:0;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);
+  transition:all 0.3s;
+}
+.nei-block.n-block.detected .nei-icon{background:rgba(0,212,255,0.15);border-color:var(--blue);color:var(--blue);}
+.nei-block.e-block.detected .nei-icon{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold);}
+.nei-block.i-block.detected .nei-icon{background:rgba(57,255,20,0.15);border-color:var(--green);color:var(--green);}
+.nei-icon-default{color:var(--muted);}
+
+.nei-content{}
+.nei-letter{
+  font-family:var(--display);font-size:0.65rem;font-weight:700;
+  color:var(--muted);letter-spacing:0.1em;margin-bottom:0.2rem;
+}
+.nei-desc{font-size:0.75rem;color:var(--muted);line-height:1.4;}
+.nei-keyword{
+  margin-top:0.5rem;
+  font-family:var(--mono);font-size:0.62rem;
+  color:var(--muted);
+}
+
+.marks-indicator{
+  margin-top:1.5rem;padding-top:1.5rem;
+  border-top:1px solid var(--panel-border);
+  text-align:center;
+}
+.marks-label{font-family:var(--mono);font-size:0.58rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.5rem;}
+.marks-display{
+  font-family:var(--display);font-size:2rem;font-weight:900;
+  color:var(--gold);
+  text-shadow:0 0 20px rgba(255,215,0,0.3);
+}
+.marks-max{font-size:1rem;color:var(--muted);}
+
+/* Main Editor */
+.editor-panel{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:14px;overflow:hidden;
+  backdrop-filter:blur(12px);
+}
+.editor-header{
+  background:rgba(0,0,0,0.3);
+  border-bottom:1px solid var(--panel-border);
+  padding:1rem 1.5rem;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+}
+.question-block{}
+.q-label{
+  font-family:var(--mono);font-size:0.55rem;
+  letter-spacing:0.15em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:0.4rem;
+  display:flex;align-items:center;gap:0.4rem;
+}
+.q-label::before{content:'';width:8px;height:1px;background:var(--gold);}
+.q-text{
+  font-size:0.9rem;color:rgba(255,255,255,0.85);
+  line-height:1.5;max-width:560px;
+}
+.q-marks{
+  background:rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.25);
+  color:var(--gold);
+  font-family:var(--display);font-size:0.62rem;font-weight:700;
+  padding:0.3rem 0.75rem;border-radius:6px;
+  white-space:nowrap;flex-shrink:0;
+}
+
+.editor-body{padding:1.5rem;}
+.editor-label{
+  font-family:var(--mono);font-size:0.55rem;
+  letter-spacing:0.12em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:0.75rem;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.editor-label::before{
+  content:'›';color:var(--green);font-size:0.8rem;
+}
+
+#answer-input{
+  width:100%;
+  min-height:160px;
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;
+  padding:1.2rem;
+  color:rgba(255,255,255,0.85);
+  font-family:var(--mono);font-size:0.82rem;
+  line-height:1.7;
+  resize:vertical;
+  outline:none;
+  transition:border-color 0.2s;
+}
+#answer-input:focus{
+  border-color:rgba(57,255,20,0.3);
+  box-shadow:0 0 0 2px rgba(57,255,20,0.05);
+}
+#answer-input::placeholder{color:var(--muted);}
+
+.word-counter{
+  font-family:var(--mono);font-size:0.6rem;
+  color:var(--muted);margin-top:0.5rem;
+  display:flex;justify-content:flex-end;
+  gap:1rem;
+}
+
+.nei-hints{
+  margin-top:1.5rem;
+  background:rgba(255,215,0,0.04);
+  border:1px solid rgba(255,215,0,0.12);
+  border-radius:10px;
+  padding:1rem 1.2rem;
+}
+.hints-label{
+  font-family:var(--mono);font-size:0.58rem;
+  color:var(--gold);letter-spacing:0.1em;
+  margin-bottom:0.75rem;
+}
+.hint-row{
+  display:flex;gap:0.5rem;margin-bottom:0.5rem;
+  align-items:flex-start;
+  font-size:0.78rem;color:rgba(255,255,255,0.5);
+}
+.hint-row:last-child{margin-bottom:0;}
+.hint-chip{
+  font-family:var(--display);font-size:0.55rem;font-weight:700;
+  padding:0.1rem 0.4rem;border-radius:3px;
+  flex-shrink:0;margin-top:1px;
+}
+.hint-n{background:rgba(0,212,255,0.15);color:var(--blue);}
+.hint-e{background:rgba(255,215,0,0.15);color:var(--gold);}
+.hint-i{background:rgba(57,255,20,0.15);color:var(--green);}
+
+.submit-row{
+  margin-top:1.5rem;
+  display:flex;justify-content:flex-end;gap:1rem;
+}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:var(--muted);
+  font-family:var(--display);font-size:0.65rem;font-weight:600;
+  letter-spacing:0.1em;
+  padding:0.75rem 1.5rem;border-radius:6px;cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.08);color:var(--ink);}
+
+.btn-submit{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:linear-gradient(135deg,rgba(57,255,20,0.15),rgba(57,255,20,0.08));
+  border:1px solid rgba(57,255,20,0.4);
+  color:var(--green);
+  font-family:var(--display);font-size:0.65rem;font-weight:700;
+  letter-spacing:0.12em;
+  padding:0.75rem 1.8rem;border-radius:6px;cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-submit:hover{
+  background:linear-gradient(135deg,rgba(57,255,20,0.25),rgba(57,255,20,0.12));
+  box-shadow:0 0 20px rgba(57,255,20,0.2);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE D — SELF CALIBRATION
+═══════════════════════════════════════════════════════ */
+#scene-d{
+  min-height:calc(100vh - 52px);
+  display:none;
+  padding:2.5rem 2rem;
+}
+#scene-d.active{display:block;}
+
+.calibration-layout{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
+  align-items:start;
+}
+
+.panel-card{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:14px;
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+.panel-top{
+  border-bottom:1px solid var(--panel-border);
+  padding:1rem 1.5rem;
+}
+.panel-label{
+  font-family:var(--mono);font-size:0.58rem;
+  letter-spacing:0.15em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:0.25rem;
+}
+.panel-title{
+  font-family:var(--display);font-size:0.9rem;font-weight:700;color:#fff;
+}
+.panel-body-inner{padding:1.5rem;}
+
+/* Model Answer */
+.model-answer{
+  background:rgba(0,0,0,0.3);
+  border-radius:10px;
+  padding:1.2rem;
+  margin-bottom:1rem;
+  font-size:0.85rem;line-height:1.7;
+  color:rgba(255,255,255,0.8);
+}
+.ma-segment{
+  display:inline;
+}
+.ma-n{
+  background:rgba(0,212,255,0.15);
+  color:#7DD3FC;
+  padding:1px 3px;border-radius:3px;
+}
+.ma-e{
+  background:rgba(255,215,0,0.15);
+  color:#FFE07A;
+  padding:1px 3px;border-radius:3px;
+}
+.ma-i{
+  background:rgba(57,255,20,0.15);
+  color:#86EFAC;
+  padding:1px 3px;border-radius:3px;
+}
+
+.ma-legend{
+  display:flex;gap:1rem;
+  font-family:var(--mono);font-size:0.6rem;
+}
+.leg-item{display:flex;align-items:center;gap:0.35rem;}
+.leg-swatch{
+  width:10px;height:10px;border-radius:2px;
+}
+.leg-n{background:rgba(0,212,255,0.3);}
+.leg-e{background:rgba(255,215,0,0.3);}
+.leg-i{background:rgba(57,255,20,0.3);}
+
+/* Student answer highlight */
+.highlighter-toolbar{
+  display:flex;gap:0.5rem;
+  margin-bottom:1rem;
+}
+.hl-btn{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  padding:0.4rem 0.85rem;
+  border-radius:6px;
+  font-family:var(--mono);font-size:0.6rem;
+  font-weight:600;letter-spacing:0.05em;
+  cursor:pointer;border:1px solid transparent;
+  transition:all 0.2s;
+}
+.hl-btn.hl-green{
+  background:rgba(57,255,20,0.12);border-color:rgba(57,255,20,0.3);color:var(--green);
+}
+.hl-btn.hl-amber-btn{
+  background:rgba(255,153,0,0.12);border-color:rgba(255,153,0,0.3);color:var(--amber);
+}
+.hl-btn.hl-red-btn{
+  background:rgba(255,68,68,0.12);border-color:rgba(255,68,68,0.3);color:var(--red);
+}
+.hl-btn.active,.hl-btn:hover{filter:brightness(1.3);transform:scale(1.05);}
+.hl-btn .hl-dot{
+  width:8px;height:8px;border-radius:50%;
+}
+.hl-g-dot{background:var(--green);}
+.hl-a-dot{background:var(--amber);}
+.hl-r-dot{background:var(--red);}
+
+.student-response-area{
+  background:rgba(0,0,0,0.3);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;
+  padding:1.2rem;
+  font-size:0.85rem;line-height:1.8;
+  color:rgba(255,255,255,0.8);
+  cursor:text;
+  user-select:text;
+  min-height:100px;
+}
+
+.highlight-green{background:rgba(57,255,20,0.25);border-radius:2px;padding:1px 2px;}
+.highlight-amber{background:rgba(255,153,0,0.25);border-radius:2px;padding:1px 2px;}
+.highlight-red{background:rgba(255,68,68,0.2);border-radius:2px;padding:1px 2px;}
+
+.tagging-legend{
+  margin-top:1rem;
+  display:flex;gap:0.8rem;flex-wrap:wrap;
+}
+.tag-explain{font-family:var(--mono);font-size:0.6rem;color:var(--muted);}
+.tag-green-ex{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  background:rgba(57,255,20,0.1);color:var(--green);
+  padding:0.15rem 0.4rem;border-radius:3px;
+  font-family:var(--mono);font-size:0.58rem;
+}
+.tag-amber-ex{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  background:rgba(255,153,0,0.1);color:var(--amber);
+  padding:0.15rem 0.4rem;border-radius:3px;
+  font-family:var(--mono);font-size:0.58rem;
+}
+.tag-red-ex{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  background:rgba(255,68,68,0.1);color:var(--red);
+  padding:0.15rem 0.4rem;border-radius:3px;
+  font-family:var(--mono);font-size:0.58rem;
+}
+
+/* Vulnerability Alert */
+.vuln-alert{
+  display:none;
+  background:rgba(255,68,68,0.08);
+  border:1px solid rgba(255,68,68,0.3);
+  border-radius:10px;padding:1.2rem;
+  margin-top:1rem;
+  animation:fadeIn 0.4s ease;
+}
+.vuln-alert.visible{display:block;}
+.vuln-header{
+  display:flex;align-items:center;gap:0.6rem;
+  margin-bottom:0.5rem;
+}
+.vuln-icon{font-size:1.2rem;}
+.vuln-title{
+  font-family:var(--display);font-size:0.72rem;font-weight:700;
+  color:var(--red);letter-spacing:0.05em;
+}
+.vuln-msg{font-size:0.8rem;color:rgba(255,255,255,0.6);line-height:1.5;}
+.vuln-tip{
+  margin-top:0.75rem;
+  background:rgba(255,215,0,0.06);
+  border-left:2px solid var(--gold);
+  padding:0.75rem;border-radius:4px;
+  font-size:0.78rem;color:rgba(255,255,255,0.55);
+  font-style:italic;
+}
+
+/* Score breakdown */
+.score-panel{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:14px;padding:1.5rem;
+  backdrop-filter:blur(12px);
+  margin-top:1.5rem;
+  grid-column:span 2;
+}
+.score-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.score-title{
+  font-family:var(--display);font-size:1rem;font-weight:700;color:#fff;
+}
+.score-chips{display:flex;gap:0.75rem;}
+.score-chip{
+  font-family:var(--display);font-size:0.65rem;font-weight:700;
+  padding:0.3rem 0.75rem;border-radius:20px;
+  display:flex;align-items:center;gap:0.35rem;
+}
+.chip-n{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:var(--blue);}
+.chip-e{background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);color:var(--gold);}
+.chip-i{background:rgba(57,255,20,0.1);border:1px solid rgba(57,255,20,0.3);color:var(--green);}
+.chip-dot{width:6px;height:6px;border-radius:50%;}
+.chip-n .chip-dot{background:var(--blue);}
+.chip-e .chip-dot{background:var(--gold);}
+.chip-i .chip-dot{background:var(--green);}
+
+.score-bar-row{
+  display:flex;align-items:center;gap:1rem;margin-bottom:0.9rem;
+}
+.bar-label{
+  font-family:var(--mono);font-size:0.6rem;
+  color:var(--muted);width:80px;flex-shrink:0;
+}
+.bar-track{
+  flex:1;height:8px;background:rgba(255,255,255,0.05);
+  border-radius:4px;overflow:hidden;
+}
+.bar-fill{
+  height:100%;border-radius:4px;
+  transition:width 1s cubic-bezier(.22,1,.36,1);
+  width:0%;
+}
+.bar-fill.n-fill{background:linear-gradient(90deg,var(--blue),#7DD3FC);}
+.bar-fill.e-fill{background:linear-gradient(90deg,var(--gold),#FFE07A);}
+.bar-fill.i-fill{background:linear-gradient(90deg,var(--green),#86EFAC);}
+.bar-pct{
+  font-family:var(--mono);font-size:0.6rem;
+  color:var(--muted);width:35px;text-align:right;flex-shrink:0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE E — BADGE + COMPLETION
+═══════════════════════════════════════════════════════ */
+#scene-e{
+  min-height:calc(100vh - 52px);
+  display:none;
+  align-items:center;justify-content:center;
+  padding:3rem 2rem;text-align:center;
+}
+#scene-e.active{display:flex;flex-direction:column;}
+
+.completion-header{
+  font-family:var(--display);font-size:0.6rem;
+  letter-spacing:0.2em;color:var(--green);
+  text-transform:uppercase;margin-bottom:2rem;
+  animation:fadeIn 0.5s ease both;
+}
+
+/* 3D rotating badge */
+.badge-3d{
+  width:200px;height:200px;
+  margin:0 auto 2.5rem;
+  animation:fadeIn 0.6s 0.2s ease both,badgeSpin 8s linear infinite;
+  perspective:600px;
+}
+@keyframes badgeSpin{
+  0%{filter:drop-shadow(0 0 20px rgba(57,255,20,0.4));}
+  25%{filter:drop-shadow(0 0 40px rgba(255,215,0,0.6));}
+  50%{filter:drop-shadow(0 0 20px rgba(57,255,20,0.4));}
+  75%{filter:drop-shadow(0 0 40px rgba(0,212,255,0.5));}
+  100%{filter:drop-shadow(0 0 20px rgba(57,255,20,0.4));}
+}
+.badge-hex{
+  width:200px;height:200px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,#1a3a1a,#0D2B0D);
+  border:3px solid var(--green);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  position:relative;
+  animation:badgeRotate3d 6s ease-in-out infinite;
+}
+@keyframes badgeRotate3d{
+  0%,100%{transform:rotateY(0deg);}
+  25%{transform:rotateY(15deg) rotateX(5deg);}
+  50%{transform:rotateY(0deg);}
+  75%{transform:rotateY(-15deg) rotateX(-5deg);}
+}
+.badge-hex::before{
+  content:'';position:absolute;inset:-3px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:linear-gradient(135deg,var(--green),var(--gold),var(--green));
+  z-index:-1;
+  animation:borderGlow 3s ease-in-out infinite;
+}
+@keyframes borderGlow{
+  0%,100%{opacity:1;}50%{opacity:0.6;}
+}
+.badge-icon{font-size:4rem;line-height:1;margin-bottom:0.4rem;}
+.badge-text-top{font-family:var(--display);font-size:0.5rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;}
+.badge-text-main{font-family:var(--display);font-size:0.65rem;font-weight:700;color:var(--green);letter-spacing:0.05em;text-shadow:0 0 10px var(--green);}
+
+.completion-title{
+  font-family:var(--display);font-size:2.2rem;font-weight:900;
+  color:#fff;margin-bottom:0.5rem;
+  animation:fadeIn 0.6s 0.4s ease both;
+}
+.completion-title span{
+  background:linear-gradient(135deg,var(--green),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.completion-sub{
+  font-size:0.9rem;color:var(--muted);margin-bottom:2.5rem;
+  animation:fadeIn 0.6s 0.5s ease both;
+}
+
+.score-final{
+  display:flex;gap:1.5rem;justify-content:center;
+  margin-bottom:2.5rem;
+  animation:fadeIn 0.6s 0.6s ease both;
+}
+.sf-item{
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:12px;padding:1.2rem 2rem;
+  backdrop-filter:blur(12px);text-align:center;
+}
+.sf-num{
+  font-family:var(--display);font-size:2rem;font-weight:900;
+  color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.4);
+}
+.sf-label{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;letter-spacing:0.05em;}
+
+.export-btn{
+  display:inline-flex;align-items:center;gap:0.75rem;
+  background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,215,0,0.06));
+  border:1px solid rgba(255,215,0,0.35);color:var(--gold);
+  font-family:var(--display);font-size:0.65rem;font-weight:700;
+  letter-spacing:0.1em;padding:0.85rem 2rem;border-radius:6px;cursor:pointer;
+  transition:all 0.2s;
+  animation:fadeIn 0.6s 0.8s ease both;
+}
+.export-btn:hover{
+  box-shadow:0 0 20px rgba(255,215,0,0.2);
+  background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,215,0,0.1));
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE NAV (bottom nav)
+═══════════════════════════════════════════════════════ */
+.scene-nav{
+  position:fixed;bottom:1.5rem;right:1.5rem;
+  display:flex;gap:0.5rem;z-index:200;
+}
+.nav-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.15);
+  cursor:pointer;transition:all 0.2s;
+}
+.nav-dot.active{
+  background:var(--green);border-color:var(--green);
+  box-shadow:0 0 10px var(--green);
+  width:24px;border-radius:5px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MISC QUIZ / FLASHCARD / DISCUSSION — Scene B extras
+═══════════════════════════════════════════════════════ */
+.quiz-section{
+  max-width:900px;margin:2rem auto 0;
+}
+.quiz-title{
+  font-family:var(--display);font-size:0.9rem;font-weight:700;color:#fff;
+  margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:0.7rem;
+}
+.quiz-title::before{
+  content:'';display:inline-block;width:4px;height:20px;
+  background:linear-gradient(var(--green),var(--gold));border-radius:2px;
+}
+.quiz-card{
+  background:var(--panel-bg);border:1px solid var(--panel-border);
+  border-radius:12px;padding:1.2rem 1.5rem;
+  margin-bottom:0.75rem;
+  backdrop-filter:blur(12px);
+  transition:border-color 0.2s;
+}
+.quiz-q{font-size:0.88rem;color:rgba(255,255,255,0.8);margin-bottom:0.75rem;}
+.quiz-options{display:flex;flex-direction:column;gap:0.5rem;}
+.q-opt{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:7px;padding:0.6rem 1rem;
+  font-size:0.82rem;color:var(--muted);
+  cursor:pointer;transition:all 0.15s;
+  display:flex;align-items:center;gap:0.6rem;
+}
+.q-opt:hover{
+  background:rgba(57,255,20,0.06);
+  border-color:rgba(57,255,20,0.2);color:var(--ink);
+}
+.q-opt.correct{
+  background:rgba(57,255,20,0.1);
+  border-color:rgba(57,255,20,0.4);color:var(--green);
+}
+.q-opt.incorrect{
+  background:rgba(255,68,68,0.08);
+  border-color:rgba(255,68,68,0.3);color:var(--red);
+}
+.q-opt.disabled{cursor:default;pointer-events:none;}
+.opt-letter{
+  width:22px;height:22px;border-radius:5px;
+  background:rgba(255,255,255,0.05);
+  font-family:var(--mono);font-size:0.65rem;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.q-feedback{
+  margin-top:0.6rem;padding:0.6rem 0.9rem;
+  border-radius:7px;font-size:0.78rem;line-height:1.5;
+  display:none;
+}
+.q-feedback.correct-fb{
+  display:block;background:rgba(57,255,20,0.07);
+  border:1px solid rgba(57,255,20,0.2);color:var(--green);
+}
+.q-feedback.incorrect-fb{
+  display:block;background:rgba(255,68,68,0.07);
+  border:1px solid rgba(255,68,68,0.2);color:var(--red);
+}
+
+/* scene tabs within B */
+.sub-tabs{
+  display:flex;gap:0.5rem;
+  max-width:1100px;margin:0 auto 2rem;
+  background:rgba(0,0,0,0.2);
+  border-radius:10px;padding:0.4rem;
+  border:1px solid var(--panel-border);
+}
+.sub-tab{
+  flex:1;padding:0.6rem;border-radius:7px;
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;
+  color:var(--muted);cursor:pointer;text-align:center;
+  transition:all 0.2s;background:transparent;border:none;
+  text-transform:uppercase;
+}
+.sub-tab.active{
+  background:rgba(57,255,20,0.1);
+  color:var(--green);
+  border:1px solid rgba(57,255,20,0.25);
+  box-shadow:0 0 10px rgba(57,255,20,0.1);
+}
+.sub-content{display:none;}
+.sub-content.active{display:block;}
+
+/* Flashcards */
+.flashcard-grid{
+  max-width:900px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
+}
+.flashcard{
+  perspective:600px;cursor:pointer;height:140px;
+}
+.fc-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform 0.5s cubic-bezier(.22,1,.36,1);
+}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-front,.fc-back{
+  position:absolute;inset:0;
+  background:var(--panel-bg);
+  border:1px solid var(--panel-border);
+  border-radius:12px;
+  backface-visibility:hidden;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:1rem;text-align:center;
+}
+.fc-back{transform:rotateY(180deg);}
+.fc-front-label{
+  font-family:var(--mono);font-size:0.55rem;
+  color:var(--gold);letter-spacing:0.12em;
+  margin-bottom:0.5rem;
+}
+.fc-front-q{font-size:0.85rem;color:rgba(255,255,255,0.8);}
+.fc-back-label{
+  font-family:var(--mono);font-size:0.55rem;
+  color:var(--green);letter-spacing:0.12em;
+  margin-bottom:0.5rem;
+}
+.fc-back-a{font-size:0.8rem;color:rgba(255,255,255,0.75);}
+
+/* Solo classify task */
+.classify-task{
+  max-width:900px;margin:0 auto;
+}
+.classify-items-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
+  margin-bottom:2rem;
+}
+.classify-item{
+  background:var(--panel-bg);border:1px solid var(--panel-border);
+  border-radius:10px;padding:1rem;
+  display:flex;align-items:center;gap:0.75rem;
+}
+.ci-text{flex:1;font-size:0.82rem;color:rgba(255,255,255,0.7);}
+.ci-select{
+  background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;padding:0.35rem 0.6rem;
+  color:var(--ink);font-family:var(--mono);font-size:0.62rem;
+  outline:none;cursor:pointer;min-width:120px;
+}
+.ci-select:focus{border-color:rgba(57,255,20,0.3);}
+
+.classify-check-row{text-align:center;}
+.classify-result-item{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  margin:0.3rem;padding:0.3rem 0.75rem;border-radius:20px;
+  font-family:var(--mono);font-size:0.65rem;
+}
+.cr-correct{background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.3);}
+.cr-incorrect{background:rgba(255,68,68,0.1);color:var(--red);border:1px solid rgba(255,68,68,0.3);}
+
+/* Discussion prompts */
+.discussion-grid{
+  max-width:900px;margin:0 auto;
+  display:flex;flex-direction:column;gap:1rem;
+}
+.dp-card{
+  background:var(--panel-bg);border:1px solid var(--panel-border);
+  border-radius:12px;padding:1.2rem 1.5rem;
+  display:flex;gap:1rem;align-items:flex-start;
+}
+.dp-num{
+  width:32px;height:32px;border-radius:7px;
+  background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);
+  font-family:var(--display);font-size:0.7rem;font-weight:700;
+  color:var(--gold);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.dp-prompt{font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.55;}
+
+/* ─── TOOLTIPS ─── */
+.tooltip-trigger{
+  border-bottom:1px dashed var(--muted);cursor:help;position:relative;
+}
+
+/* ─── SCREEN LOCK OVERLAY ─── */
+.lock-overlay{
+  position:fixed;inset:0;
+  background:rgba(13,17,23,0.95);backdrop-filter:blur(20px);
+  z-index:500;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  animation:fadeIn 0.3s ease;
+}
+.lock-overlay.hidden{display:none;}
+.lock-icon{font-size:3rem;margin-bottom:1rem;}
+.lock-title{
+  font-family:var(--display);font-size:1.2rem;font-weight:700;
+  color:#fff;margin-bottom:0.5rem;
+}
+.lock-msg{font-size:0.85rem;color:var(--muted);max-width:380px;text-align:center;}
+</style>
+<style id="msm-breadcrumb-style">.msm-breadcrumb{font-family:monospace;font-size:11px;padding:10px 20px 0;color:rgba(232,237,243,0.65);letter-spacing:0.06em;}.msm-breadcrumb a{color:rgba(57,255,20,0.85);text-decoration:none;}.msm-breadcrumb a:hover{text-decoration:underline;}</style><style id="msm-nextstep-style">.msm-next-step{margin:40px 20px 20px;padding:20px 24px;background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.25);border-radius:4px;font-family:monospace;}.msm-next-step .ns-label{font-size:10px;letter-spacing:0.1em;color:rgba(232,237,243,0.65);margin-bottom:8px;}.msm-next-step .ns-link{display:inline-block;color:#39FF14;text-decoration:none;font-size:13px;letter-spacing:0.06em;}.msm-next-step .ns-link:hover{text-decoration:underline;}</style></head>
+<body>
+<div class="msm-breadcrumb" aria-label="Breadcrumb"><a href="https://devontallman.github.io/mark-scheme-method-pilot/topics.html">&larr; TOPICS</a> &rsaquo; CA 6.4 &rsaquo; Field Training</div>
+
+
+<!-- ─── HEADER ─────────────────────────────────────────── -->
+<header class="header">
+  <div class="header-brand">The Mark Scheme Method® // Field Training 6.4</div>
+  <div class="header-status">
+    <div class="status-item">
+      <span class="status-dot"></span>SYSTEM ONLINE
+    </div>
+    <div class="status-item">
+      STATION: <span id="station-label" style="color:var(--gold);margin-left:4px;">BRIEFING</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;">
+      <div class="status-item">PROGRESS</div>
+      <div class="progress-bar"><div class="progress-fill" id="main-progress" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ─── SCENE A: OPERATIONAL BRIEFING ─────────────────── -->
+<section id="scene-a" class="scene active">
+  <div class="briefing-bg-fx"></div>
+  <div class="briefing-container">
+    <div class="mission-badge">⬡ FIELD TRAINING 6.4 — OPERATIONAL BRIEFING ⬡</div>
+    
+    <div class="avatar-frame">
+      <div class="avatar-hex">
+        <div class="avatar-inner">🤖</div>
+      </div>
+      <div class="avatar-ring"></div>
+    </div>
+
+    <h1 class="briefing-title">DATA, INFORMATION<br>& <span>KNOWLEDGE</span></h1>
+    <p class="briefing-sub">AXIOM-7 TACTICAL BRIEF // CONTENT AREA 6.4 // CLEARANCE: STANDARD</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="t-dot t-red"></span>
+        <span class="t-dot t-amber"></span>
+        <span class="t-dot t-green"></span>
+        <span class="terminal-label">AXIOM-7 // LIVE CHANNEL</span>
+      </div>
+      <div class="terminal-body" id="terminal-transcript"></div>
+    </div>
+
+    <div class="briefing-stats">
+      <div class="stat-card">
+        <div class="stat-num">37/100</div>
+        <div class="stat-label">Average T-Level Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green);text-shadow:0 0 15px rgba(57,255,20,0.4);">6</div>
+        <div class="stat-label">Training Stations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--blue);">N·E·I</div>
+        <div class="stat-label">The Method Framework</div>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startMission()">
+      <span>INITIATE FIELD TRAINING</span>
+      <span class="btn-arrow">→</span>
+    </button>
+  </div>
+</section>
+
+<!-- ─── SCENE B: INTERACTIVE LEARNING ─────────────────── -->
+<section id="scene-b" class="scene">
+  <div class="scene-header">
+    <div class="scene-badge">&#x2B21; STATION 01 — THEORY + PRACTICE</div>
+    <h2 class="scene-title">Data Security and Management</h2>
+    <p class="scene-sub">Master the CIA triad, GDPR, encryption and access controls.</p>
+  </div>
+  <div class="theory-grid">
+    <div class="theory-card">
+      <div class="card-tier"><span class="tier-dot" style="background:var(--hl-red,#FF3B3B)"></span>THE CIA TRIAD</div>
+      <div class="card-icon">&#x1F6E1;&#xFE0F;</div>
+      <div class="card-heading">Three Security Goals</div>
+      <div class="card-def">Confidentiality — only authorised users can access data. Integrity — data is accurate and has not been tampered with. Availability — data is accessible to authorised users when needed. Every security measure should be evaluated against which CIA goal it protects.</div>
+      <div class="card-example"><span class="example-label">EXAM TIP</span><span class="example-text">Ransomware primarily attacks Availability — not Confidentiality</span></div>
+    </div>
+    <div class="theory-card">
+      <div class="card-tier"><span class="tier-dot" style="background:var(--hl-gold,#FFD700)"></span>GDPR PRINCIPLES</div>
+      <div class="card-icon">&#x1F4DC;</div>
+      <div class="card-heading">Name the Specific Principle</div>
+      <div class="card-def">Key principles: Lawfulness/fairness/transparency — tell people what you collect. Purpose limitation — only use data for its stated purpose. Data minimisation — collect only what is necessary. Storage limitation — do not keep data longer than needed. Accuracy — keep data up to date.</div>
+      <div class="card-example"><span class="example-label">EXAMINER TIP</span><span class="example-text">"Follow GDPR" scores zero — name the specific principle with an example</span></div>
+    </div>
+    <div class="theory-card">
+      <div class="card-tier"><span class="tier-dot" style="background:var(--hl-green,#39FF14)"></span>ENCRYPTION</div>
+      <div class="card-icon">&#x1F512;</div>
+      <div class="card-heading">Converting Data to Ciphertext</div>
+      <div class="card-def">Encryption transforms readable data into unreadable ciphertext — only the holder of the correct key can decrypt it. Symmetric: same key encrypts and decrypts (fast, for stored data). Asymmetric: public key encrypts, private key decrypts (secure transmission, HTTPS/TLS). Always name the specific threat encryption prevents.</div>
+      <div class="card-example"><span class="example-label">KEY TERM</span><span class="example-text">Encryption in transit (TLS) vs encryption at rest (database encryption)</span></div>
+    </div>
+    <div class="theory-card">
+      <div class="card-tier"><span class="tier-dot" style="background:var(--hl-blue,#38BDF8)"></span>ACCESS CONTROLS</div>
+      <div class="card-icon">&#x1F511;</div>
+      <div class="card-heading">Principle of Least Privilege</div>
+      <div class="card-def">Role-Based Access Control (RBAC): access rights assigned by job role. Principle of least privilege: users should only have access to the minimum data required for their role. This limits the blast radius of any breach. Example: a sales rep can view customer contacts but cannot access HR salary data.</div>
+      <div class="card-example"><span class="example-label">BREACH CONSEQUENCE</span><span class="example-text">ICO must be notified within 72 hours — failure is itself a GDPR violation</span></div>
+    </div>
+  </div>
+  <div class="dnd-section">
+    <div class="dnd-intro">RAPID RECALL — Flip each card to check your knowledge</div>
+    <div class="flashcard-grid">
+      <div class="flashcard"><div class="fc-inner"><div class="fc-front"><div class="fc-front-label">TERM</div><div class="fc-front-q">Confidentiality (CIA)</div></div><div class="fc-back"><div class="fc-back-label">DEFINITION</div><div class="fc-back-a">Only authorised users can access data. Protected by encryption, access controls and authentication.</div></div></div></div>
+      <div class="flashcard"><div class="fc-inner"><div class="fc-front"><div class="fc-front-label">TERM</div><div class="fc-front-q">Availability (CIA)</div></div><div class="fc-back"><div class="fc-back-label">DEFINITION</div><div class="fc-back-a">Data is accessible to authorised users when needed. Threatened by ransomware, DDoS attacks and system failures.</div></div></div></div>
+      <div class="flashcard"><div class="fc-inner"><div class="fc-front"><div class="fc-front-label">TERM</div><div class="fc-front-q">Purpose Limitation (GDPR)</div></div><div class="fc-back"><div class="fc-back-label">DEFINITION</div><div class="fc-back-a">Data must only be used for the specific purpose for which it was collected. Using email addresses for marketing when collected for order confirmations violates this principle.</div></div></div></div>
+      <div class="flashcard"><div class="fc-inner"><div class="fc-front"><div class="fc-front-label">TERM</div><div class="fc-front-q">Principle of Least Privilege</div></div><div class="fc-back"><div class="fc-back-label">DEFINITION</div><div class="fc-back-a">Users should only have access to the minimum data and systems required for their specific role, limiting the damage any breach or insider threat can cause.</div></div></div></div>
+      <div class="flashcard"><div class="fc-inner"><div class="fc-front"><div class="fc-front-label">TERM</div><div class="fc-front-q">Encryption in Transit</div></div><div class="fc-back"><div class="fc-back-label">DEFINITION</div><div class="fc-back-a">Protecting data as it moves across networks using protocols like TLS/HTTPS. Intercepted traffic appears as unreadable ciphertext without the decryption key.</div></div></div></div>
+      <div class="flashcard"><div class="fc-inner"><div class="fc-front"><div class="fc-front-label">TERM</div><div class="fc-front-q">Data Breach (GDPR)</div></div><div class="fc-back"><div class="fc-back-label">DEFINITION</div><div class="fc-back-a">An incident where personal data is accessed, disclosed or lost without authorisation. Must be reported to the ICO within 72 hours if likely to risk individuals.</div></div></div></div>
+    </div>
+  </div>
+</section>
+<section id="scene-c" class="scene">
+  <div class="scene-header">
+    <div class="scene-badge" style="color:var(--green);background:var(--green-dim);border-color:rgba(57,255,20,0.25);">⬡ STATION 05 — HUD PRACTICE MODE</div>
+    <h2 class="scene-title">N·E·I Framework — Live Application</h2>
+    <p class="scene-sub">Construct a full 3-mark answer. Your HUD detects what you've included.</p>
+  </div>
+
+  <div class="hud-layout">
+    <!-- Editor -->
+    <div class="editor-panel">
+      <div class="editor-header">
+        <div class="question-block">
+          <div class="q-label">EXAM QUESTION // 6.1.2</div>
+          <div class="q-text">An e-commerce company uses targeted marketing based on customer purchase history. Explain one way this adds value to the business.</div>
+        </div>
+        <div class="q-marks">3 MARKS</div>
+      </div>
+      <div class="editor-body">
+        <div class="editor-label">YOUR RESPONSE</div>
+        <textarea id="answer-input" placeholder="Begin your answer here... Include the technique name, how it works, and the business impact." oninput="analyseAnswer(this.value)"></textarea>
+        <div class="word-counter">
+          <span>WORDS: <span id="word-count">0</span></span>
+          <span>CHARS: <span id="char-count">0</span></span>
+        </div>
+
+        <div class="nei-hints">
+          <div class="hints-label">◈ N·E·I FRAMEWORK GUIDE</div>
+          <div class="hint-row">
+            <span class="hint-chip hint-n">N</span>
+            Name the technique — e.g. "Predictive modelling" or "Recommendation algorithms"
+          </div>
+          <div class="hint-row">
+            <span class="hint-chip hint-e">E</span>
+            Explain the mechanism — how does the system use purchase history?
+          </div>
+          <div class="hint-row">
+            <span class="hint-chip hint-i">I</span>
+            State the impact — what measurable business value does this create?
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button class="btn-secondary" onclick="clearAnswer()">✕ Clear</button>
+          <button class="btn-submit" onclick="submitAnswer()">Submit for Calibration →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEI Ribbon -->
+    <div class="nei-ribbon">
+      <div class="ribbon-header">◈ METHOD RIBBON</div>
+
+      <div class="nei-block n-block" id="hud-n">
+        <div class="nei-icon"><span class="nei-icon-default">N</span></div>
+        <div class="nei-content">
+          <div class="nei-letter">NAME</div>
+          <div class="nei-desc">Technical term or tool identified</div>
+          <div class="nei-keyword" id="hud-n-kw">— not yet detected</div>
+        </div>
+      </div>
+
+      <div class="nei-block e-block" id="hud-e">
+        <div class="nei-icon"><span class="nei-icon-default">E</span></div>
+        <div class="nei-content">
+          <div class="nei-letter">EXPLAIN</div>
+          <div class="nei-desc">Mechanism described — how it works</div>
+          <div class="nei-keyword" id="hud-e-kw">— not yet detected</div>
+        </div>
+      </div>
+
+      <div class="nei-block i-block" id="hud-i">
+        <div class="nei-icon"><span class="nei-icon-default">I</span></div>
+        <div class="nei-content">
+          <div class="nei-letter">IMPACT</div>
+          <div class="nei-desc">Business value stated — why it matters</div>
+          <div class="nei-keyword" id="hud-i-kw">— not yet detected</div>
+        </div>
+      </div>
+
+      <div class="marks-indicator">
+        <div class="marks-label">PROJECTED MARKS</div>
+        <div class="marks-display"><span id="projected-marks">0</span><span class="marks-max">/3</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SCENE D: SELF-CALIBRATION TOOL ────────────────── -->
+<section id="scene-d" class="scene">
+  <div class="scene-header">
+    <div class="scene-badge">&#x2B21; STATION 04 — TEAM DEBRIEF</div>
+    <h2 class="scene-title">Discussion — Data Security and Management</h2>
+    <p class="scene-sub">Discuss with your class. Name specific principles — never give generic answers.</p>
+  </div>
+  <div class="discussion-grid">
+    <div class="dp-card"><div class="dp-num">01</div><div class="dp-prompt">A healthcare app stores patient medical records in the cloud and transmits data between the app and the server. Identify one specific threat to each element of the CIA triad for this system. For each threat, name one security measure that would protect against it and explain the specific protection it provides.</div></div>
+    <div class="dp-card"><div class="dp-num">02</div><div class="dp-prompt">A large retailer uses customer loyalty card data for two purposes: to send customers personalised discount offers, and to sell anonymised purchasing trend data to FMCG brands. Which GDPR principles are relevant here? Is either use a potential violation? Justify your answer with reference to specific GDPR principles.</div></div>
+    <div class="dp-card"><div class="dp-num">03</div><div class="dp-prompt">Your school holds data about students, staff, finances and safeguarding. Design a role-based access control policy for three different roles in the school (e.g. teacher, headteacher, finance officer). For each role, specify what data they should have access to, and explain why denying them access to other data protects the school under the principle of least privilege and GDPR.</div></div>
+  </div>
+</section>
+<section id="scene-e" class="scene">
+  <div class="completion-header">◈ FIELD TRAINING 6.4 // MISSION COMPLETE ◈</div>
+  
+  <div class="badge-3d">
+    <div class="badge-hex">
+      <div class="badge-icon">🏗️</div>
+      <div class="badge-text-top">FIELD READY</div>
+      <div class="badge-text-main">6.4</div>
+    </div>
+  </div>
+
+  <h1 class="completion-title">FIELD READY <span>611</span> BADGE AWARDED</h1>
+  <p class="completion-sub">You have demonstrated understanding of the Data-Information-Knowledge hierarchy and applied the N·E·I framework.</p>
+
+  <div class="score-final">
+    <div class="sf-item">
+      <div class="sf-num" id="final-score-display">—</div>
+      <div class="sf-label">NEI Score</div>
+    </div>
+    <div class="sf-item">
+      <div class="sf-num" style="color:var(--green);text-shadow:0 0 20px rgba(57,255,20,0.4);">6/6</div>
+      <div class="sf-label">Stations Cleared</div>
+    </div>
+    <div class="sf-item">
+      <div class="sf-num" style="color:var(--blue);">6.4</div>
+      <div class="sf-label">Topic Unlocked</div>
+    </div>
+  </div>
+
+  <button class="export-btn" onclick="exportReport()">
+    📄 Export Mission Report PDF
+  </button>
+
+  <div style="margin-top:2rem;font-family:var(--mono);font-size:0.65rem;color:var(--muted);">
+    LAUNCH MODULE ACTIVATED ON TOPIC INDEX // NEXT: 6.1.2 — Market Trends &amp; Predictive Modelling →
+  </div>
+</section>
+
+<!-- Scene nav dots -->
+<div class="scene-nav" id="scene-nav">
+  <div class="nav-dot active" data-scene="a" title="Briefing" onclick="goToScene('a')"></div>
+  <div class="nav-dot" data-scene="b" title="Theory" onclick="goToScene('b')"></div>
+  <div class="nav-dot" data-scene="c" title="Practice" onclick="goToScene('c')"></div>
+  <div class="nav-dot" data-scene="d" title="Calibration" onclick="goToScene('d')"></div>
+  <div class="nav-dot" data-scene="e" title="Complete" onclick="goToScene('e')"></div>
+</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────
+const state = {
+  currentScene: 'a',
+  activeHighlighter: null,
+  taggedCategories: { name: false, explain: false, impact: false },
+  submittedAnswer: '',
+  quizScore: 0,
+  quizAnswered: 0,
+  neiScore: { n: 0, e: 0, i: 0 },
+  dndPlacements: {},
+};
+
+// ─── SCENE NAVIGATION ────────────────────────────────
+function goToScene(id) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  document.getElementById('scene-' + id).classList.add('active');
+  state.currentScene = id;
+  updateProgress();
+  window.scrollTo(0,0);
+  document.querySelectorAll('.nav-dot').forEach(d => {
+    d.classList.toggle('active', d.dataset.scene === id);
+  });
+}
+
+// ─── PROGRESS ─────────────────────────────────────────
+const sceneOrder = ['a','b','c','d','e'];
+const stationLabels = {a:'BRIEFING',b:'THEORY',c:'HUD PRACTICE',d:'CALIBRATION',e:'COMPLETE'};
+function updateProgress() {
+  const idx = sceneOrder.indexOf(state.currentScene);
+  const pct = (idx / (sceneOrder.length - 1)) * 100;
+  document.getElementById('main-progress').style.width = pct + '%';
+  document.getElementById('station-label').textContent = stationLabels[state.currentScene] || '';
+}
+
+// ─── SCENE A: TYPEWRITER BRIEFING ───────────────────
+const briefingScript = [
+  {speaker:'AXIOM-7',text:'OPERATIONAL BRIEFING INITIATED. Content Area 6.4 — Data Security and Management.'},
+  {speaker:'AXIOM-7',text:'THREAT ASSESSMENT: Naming "GDPR" without a specific principle scores zero in every series. Examiners want the principle name and a concrete example. "Data minimisation — only collecting what is necessary for the stated purpose" scores. "Follow GDPR" does not.'},
+  {speaker:'AXIOM-7',text:'MISSION PARAMETERS: Apply the CIA triad to security scenarios. Name specific GDPR principles. Explain encryption mechanisms. Apply the principle of least privilege to access control questions.'},
+  {speaker:'AXIOM-7',text:'FIELD INTELLIGENCE: For encryption questions, the Impact mark requires naming what specific threat is prevented. "Keeps data safe" scores zero. "Ensures intercepted data cannot be read without the private key, preventing man-in-the-middle attacks on customer payment data" scores full marks.'},
+  {speaker:'AXIOM-7',text:'DEPLOY WHEN READY.'}
+];
+
+function typeTerminal() {
+  const container = document.getElementById('terminal-transcript');
+  briefingScript.forEach((line, i) => {
+    const timeout = line.delay || (i * 1800);
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'terminal-line';
+      el.innerHTML = `<span class="prompt">${line.prompt} ›</span>${line.text}`;
+      container.appendChild(el);
+    }, timeout);
+  });
+}
+
+// Add color class for blue
+document.head.insertAdjacentHTML('beforeend', '<style>.hl-blue{color:var(--blue);}</style>');
+
+function startMission() {
+  goToScene('b');
+}
+
+// ─── SCENE B: SUB-TAB NAVIGATION ─────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.sub-tab').forEach((t,i) => {
+    const ids = ['theory','flashcards','quiz','discuss','classify','dnd'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+  document.querySelectorAll('.sub-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('sub-' + id).classList.add('active');
+}
+
+// ─── QUIZ ─────────────────────────────────────────────
+const quizData = [
+  {q:'A ransomware attack encrypts a hospital's patient records, making them inaccessible to clinical staff until a ransom is paid. Which element of the CIA triad has primarily been compromised?',opts:['Confidentiality — unauthorised users accessed patient data','Integrity — patient records have been modified by the attacker','Availability — authorised staff can no longer access data they need','All three elements are equally compromised'],correct:2,feedback:'CORRECT — Ransomware primarily attacks Availability. The data may not have been read or modified — but clinical staff cannot access it when needed. Denying access is what creates the leverage for a ransom demand.'},
+  {q:'An e-commerce business collects customer email addresses to send order confirmations, then uses those addresses to send weekly marketing newsletters without asking for additional permission. Which GDPR principle has been violated?',opts:['Data minimisation — the business collected more data than needed','Purpose limitation — data is used for a different purpose than the stated reason for collection','Storage limitation — the business has kept the data for too long','Accuracy — the email addresses may have become inaccurate'],correct:1,feedback:'CORRECT — Purpose limitation requires that data is only used for the purpose it was collected for. Emails collected for order confirmations cannot be used for marketing without separate, explicit consent.'},
+  {q:'A bank uses TLS encryption for all online banking sessions. A hacker intercepts the network traffic between a customer's browser and the bank's server. What does TLS encryption prevent?',opts:['The hacker accessing the bank's internal database directly','The customer's browser loading malware during the session','The intercepted network traffic being read — it appears as unreadable ciphertext without the decryption key','The hacker knowing that a banking session is taking place'],correct:2,feedback:'CORRECT — TLS (encryption in transit) means that even if traffic is intercepted, it cannot be read without the private decryption key. The hacker sees only ciphertext, protecting login credentials and transaction data from man-in-the-middle attacks.'},
+  {q:'A financial services firm implements role-based access control. A customer service agent can view account balances but cannot initiate transfers. A senior manager can do both. What security principle does this implement?',opts:['Encryption — data is protected by converting it to ciphertext based on role','Principle of least privilege — each role only has the minimum access required for their function','Data minimisation — the system only stores data relevant to each role','Two-factor authentication — two access levels are required for every action'],correct:1,feedback:'CORRECT — Limiting each role to only the permissions they need is the principle of least privilege. If the agent's account is compromised, the attacker cannot initiate transfers — limiting the blast radius of any breach.'},
+  {q:'A retailer suffers a data breach exposing 500,000 customer payment card numbers. Under GDPR, what must the organisation do within 72 hours of discovering the breach?',opts:['Pay compensation directly to all 500,000 affected customers','Report the breach to the Information Commissioner's Office (ICO)','Permanently delete all customer data to prevent further exposure','Issue a public press release with full breach details'],correct:1,feedback:'CORRECT — GDPR Article 33 requires organisations to notify the ICO within 72 hours of becoming aware of a personal data breach likely to risk individuals. Failure to report within the deadline is itself a GDPR violation.'}
+];
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  quizData.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.innerHTML = `
+      <div class="quiz-q"><span style="color:var(--gold);font-family:var(--mono);font-size:0.7rem;">Q${qi+1}.</span> ${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,oi) => `
+          <div class="q-opt" data-qi="${qi}" data-oi="${oi}" onclick="answerQuiz(${qi},${oi})">
+            <span class="opt-letter">${String.fromCharCode(65+oi)}</span>${o}
+          </div>
+        `).join('')}
+      </div>
+      <div class="q-feedback" id="qfb-${qi}"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function answerQuiz(qi, oi) {
+  const q = quizData[qi];
+  const opts = document.querySelectorAll(`[data-qi="${qi}"]`);
+  opts.forEach(o => { o.classList.add('disabled'); });
+  const fb = document.getElementById('qfb-' + qi);
+  if (oi === q.correct) {
+    opts[oi].classList.add('correct');
+    fb.className = 'q-feedback correct-fb';
+    fb.textContent = '✓ ' + q.feedback;
+    state.quizScore++;
+  } else {
+    opts[oi].classList.add('incorrect');
+    opts[q.correct].classList.add('correct');
+    fb.className = 'q-feedback incorrect-fb';
+    fb.textContent = '✗ Incorrect. ' + q.feedback;
+  }
+  state.quizAnswered++;
+  if (state.quizAnswered === quizData.length) {
+    const scoreRow = document.getElementById('quiz-score-row');
+    document.getElementById('quiz-final').textContent = state.quizScore;
+    scoreRow.style.display = 'block';
+  }
+}
+
+// ─── CLASSIFY ─────────────────────────────────────────
+const classifyItems = [
+  {text:'A hospital encrypts all patient records stored on its servers',answer:'Confidentiality'},
+  {text:'A ransomware attack locks staff out of a booking system for three days',answer:'Availability'},
+  {text:'An attacker alters a student's exam marks in a school database',answer:'Integrity'},
+  {text:'A sales rep can view customer contacts but cannot access salary records',answer:'Least Privilege'},
+  {text:'A bank uses TLS so intercepted online banking traffic cannot be read',answer:'Confidentiality'},
+  {text:'A business only collects the customer data it actually needs for the transaction',answer:'Data Minimisation'},
+  {text:'An e-commerce company suffers a DDoS attack making its website unavailable for 6 hours',answer:'Availability'},
+  {text:'An employee uses double-entry to ensure data entered matches the original form',answer:'Integrity'},
+  {text:'An organisation reports a data breach to the ICO within 72 hours',answer:'GDPR Compliance'},
+  {text:'A junior developer is given read-only access to the production database',answer:'Least Privilege'}
+];
+
+function buildClassify() {
+  const grid = document.getElementById('classify-grid');
+  classifyItems.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'classify-item';
+    div.innerHTML = `
+      <div class="ci-text">${item.text}</div>
+      <select class="ci-select" id="ci-${i}">
+        <option value="">— Select —</option>
+        <option value="Data">Data</option>
+        <option value="Information">Information</option>
+        <option value="Knowledge">Knowledge</option>
+      </select>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function checkClassify() {
+  const results = document.getElementById('classify-results');
+  let correct = 0;
+  let html = '';
+  classifyItems.forEach((item, i) => {
+    const sel = document.getElementById('ci-' + i).value;
+    if (sel === item.answer) {
+      correct++;
+      html += `<span class="classify-result-item cr-correct">✓ ${item.answer}</span>`;
+    } else {
+      html += `<span class="classify-result-item cr-incorrect">✗ ${sel || '?'} → ${item.answer}</span>`;
+    }
+  });
+  results.innerHTML = `<div style="font-family:var(--display);font-size:1.1rem;color:var(--gold);margin-bottom:0.8rem;">Score: ${correct}/${classifyItems.length}</div>` + html;
+}
+
+// ─── DRAG AND DROP ─────────────────────────────────────
+let draggedItem = null;
+
+function initDnD() {
+  document.querySelectorAll('.drag-item').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      draggedItem = item;
+      setTimeout(() => item.classList.add('dragging'), 0);
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+    });
+  });
+
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      if (!draggedItem) return;
+      const accepts = zone.dataset.accepts;
+      const type = draggedItem.dataset.type;
+      const id = draggedItem.dataset.id;
+      const itemsContainer = zone.querySelector('[id^="zone-"]');
+      itemsContainer.appendChild(draggedItem);
+      draggedItem.draggable = false;
+      state.dndPlacements[id] = accepts;
+      draggedItem.classList.add('placed');
+      draggedItem.querySelector('.drag-handle').textContent = '';
+    });
+  });
+}
+
+function resetDnD() {
+  const pool = document.getElementById('drag-pool');
+  document.querySelectorAll('.drag-item').forEach(item => {
+    pool.appendChild(item);
+    item.draggable = true;
+    item.classList.remove('placed','dragging');
+    item.querySelector('.drag-handle').textContent = '⠿';
+  });
+  document.querySelectorAll('.drop-zone').forEach(z => {
+    z.classList.remove('correct','incorrect');
+  });
+  document.getElementById('dnd-feedback').innerHTML = '';
+  state.dndPlacements = {};
+}
+
+function checkDnD() {
+  const items = document.querySelectorAll('.drag-item');
+  let correct = 0, total = 0;
+  
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    zone.classList.remove('correct','incorrect');
+    const accepts = zone.dataset.accepts;
+    const children = zone.querySelectorAll('.drag-item');
+    let zoneCorrect = true;
+    children.forEach(item => {
+      total++;
+      if (item.dataset.type === accepts) correct++;
+      else zoneCorrect = false;
+    });
+    if (children.length > 0) {
+      zone.classList.add(zoneCorrect ? 'correct' : 'incorrect');
+    }
+  });
+
+  const fb = document.getElementById('dnd-feedback');
+  if (correct === total && total > 0) {
+    fb.innerHTML = `<span style="color:var(--green);">✓ CLASSIFICATION COMPLETE — ${correct}/${total} correct. Full marks awarded.</span>`;
+  } else {
+    fb.innerHTML = `<span style="color:var(--amber);">⚠ ${correct}/${total} correctly classified. Review the highlighted zones and try again.</span>`;
+  }
+}
+
+// ─── SCENE C: HUD ANALYSIS ───────────────────────────
+const nKeywords = ['predictive model', 'recommendation', 'machine learning', 'algorithm', 'analytics', 'data mining', 'personalisation', 'segmentation', 'ai', 'targeting'];
+const eKeywords = ['analyses', 'processes', 'identifies', 'uses', 'tracks', 'monitors', 'examines', 'reviews', 'calculates', 'cross-references', 'patterns', 'history', 'behaviour'];
+const iKeywords = ['revenue', 'profit', 'sales', 'conversion', 'retention', 'cost', 'efficiency', 'competitive', 'loyalty', 'return', 'increase', 'reduce', 'improve', 'growth', 'value', 'saves'];
+
+function analyseAnswer(text) {
+  const lower = text.toLowerCase();
+  const words = text.trim().split(/\s+/).filter(w => w).length;
+  document.getElementById('word-count').textContent = words;
+  document.getElementById('char-count').textContent = text.length;
+
+  const hasN = nKeywords.some(k => lower.includes(k));
+  const hasE = eKeywords.some(k => lower.includes(k)) && words > 8;
+  const hasI = iKeywords.some(k => lower.includes(k));
+
+  const nb = document.getElementById('hud-n');
+  const eb = document.getElementById('hud-e');
+  const ib = document.getElementById('hud-i');
+
+  nb.classList.toggle('detected', hasN);
+  eb.classList.toggle('detected', hasE);
+  ib.classList.toggle('detected', hasI);
+
+  document.getElementById('hud-n-kw').textContent = hasN ? '✓ technique name detected' : '— not yet detected';
+  document.getElementById('hud-e-kw').textContent = hasE ? '✓ mechanism described' : '— not yet detected';
+  document.getElementById('hud-i-kw').textContent = hasI ? '✓ business impact found' : '— not yet detected';
+
+  const marks = [hasN, hasE, hasI].filter(Boolean).length;
+  document.getElementById('projected-marks').textContent = marks;
+  document.getElementById('projected-marks').style.color = marks === 3 ? 'var(--green)' : marks === 2 ? 'var(--gold)' : 'var(--red)';
+}
+
+function clearAnswer() {
+  document.getElementById('answer-input').value = '';
+  analyseAnswer('');
+}
+
+function submitAnswer() {
+  const answer = document.getElementById('answer-input').value.trim();
+  if (!answer) {
+    document.getElementById('answer-input').style.borderColor = 'rgba(255,68,68,0.5)';
+    setTimeout(() => document.getElementById('answer-input').style.borderColor = '', 1000);
+    return;
+  }
+  state.submittedAnswer = answer;
+  
+  // Move to scene D and populate
+  goToScene('d');
+  const srArea = document.getElementById('student-response');
+  srArea.textContent = answer;
+  state.taggedCategories = { name: false, explain: false, impact: false };
+}
+
+// ─── SCENE D: HIGHLIGHTER ────────────────────────────
+function setHighlighter(type) {
+  state.activeHighlighter = type;
+  document.querySelectorAll('.hl-btn').forEach(b => b.classList.remove('active'));
+  const map = { impact: 'hl-i-btn', explain: 'hl-e-btn', name: 'hl-n-btn' };
+  if (map[type]) document.getElementById(map[type]).classList.add('active');
+}
+
+function applyHighlight() {
+  if (!state.activeHighlighter) return;
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
+
+  const range = selection.getRangeAt(0);
+  const container = document.getElementById('student-response');
+  if (!container.contains(range.commonAncestorContainer)) return;
+
+  const span = document.createElement('span');
+  const classMap = { impact: 'highlight-green', explain: 'highlight-amber', name: 'highlight-red' };
+  span.className = classMap[state.activeHighlighter];
+  span.dataset.tag = state.activeHighlighter;
+
+  try {
+    range.surroundContents(span);
+    state.taggedCategories[state.activeHighlighter] = true;
+  } catch(e) {}
+
+  selection.removeAllRanges();
+}
+
+function calibrateResult() {
+  const tagged = state.taggedCategories;
+  const hasN = tagged.name || document.querySelector('.highlight-red') !== null;
+  const hasE = tagged.explain || document.querySelector('.highlight-amber') !== null;
+  const hasI = tagged.impact || document.querySelector('.highlight-green') !== null;
+
+  // Check for tagged elements in the response
+  const redEls = document.getElementById('student-response').querySelectorAll('.highlight-red');
+  const amberEls = document.getElementById('student-response').querySelectorAll('.highlight-amber');
+  const greenEls = document.getElementById('student-response').querySelectorAll('.highlight-green');
+
+  const nFound = redEls.length > 0;
+  const eFound = amberEls.length > 0;
+  const iFound = greenEls.length > 0;
+
+  // Vulnerability check
+  if (!iFound) {
+    document.getElementById('vuln-alert').classList.add('visible');
+  } else {
+    document.getElementById('vuln-alert').classList.remove('visible');
+  }
+
+  const score = [nFound, eFound, iFound].filter(Boolean).length;
+  state.neiScore = { n: nFound ? 80 : 20, e: eFound ? 85 : 25, i: iFound ? 90 : 15 };
+
+  // Show score panel
+  const panel = document.getElementById('score-panel');
+  panel.style.display = 'block';
+
+  setTimeout(() => {
+    document.getElementById('bar-n').style.width = state.neiScore.n + '%';
+    document.getElementById('bar-e').style.width = state.neiScore.e + '%';
+    document.getElementById('bar-i').style.width = state.neiScore.i + '%';
+    document.getElementById('pct-n').textContent = state.neiScore.n + '%';
+    document.getElementById('pct-e').textContent = state.neiScore.e + '%';
+    document.getElementById('pct-i').textContent = state.neiScore.i + '%';
+  }, 100);
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const avg = Math.round((state.neiScore.n + state.neiScore.e + state.neiScore.i) / 3);
+  document.getElementById('final-score-display').textContent = avg + '%';
+}
+
+// ─── EXPORT (Mock) ────────────────────────────────────
+function exportReport() {
+  const btn = document.querySelector('.export-btn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '⏳ Generating Mission Report...';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = '✓ Report Exported to Downloads';
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.disabled = false;
+    }, 3000);
+  }, 1500);
+}
+
+// ─── INIT ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  typeTerminal();
+  buildQuiz();
+  buildClassify();
+  initDnD();
+  updateProgress();
+});
+</script>
+
+<!-- perf-patched -->
+<div class="msm-next-step" aria-label="Next step"><div class="ns-label">NEXT STEP</div><a href="https://devontallman.github.io/mark-scheme-method-pilot/content-areas/classroom-611-v3.html" class="ns-link">&rarr; CA 6.4 Classroom Lesson</a></div>
+<!-- nextstep-ft-patched -->
+
+<!-- ft-6-4-built -->
+</body>
+</html>
