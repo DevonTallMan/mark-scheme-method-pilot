@@ -200,11 +200,18 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </style>
 </head>
 <body>
+<!-- MSM-CONTENT-NAV -->
+<nav class="msm-content-nav" aria-label="Content path" style="font-family:'Share Tech Mono',monospace;background:rgba(0,0,0,0.55);border-bottom:1px solid rgba(57,255,20,0.12);padding:7px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;position:sticky;top:0;z-index:200;">
+  <div style="font-size:11px;letter-spacing:0.5px;"><a href="../topics.html" style="color:rgba(57,255,20,0.7);text-decoration:none;">TOPICS</a> <span style="color:rgba(255,255,255,0.3);">&rsaquo;</span> <span style="color:rgba(232,237,243,0.55);font-size:10px;">CA 6.1.1 DATA, INFORMATION & KNOWLEDGE</span> <span style="color:rgba(255,255,255,0.3);">&rsaquo;</span> <span style="color:#39FF14;font-weight:700;">SOLO MODULE</span></div>
+  <div style="display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:1px;"><span style="color:rgba(57,255,20,0.4);">&bull; 1 FIELD TRAINING</span> <span style="color:rgba(255,255,255,0.15);">&#x2192;</span> <span style="color:rgba(57,255,20,0.4);">&bull; 2 CLASSROOM</span> <span style="color:rgba(255,255,255,0.15);">&#x2192;</span> <span style="color:#39FF14;font-weight:700;">&bull; 3 SOLO MODULE</span> <span style="display:inline-block;width:1px;height:10px;background:rgba(255,255,255,0.12);margin:0 4px;"></span> <a href="../hub.html" style="color:rgba(232,237,243,0.38);text-decoration:none;font-size:10px;">HUB</a> <span style="color:rgba(255,255,255,0.12);">&#xB7;</span> <a href="../dashboard.html" style="color:rgba(232,237,243,0.38);text-decoration:none;font-size:10px;">DASHBOARD</a></div>
+</nav>
+<!-- END MSM-CONTENT-NAV -->
+
 
 <nav class="topbar">
   <div class="logo">MSM<span>®</span></div>
   <div class="topnav">
-    <a href="../index.html" class="navlink">HUB</a>
+    <a href="../hub.html" class="navlink">HUB</a>
     <a href="../index.html" class="navlink active">FIELD TRAINING</a>
     <a href="../topics.html" class="navlink">TOPICS</a>
   </div>
@@ -766,5 +773,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   initSort();
 });
 </script>
+
+<!-- MSM-RETURN-NUDGE -->
+<div id="msm-return-nudge" style="font-family:'Share Tech Mono',monospace;text-align:center;padding:28px 20px;border-top:1px solid rgba(57,255,20,0.15);margin-top:16px;">
+  <div style="font-size:10px;letter-spacing:2px;color:rgba(232,237,243,0.38);margin-bottom:8px;">SPACED RETRIEVAL</div>
+  <div style="font-size:12px;color:rgba(232,237,243,0.62);margin-bottom:12px;letter-spacing:0.5px;">Return Mission for CA 6.1.1 is available on the Hub</div>
+  <a href="../hub.html" style="display:inline-block;color:#39FF14;text-decoration:none;border:1px solid rgba(57,255,20,0.33);padding:8px 20px;font-size:11px;letter-spacing:2px;border-radius:4px;">&#x27F6; GO TO HUB</a>
+</div>
+<!-- END MSM-RETURN-NUDGE -->
 </body>
 </html>
