@@ -6,93 +6,98 @@ on:
   pull_request:
     branches: [ main ]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      # Sync with latest remote main to prevent non-fast-forward push problems
       - name: Sync with latest remote main
-        run: git pull origin main --ff-only
+        run: git fetch origin main && git merge origin/main --ff-only
 
-      # ---- 1: Set up Python 3.11 ------------------------------------
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-
-      # ---- 2: Install test dependencies -----------------------------
-      - name: Install deps
+      - name: Check key pages exist
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          MISSING=0
+          for f in index.html hub.html topics.html dashboard.html teacher.html \
+                   learn/index.html \
+                   learn/6-1-1/index.html learn/6-1-2/index.html \
+                   learn/6-1-3/index.html learn/6-2/index.html \
+                   learn/6-3/index.html learn/6-4/index.html \
+                   content-areas/classroom-611-v3.html \
+                   review-611.html review-612.html review-613.html \
+                   review-62.html review-63.html \
+                   firebase-config.js; do
+            [ -f "$f" ] && echo "OK: $f" || { echo "FAIL: missing $f"; MISSING=1; }
+          done
+          [ $MISSING -eq 0 ] || exit 1
 
-      # ---- 3: Unit & integration tests ------------------------------
-      - name: Run pytest (unit + integration)
+      - name: Verify FT briefing openers — no THREAT ASSESSMENT
         run: |
-          pytest tests/unit tests/integration \
-            --cov=app --cov-report=xml \
-            --alluredir=allure-results
+          FAIL=0
+          for f in learn/6-1-2/index.html learn/6-1-3/index.html \
+                   learn/6-2/index.html learn/6-3/index.html learn/6-4/index.html; do
+            grep -q "THREAT ASSESSMENT" "$f" \
+              && { echo "FAIL: THREAT ASSESSMENT still present in $f"; FAIL=1; } \
+              || echo "OK: $f"
+          done
+          [ $FAIL -eq 0 ] || exit 1
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          file: coverage.xml
-
-      # ---- 4: End-to-end UI tests (Playwright) ----------------------
-      - name: Install Playwright browsers
-        run: playwright install --with-deps
-
-      - name: Run e2e tests
-        run: pytest tests/e2e --alluredir=allure-results
-
-      # ---- 5: Performance tests (Locust) ----------------------------
-      - name: Run Locust
+      - name: Verify AXIOM-7 coaching register
         run: |
-          locust -f tests/performance/locustfile.py \
-            --headless -u 10 -r 2 --run-time 30s \
-            --csv=locust_result
+          FAIL=0
+          for f in review-611.html review-612.html review-613.html review-62.html review-63.html; do
+            grep -q "coaching a student" "$f" \
+              && echo "OK: $f" \
+              || { echo "FAIL: coaching prompt missing in $f"; FAIL=1; }
+          done
+          [ $FAIL -eq 0 ] || exit 1
 
-      - name: Attach performance report
-        uses: actions/upload-artifact@v6
-        with:
-          name: performance-report
-          path: locust_result_stats.csv
-
-      # ---- 6: Security scan (OWASP ZAP) ----------------------------
-      - name: Run ZAP scan
-        run: python zap_scan.py
-
-      - name: Attach ZAP report
-        uses: actions/upload-artifact@v6
-        with:
-          name: zap-report
-          path: zap_report.html
-
-      # ---- 7: Generate and attach Allure report --------------------
-      - name: Install Allure CLI
+      - name: Verify AXIOM-7 parser tokens
         run: |
-          curl -o allure.tgz -Ls \
-            https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-          tar -xzf allure.tgz
-          sudo mv allure-2.27.0 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+          FAIL=0
+          for f in review-611.html review-612.html review-613.html review-62.html review-63.html; do
+            grep -q "AWARDED:" "$f" && grep -q "MISSING:" "$f" && grep -q "NEI_SCORES:" "$f" \
+              && echo "OK: $f" \
+              || { echo "FAIL: parser tokens missing in $f"; FAIL=1; }
+          done
+          [ $FAIL -eq 0 ] || exit 1
 
-      - name: Build Allure report
-        run: allure generate allure-results -o allure-report --clean
+      - name: Verify content nav strip on all content path pages
+        run: |
+          FAIL=0
+          for f in learn/6-1-1/index.html learn/6-1-2/index.html learn/6-1-3/index.html \
+                   learn/6-2/index.html learn/6-3/index.html learn/6-4/index.html \
+                   content-areas/classroom-611-v3.html \
+                   content-areas/classroom-612.html content-areas/classroom-613.html \
+                   content-areas/classroom-62.html content-areas/classroom-63.html \
+                   content-areas/classroom-64.html; do
+            grep -q "MSM-CONTENT-NAV" "$f" \
+              && echo "OK: $f" \
+              || { echo "FAIL: content nav strip missing in $f"; FAIL=1; }
+          done
+          [ $FAIL -eq 0 ] || exit 1
 
-      - name: Attach Allure artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: allure-report
-          path: allure-report
+      - name: Verify AXIOM-7 proxy — no direct Groq API calls
+        run: |
+          FAIL=0
+          for f in review-611.html review-612.html review-613.html review-62.html review-63.html; do
+            grep -qE "AXIOM7_PROXY_URL|workers\.dev" "$f" \
+              && echo "OK proxy: $f" \
+              || { echo "FAIL: proxy URL missing in $f"; FAIL=1; }
+            grep -q "api\.groq\.com" "$f" \
+              && { echo "FAIL: direct Groq API call found in $f"; FAIL=1; } || true
+          done
+          [ $FAIL -eq 0 ] || exit 1
 
-      # NOTE: The 'pages' deployment job has been removed.
-      # The Allure report is available above as a downloadable artifact
-      # on the Actions run page. Your live GitHub Pages site remains
-      # untouched and served from your repo's main branch as normal.
+      - name: File size guardrails — flag HTML over 120KB
+        run: |
+          while IFS= read -r f; do
+            size=$(wc -c < "$f")
+            if [ "$size" -gt 122880 ]; then
+              echo "WARN: $f is ${size} bytes — exceeds 120KB, review for bloat"
+            fi
+          done < <(find . -name "*.html" -not -path "./.git/*")
+          echo "File size check complete"
