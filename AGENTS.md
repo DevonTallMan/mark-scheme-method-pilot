@@ -470,3 +470,26 @@ class.
 - [ ] No `console.log` debug statements committed
 - [ ] Feature branch merged or explicitly left open with a reason
 - [ ] `window._PAT` cleared from browser memory if extension was used
+
+
+---
+
+## Known failure modes (additions from session Apr 2026)
+
+### Cloudflare Worker — CORS headers required on every response path
+The Worker must include CORS headers on ALL response branches: OPTIONS (204), bad method (405), rate limit (429), success, and catch. If CORS headers are missing on the POST response path only, the browser returns `TypeError: Failed to fetch` with no visible error — the OPTIONS preflight still returns 204 correctly, masking the problem. Pattern:
+
+```js
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': 'https://devontallman.github.io',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type'
+};
+// Every response must spread: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+```
+
+### Review page JS — renderQ(n) does not update curQ
+Calling `renderQ(4)` to jump to Q5 for testing renders the UI but leaves `curQ = 0`. The `handleNEI` onclick is bound to `QS[curQ]` at render time — if `curQ` is wrong, the submit fires with `undefined` arguments and the catch block triggers immediately. Always set `window.curQ = n` before calling `renderQ(n)` in programmatic tests.
+
+### Apostrophes in single-quoted JS strings — check all inserted text
+Any text inserted into single-quoted JS string literals must have apostrophes escaped as `\'`. This applies to both briefing script text and quiz data. The briefing script error masks quiz data errors beneath it — fixing the briefing reveals a second wave of apostrophe bugs in the quiz questions. Scan the whole file, not just the changed section.
