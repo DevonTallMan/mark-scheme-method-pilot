@@ -282,6 +282,7 @@
       <div class="glass stat-card">
         <div class="stat-val" id="stat-impact">0%</div>
         <div class="stat-lbl">IMPACT BADGE RATE</div>
+        <div class="stat-bench" id="benchImpact" style="font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;color:rgba(255,149,0,0.7);margin-top:5px;">TARGET ≥70%</div>
       </div>
     </div>
 
@@ -520,6 +521,11 @@
     document.getElementById('stat-active').textContent   = active;
     document.getElementById('stat-badges').textContent   = totalBadges;
     document.getElementById('stat-impact').textContent   = impactPct + '%';
+    const benchEl = document.getElementById('benchImpact');
+    if (benchEl) {
+      benchEl.textContent = impactPct >= 70 ? '✓ CLASS TARGET MET' : 'TARGET ≥70% — ' + (70 - impactPct) + '% GAP';
+      benchEl.style.color = impactPct >= 70 ? 'rgba(57,255,20,0.8)' : 'rgba(255,149,0,0.7)';
+    }
   }
 
   // ── ROSTER ──

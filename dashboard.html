@@ -56,6 +56,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sc-modules .sc-val{color:var(--cyan);}
 .sc-impact .sc-val{color:var(--amber);}
 .sc-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px;}
+.sc-bench{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--amber);opacity:0.75;margin-top:5px;display:flex;align-items:center;gap:4px;justify-content:center;}.sc-bench::before{content:'▸';opacity:0.6;}
 
 /* ── EXAM COUNTDOWN BANNER ── */
 .countdown-banner{grid-column:span 3;background:rgba(255,59,59,0.06);border:1px solid rgba(255,59,59,0.25);border-radius:12px;padding:16px 24px;display:flex;align-items:center;gap:24px;overflow:hidden;position:relative;}
@@ -252,6 +253,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       <div class="sc-icon">💥</div>
       <div class="sc-val" id="scImpact">--</div>
       <div class="sc-lbl">IMPACT MARK RATE</div>
+      <div class="sc-bench" id="scImpactBench">TARGET ≥70%</div>
     </div>
   </div>
 
@@ -545,7 +547,8 @@ function initAll(){
   document.getElementById('scBadges').textContent=(Array.isArray(badges)?badges.length:0)+' / 12';
   const modsDone=MODULE_BADGES.filter(b=>badges.includes(b)).length;
   document.getElementById('scModules').textContent=modsDone+' / 6';
-  document.getElementById('scImpact').textContent='42%';// demo
+  document.getElementById('scImpact').textContent='42%';
+  const _ib=document.getElementById('scImpactBench');if(_ib){const _iv=parseFloat(document.getElementById('scImpact').textContent);_ib.style.opacity=_iv>=70?'1':'0.75';_ib.textContent=_iv>=70?'✓ TARGET MET ≥70%':(_iv>0?'TARGET ≥70% ('+Math.round(70-_iv)+'% gap)':'TARGET ≥70%');}// demo
 
   // Countdown
   const exam=new Date('2026-05-11');
