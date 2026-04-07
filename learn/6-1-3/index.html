@@ -1227,6 +1227,9 @@ body::after{
   color:#fff;margin-bottom:0.5rem;
 }
 .lock-msg{font-size:0.85rem;color:var(--muted);max-width:380px;text-align:center;}
+
+/* MODEL ANSWER PANEL */
+.pa-model-answer{display:none;margin-top:1rem;border:1px solid rgba(255,167,38,0.35);background:rgba(255,167,38,0.04);border-radius:8px;overflow:hidden;}.pa-model-answer.vis{display:block;}.pma-hdr{background:rgba(255,167,38,0.1);border-bottom:1px solid rgba(255,167,38,0.25);padding:0.55rem 0.9rem;display:flex;align-items:center;justify-content:space-between;}.pma-hdr-title{font-family:var(--display);font-size:0.55rem;letter-spacing:0.1em;color:var(--gold);font-weight:700;}.pma-hdr-sub{font-family:var(--mono);font-size:0.48rem;color:rgba(255,167,38,0.55);}.pma-body{padding:0.75rem 0.9rem;display:flex;flex-direction:column;gap:0.55rem;}.pma-component{display:flex;gap:0.6rem;align-items:flex-start;}.pma-badge{font-family:var(--display);font-size:0.5rem;font-weight:700;padding:0.2rem 0.45rem;border-radius:4px;flex-shrink:0;margin-top:0.05rem;}.pma-badge.n{background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.35);color:#FF8FAB;}.pma-badge.e{background:rgba(255,167,38,0.15);border:1px solid rgba(255,167,38,0.35);color:#FFD580;}.pma-badge.i{background:rgba(16,255,128,0.1);border:1px solid rgba(16,255,128,0.3);color:#6EFFC4;}.pma-text{font-size:0.7rem;line-height:1.6;color:rgba(255,255,255,0.82);}.pma-divider{border:none;border-top:1px solid rgba(255,167,38,0.12);margin:0.1rem 0;}.pma-full{font-size:0.68rem;line-height:1.7;color:rgba(255,255,255,0.65);font-style:italic;padding:0.5rem 0.7rem;background:rgba(255,255,255,0.03);border-radius:5px;border-left:2px solid rgba(255,167,38,0.3);}.pma-label{font-family:var(--mono);font-size:0.44rem;color:rgba(255,167,38,0.5);letter-spacing:0.08em;margin-bottom:0.3rem;}
 </style>
 <style id="msm-breadcrumb-style">.msm-breadcrumb{font-family:monospace;font-size:11px;padding:10px 20px 0;color:rgba(232,237,243,0.65);letter-spacing:0.06em;}.msm-breadcrumb a{color:rgba(57,255,20,0.85);text-decoration:none;}.msm-breadcrumb a:hover{text-decoration:underline;}</style><style id="msm-nextstep-style">.msm-next-step{margin:40px 20px 20px;padding:20px 24px;background:rgba(57,255,20,0.06);border:1px solid rgba(57,255,20,0.25);border-radius:4px;font-family:monospace;}.msm-next-step .ns-label{font-size:10px;letter-spacing:0.1em;color:rgba(232,237,243,0.65);margin-bottom:8px;}.msm-next-step .ns-link{display:inline-block;color:#39FF14;text-decoration:none;font-size:13px;letter-spacing:0.06em;}.msm-next-step .ns-link:hover{text-decoration:underline;}</style></head>
 <body>
@@ -1840,6 +1843,8 @@ function applyHighlight() {
   selection.removeAllRanges();
 }
 
+const MODEL_ANSWERS=[{q:'E-commerce targeted marketing (3 marks)',n:'H2D (Human-to-Device) interaction data — purchase history, click paths, and browsing patterns — is used to generate personalised product recommendations via recommendation algorithms.',e:'The algorithm analyses past purchase sequences to identify correlations between products, automatically surfacing relevant suggestions when the customer browses, without manual curation or human data entry.',i:'This increases average order value and repeat purchase frequency, generating additional revenue from the existing customer base without increasing acquisition costs.',full:'H2D interaction data — purchase history, click paths, and browsing patterns — powers recommendation algorithms that identify correlations between products bought together. The system surfaces personalised suggestions automatically each time the customer browses, without human intervention. This increases average order value and repeat purchase frequency, generating additional revenue from the existing customer base without increasing acquisition costs.'}];
+function showModelAnswer(){const ma=MODEL_ANSWERS[0];const panel=document.getElementById('ma-panel');if(!panel)return;panel.innerHTML='<div class="pma-hdr"><div class="pma-hdr-title">&#x2748; EXAMINER\'S FULL-MARK RESPONSE</div><div class="pma-hdr-sub">'+ma.q+'</div></div><div class="pma-body"><div class="pma-label">N&#xB7;E&#xB7;I COMPONENTS</div><div class="pma-component"><span class="pma-badge n">N</span><div class="pma-text">'+ma.n+'</div></div><div class="pma-component"><span class="pma-badge e">E</span><div class="pma-text">'+ma.e+'</div></div><div class="pma-component"><span class="pma-badge i">I</span><div class="pma-text">'+ma.i+'</div></div><hr class="pma-divider"/><div class="pma-label">COMPLETE RESPONSE</div><div class="pma-full">'+ma.full+'</div></div>';panel.classList.add('vis');document.getElementById('btn-show-ma').style.display='none';panel.scrollIntoView({behavior:'smooth',block:'start'});}
 function calibrateResult() {
   const tagged = state.taggedCategories;
   const hasN = tagged.name || document.querySelector('.highlight-red') !== null;
@@ -1868,6 +1873,8 @@ function calibrateResult() {
   // Show score panel
   const panel = document.getElementById('score-panel');
   panel.style.display = 'block';
+  const maBtn=document.getElementById('btn-show-ma');
+  if(maBtn)maBtn.style.display='';
 
   setTimeout(() => {
     document.getElementById('bar-n').style.width = state.neiScore.n + '%';
