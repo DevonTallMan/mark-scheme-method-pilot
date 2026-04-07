@@ -1298,6 +1298,8 @@ body::after{
       </div>
     </div>
 
+    <button id="brief-skip" onclick="startMission()" style="position:absolute;bottom:1.5rem;right:2rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:rgba(255,255,255,0.35);background:transparent;border:1px solid rgba(255,255,255,0.15);padding:0.35rem 1rem;border-radius:4px;cursor:pointer;">SKIP →</button>
+    <div id="brief-prog" style="position:absolute;bottom:1.6rem;left:2rem;font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em;"></div>
     <button class="btn-primary" onclick="startMission()">
       <span>INITIATE FIELD TRAINING</span>
       <span class="btn-arrow">→</span>
@@ -2209,6 +2211,7 @@ function exportReport() {
 // ─── INIT ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   typeTerminal();
+  var _bN=briefingScript.length,_bI=0;var _bP=document.getElementById('brief-prog');if(_bP)_bP.textContent='0 / '+_bN;var _bT=setInterval(function(){_bI++;if(_bP)_bP.textContent=_bI+' / '+_bN;if(_bI>=_bN)clearInterval(_bT);},1800);
   buildQuiz();
   buildClassify();
   initDnD();
