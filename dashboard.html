@@ -603,7 +603,7 @@ function initAll(){
   }
 }
 
-document.addEventListener('DOMContentLoaded',initAll);
+document.addEventListener('DOMContentLoaded',function(){initAll();if(!getXP()){var _pb=document.querySelector('.panel-card.span2 .panel-body');if(_pb&&!document.getElementById('xp-cta')){var _d=document.createElement('div');_d.id='xp-cta';_d.style='text-align:center;padding-top:1rem;';_d.innerHTML='<a href="topics.html" style="display:inline-block;font-family:\'Share Tech Mono\',monospace;font-size:0.68rem;letter-spacing:0.12em;color:#39ff14;border:1px solid rgba(57,255,20,0.5);padding:0.45rem 1.5rem;border-radius:4px;text-decoration:none;">→ START YOUR FIRST MODULE</a>';_pb.appendChild(_d);}}});
 </script>
 <script type="module" id="msm-awareness-firestore">
 import { collection, getDocs, doc, setDoc, updateDoc, getDoc }
