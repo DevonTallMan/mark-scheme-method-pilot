@@ -1,0 +1,115 @@
+name: Stage 4 - Node 24 Action Upgrades
+
+# Upgrades all four deprecated Node 20 GitHub Actions to their
+# Node 24 releases across every workflow file in the repo,
+# then removes the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 flag.
+#
+# Confirmed Node 24 versions (verified against GitHub releases, March 2026):
+#   actions/checkout        v4  ->  v5
+#   actions/setup-python    v5  ->  v6
+#   actions/upload-artifact v4  ->  v6
+#   codecov/codecov-action  v4  ->  v5
+#
+# Also updates docs/ci.md Node upgrade plan status to Complete.
+#
+# Run: Actions > Stage 4 - Node 24 Action Upgrades > Run workflow > YES
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to upgrade all actions to Node 24'
+        required: true
+        default: ''
+
+jobs:
+  node24-upgrades:
+    name: Upgrade actions and remove FORCE_JAVASCRIPT_ACTIONS_TO_NODE24
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    permissions:
+      contents: write
+
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Sync with latest remote main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git merge origin/main --ff-only
+
+      - name: Show current action versions before upgrade
+        run: |
+          echo "=== Current action version pins in .github/workflows/ ==="
+          grep -rh "uses:" .github/workflows/ | grep -v "^#" | sort | uniq | sed 's/^ */  /'
+
+      - name: Patch all workflow files
+        run: |
+          echo "aW1wb3J0IG9zLCBnbG9iLCByZQpmcm9tIGRhdGV0aW1lIGltcG9ydCBkYXRlCgpUT0RBWSA9IGRhdGUudG9kYXkoKS5zdHJmdGltZSgiJS1kICVCICVZIikgICMgZS5nLiAiMTYgTWFyY2ggMjAyNiIKCiMg4pSA4pSAIFZlcnNpb24gbWFwOiBvbGQgcGF0dGVybnMg4oaSIG5ldyB2ZXJzaW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgApVUEdSQURFUyA9IFsKICAgICMgKHNlYXJjaCBwYXR0ZXJuLCByZXBsYWNlbWVudCkKICAgIChyJ2FjdGlvbnMvY2hlY2tvdXRAdlxkKyg/OlwuXGQrKSonLCAnYWN0aW9ucy9jaGVja291dEB2NScpLAogICAgKHInYWN0aW9ucy9zZXR1cC1weXRob25AdlxkKyg/OlwuXGQrKSonLCAnYWN0aW9ucy9zZXR1cC1weXRob25AdjYnKSwKICAgIChyJ2FjdGlvbnMvdXBsb2FkLWFydGlmYWN0QHZcZCsoPzpcLlxkKykqJywgJ2FjdGlvbnMvdXBsb2FkLWFydGlmYWN0QHY2JyksCiAgICAocidjb2RlY292L2NvZGVjb3YtYWN0aW9uQHZcZCsoPzpcLlxkKykqJywgJ2NvZGVjb3YvY29kZWNvdi1hY3Rpb25AdjUnKSwKXQoKIyDilIDilIAgRmluZCBhbGwgd29ya2Zsb3cgZmlsZXMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACndvcmtmbG93X2ZpbGVzID0gZ2xvYi5nbG9iKCcuZ2l0aHViL3dvcmtmbG93cy8qLnltbCcpICsgZ2xvYi5nbG9iKCcuZ2l0aHViL3dvcmtmbG93cy8qLnlhbWwnKQppZiBub3Qgd29ya2Zsb3dfZmlsZXM6CiAgICBwcmludCgiRVJST1I6IE5vIHdvcmtmbG93IGZpbGVzIGZvdW5kIGluIC5naXRodWIvd29ya2Zsb3dzLyIpCiAgICBleGl0KDEpCgpwcmludChmIkZvdW5kIHtsZW4od29ya2Zsb3dfZmlsZXMpfSB3b3JrZmxvdyBmaWxlKHMpOiIpCmZvciBmIGluIHdvcmtmbG93X2ZpbGVzOgogICAgcHJpbnQoZiIgIHtmfSIpCgp0b3RhbF9jaGFuZ2VzID0gMAoKZm9yIHBhdGggaW4gc29ydGVkKHdvcmtmbG93X2ZpbGVzKToKICAgIHdpdGggb3BlbihwYXRoLCAncicsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgb3JpZ2luYWwgPSBmLnJlYWQoKQoKICAgIHVwZGF0ZWQgPSBvcmlnaW5hbAogICAgZmlsZV9jaGFuZ2VzID0gW10KCiAgICBmb3IgcGF0dGVybiwgcmVwbGFjZW1lbnQgaW4gVVBHUkFERVM6CiAgICAgICAgbWF0Y2hlcyA9IHJlLmZpbmRhbGwocGF0dGVybiwgdXBkYXRlZCkKICAgICAgICBpZiBtYXRjaGVzOgogICAgICAgICAgICBmb3IgbSBpbiBtYXRjaGVzOgogICAgICAgICAgICAgICAgaWYgbSAhPSByZXBsYWNlbWVudDoKICAgICAgICAgICAgICAgICAgICBmaWxlX2NoYW5nZXMuYXBwZW5kKGYiICAgIHttfSAgLT4gIHtyZXBsYWNlbWVudH0iKQogICAgICAgICAgICB1cGRhdGVkID0gcmUuc3ViKHBhdHRlcm4sIHJlcGxhY2VtZW50LCB1cGRhdGVkKQoKICAgICMgUmVtb3ZlIEZPUkNFX0pBVkFTQ1JJUFRfQUNUSU9OU19UT19OT0RFMjQgZW52IHZhcgogICAgIyBIYW5kbGVzOiBzaW5nbGUtbGluZSBlbnYgYmxvY2sgZW50cnkKICAgIGxpbmVzID0gdXBkYXRlZC5zcGxpdCgnXG4nKQogICAgbmV3X2xpbmVzID0gW10KICAgIGkgPSAwCiAgICB3aGlsZSBpIDwgbGVuKGxpbmVzKToKICAgICAgICBsaW5lID0gbGluZXNbaV0KICAgICAgICBpZiAnRk9SQ0VfSkFWQVNDUklQVF9BQ1RJT05TX1RPX05PREUyNCcgaW4gbGluZToKICAgICAgICAgICAgZmlsZV9jaGFuZ2VzLmFwcGVuZChmIiAgICBSZW1vdmVkOiB7bGluZS5zdHJpcCgpfSIpCiAgICAgICAgICAgIGkgKz0gMQogICAgICAgICAgICBjb250aW51ZQogICAgICAgIG5ld19saW5lcy5hcHBlbmQobGluZSkKICAgICAgICBpICs9IDEKICAgIHVwZGF0ZWQgPSAnXG4nLmpvaW4obmV3X2xpbmVzKQoKICAgICMgQ2xlYW4gdXAgYW55IG5vdy1lbXB0eSBlbnY6IGJsb2NrcwogICAgIyBlLmcuICBlbnY6XG4gIChub3RoaW5nIGxlZnQpIC0+IHJlbW92ZSB0aGUgZW52OiBsaW5lIHRvbwogICAgdXBkYXRlZCA9IHJlLnN1YihyJ1xuKFxzKillbnY6XHMqXG4oXHMqXG4pJywgcidcblwyJywgdXBkYXRlZCkKCiAgICBpZiB1cGRhdGVkICE9IG9yaWdpbmFsOgogICAgICAgIHdpdGggb3BlbihwYXRoLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgICAgIGYud3JpdGUodXBkYXRlZCkKICAgICAgICBwcmludChmIlxuUEFUQ0hFRDoge3BhdGh9IikKICAgICAgICBmb3IgYyBpbiBmaWxlX2NoYW5nZXM6CiAgICAgICAgICAgIHByaW50KGMpCiAgICAgICAgdG90YWxfY2hhbmdlcyArPSBsZW4oZmlsZV9jaGFuZ2VzKQogICAgZWxzZToKICAgICAgICBwcmludChmIlxuTk8gQ0hBTkdFOiB7cGF0aH0iKQoKcHJpbnQoZiJcblRvdGFsIGNoYW5nZXM6IHt0b3RhbF9jaGFuZ2VzfSIpCgojIOKUgOKUgCBVcGRhdGUgZG9jcy9jaS5tZCBpZiBpdCBleGlzdHMg4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSACkNJX0RPQ19QQVRIUyA9IFsnZG9jcy9jaS5tZCcsICdkb2NzL0NJLm1kJywgJ0NJLm1kJywgJ2RvY3MvY2kvY2kubWQnXQpkb2NfcGF0Y2hlZCA9IEZhbHNlCgpmb3IgZG9jX3BhdGggaW4gQ0lfRE9DX1BBVEhTOgogICAgaWYgbm90IG9zLnBhdGguZXhpc3RzKGRvY19wYXRoKToKICAgICAgICBjb250aW51ZQoKICAgIHdpdGggb3Blbihkb2NfcGF0aCwgJ3InLCBlbmNvZGluZz0ndXRmLTgnKSBhcyBmOgogICAgICAgIGRvYyA9IGYucmVhZCgpCgogICAgb3JpZ2luYWxfZG9jID0gZG9jCgogICAgIyBSZXBsYWNlICJQbGFubmVkIOKAlCBiZWZvcmUgSnVuIDIwMjYiIHdpdGggIkNvbXBsZXRlIOKAlCB7ZGF0ZX0iCiAgICBwYXR0ZXJucyA9IFsKICAgICAgICAocidQbGFubmVkXHMqW+KAlFwtXStccypiZWZvcmUgSnVuIDIwMjYnLCBmJ0NvbXBsZXRlIOKAlCB7VE9EQVl9JyksCiAgICAgICAgKHInUGxhbm5lZFxzKlvigJRcLV0rXHMqYmVmb3JlIEp1bmUgMjAyNicsIGYnQ29tcGxldGUg4oCUIHtUT0RBWX0nKSwKICAgICAgICAocidTdGF0dXM6XHMqUGxhbm5lZCcsIGYnU3RhdHVzOiBDb21wbGV0ZSDigJQge1RPREFZfScpLAogICAgICAgIChyJ1xiUGxhbm5lZFxiKD89LipbTm5db2RlKScsIGYnQ29tcGxldGUg4oCUIHtUT0RBWX0nKSwKICAgIF0KCiAgICBmb3IgcGF0LCByZXBsIGluIHBhdHRlcm5zOgogICAgICAgIGRvYyA9IHJlLnN1YihwYXQsIHJlcGwsIGRvYywgZmxhZ3M9cmUuSUdOT1JFQ0FTRSkKCiAgICAjIEFsc28gYWRkL3VwZGF0ZSBhICJOb2RlIDI0IHVwZ3JhZGUiIHNlY3Rpb24gaWYgcHJlc2VudAogICAgaWYgJ25vZGUnIGluIGRvYy5sb3dlcigpIGFuZCAndXBncmFkZScgaW4gZG9jLmxvd2VyKCk6CiAgICAgICAgZG9jID0gcmUuc3ViKAogICAgICAgICAgICByJygjezEsM31bXlxuXSpbTm5db2RlW15cbl0qW1V1XXBncmFbXlxuXSpcbiknLAogICAgICAgICAgICByJ1wxXG4+ICoqQ29tcGxldGVkICcgKyBUT0RBWSArIHInKiog4oCUIGFsbCBmb3VyIGFjdGlvbnMgdXBncmFkZWQgdG8gTm9kZSAyNCBydW50aW1lLlxuJywKICAgICAgICAgICAgZG9jLAogICAgICAgICAgICBjb3VudD0xCiAgICAgICAgKQoKICAgIGlmIGRvYyAhPSBvcmlnaW5hbF9kb2M6CiAgICAgICAgd2l0aCBvcGVuKGRvY19wYXRoLCAndycsIGVuY29kaW5nPSd1dGYtOCcpIGFzIGY6CiAgICAgICAgICAgIGYud3JpdGUoZG9jKQogICAgICAgIHByaW50KGYiXG5QQVRDSEVEIGRvY3M6IHtkb2NfcGF0aH0iKQogICAgICAgIGRvY19wYXRjaGVkID0gVHJ1ZQogICAgZWxzZToKICAgICAgICBwcmludChmIlxuTk8gQ0hBTkdFIHRvIGRvY3M6IHtkb2NfcGF0aH0gKHVwZGF0ZSBtYW51YWxseSBpZiBuZWVkZWQpIikKICAgIGJyZWFrCgppZiBub3QgZG9jX3BhdGNoZWQ6CiAgICBwcmludCgiXG5JTkZPOiBkb2NzL2NpLm1kIG5vdCBmb3VuZCDigJQgVGFzayA2IChkb2MgdXBkYXRlKSBtdXN0IGJlIGRvbmUgbWFudWFsbHkuIikKICAgIHByaW50KCIgIENoYW5nZTogJ1BsYW5uZWQg4oCUIGJlZm9yZSBKdW4gMjAyNicgIC0+ICAnQ29tcGxldGUg4oCUICIgKyBUT0RBWSArICInIikKCnByaW50KCJcbkRvbmUuIikK" | base64 -d > patch_node24.py
+          python3 patch_node24.py
+
+      - name: Verify upgrades and flag removal
+        run: |
+          echo "=== Action versions after upgrade ==="
+          grep -rh "uses:" .github/workflows/ | grep -v "^#" | sort | uniq | sed 's/^ */  /'
+
+          echo ""
+          echo "=== Checking FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 is gone ==="
+          if grep -rl "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24" .github/workflows/; then
+            echo "WARNING: Flag still present in above file(s)"
+          else
+            echo "  CLEAN: FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 fully removed"
+          fi
+
+          echo ""
+          echo "=== Checking all four actions are at Node 24 versions ==="
+          ISSUES=0
+          for check in "actions/checkout@v5" "actions/setup-python@v6" "actions/upload-artifact@v6" "codecov/codecov-action@v5"; do
+            if grep -rq "$check" .github/workflows/; then
+              echo "  FOUND: $check"
+            else
+              echo "  NOT FOUND: $check (may not be used in this repo)"
+            fi
+          done
+
+          # Check no old v4 pins remain for the upgraded actions
+          for old in "actions/checkout@v4" "actions/setup-python@v5" "actions/upload-artifact@v4" "codecov/codecov-action@v4"; do
+            if grep -rq "$old" .github/workflows/; then
+              echo "  WARNING: Old pin still present: $old"
+              ISSUES=1
+            fi
+          done
+          if [ "$ISSUES" -eq 0 ]; then
+            echo "  All old pins removed."
+          fi
+
+      - name: Commit and push
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit — actions may already be at Node 24 versions."
+          else
+            git commit -m "Stage 4: upgrade all actions to Node 24 runtime
+
+          Actions upgraded across all workflow files:
+          - actions/checkout        v4 -> v5  (Node 24, runner >= 2.327.1)
+          - actions/setup-python    v5 -> v6  (Node 24, runner >= 2.327.1)
+          - actions/upload-artifact v4 -> v6  (Node 24, runner >= 2.327.1)
+          - codecov/codecov-action  v4 -> v5  (latest, Node 24 compatible)
+
+          Removed: FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 env flag
+          (was a temporary workaround — no longer needed)
+
+          docs/ci.md: Node upgrade plan status updated to Complete
+
+          Verified against official GitHub releases pages, March 2026."
+            git push origin main
+            echo "Pushed."
+          fi

@@ -16,7 +16,7 @@ jobs:
     if: github.event.inputs.confirm == 'YES'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Sync with latest remote main
         run: git fetch origin main && git merge origin/main --ff-only
