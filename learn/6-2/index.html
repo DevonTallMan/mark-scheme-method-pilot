@@ -1397,6 +1397,7 @@ body::after{
           </div>
         </div>
 
+        <div class="wc-warn" id="wc-warn" style="font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--red);margin-top:4px;display:none;padding:2px 0;">⚠ Too short — write at least 10 words</div>
         <div class="submit-row">
           <button class="btn-secondary" onclick="clearAnswer()">✕ Clear</button>
           <button class="btn-submit" onclick="submitAnswer()">Submit for Calibration →</button>
@@ -1765,7 +1766,12 @@ const iKeywords = ['revenue', 'profit', 'sales', 'conversion', 'retention', 'cos
 function analyseAnswer(text) {
   const lower = text.toLowerCase();
   const words = text.trim().split(/\s+/).filter(w => w).length;
-  document.getElementById('word-count').textContent = words;
+    document.getElementById('word-count').textContent = words;
+  // ── inline feedback ──
+  const _wcWarn = document.getElementById('wc-warn');
+  if (_wcWarn) _wcWarn.style.display = (words > 0 && words < 10) ? 'block' : 'none';
+  const _wcSpan = document.getElementById('word-count');
+  if (_wcSpan) _wcSpan.style.color = (words > 0 && words < 10) ? 'var(--red)' : '';
   document.getElementById('char-count').textContent = text.length;
 
   const hasN = nKeywords.some(k => lower.includes(k));

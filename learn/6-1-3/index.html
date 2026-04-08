@@ -1770,7 +1770,12 @@ const iKeywords = ['revenue', 'profit', 'sales', 'conversion', 'retention', 'cos
 function analyseAnswer(text) {
   const lower = text.toLowerCase();
   const words = text.trim().split(/\s+/).filter(w => w).length;
-  document.getElementById('word-count').textContent = words;
+    document.getElementById('word-count').textContent = words;
+  // ── inline feedback ──
+  const _wcWarn = document.getElementById('wc-warn');
+  if (_wcWarn) _wcWarn.style.display = (words > 0 && words < 10) ? 'block' : 'none';
+  const _wcSpan = document.getElementById('word-count');
+  if (_wcSpan) _wcSpan.style.color = (words > 0 && words < 10) ? 'var(--red)' : '';
   document.getElementById('char-count').textContent = text.length;
 
   const hasN = nKeywords.some(k => lower.includes(k));
