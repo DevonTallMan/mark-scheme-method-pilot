@@ -1796,11 +1796,15 @@ function clearAnswer() {
 
 function submitAnswer() {
   const answer = document.getElementById('answer-input').value.trim();
-  if (!answer) {
+  const warnEl = document.getElementById('wc-warn');
+  const words = answer.split(/\s+/).filter(w=>w).length;
+  if (!answer || words < 10) {
     document.getElementById('answer-input').style.borderColor = 'rgba(255,68,68,0.5)';
-    setTimeout(() => document.getElementById('answer-input').style.borderColor = '', 1000);
+    setTimeout(() => document.getElementById('answer-input').style.borderColor = '', 1500);
+    if (warnEl) { warnEl.style.display = 'block'; setTimeout(()=>warnEl.style.display='none', 3000); }
     return;
   }
+  if (warnEl) warnEl.style.display = 'none';
   state.submittedAnswer = answer;
   
   // Move to scene D and populate
