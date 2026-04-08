@@ -1272,6 +1272,7 @@ body::after{
 
     <h1 class="briefing-title">DATA, INFORMATION<br>& <span>KNOWLEDGE</span></h1>
     <p class="briefing-sub">AXIOM-7 TACTICAL BRIEF // CONTENT AREA 6.4 // CLEARANCE: STANDARD</p>
+    <p style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:6px;font-family:var(--mono);letter-spacing:0.05em;">AXIOM-7 is MSM's AI marking engine. It reads your answers and tells you exactly which marks you've earned.</p>
 
     <div class="terminal">
       <div class="terminal-bar">
@@ -1360,7 +1361,7 @@ body::after{
   <div class="scene-header">
     <div class="scene-badge" style="color:var(--green);background:var(--green-dim);border-color:rgba(57,255,20,0.25);">⬡ STATION 05 — HUD PRACTICE MODE</div>
     <h2 class="scene-title">N·E·I Framework — Live Application</h2>
-    <p class="scene-sub">Construct a full 3-mark answer. Your HUD detects what you\'ve included.</p>
+    <p class="scene-sub">Construct a full 3-mark answer. The HUD (Heads-Up Display) lights up in real time as it detects your N, E and I components.</p>
   </div>
 
   <div class="hud-layout">
@@ -1446,16 +1447,121 @@ body::after{
 <!-- ─── SCENE D: SELF-CALIBRATION TOOL ────────────────── -->
 <section id="scene-d" class="scene">
   <div class="scene-header">
-    <div class="scene-badge">&#x2B21; STATION 04 — TEAM DEBRIEF</div>
-    <h2 class="scene-title">Discussion — Data Security and Management</h2>
-    <p class="scene-sub">Discuss with your class. Name specific principles — never give generic answers.</p>
+    <div class="scene-badge" style="color:var(--red);background:rgba(255,68,68,0.1);border-color:rgba(255,68,68,0.25);">⬡ STATION 06 — SELF-CALIBRATION</div>
+    <h2 class="scene-title">Mark Your Own Work</h2>
+    <p class="scene-sub">Tag your response using the highlighter. Every [I] Impact you identify earns the 3rd mark.</p>
   </div>
-  <div class="discussion-grid">
-    <div class="dp-card"><div class="dp-num">01</div><div class="dp-prompt">A healthcare app stores patient medical records in the cloud and transmits data between the app and the server. Identify one specific threat to each element of the CIA triad for this system. For each threat, name one security measure that would protect against it and explain the specific protection it provides.</div></div>
-    <div class="dp-card"><div class="dp-num">02</div><div class="dp-prompt">A large retailer uses customer loyalty card data for two purposes: to send customers personalised discount offers, and to sell anonymised purchasing trend data to FMCG brands. Which GDPR principles are relevant here? Is either use a potential violation? Justify your answer with reference to specific GDPR principles.</div></div>
-    <div class="dp-card"><div class="dp-num">03</div><div class="dp-prompt">Your school holds data about students, staff, finances and safeguarding. Design a role-based access control policy for three different roles in the school (e.g. teacher, headteacher, finance officer). For each role, specify what data they should have access to, and explain why denying them access to other data protects the school under the principle of least privilege and GDPR.</div></div>
+
+  <div class="calibration-layout">
+    <!-- Model Answer -->
+    <div class="panel-card">
+      <div class="panel-top">
+        <div class="panel-label">EXAMINER MODEL ANSWER</div>
+        <div class="panel-title">Full-Mark Response</div>
+      </div>
+      <div class="panel-body-inner">
+        <div class="model-answer">
+          The business uses
+          <span class="ma-n">predictive modelling</span>,
+          which analyses
+          <span class="ma-e">historical purchase data from thousands of customers to identify seasonal and behavioural patterns, enabling the system to automatically surface products the individual is statistically likely to buy</span>.
+          This
+          <span class="ma-i">reduces customer acquisition cost, increases average order value, and drives repeat purchases — directly increasing revenue without proportional increases in marketing spend</span>.
+        </div>
+        <div class="ma-legend">
+          <div class="leg-item"><span class="leg-swatch leg-n"></span><span style="color:var(--blue);font-family:var(--mono);font-size:0.6rem;">[N] NAME</span></div>
+          <div class="leg-item"><span class="leg-swatch leg-e"></span><span style="color:var(--gold);font-family:var(--mono);font-size:0.6rem;">[E] EXPLAIN</span></div>
+          <div class="leg-item"><span class="leg-swatch leg-i"></span><span style="color:var(--green);font-family:var(--mono);font-size:0.6rem;">[I] IMPACT</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Response + Highlighter -->
+    <div class="panel-card">
+      <div class="panel-top">
+        <div class="panel-label">YOUR RESPONSE — SELF-MARK</div>
+        <div class="panel-title">Highlight &amp; Tag</div>
+      </div>
+      <div class="panel-body-inner">
+        <div class="highlighter-toolbar">
+          <button class="hl-btn hl-green" id="hl-i-btn" onclick="setHighlighter('impact')" title="Tag as [I] Impact">
+            <span class="hl-dot hl-g-dot"></span>[I] IMPACT
+          </button>
+          <button class="hl-btn hl-amber-btn" id="hl-e-btn" onclick="setHighlighter('explain')" title="Tag as [E] Explain">
+            <span class="hl-dot hl-a-dot"></span>[E] EXPLAIN
+          </button>
+          <button class="hl-btn hl-red-btn" id="hl-n-btn" onclick="setHighlighter('name')" title="Tag as [N] Name">
+            <span class="hl-dot hl-r-dot"></span>[N] NAME
+          </button>
+        </div>
+        
+        <div class="student-response-area" id="student-response" onmouseup="applyHighlight()">
+          <em style="color:var(--muted);font-size:0.8rem;">[ Your submitted answer will appear here for marking. Select text and click a tag button. ]</em>
+        </div>
+
+        <div class="tagging-legend" style="margin-top:0.8rem;">
+          <span class="tag-explain">Select text, then tag it:</span>
+          <span class="tag-green-ex">✓ IMPACT = full marks</span>
+          <span class="tag-amber-ex">~ EXPLAIN = partial</span>
+          <span class="tag-red-ex">○ NAME = 1 mark only</span>
+        </div>
+
+        <!-- Vulnerability Alert -->
+        <div class="vuln-alert" id="vuln-alert">
+          <div class="vuln-header">
+            <span class="vuln-icon">⚠</span>
+            <span class="vuln-title">VULNERABILITY DETECTED</span>
+          </div>
+          <div class="vuln-msg">
+            System Check: You provided Data and Information, but missed the Knowledge (Impact). <strong>No impact = No 3rd mark.</strong>
+          </div>
+          <div class="vuln-tip">
+            "Ask yourself: what does this mean for the business's revenue, efficiency, or competitive advantage? That's your Impact mark."
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-end;">
+          <button class="btn-submit" onclick="calibrateResult()">Calibrate Score →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Panel -->
+    <div class="score-panel" id="score-panel" style="display:none;">
+      <div class="score-header">
+        <div class="score-title">N·E·I Proficiency Breakdown</div>
+        <div class="score-chips">
+          <div class="score-chip chip-n"><span class="chip-dot"></span>NAME</div>
+          <div class="score-chip chip-e"><span class="chip-dot"></span>EXPLAIN</div>
+          <div class="score-chip chip-i"><span class="chip-dot"></span>IMPACT</div>
+        </div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[N] Name</div>
+        <div class="bar-track"><div class="bar-fill n-fill" id="bar-n"></div></div>
+        <div class="bar-pct" id="pct-n">—</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[E] Explain</div>
+        <div class="bar-track"><div class="bar-fill e-fill" id="bar-e"></div></div>
+        <div class="bar-pct" id="pct-e">—</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[I] Impact</div>
+        <div class="bar-track"><div class="bar-fill i-fill" id="bar-i"></div></div>
+        <div class="bar-pct" id="pct-i">—</div>
+      </div>
+      <div style="margin-bottom:1.2rem;">
+        <button id="btn-show-ma" onclick="showModelAnswer()" style="display:none;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;padding:0.5rem 1.4rem;border-radius:6px;background:rgba(255,167,38,0.1);border:1px solid rgba(255,167,38,0.4);color:var(--gold);cursor:pointer;width:100%;">⭐ SHOW MODEL ANSWER</button>
+        <div class="pa-model-answer" id="ma-panel"></div>
+      </div>
+      <div style="text-align:center;margin-top:2rem;">
+        <button class="btn-primary" onclick="goToScene('e')">Complete Mission & Claim Badge →</button>
+      </div>
+    </div>
   </div>
 </section>
+
 <section id="scene-e" class="scene">
   <div class="completion-header">◈ FIELD TRAINING 6.4 // MISSION COMPLETE ◈</div>
   
@@ -1504,7 +1610,49 @@ body::after{
 </div>
 
 <script>
-// ─── STATE ────────────────────────────────────────────
+
+// ─── SCENE PERSISTENCE ──────────────────────────────────────────
+const _SCENE_KEY = 'msm_ft_64_scene';
+const _FT_KEY    = 'msm_ft_64';
+const _sceneToStation = {a:0, b:1, c:2, d:3, e:4};
+
+
+function _showSaveToast(){
+  const t=document.getElementById('msm-save-toast');
+  if(!t)return;
+  t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+function _saveScene(id) {
+  _showSaveToast();
+  localStorage.setItem(_SCENE_KEY, id);
+  try {
+    const ft = JSON.parse(localStorage.getItem(_FT_KEY) || '{"stations":[]}');
+    if (!Array.isArray(ft.stations)) ft.stations = [false,false,false,false,false,false];
+    while (ft.stations.length < 6) ft.stations.push(false);
+    const idx = _sceneToStation[id];
+    if (idx !== undefined) {
+      ft.stations[idx] = true;
+      if (id === 'e') ft.stations = [true,true,true,true,true,true];
+    }
+    localStorage.setItem(_FT_KEY, JSON.stringify(ft));
+  } catch(e) {}
+}
+
+function _resumeScene() {
+  const urlScene = new URLSearchParams(location.search).get('scene');
+  if (urlScene && 'abcde'.includes(urlScene)) {
+    goToScene(urlScene);
+    return;
+  }
+  const saved = localStorage.getItem(_SCENE_KEY);
+  if (saved && 'abcde'.includes(saved) && saved !== 'a') {
+    goToScene(saved);
+  }
+}
+
 const state = {
   currentScene: 'a',
   activeHighlighter: null,
@@ -1516,11 +1664,15 @@ const state = {
   dndPlacements: {},
 };
 
+const MODEL_ANSWERS=[{q:'E-commerce targeted marketing (3 marks)',n:'Customer purchase history data is used to feed a recommendation algorithm — a machine learning system that identifies correlations between products previously bought together.',e:'Each time the customer visits the site, the algorithm cross-references their purchase history against other customers with similar buying patterns and automatically surfaces relevant product suggestions without manual curation.',i:'This increases average order value by presenting relevant upsell opportunities at the point of purchase, generating additional revenue from the existing customer base without increasing acquisition costs.',full:'Customer purchase history feeds a recommendation algorithm that identifies correlations between products bought together. Each visit, the system cross-references purchase patterns across all customers and surfaces personalised suggestions automatically. This increases average order value — presenting relevant upsell opportunities at the point of purchase — generating additional revenue from existing customers without increasing acquisition costs.'}];
+function showModelAnswer(){const ma=MODEL_ANSWERS[0];const panel=document.getElementById('ma-panel');if(!panel)return;panel.innerHTML='<div class="pma-hdr"><div class="pma-hdr-title">&#x2748; EXAMINER\'S FULL-MARK RESPONSE</div><div class="pma-hdr-sub">'+ma.q+'</div></div><div class="pma-body"><div class="pma-label">N·E·I COMPONENTS</div><div class="pma-component"><span class="pma-badge n">N</span><div class="pma-text">'+ma.n+'</div></div><div class="pma-component"><span class="pma-badge e">E</span><div class="pma-text">'+ma.e+'</div></div><div class="pma-component"><span class="pma-badge i">I</span><div class="pma-text">'+ma.i+'</div></div><hr class="pma-divider"/><div class="pma-label">COMPLETE RESPONSE</div><div class="pma-full">'+ma.full+'</div></div>';panel.classList.add('vis');document.getElementById('btn-show-ma').style.display='none';panel.scrollIntoView({behavior:'smooth',block:'start'});}
+
 // ─── SCENE NAVIGATION ────────────────────────────────
 function goToScene(id) {
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   document.getElementById('scene-' + id).classList.add('active');
   state.currentScene = id;
+  _saveScene(id);
   updateProgress();
   window.scrollTo(0,0);
   document.querySelectorAll('.nav-dot').forEach(d => {
@@ -1765,7 +1917,11 @@ const iKeywords = ['revenue', 'profit', 'sales', 'conversion', 'retention', 'cos
 function analyseAnswer(text) {
   const lower = text.toLowerCase();
   const words = text.trim().split(/\s+/).filter(w => w).length;
-  document.getElementById('word-count').textContent = words;
+    document.getElementById('word-count').textContent = words;
+  const _wcWarn = document.getElementById('wc-warn');
+  if (_wcWarn) _wcWarn.style.display = (words > 0 && words < 10) ? 'block' : 'none';
+  const _wcSpan = document.getElementById('word-count');
+  if (_wcSpan) _wcSpan.style.color = (words > 0 && words < 10) ? 'var(--red)' : '';
   document.getElementById('char-count').textContent = text.length;
 
   const hasN = nKeywords.some(k => lower.includes(k));
@@ -1872,6 +2028,8 @@ function calibrateResult() {
   // Show score panel
   const panel = document.getElementById('score-panel');
   panel.style.display = 'block';
+  const maBtn=document.getElementById('btn-show-ma');
+  if(maBtn)maBtn.style.display='';
 
   setTimeout(() => {
     document.getElementById('bar-n').style.width = state.neiScore.n + '%';
@@ -1918,5 +2076,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- nextstep-ft-patched -->
 
 <!-- ft-6-4-built -->
+
+<div id="msm-save-toast">✓ PROGRESS AUTO-SAVED</div>
 </body>
 </html>

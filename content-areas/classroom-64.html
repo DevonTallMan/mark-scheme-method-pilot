@@ -1158,6 +1158,23 @@ function showComplete() {
   const pb = parseInt(localStorage.getItem('msm_64_pb') || '0');
   if (totalXP > pb) localStorage.setItem('msm_64_pb', totalXP);
 
+  // ── Sync to platform-standard keys ──
+  (function _syncToPlatform() {
+    try {
+      var _xpToAdd = Math.min(totalXP, 150);
+      var _platformXP = parseInt(localStorage.getItem('msm_xp') || '0');
+      localStorage.setItem('msm_xp', _platformXP + _xpToAdd);
+      var _ftData = {stations:[true,true,true,true,true,true]};
+      localStorage.setItem('msm_ft_64', JSON.stringify(_ftData));
+      var _hubBadges = JSON.parse(localStorage.getItem('msm_badges') || '[]');
+      if (!_hubBadges.includes('compliance_officer')) {
+        _hubBadges.push('compliance_officer');
+        localStorage.setItem('msm_badges', JSON.stringify(_hubBadges));
+      }
+    } catch(e) { console.warn('[MSM sync]', e); }
+  })();
+
+
   document.getElementById('pb-fill').style.width  = '100%';
   document.getElementById('pb-label').textContent = 'COMPLETE';
   document.querySelectorAll('.sdot').forEach(d => d.className = 'sdot done');
