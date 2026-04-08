@@ -352,9 +352,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:0%;background:linear-gradient(90deg,#A855F7,#A855F7)"></div></div>
         <span class="prog-pct" style="color:#A855F7">0%</span>
       </div>
-      <div class="prog-row" data-badge="compliance_officer" data-accent="#00D4B8" style="opacity:0.5;cursor:not-allowed;">
+      <div class="prog-row" data-badge="compliance_officer" data-accent="#00D4B8">
         <span class="prog-ca">6.4</span>
-            <span class="prog-name" style="opacity:0.4;">Big Data, Warehousing &amp; GDPR</span>
+            <span class="prog-name">Big Data, Warehousing &amp; GDPR</span>
             <span style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--muted);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:2px 8px;cursor:not-allowed;">COMING SOON</span>
       </div>
     </div>
@@ -490,6 +490,7 @@ function initPage(){
     {badge:'signal_mapper',  label:'6.1.3 — How Data Is Generated',         href:'learn/6-1-3/'},
     {badge:'data_architect', label:'6.2 — Data Formats',                    href:'learn/6-2/'},
     {badge:'systems_analyst',label:'6.3 — Data Systems',                    href:'learn/6-3/'},
+    {badge:'compliance_officer',label:'6.4 — Big Data, Warehousing & GDPR',     href:'learn/6-4/'},
   ];
   const nextModule=MODULE_SEQ.find(m=>!badges.includes(m.badge));
   if(nextModule){
@@ -513,6 +514,7 @@ function initPage(){
     'signal_mapper':      {ftKey:'msm_ft_613', max:6},
     'data_architect':     {ftKey:'msm_ft_62',  max:6},
     'systems_analyst':    {ftKey:'msm_ft_63',  max:6},
+    'compliance_officer': {ftKey:'msm_ft_64',  max:6},
   };
   document.querySelectorAll('.prog-row').forEach(row=>{
     const badge=row.dataset.badge;
@@ -659,6 +661,7 @@ window.addEventListener('beforeunload',()=>{
   <a href="review-613.html" tabindex="-1">Return Mission 6.1.3</a>
   <a href="review-62.html" tabindex="-1">Return Mission 6.2</a>
   <a href="review-63.html" tabindex="-1">Return Mission 6.3</a>
+  <a href="review-64.html" tabindex="-1">Return Mission 6.4</a>
 </div>
 
 <!-- a11y-patched -->
@@ -674,7 +677,7 @@ window.addEventListener('beforeunload',()=>{
 <!-- main-landmark -->
 
 <!-- contrast2-patched -->
-<div class="msm-rm-panel" aria-label="Return Missions"><div class="rm-title">RETURN MISSIONS &mdash; SPACED RETRIEVAL</div><div class="rm-links"><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-611.html" class="rm-link">6.1.1 DIK</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-612.html" class="rm-link">6.1.2 Data Need</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-613.html" class="rm-link">6.1.3 Generation</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-62.html" class="rm-link">6.2 Formats</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-63.html" class="rm-link">6.3 Systems</a></div></div>
+<div class="msm-rm-panel" aria-label="Return Missions"><div class="rm-title">RETURN MISSIONS &mdash; SPACED RETRIEVAL</div><div class="rm-links"><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-611.html" class="rm-link">6.1.1 DIK</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-612.html" class="rm-link">6.1.2 Data Need</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-613.html" class="rm-link">6.1.3 Generation</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-62.html" class="rm-link">6.2 Formats</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-63.html" class="rm-link">6.3 Systems</a><a href="https://devontallman.github.io/mark-scheme-method-pilot/review-64.html" class="rm-link">6.4 Big Data</a></div></div>
 <!-- rm-panel-patched -->
 </body>
 </html>

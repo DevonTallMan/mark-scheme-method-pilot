@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Return Mission: 6.4 // MSM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--void:#0D1117;--green:#39FF14;--gold:#FFD700;--red:#FF3838;--amber:#FF9500;--dim:rgba(232,237,243,0.45);--border:rgba(255,255,255,0.08);--panel:rgba(255,255,255,0.04)}
+*{box-sizing:border-box;margin:0;padding:0}html,body{height:100%;background:var(--void);color:#fff;font-family:'Rajdhani',sans-serif;overflow:hidden}
+.topbar{position:fixed;top:0;left:0;right:0;height:48px;background:rgba(13,17,23,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100}
+.tb-brand{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green);font-weight:700;letter-spacing:2px}.tb-div{width:1px;height:20px;background:var(--border)}
+.tb-title{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:1px}.tb-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.tb-qcount,.tb-timer{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--dim)}.tb-score{font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);font-weight:700}
+.tb-timer.warn{color:var(--amber)}.tb-timer.urgent{color:var(--red);animation:pulse .5s infinite alternate}@keyframes pulse{to{opacity:.5}}
+.prog-track{position:fixed;top:48px;left:0;right:0;height:3px;background:rgba(255,255,255,.06)}.prog-fill{height:100%;background:var(--green);transition:width .5s}
+.main{margin-top:51px;height:calc(100vh - 107px);display:grid;grid-template-columns:1fr 1fr;overflow:hidden}.qp,.fbp{padding:26px;overflow-y:auto}.qp{border-right:1px solid var(--border)}
+.rm-badge{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:rgba(57,255,20,.1);color:var(--green);border:1px solid rgba(57,255,20,.25);border-radius:4px;padding:3px 10px;display:inline-block;margin-bottom:12px}
+.q-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}.q-txt{font-size:16px;line-height:1.6;margin-bottom:18px}
+.mcq-opts{display:flex;flex-direction:column;gap:8px}.opt{padding:11px 14px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.7);transition:all .2s;user-select:none;line-height:1.4}
+.opt:hover{border-color:rgba(57,255,20,.4);color:#fff}.opt.correct{background:rgba(57,255,20,.12);border-color:var(--green);color:var(--green)}.opt.wrong{background:rgba(255,56,56,.08);border-color:rgba(255,56,56,.4);color:rgba(255,150,150,.9)}
+.mcq-fb{margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:11px;min-height:16px}.mcq-fb.pass{color:var(--green)}.mcq-fb.fail{color:var(--amber)}
+.nei-area{width:100%;min-height:110px;padding:12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:15px;line-height:1.6;resize:vertical}.nei-area:focus{outline:none;border-color:rgba(57,255,20,.4)}
+.nei-guide{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.nei-tag{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:1px}
+.nei-tag.n{background:rgba(57,255,20,.1);color:var(--green);border:1px solid rgba(57,255,20,.25)}.nei-tag.e{background:rgba(255,215,0,.1);color:var(--gold);border:1px solid rgba(255,215,0,.25)}.nei-tag.i{background:rgba(255,149,0,.1);color:var(--amber);border:1px solid rgba(255,149,0,.25)}
+.wc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);margin-top:6px}.fbp{display:flex;flex-direction:column;gap:14px}
+.fb-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;opacity:.4}.fb-ph-icon{font-size:40px}.fb-ph-txt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--dim);text-align:center;max-width:220px;line-height:1.6}
+.fb-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px}.fb-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:10px}
+.fb-awarded{font-family:'Orbitron',monospace;font-size:26px;font-weight:700;margin-bottom:4px}.fb-awarded span{font-size:14px;color:var(--dim)}.fb-txt{font-size:14px;color:rgba(255,255,255,.8);line-height:1.6}
+.fb-model{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--dim);background:rgba(255,255,255,.03);border-left:3px solid var(--green);border-radius:0 6px 6px 0;padding:10px 14px;line-height:1.6}
+.bbar{position:fixed;bottom:0;left:0;right:0;height:56px;background:rgba(13,17,23,.96);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:12px;z-index:100}
+.bbar-s{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);flex:1}.btn{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-radius:6px;padding:10px 20px;cursor:pointer;border:none;transition:all .2s}
+.btn-p{background:var(--green);color:var(--void)}.btn-p:hover{background:#5fff3a}.btn-p:disabled{background:rgba(57,255,20,.2);color:rgba(57,255,20,.5);cursor:not-allowed;pointer-events:none}
+.btn-s{background:transparent;color:var(--dim);border:1px solid rgba(255,255,255,.12)}.btn-s:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.rs{display:none;position:fixed;inset:0;background:var(--void);z-index:200;overflow-y:auto;padding:56px 24px 40px}.rs.show{display:block}.ri{max-width:620px;margin:0 auto}
+.rh{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;margin-bottom:6px}.rsub{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--dim);margin-bottom:24px}
+.sr{display:flex;gap:14px;margin-bottom:20px}.sc{flex:1;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px;text-align:center}
+.sc-l{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}.sc-v{font-family:'Orbitron',monospace;font-size:28px;font-weight:700}
+.sc-v.g{color:var(--green)}.sc-v.r{color:var(--red)}.sc-v.n{color:var(--gold)}.nb{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:16px}
+.nr{display:flex;align-items:center;gap:10px;margin-bottom:8px}.nr:last-child{margin-bottom:0}.nl{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;width:80px;letter-spacing:1px}
+.nt{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}.nf{height:100%;border-radius:3px;transition:width .6s}
+.np{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);width:32px;text-align:right}
+.nrc{background:rgba(57,255,20,.05);border:1px solid rgba(57,255,20,.2);border-radius:10px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:14px}.nri{font-size:26px}
+.nrt{font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.6}.nr-date{font-family:'Orbitron',monospace;font-size:14px;color:var(--green);font-weight:700}
+.ra{display:flex;gap:10px;flex-wrap:wrap}.lo{position:fixed;inset:0;background:var(--void);z-index:300;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.lo-txt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--dim)}.spin{width:30px;height:30px;border:2px solid rgba(57,255,20,.2);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+<style id="msm-breadcrumb-style">.msm-breadcrumb{font-family:monospace;font-size:11px;padding:10px 20px 0;color:rgba(232,237,243,0.65);letter-spacing:0.06em;}.msm-breadcrumb a{color:rgba(57,255,20,0.85);text-decoration:none;}.msm-breadcrumb a:hover{text-decoration:underline;}</style></head>
+<body>
+<div class="msm-breadcrumb" aria-label="Breadcrumb"><a href="https://devontallman.github.io/mark-scheme-method-pilot/hub.html">&larr; HUB</a> &rsaquo; Return Mission 63</div>
+
+<div class="lo" id="lo"><div class="spin"></div><div class="lo-txt">Loading Return Mission...</div></div>
+<nav class="topbar"><span class="tb-brand">MSM</span><div class="tb-div"></div><span class="tb-title">RETURN MISSION - CA 6.3 DATA SYSTEMS</span><div class="tb-right"><span class="tb-qcount" id="tq">Q 1 of 5</span><div class="tb-div"></div><span class="tb-score" id="ts">0 pts</span><div class="tb-div"></div><span class="tb-timer" id="tt">45</span></div></nav>
+<div class="prog-track"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+<div class="main"><div class="qp" id="qp"></div><div class="fbp" id="fbp"><div class="fb-ph"><div class="fb-ph-icon">!</div><div class="fb-ph-txt">Answer to get AXIOM-7 feedback.</div></div></div></div>
+<div class="bbar"><span class="bbar-s" id="bs">Answer before continuing</span><button class="btn btn-s" id="bsk">Skip</button><button class="btn btn-p" id="bn" disabled>Next</button></div>
+<div class="rs" id="rs"></div>
+<script src="../firebase-config.js"></script>
+<script src="../return-mission-scheduler.js"></script>
+<script>
+window.AXIOM7_PROXY_URL="https://msm-axiom-proxy.morrischristopher675.workers.dev";
+var MID="ca-63",MN="How Data Supports Organisations";
+var QS=[
+  {t:"mcq",q:"Which of the following best describes a data warehouse?",
+   opts:["A system for real-time transactional processing","A centralised repository for historical, structured data used for analytics","A tool for capturing unstructured social media data","A NoSQL database for high-velocity data streams"],
+   ans:1,
+   exp:"A data warehouse stores large volumes of structured, historical data optimised for analytical queries — not for live transactions."},
+  {t:"mcq",q:"A company is subject to GDPR. A customer requests deletion of their personal data. Under the 'right to erasure', which of the following is most accurate?",
+   opts:["The company must immediately delete all data held on the customer","The company must delete data unless retention is required for a legal obligation","The company only needs to delete data if it was collected without consent","GDPR does not apply to data held in a data warehouse"],
+   ans:1,
+   exp:"GDPR's right to erasure applies unless the data controller has a lawful basis to retain it, such as a legal obligation."},
+  {t:"nei",q:"A supermarket chain analyses five years of loyalty card transaction data to identify purchasing patterns and optimise stock levels. Explain one way this adds business value.",
+   ph:"Name the technique (e.g. predictive analytics, data mining), explain how it uses the historical data, and state the business impact..."}
+];
+var curQ=0,score=0,totPts=0,tmr=null,tLeft=45,answered=false,neiBreakdown={n:0,e:0,i:0},qRes=[];
+function startTimer(){clearInterval(tmr);tLeft=45;updTimer();tmr=setInterval(function(){tLeft--;updTimer();if(tLeft<=0){clearInterval(tmr);autoSkip();}},1000);}
+function updTimer(){var el=document.getElementById("tt");el.textContent=tLeft;el.className="tb-timer"+(tLeft<=5?" urgent":tLeft<=10?" warn":"");}
+function autoSkip(){if(!answered){answered=true;qRes.push({ok:false,pts:0});showFB(false);enNext();}}
+function renderQ(i){answered=false;var q=QS[i];document.getElementById("tq").textContent="Q "+(i+1)+" of "+QS.length;document.getElementById("pf").style.width=(i/QS.length*100)+"%";document.getElementById("bn").disabled=true;document.getElementById("bn").textContent="Next";document.getElementById("bs").textContent="Answer before continuing";document.getElementById("ts").textContent=score+" pts";
+document.getElementById("fbp").innerHTML='<div class="fb-ph"><div class="fb-ph-icon">'+(q.t==="nei"?"NEI":"+1")+'</div><div class="fb-ph-txt">'+(q.t==="nei"?"Submit for AXIOM-7 feedback.":"Select an answer.")+'</div></div>';
+if(q.t==="mcq"){document.getElementById("qp").innerHTML='<span class="rm-badge">Quick Check 1 mark</span><div class="q-lbl">Select the correct answer</div><div class="q-txt">'+q.q+'</div><div class="mcq-opts" id="mo">'+q.opts.map(function(o,j){return'<div class="opt" data-i="'+j+'">'+String.fromCharCode(65+j)+". "+o+"</div>";}).join("")+'</div><div class="mcq-fb" id="mf"></div>';document.querySelectorAll(".opt").forEach(function(el){el.addEventListener("click",function(){handleMCQ(el,q);});});}
+else{document.getElementById("qp").innerHTML='<span class="rm-badge">NEI Answer 3 marks</span><div class="q-lbl">Write a 3-mark answer</div><div class="q-txt">'+q.q+'</div><textarea class="nei-area" id="na" placeholder="'+q.ph+'" rows="5"></textarea><div class="nei-guide"><span class="nei-tag n">N - Name</span><span class="nei-tag e">E - Explain</span><span class="nei-tag i">I - Impact</span></div><div class="wc" id="wc">0 words</div>';var ta=document.getElementById("na");ta.addEventListener("input",function(){var wc=ta.value.trim().split(/\s+/).filter(function(w){return w;}).length;document.getElementById("wc").textContent=wc+" words";if(wc>=10){document.getElementById("bn").disabled=false;document.getElementById("bn").textContent="Submit";document.getElementById("bs").textContent="Ready - AXIOM-7 will mark it";}else{document.getElementById("bs").textContent=(10-wc)+" more word"+(10-wc===1?"":"s")+" needed to submit";}});document.getElementById("bn").onclick=function(){if(QS[curQ].t==="nei"&&!answered)handleNEI(ta.value,q);else adv();};}
+startTimer();}
+function handleMCQ(el,q){if(answered)return;answered=true;clearInterval(tmr);var ch=parseInt(el.getAttribute("data-i")),ok=ch===q.a;score+=ok?1:0;totPts+=1;qRes.push({ok:ok,pts:ok?1:0});document.querySelectorAll(".opt").forEach(function(o,i){o.style.pointerEvents="none";if(i===q.a)o.classList.add("correct");else if(i===ch&&!ok)o.classList.add("wrong");});var fb=document.getElementById("mf");fb.className="mcq-fb "+(ok?"pass":"fail");fb.textContent=ok?"Correct":"Answer was "+String.fromCharCode(65+q.a);showFB(ok);enNext();}
+async function handleNEI(answer,q){if(answered)return;answered=true;clearInterval(tmr);document.getElementById("bn").disabled=true;document.getElementById("bs").textContent="AXIOM-7 marking...";document.getElementById("fbp").innerHTML='<div class="fb-ph"><div class="spin" style="margin:auto"></div><div class="fb-ph-txt" style="text-align:center">Reviewing...</div></div>';
+var sys="You are a T-Level Digital examiner coaching a student on Data Systems. Mark 1=Name (names the process or error: validation/verification/transcription/transposition), 2=Explain (shows what the process actually does in practice), 3=Impact (gives a specific downstream consequence if the error is not caught). For MISSING: affirm what is right, use a supermarket checkout or bank account example to illustrate the gap, end with one redirecting question. Format: AWARDED: X/3 MISSING: coaching feedback or Full marks NEXT TIME: redirect question max 12 words NEI_SCORES: N=X E=X I=X";
+try{var res=await fetch(window.AXIOM7_PROXY_URL+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:sys},{role:"user",content:"Q: "+q.q+" Answer: "+answer}],temperature:0.2,max_tokens:350})});
+var data=await res.json();var text=data.choices&&data.choices[0]?data.choices[0].message.content:"";
+var am=text.match(/AWARDED:\s*(\d)/),mm=text.match(/MISSING:\s*(.+)/),nm=text.match(/NEXT TIME:\s*(.+)/),nem=text.match(/NEI_SCORES:\s*N=(\d)\s*E=(\d)\s*I=(\d)/);
+var awarded=am?parseInt(am[1]):0;score+=awarded;totPts+=3;
+if(nem)neiBreakdown={n:parseInt(nem[1]),e:parseInt(nem[2]),i:parseInt(nem[3])};else neiBreakdown={n:awarded>=1?1:0,e:awarded>=2?1:0,i:awarded>=3?1:0};
+qRes.push({ok:awarded>=2,pts:awarded});var col=awarded===3?"var(--green)":awarded===2?"var(--gold)":"var(--red)";
+document.getElementById("fbp").innerHTML='<div class="fb-card"><div class="fb-lbl">AXIOM-7 Mark</div><div class="fb-awarded" style="color:'+col+'">'+awarded+'<span>/3</span></div></div>'+(mm&&mm[1]!=="Full marks"?'<div class="fb-card"><div class="fb-lbl">What earns the next mark</div><div class="fb-model">'+mm[1].trim()+'</div></div>':"")+( nm?'<div class="fb-card"><div class="fb-lbl">Next time</div><div class="fb-txt">'+nm[1].trim()+'</div></div>':"");
+enNext();}catch(e){qRes.push({ok:false,pts:0});document.getElementById("fbp").innerHTML='<div class="fb-card"><div class="fb-lbl">AXIOM-7 Unavailable</div><div class="fb-txt">Could not reach AI. Move on.</div></div>';enNext();}}
+function showFB(ok){document.getElementById("fbp").innerHTML='<div class="fb-card"><div class="fb-lbl">'+(ok?"Correct":"Incorrect")+'</div><div class="fb-txt" style="color:'+(ok?"var(--green)":"var(--amber)")+'">'+( ok?"Good - solid recall.":"Review this before next session.")+'</div></div>';}
+function enNext(){var btn=document.getElementById("bn");btn.disabled=false;btn.textContent=curQ<QS.length-1?"Next":"Results";btn.onclick=adv;document.getElementById("bs").textContent=curQ<QS.length-1?"Ready":"Session complete";}
+function adv(){curQ++;if(curQ>=QS.length)showResults();else renderQ(curQ);}
+async function showResults(){clearInterval(tmr);var pct=totPts>0?Math.round(score/totPts*100):0;
+  // Award XP for completing a return mission (25 base, +25 bonus if passed)
+  try{var _rmXP=25+(pct>=70?25:0);var _rmPlatXP=parseInt(localStorage.getItem('msm_xp')||'0');localStorage.setItem('msm_xp',_rmPlatXP+_rmXP);}catch(e){}var cc=new URLSearchParams(window.location.search).get("class")||"5MFH4P";var nextRv=null,intDays=1,passed=false;
+try{if(window.MSM_ReturnMission){var r=await window.MSM_ReturnMission.writeReviewResult(MID,pct,neiBreakdown);if(r){nextRv=r.nextReviewDate;intDays=r.intervalDays;passed=r.passed;}}}catch(e){console.warn(e);}
+var ds=nextRv?nextRv.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}):"in "+intDays+" day"+(intDays!==1?"s":"");var pc=pct>=80?"g":pct>=60?"n":"r";var nei=neiBreakdown;
+var nRows=[{l:"N - NAME",v:nei.n,c:"var(--green)"},{l:"E - EXPLAIN",v:nei.e,c:"var(--gold)"},{l:"I - IMPACT",v:nei.i,c:"var(--amber)"}].map(function(x){return'<div class="nr"><span class="nl" style="color:'+x.c+'">'+x.l+'</span><div class="nt"><div class="nf" style="width:'+(x.v*100)+'%;background:'+x.c+'"></div></div><span class="np">'+(x.v?"Y":"N")+'</span></div>';}).join("");
+document.getElementById("rs").innerHTML='<div class="ri"><div class="rh">'+(passed?"Mission Complete":"Keep Training")+'</div><div class="rsub">CA 6.3 Return Mission</div><div class="sr"><div class="sc"><div class="sc-l">Score</div><div class="sc-v '+pc+'">'+pct+'%</div></div><div class="sc"><div class="sc-l">Points</div><div class="sc-v n">'+score+"/"+totPts+'</div></div><div class="sc"><div class="sc-l">Correct</div><div class="sc-v n">'+qRes.filter(function(r){return r.ok;}).length+"/"+QS.length+'</div></div></div><div class="nb"><div class="fb-lbl" style="margin-bottom:12px">NEI PROFICIENCY</div>'+nRows+'</div><div class="nrc"><div class="nri">Cal</div><div><div class="nrt">Next Return Mission</div><div class="nr-date">'+ds+'</div><div class="nrt" style="opacity:.6;font-size:11px;margin-top:4px">'+(passed?"Interval extended to "+intDays+" days.":"Interval reset - revisit sooner.")+'</div></div></div><div class="ra"><a class="btn btn-p" href="../hub.html?class='+cc+'" style="text-decoration:none">Hub</a><a class="btn btn-s" href="../topics.html?class='+cc+'" style="text-decoration:none">Topics</a><button class="btn btn-s" onclick="location.reload()">Retry</button></div></div>';
+document.getElementById("rs").classList.add("show");}
+document.addEventListener("DOMContentLoaded",function(){document.getElementById("bsk").addEventListener("click",function(){if(!answered){clearInterval(tmr);answered=true;qRes.push({ok:false,pts:0});}adv();});document.getElementById("bn").onclick=adv;setTimeout(function(){document.getElementById("lo").style.display="none";renderQ(0);},800);});
+</script>
+
+<!-- perf-patched -->
+
+<!-- rmv2-63-final -->
+</body>
+</html>
