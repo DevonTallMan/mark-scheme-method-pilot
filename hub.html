@@ -66,6 +66,13 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 /* ── CTA CARD */
 .cta-card{background:linear-gradient(135deg,rgba(57,255,20,0.08) 0%,rgba(255,215,0,0.04) 100%);border:1px solid rgba(57,255,20,0.25);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.hub-zero-state{display:none;background:linear-gradient(135deg,rgba(57,255,20,0.06),rgba(255,215,0,0.03));border:1px solid rgba(57,255,20,0.25);border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.hub-zero-state.show{display:flex;}
+.hz-icon{font-size:22px;flex-shrink:0;}
+.hz-body{flex:1;}
+.hz-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.5px;margin-bottom:3px;}
+.hz-sub{font-size:12px;color:var(--dim);line-height:1.5;}
+
 .cta-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(57,255,20,0.04),transparent);pointer-events:none;}
 .cta-eyebrow{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--green);margin-bottom:10px;}
 .cta-title{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.2;}
@@ -228,7 +235,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
     <div class="hero-text">
       <div class="hero-eyebrow"><span id="main-content"></span>STUDENT COMMAND CENTRE</div>
-      <div class="hero-name">WELCOME BACK, <span id="heroName">SPECIALIST</span></div>
+      <div class="hero-name" id="heroGreeting">WELCOME BACK, <span id="heroName">SPECIALIST</span></div>
       <p class="hero-sub">Your NEI proficiency is being tracked. Examiners award the third mark for Impact — that's where most marks are lost. Let's change that.</p>
       <div class="hero-stats">
         <div class="hstat hs-xp">
@@ -285,13 +292,20 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
 
     <!-- Progress strip -->
+    <div class="hub-zero-state" id="hubZeroState">
+      <div class="hz-icon">🎯</div>
+      <div class="hz-body">
+        <div class="hz-title">FIRST TIME HERE?</div>
+        <div class="hz-sub">You have no progress yet. Start with CA 6.1.1 — it unlocks everything else. Takes about 45 minutes.</div>
+      </div>
+    </div>
     <div class="section-label">MODULE PROGRESS</div>
     <div class="progress-strip" id="progStrip">
       <div class="prog-row" data-badge="raw_signal" data-accent="#39FF14">
         <span class="prog-ca">6.1.1</span>
         <span class="prog-name">Data, Information & Knowledge</span>
-        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:65%;background:linear-gradient(90deg,#39FF14,#39FF14)"></div></div>
-        <span class="prog-pct" style="color:#39FF14">65%</span>
+        <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:0%;background:linear-gradient(90deg,#39FF14,#39FF14)"></div></div>
+        <span class="prog-pct" style="color:#39FF14">0%</span>
       </div>
       <div class="prog-row" data-badge="market_intelligence" data-accent="#FFD700">
         <span class="prog-ca">6.1.2</span>
@@ -418,6 +432,11 @@ function initPage(){
 
   // Top stats
   document.getElementById('statXP').textContent=xp;
+  // Greeting — first visit vs returning
+  const greetEl=document.getElementById('heroGreeting');
+  if(greetEl && xp===0 && badges.length===0){
+    greetEl.innerHTML='WELCOME, <span id="heroName">SPECIALIST</span>';
+  }
   document.getElementById('statBadges').textContent=badges.length;
   document.getElementById('statRank').textContent=rd.l;
 
@@ -447,18 +466,37 @@ function initPage(){
     else{el.classList.add('locked');}
   });
 
-  // Progress strip — mark earned modules as 100%
+  // Progress strip — read real progress from localStorage
+  const FT_KEYS = {
+    'raw_signal':         {ftKey:'msm_ft_611', max:6},
+    'market_intelligence':{ftKey:'msm_ft_612', max:6},
+    'signal_mapper':      {ftKey:'msm_ft_613', max:6},
+    'data_architect':     {ftKey:'msm_ft_62',  max:6},
+    'systems_analyst':    {ftKey:'msm_ft_63',  max:6},
+  };
   document.querySelectorAll('.prog-row').forEach(row=>{
     const badge=row.dataset.badge;
+    const fill=row.querySelector('.prog-bar-fill');
+    const pctEl=row.querySelector('.prog-pct');
+    if(!fill||!pctEl) return;
     if(badges.includes(badge)){
-      const fill=row.querySelector('.prog-bar-fill');
-      const pctEl=row.querySelector('.prog-pct');
       setTimeout(()=>{fill.style.width='100%';pctEl.textContent='100%';},300);
+    } else if(FT_KEYS[badge]){
+      const ftData=JSON.parse(localStorage.getItem(FT_KEYS[badge].ftKey)||'{"stations":[]}');
+      const done=ftData.stations.filter(Boolean).length;
+      const pct=Math.round((done/FT_KEYS[badge].max)*100);
+      if(pct>0) setTimeout(()=>{fill.style.width=pct+'%';pctEl.textContent=pct+'%';},300);
     }
   });
 }
 
-document.addEventListener('DOMContentLoaded',initPage);
+function initHubZeroState(){
+  const xp=getXP();
+  const badges=getBadges();
+  const el=document.getElementById('hubZeroState');
+  if(el && xp===0 && badges.length===0) el.classList.add('show');
+}
+document.addEventListener('DOMContentLoaded',function(){ initPage(); initHubZeroState(); });
 </script>
 
 <script type="module" id="msm-leaderboard-live-script">
