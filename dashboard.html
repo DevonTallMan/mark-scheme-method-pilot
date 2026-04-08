@@ -575,8 +575,13 @@ function initAll(){
   document.getElementById('scBadges').textContent=(Array.isArray(badges)?badges.length:0)+' / 12';
   const modsDone=MODULE_BADGES.filter(b=>badges.includes(b)).length;
   document.getElementById('scModules').textContent=modsDone+' / 6';
-  document.getElementById('scImpact').textContent='42%';
-  const _ib=document.getElementById('scImpactBench');if(_ib){const _iv=parseFloat(document.getElementById('scImpact').textContent);_ib.style.opacity=_iv>=70?'1':'0.75';_ib.textContent=_iv>=70?'✓ TARGET MET ≥70%':(_iv>0?'TARGET ≥70% ('+Math.round(70-_iv)+'% gap)':'TARGET ≥70%');}// demo
+  // Impact rate — only show demo value if user has activity; zero-state users see clean '--'
+  const _impXP=parseInt(localStorage.getItem('msm_xp')||'0');
+  const _impB=JSON.parse(localStorage.getItem('msm_badges')||'[]');
+  if(_impXP>0||_impB.length>0){
+    document.getElementById('scImpact').textContent='42%';
+    const _ib=document.getElementById('scImpactBench');if(_ib){const _iv=parseFloat(document.getElementById('scImpact').textContent);_ib.style.opacity=_iv>=70?'1':'0.75';_ib.textContent=_iv>=70?'✓ TARGET MET ≥70%':(_iv>0?'TARGET ≥70% ('+Math.round(70-_iv)+'% gap)':'TARGET ≥70%');}
+  }// demo — replace with real Firestore value when wired
 
   // Countdown
   const exam=new Date('2026-05-11');

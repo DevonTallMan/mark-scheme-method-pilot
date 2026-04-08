@@ -66,7 +66,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 /* ── CTA CARD */
 .cta-card{background:linear-gradient(135deg,rgba(57,255,20,0.08) 0%,rgba(255,215,0,0.04) 100%);border:1px solid rgba(57,255,20,0.25);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
-.hub-zero-state{display:none;background:linear-gradient(135deg,rgba(57,255,20,0.06),rgba(255,215,0,0.03));border:1px solid rgba(57,255,20,0.25);border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.hub-zero-state{display:none;background:linear-gradient(135deg,rgba(57,255,20,0.06),rgba(255,215,0,0.03));border:1px solid rgba(57,255,20,0.25);border-radius:12px;padding:16px 20px;margin-bottom:16px;align-items:center;gap:14px;}
 .hub-zero-state.show{display:flex;}
 .hz-icon{font-size:22px;flex-shrink:0;}
 .hz-body{flex:1;}
@@ -235,7 +235,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     </div>
     <div class="hero-text">
       <div class="hero-eyebrow"><span id="main-content"></span>STUDENT COMMAND CENTRE</div>
-      <div class="hero-name" id="heroGreeting">WELCOME BACK, <span id="heroName">SPECIALIST</span></div>
+      <div class="hero-name" id="heroGreeting">WELCOME, <span id="heroName">SPECIALIST</span></div>
       <p class="hero-sub">Your NEI proficiency is being tracked. Examiners award the third mark for Impact — that's where most marks are lost. Let's change that.</p>
       <div class="hero-stats">
         <div class="hstat hs-xp">
@@ -434,8 +434,8 @@ function initPage(){
   document.getElementById('statXP').textContent=xp;
   // Greeting — first visit vs returning
   const greetEl=document.getElementById('heroGreeting');
-  if(greetEl && xp===0 && badges.length===0){
-    greetEl.innerHTML='WELCOME, <span id="heroName">SPECIALIST</span>';
+  if(greetEl && (xp>0 || badges.length>0)){
+    greetEl.innerHTML='WELCOME BACK, <span id="heroName">SPECIALIST</span>';
   }
   document.getElementById('statBadges').textContent=badges.length;
   document.getElementById('statRank').textContent=rd.l;
