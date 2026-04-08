@@ -1150,6 +1150,28 @@ function showComplete() {
   const pb = parseInt(localStorage.getItem('msm_612_pb') || '0');
   if (totalXP > pb) localStorage.setItem('msm_612_pb', totalXP);
 
+  // ── Sync to platform-standard keys so hub/topics reflect classroom progress ──
+  (function _syncToPlatform() {
+    try {
+      // 1. Add XP to platform total (capped to avoid runaway accumulation)
+      var _xpToAdd = Math.min(totalXP, 150);
+      var _platformXP = parseInt(localStorage.getItem('msm_xp') || '0');
+      localStorage.setItem('msm_xp', _platformXP + _xpToAdd);
+
+      // 2. Mark all 6 FT stations as complete in the hub progress strip key
+      var _ftData = {stations:[true,true,true,true,true,true]};
+      localStorage.setItem('msm_ft_612', JSON.stringify(_ftData));
+
+      // 3. Award the hub badge for this module
+      var _hubBadges = JSON.parse(localStorage.getItem('msm_badges') || '[]');
+      if (!_hubBadges.includes('market_intelligence')) {
+        _hubBadges.push('market_intelligence');
+        localStorage.setItem('msm_badges', JSON.stringify(_hubBadges));
+      }
+    } catch(e) { console.warn('[MSM sync]', e); }
+  })();
+
+
   document.getElementById('pb-fill').style.width  = '100%';
   document.getElementById('pb-label').textContent = 'COMPLETE';
   document.querySelectorAll('.sdot').forEach(d => d.className = 'sdot done');
