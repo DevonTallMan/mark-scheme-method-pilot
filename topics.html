@@ -82,6 +82,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sh-dismiss{background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);padding:4px;opacity:0.5;flex-shrink:0;}
 .sh-dismiss:hover{opacity:1;}
 
+/* ── N·E·I Tooltip ── */
+.nei-tip-wrap{position:relative;display:inline;}
+.nei-tip-trigger{border-bottom:1px dotted rgba(57,255,20,0.6);cursor:help;color:inherit;white-space:nowrap;}
+.nei-tip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#0d1a0d;border:1px solid rgba(57,255,20,0.35);border-radius:8px;padding:10px 14px;width:240px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.7);pointer-events:none;opacity:0;transition:opacity .18s;white-space:normal;}
+.nei-tip-wrap:hover .nei-tip-box,
+.nei-tip-wrap.open .nei-tip-box{opacity:1;pointer-events:auto;}
+.nei-tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(57,255,20,0.35);}
+.nei-tip-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;}
+.nei-tip-row:last-child{margin-bottom:0;}
+.nei-tip-letter{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;width:14px;flex-shrink:0;}
+.nl-n{color:#FF8FAB;}.nl-e{color:#FFD580;}.nl-i{color:var(--amber);}
+.nei-tip-def{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,255,255,0.75);line-height:1.5;}
+.nei-tip-tag{font-size:8px;letter-spacing:1px;color:rgba(255,255,255,0.35);margin-top:2px;}
+
+
 .rec-banner{position:relative;z-index:1;margin:20px 40px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.25);border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:14px;}
 .rec-icon{font-size:18px;flex-shrink:0;}
 .rec-body{flex:1;}
@@ -234,7 +249,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
     <div>
       <div class="sh-eyebrow">NEW HERE? START YOUR MISSION</div>
       <div class="sh-heading">Begin with CA 6.1.1 — Data, Information &amp; Knowledge</div>
-      <div class="sh-sub">The foundation module. Every other topic builds on this — complete it first to unlock full N·E·I training.</div>
+      <div class="sh-sub">The foundation module. Every other topic builds on this — complete it first to unlock full <span class="nei-tip-wrap" id="neiTip"><span class="nei-tip-trigger" onclick="toggleNeiTip(event)">N·E·I</span><div class="nei-tip-box"><div class="nei-tip-row"><span class="nei-tip-letter nl-n">N</span><div><div class="nei-tip-def">NAME the technique or concept</div><div class="nei-tip-tag">MARK 1</div></div></div><div class="nei-tip-row"><span class="nei-tip-letter nl-e">E</span><div><div class="nei-tip-def">EXPLAIN how it works in context</div><div class="nei-tip-tag">MARK 2</div></div></div><div class="nei-tip-row"><span class="nei-tip-letter nl-i">I</span><div><div class="nei-tip-def">IMPACT — the business outcome</div><div class="nei-tip-tag">MARK 3 ← MOST MISSED</div></div></div></div></span> training.</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
@@ -707,6 +722,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     var el=document.getElementById('footer-cc');
     if(el){var cc=new URLSearchParams(window.location.search).get('class')||'';if(cc)el.textContent=cc;}
   })();
+
+function toggleNeiTip(e){
+  e.stopPropagation();
+  const w=document.getElementById('neiTip');
+  if(w) w.classList.toggle('open');
+}
+document.addEventListener('click',function(){
+  const w=document.getElementById('neiTip');
+  if(w) w.classList.remove('open');
+});
 </script>
 
 <!-- nav-optimised -->
