@@ -612,6 +612,7 @@ body::after{
   display:flex;justify-content:flex-end;
   gap:1rem;
 }
+.wc-warn{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--red);margin-top:4px;display:none;padding:2px 0;}
 
 .nei-hints{
   margin-top:1.5rem;
@@ -1298,8 +1299,8 @@ body::after{
       </div>
     </div>
 
-    <button id="brief-skip" onclick="startMission()" style="position:absolute;bottom:1.5rem;right:2rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:rgba(255,255,255,0.35);background:transparent;border:1px solid rgba(255,255,255,0.15);padding:0.35rem 1rem;border-radius:4px;cursor:pointer;">SKIP →</button>
-    <div id="brief-prog" style="position:absolute;bottom:1.6rem;left:2rem;font-family:var(--mono);font-size:0.65rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em;"></div>
+    <button id="brief-skip" onclick="startMission()" style="position:absolute;bottom:1.5rem;right:2rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.25);padding:0.4rem 1.2rem;border-radius:4px;cursor:pointer;transition:all 0.2s;">SKIP →</button>
+    <div id="brief-prog" style="position:absolute;bottom:1.7rem;left:2rem;display:flex;align-items:center;gap:2px;"></div>
     <button class="btn-primary" onclick="startMission()">
       <span>INITIATE FIELD TRAINING</span>
       <span class="btn-arrow">→</span>
@@ -1557,6 +1558,7 @@ body::after{
           <span>WORDS: <span id="word-count">0</span></span>
           <span>CHARS: <span id="char-count">0</span></span>
         </div>
+        <div class="wc-warn" id="wc-warn">⚠ Too short — write at least 10 words</div>
 
         <div class="nei-hints">
           <div class="hints-label">◈ N·E·I FRAMEWORK GUIDE</div>
@@ -2106,11 +2108,15 @@ function clearAnswer() {
 
 function submitAnswer() {
   const answer = document.getElementById('answer-input').value.trim();
-  if (!answer) {
+  const warnEl = document.getElementById('wc-warn');
+  const words = answer.split(/\s+/).filter(w=>w).length;
+  if (!answer || words < 10) {
     document.getElementById('answer-input').style.borderColor = 'rgba(255,68,68,0.5)';
-    setTimeout(() => document.getElementById('answer-input').style.borderColor = '', 1000);
+    setTimeout(() => document.getElementById('answer-input').style.borderColor = '', 1500);
+    if (warnEl) { warnEl.style.display = 'block'; setTimeout(()=>warnEl.style.display='none', 3000); }
     return;
   }
+  if (warnEl) warnEl.style.display = 'none';
   state.submittedAnswer = answer;
   
   // Move to scene D and populate
@@ -2211,7 +2217,11 @@ function exportReport() {
 // ─── INIT ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   typeTerminal();
-  var _bN=briefingScript.length,_bI=0;var _bP=document.getElementById('brief-prog');if(_bP)_bP.textContent='0 / '+_bN;var _bT=setInterval(function(){_bI++;if(_bP)_bP.textContent=_bI+' / '+_bN;if(_bI>=_bN)clearInterval(_bT);},1800);
+  var _bN=briefingScript.length,_bI=0;
+  var _bP=document.getElementById('brief-prog');
+  function _bDraw(){if(!_bP)return;var s='';for(var x=0;x<_bN;x++)s+='<span style="display:inline-block;width:6px;height:6px;border-radius:50%;margin:0 2px;background:'+(x<_bI?'rgba(57,255,20,0.8)':'rgba(255,255,255,0.18)')+'"></span>';_bP.innerHTML=s;}
+  _bDraw();
+  var _bT=setInterval(function(){_bI++;_bDraw();if(_bI>=_bN)clearInterval(_bT);},1800);
   buildQuiz();
   buildClassify();
   initDnD();

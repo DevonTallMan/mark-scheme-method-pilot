@@ -58,6 +58,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .sc-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:4px;}
 .sc-bench{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--amber);opacity:0.75;margin-top:5px;display:flex;align-items:center;gap:4px;justify-content:center;}.sc-bench::before{content:'▸';opacity:0.6;}
 
+/* ── EMPTY STATE ── */
+.empty-dash{grid-column:span 3;background:linear-gradient(135deg,rgba(57,255,20,0.06) 0%,rgba(255,215,0,0.03) 100%);border:1px solid rgba(57,255,20,0.25);border-radius:14px;padding:40px 48px;text-align:center;display:none;}
+.empty-dash.visible{display:block;}
+.ed-icon{font-size:36px;margin-bottom:16px;}
+.ed-title{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;}
+.ed-sub{font-size:14px;color:var(--dim);max-width:480px;margin:0 auto 24px;line-height:1.65;}
+.ed-steps{display:flex;justify-content:center;gap:32px;margin-bottom:28px;flex-wrap:wrap;}
+.ed-step{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.ed-step-num{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--green);text-shadow:0 0 14px rgba(57,255,20,0.4);}
+.ed-step-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--muted);}
+.ed-arrow{font-size:20px;color:rgba(255,255,255,0.15);align-self:center;margin-top:-8px;}
+.btn-ed{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:#000;background:var(--green);border:none;border-radius:8px;padding:13px 32px;cursor:pointer;text-decoration:none;box-shadow:0 0 24px rgba(57,255,20,0.3);display:inline-block;}
+
 /* ── EXAM COUNTDOWN BANNER ── */
 .countdown-banner{grid-column:span 3;background:rgba(255,59,59,0.06);border:1px solid rgba(255,59,59,0.25);border-radius:12px;padding:16px 24px;display:flex;align-items:center;gap:24px;overflow:hidden;position:relative;}
 .countdown-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,59,59,0.04),transparent);}
@@ -213,6 +226,21 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 </div>
 
 <div class="main">
+
+  <!-- ── EMPTY STATE ── -->
+  <div class="empty-dash" id="emptyDash">
+    <div class="ed-icon">🎯</div>
+    <div class="ed-title">YOUR DASHBOARD IS EMPTY</div>
+    <div class="ed-sub">Complete your first module to start tracking N·E·I proficiency, XP, and rank. Takes about 45 minutes.</div>
+    <div class="ed-steps">
+      <div class="ed-step"><div class="ed-step-num">1</div><div class="ed-step-lbl">FIELD TRAINING</div></div>
+      <div class="ed-arrow">→</div>
+      <div class="ed-step"><div class="ed-step-num">2</div><div class="ed-step-lbl">EXAM MISSION</div></div>
+      <div class="ed-arrow">→</div>
+      <div class="ed-step"><div class="ed-step-num">3</div><div class="ed-step-lbl">EARN YOUR BADGE</div></div>
+    </div>
+    <a href="topics.html" class="btn-ed">⟶ START MODULE 1 — FREE</a>
+  </div>
 
   <!-- ── EXAM COUNTDOWN ── -->
   <div class="countdown-banner span3">
@@ -605,7 +633,15 @@ function initAll(){
   }
 }
 
-document.addEventListener('DOMContentLoaded',function(){function _injectCTA(){if(getXP()>0)return;var pb=document.querySelector('.panel-card.span2 .panel-body');if(!pb||document.getElementById('xp-cta'))return;var d=document.createElement('div');d.id='xp-cta';d.style.cssText='text-align:center;padding-top:1rem;';d.innerHTML='<a href="topics.html" style="display:inline-block;font-family:\'Share Tech Mono\',monospace;font-size:0.68rem;letter-spacing:0.12em;color:#39ff14;border:1px solid rgba(57,255,20,0.5);padding:0.45rem 1.5rem;border-radius:4px;text-decoration:none;">→ START YOUR FIRST MODULE</a>';pb.appendChild(d);}initAll();setTimeout(function(){var target=document.querySelector('.panel-card.span2');if(target){var obs=new MutationObserver(function(){_injectCTA();});obs.observe(target,{childList:true,subtree:true});}_injectCTA();},500);});
+document.addEventListener('DOMContentLoaded',function(){
+  initAll();
+  setTimeout(function(){
+    const xp=getXP();
+    const badges=JSON.parse(localStorage.getItem('msm_badges')||'[]');
+    const el=document.getElementById('emptyDash');
+    if(el && xp===0 && badges.length===0) el.classList.add('visible');
+  }, 400);
+});
 </script>
 <script type="module" id="msm-awareness-firestore">
 import { collection, getDocs, doc, setDoc, updateDoc, getDoc }
