@@ -1622,7 +1622,17 @@ const _SCENE_KEY = 'msm_ft_612_scene';
 const _FT_KEY    = 'msm_ft_612';
 const _sceneToStation = {a:0, b:1, c:2, d:3, e:4};
 
+
+function _showSaveToast(){
+  const t=document.getElementById('msm-save-toast');
+  if(!t)return;
+  t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.classList.remove('show'),2000);
+}
+
 function _saveScene(id) {
+  _showSaveToast();
   localStorage.setItem(_SCENE_KEY, id);
   // Update FT station progress for hub.html progress strip
   try {
@@ -2080,5 +2090,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- nextstep-ft-patched -->
 
 <!-- ft-6-1-2-built -->
+
+<div id="msm-save-toast">✓ PROGRESS AUTO-SAVED</div>
 </body>
 </html>

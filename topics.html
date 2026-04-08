@@ -259,7 +259,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   </div>
 </div>
 
-<div class="rec-banner" id="recBanner">
+<div class="rec-banner" id="recBanner" style="display:none;">
   <div class="rec-icon">📡</div>
   <div class="rec-body">
     <div class="rec-title">EDUCATOR RECOMMENDATION</div>
@@ -287,19 +287,19 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 
 <div class="grid" id="grid">
 
-  <div class="card m611" data-state="inprogress" data-diff="2" data-completion="65">
+  <div class="card m611" data-state="notstarted" data-diff="2" data-completion="0">
     <div class="card-head">
       <div class="ring-wrap">
         <svg class="ring-svg" viewBox="0 0 52 52">
           <circle class="ring-bg" cx="26" cy="26" r="21"/>
-          <circle class="ring-fill" cx="26" cy="26" r="21" data-pct="65"/>
+          <circle class="ring-fill" cx="26" cy="26" r="21" data-pct="0"/>
         </svg>
-        <div class="ring-pct" data-pct="65">65%</div>
+        <div class="ring-pct" data-pct="0">0%</div>
       </div>
       <div class="card-meta">
         <div class="card-ca">CA 6.1.1</div>
         <div class="card-title">DATA, INFORMATION & KNOWLEDGE</div>
-        <span class="status-badge s-progress">IN PROGRESS</span>
+        <span class="status-badge s-locked">NOT STARTED</span>
       </div>
     </div>
     <div class="card-body">
@@ -663,6 +663,24 @@ function initPathStatuses(){
     const missionBtn=msEl&&msEl.closest('.path-mission')&&msEl.closest('.path-mission').querySelector('.btn-path-mission');
     const learnBtn=ftEl&&ftEl.closest('.path-learn')&&ftEl.closest('.path-learn').querySelector('.btn-path-learn');
     const missionDone=badges.includes(cfg.mBadge);
+    // ── Update ring fill and status badge from localStorage ──
+    const card = ftEl && ftEl.closest('.card');
+    if(card){
+      const totalStations = 6;
+      const pct = missionDone ? 100 : Math.round((ftDone/totalStations)*100);
+      // Ring circle
+      const ring = card.querySelector('.ring-fill');
+      const ringPct = card.querySelector('.ring-pct');
+      if(ring){ ring.dataset.pct = pct; const c=2*Math.PI*21; ring.style.strokeDashoffset=c-(pct/100)*c; }
+      if(ringPct){ ringPct.dataset.pct = pct; ringPct.textContent = pct+'%'; }
+      // Status badge
+      const badge = card.querySelector('.status-badge');
+      if(badge){
+        if(missionDone){ badge.className='status-badge s-complete'; badge.textContent='✓ COMPLETE'; }
+        else if(ftDone>0){ badge.className='status-badge s-progress'; badge.textContent='IN PROGRESS'; }
+        else{ badge.className='status-badge s-locked'; badge.textContent='NOT STARTED'; }
+      }
+    }
     // Field Training status
     if(ftEl){
       if(ftDone===6){
@@ -698,10 +716,24 @@ function initPathStatuses(){
 }
 
 function initRec(){
-  if(localStorage.getItem('msm_rec_dis'))document.getElementById('recBanner').style.display='none';
+  const banner=document.getElementById('recBanner');
+  if(!banner)return;
+  // Only show when teacher has set a recommendation in localStorage
+  const rec=localStorage.getItem('msm_teacher_rec');
+  if(!rec||localStorage.getItem('msm_rec_dis')){
+    banner.style.display='none'; return;
+  }
+  try{
+    const obj=JSON.parse(rec);
+    if(obj.module&&obj.reason){
+      const recText=banner.querySelector('.rec-text');
+      if(recText)recText.innerHTML='Your teacher recommends focusing on <strong>'+obj.module+'</strong> — '+obj.reason;
+    }
+    banner.style.display='flex';
+  }catch(e){banner.style.display='none';}
   document.getElementById('recDismiss').addEventListener('click',()=>{
     localStorage.setItem('msm_rec_dis','1');
-    document.getElementById('recBanner').style.display='none';
+    banner.style.display='none';
   });
 }
 
