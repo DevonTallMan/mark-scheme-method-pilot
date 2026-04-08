@@ -365,6 +365,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
       <div class="rank-xp-row">
         <span class="rxp-cur" id="rankXPcur">0 XP</span>
         <span class="rxp-nxt" id="rankXPnxt">/ 100 XP</span>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;color:var(--green);margin-left:auto;" id="rankTierPct"></span>
       </div>
     </div>
 
@@ -375,7 +376,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
             <div class="lb-live-dot-wrap"><div class="lb-live-dot"></div>LIVE</div>
           </div>
           <div class="lb-class-label" id="lb-class-label">CLASS: —</div>
-          <table style="width:100%;border-collapse:collapse;"><tbody id="lb-tbody"></tbody></table>
+          <table style="width:100%;border-collapse:collapse;"><tbody id="lb-tbody"><tr style="padding:14px 18px;"><td colspan="4" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:1px;">⟳ LOADING CLASS DATA...</td></tr></tbody></table>
           <div class="lb-callsign-row">
             <input id="lb-callsign-input" class="lb-callsign-input" type="text" maxlength="20" placeholder="SET CALLSIGN…">
             <button class="lb-callsign-btn" onclick="window.lbSaveCallsign()">SAVE</button>
@@ -450,6 +451,8 @@ function initPage(){
     document.getElementById('rankXPnxt').textContent='/ '+rd.next+' XP';
     const pct=((xp-rd.m)/(rd.next-rd.m))*100;
     setTimeout(()=>{document.getElementById('rankBar').style.width=Math.min(pct,100)+'%';},300);
+    const tierEl=document.getElementById('rankTierPct');
+    if(tierEl)tierEl.textContent=Math.round(pct)+'% THROUGH TIER';
   }else{
     document.getElementById('rankNext').textContent='Maximum rank achieved';
     setTimeout(()=>{document.getElementById('rankBar').style.width='100%';},300);
@@ -458,6 +461,22 @@ function initPage(){
   // Leaderboard
   document.getElementById('lbMyRank').textContent=rd.l;
   document.getElementById('lbMyXP').textContent=xp+' XP';
+
+  // Dynamic CTA — point to next incomplete module
+  const MODULE_SEQ=[
+    {badge:'raw_signal',     label:'6.1.1 — Data, Information & Knowledge', href:'learn/6-1-1/'},
+    {badge:'market_intelligence',label:'6.1.2 — Why Organisations Need Data', href:'learn/6-1-2/'},
+    {badge:'signal_mapper',  label:'6.1.3 — How Data Is Generated',         href:'learn/6-1-3/'},
+    {badge:'data_architect', label:'6.2 — Data Formats',                    href:'learn/6-2/'},
+    {badge:'systems_analyst',label:'6.3 — Data Systems',                    href:'learn/6-3/'},
+  ];
+  const nextModule=MODULE_SEQ.find(m=>!badges.includes(m.badge));
+  if(nextModule){
+    const ctaBtn=document.querySelector('.cta-btn');
+    const ctaBody=document.querySelector('.cta-body');
+    if(ctaBtn){ctaBtn.href=nextModule.href;ctaBtn.textContent='⟶ START '+nextModule.label;}
+    if(ctaBody&&xp>0)ctaBody.textContent='Your next target is '+nextModule.label+'. Complete it to earn your badge and climb the leaderboard.';
+  }
 
   // Badges
   document.querySelectorAll('.badge-item').forEach(el=>{
