@@ -1452,16 +1452,121 @@ body::after{
 <!-- ─── SCENE D: SELF-CALIBRATION TOOL ────────────────── -->
 <section id="scene-d" class="scene">
   <div class="scene-header">
-    <div class="scene-badge">&#x2B21; STATION 04 — TEAM DEBRIEF</div>
-    <h2 class="scene-title">Discussion — How Data Is Generated</h2>
-    <p class="scene-sub">Discuss with your class. Use precise technical terminology.</p>
+    <div class="scene-badge" style="color:var(--red);background:rgba(255,68,68,0.1);border-color:rgba(255,68,68,0.25);">⬡ STATION 06 — SELF-CALIBRATION</div>
+    <h2 class="scene-title">Mark Your Own Work</h2>
+    <p class="scene-sub">Tag your response using the highlighter. Every [I] Impact you identify earns the 3rd mark.</p>
   </div>
-  <div class="discussion-grid">
-    <div class="dp-card"><div class="dp-num">01</div><div class="dp-prompt">A smart hospital has both automated IoT vital signs monitors and nurses who manually record observations during ward rounds. Describe one situation where H2D is more appropriate than D2D in this context, and justify your answer with a specific reason.</div></div>
-    <div class="dp-card"><div class="dp-num">02</div><div class="dp-prompt">Your school generates data every day. Identify three examples of data your school generates, classify each as H2D or D2D, and explain at what point each example transitions from raw data into useful information for a teacher or manager.</div></div>
-    <div class="dp-card"><div class="dp-num">03</div><div class="dp-prompt">A logistics company is deciding whether to replace manual delivery check-ins (drivers phoning the depot) with automatic GPS tracking and IoT parcel sensors. What are the likely benefits to the company? What might be a drawback? Use data generation terminology in your answer.</div></div>
+
+  <div class="calibration-layout">
+    <!-- Model Answer -->
+    <div class="panel-card">
+      <div class="panel-top">
+        <div class="panel-label">EXAMINER MODEL ANSWER</div>
+        <div class="panel-title">Full-Mark Response</div>
+      </div>
+      <div class="panel-body-inner">
+        <div class="model-answer">
+          The business uses
+          <span class="ma-n">predictive modelling</span>,
+          which analyses
+          <span class="ma-e">historical purchase data from thousands of customers to identify seasonal and behavioural patterns, enabling the system to automatically surface products the individual is statistically likely to buy</span>.
+          This
+          <span class="ma-i">reduces customer acquisition cost, increases average order value, and drives repeat purchases — directly increasing revenue without proportional increases in marketing spend</span>.
+        </div>
+        <div class="ma-legend">
+          <div class="leg-item"><span class="leg-swatch leg-n"></span><span style="color:var(--blue);font-family:var(--mono);font-size:0.6rem;">[N] NAME</span></div>
+          <div class="leg-item"><span class="leg-swatch leg-e"></span><span style="color:var(--gold);font-family:var(--mono);font-size:0.6rem;">[E] EXPLAIN</span></div>
+          <div class="leg-item"><span class="leg-swatch leg-i"></span><span style="color:var(--green);font-family:var(--mono);font-size:0.6rem;">[I] IMPACT</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Response + Highlighter -->
+    <div class="panel-card">
+      <div class="panel-top">
+        <div class="panel-label">YOUR RESPONSE — SELF-MARK</div>
+        <div class="panel-title">Highlight &amp; Tag</div>
+      </div>
+      <div class="panel-body-inner">
+        <div class="highlighter-toolbar">
+          <button class="hl-btn hl-green" id="hl-i-btn" onclick="setHighlighter('impact')" title="Tag as [I] Impact">
+            <span class="hl-dot hl-g-dot"></span>[I] IMPACT
+          </button>
+          <button class="hl-btn hl-amber-btn" id="hl-e-btn" onclick="setHighlighter('explain')" title="Tag as [E] Explain">
+            <span class="hl-dot hl-a-dot"></span>[E] EXPLAIN
+          </button>
+          <button class="hl-btn hl-red-btn" id="hl-n-btn" onclick="setHighlighter('name')" title="Tag as [N] Name">
+            <span class="hl-dot hl-r-dot"></span>[N] NAME
+          </button>
+        </div>
+        
+        <div class="student-response-area" id="student-response" onmouseup="applyHighlight()">
+          <em style="color:var(--muted);font-size:0.8rem;">[ Your submitted answer will appear here for marking. Select text and click a tag button. ]</em>
+        </div>
+
+        <div class="tagging-legend" style="margin-top:0.8rem;">
+          <span class="tag-explain">Select text, then tag it:</span>
+          <span class="tag-green-ex">✓ IMPACT = full marks</span>
+          <span class="tag-amber-ex">~ EXPLAIN = partial</span>
+          <span class="tag-red-ex">○ NAME = 1 mark only</span>
+        </div>
+
+        <!-- Vulnerability Alert -->
+        <div class="vuln-alert" id="vuln-alert">
+          <div class="vuln-header">
+            <span class="vuln-icon">⚠</span>
+            <span class="vuln-title">VULNERABILITY DETECTED</span>
+          </div>
+          <div class="vuln-msg">
+            System Check: You provided Data and Information, but missed the Knowledge (Impact). <strong>No impact = No 3rd mark.</strong>
+          </div>
+          <div class="vuln-tip">
+            "Ask yourself: what does this mean for the business's revenue, efficiency, or competitive advantage? That's your Impact mark."
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-end;">
+          <button class="btn-submit" onclick="calibrateResult()">Calibrate Score →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Panel -->
+    <div class="score-panel" id="score-panel" style="display:none;">
+      <div class="score-header">
+        <div class="score-title">N·E·I Proficiency Breakdown</div>
+        <div class="score-chips">
+          <div class="score-chip chip-n"><span class="chip-dot"></span>NAME</div>
+          <div class="score-chip chip-e"><span class="chip-dot"></span>EXPLAIN</div>
+          <div class="score-chip chip-i"><span class="chip-dot"></span>IMPACT</div>
+        </div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[N] Name</div>
+        <div class="bar-track"><div class="bar-fill n-fill" id="bar-n"></div></div>
+        <div class="bar-pct" id="pct-n">—</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[E] Explain</div>
+        <div class="bar-track"><div class="bar-fill e-fill" id="bar-e"></div></div>
+        <div class="bar-pct" id="pct-e">—</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[I] Impact</div>
+        <div class="bar-track"><div class="bar-fill i-fill" id="bar-i"></div></div>
+        <div class="bar-pct" id="pct-i">—</div>
+      </div>
+      <div style="margin-bottom:1.2rem;">
+        <button id="btn-show-ma" onclick="showModelAnswer()" style="display:none;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;padding:0.5rem 1.4rem;border-radius:6px;background:rgba(255,167,38,0.1);border:1px solid rgba(255,167,38,0.4);color:var(--gold);cursor:pointer;width:100%;">⭐ SHOW MODEL ANSWER</button>
+        <div class="pa-model-answer" id="ma-panel"></div>
+      </div>
+      <div style="text-align:center;margin-top:2rem;">
+        <button class="btn-primary" onclick="goToScene('e')">Complete Mission & Claim Badge →</button>
+      </div>
+    </div>
   </div>
 </section>
+
 <section id="scene-e" class="scene">
   <div class="completion-header">◈ FIELD TRAINING 6.1.3 // MISSION COMPLETE ◈</div>
   

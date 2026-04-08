@@ -1449,16 +1449,121 @@ body::after{
 <!-- ─── SCENE D: SELF-CALIBRATION TOOL ────────────────── -->
 <section id="scene-d" class="scene">
   <div class="scene-header">
-    <div class="scene-badge">&#x2B21; STATION 04 — TEAM DEBRIEF</div>
-    <h2 class="scene-title">Discussion — Why Organisations Need Data</h2>
-    <p class="scene-sub">Discuss with your class. Be ready to give a specific, quantifiable answer.</p>
+    <div class="scene-badge" style="color:var(--red);background:rgba(255,68,68,0.1);border-color:rgba(255,68,68,0.25);">⬡ STATION 06 — SELF-CALIBRATION</div>
+    <h2 class="scene-title">Mark Your Own Work</h2>
+    <p class="scene-sub">Tag your response using the highlighter. Every [I] Impact you identify earns the 3rd mark.</p>
   </div>
-  <div class="discussion-grid">
-    <div class="dp-card"><div class="dp-num">01</div><div class="dp-prompt">Think of a business you know or use. Give one example of an operational decision, one tactical decision, and one strategic decision that business might make — and what data would support each one.</div></div>
-    <div class="dp-card"><div class="dp-num">02</div><div class="dp-prompt">A small bakery records daily sales by hand at closing time. A large supermarket chain uses automated EPOS systems generating millions of data points per day. What decisions does each business make differently because of its data capabilities — and what decisions can only the supermarket make?</div></div>
-    <div class="dp-card"><div class="dp-num">03</div><div class="dp-prompt">Your school collects data about attendance, grades, behaviour and timetabling. Classify three examples as internal or external data, and identify whether each supports an operational, tactical or strategic decision made by school leadership.</div></div>
+
+  <div class="calibration-layout">
+    <!-- Model Answer -->
+    <div class="panel-card">
+      <div class="panel-top">
+        <div class="panel-label">EXAMINER MODEL ANSWER</div>
+        <div class="panel-title">Full-Mark Response</div>
+      </div>
+      <div class="panel-body-inner">
+        <div class="model-answer">
+          The business uses
+          <span class="ma-n">predictive modelling</span>,
+          which analyses
+          <span class="ma-e">historical purchase data from thousands of customers to identify seasonal and behavioural patterns, enabling the system to automatically surface products the individual is statistically likely to buy</span>.
+          This
+          <span class="ma-i">reduces customer acquisition cost, increases average order value, and drives repeat purchases — directly increasing revenue without proportional increases in marketing spend</span>.
+        </div>
+        <div class="ma-legend">
+          <div class="leg-item"><span class="leg-swatch leg-n"></span><span style="color:var(--blue);font-family:var(--mono);font-size:0.6rem;">[N] NAME</span></div>
+          <div class="leg-item"><span class="leg-swatch leg-e"></span><span style="color:var(--gold);font-family:var(--mono);font-size:0.6rem;">[E] EXPLAIN</span></div>
+          <div class="leg-item"><span class="leg-swatch leg-i"></span><span style="color:var(--green);font-family:var(--mono);font-size:0.6rem;">[I] IMPACT</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Response + Highlighter -->
+    <div class="panel-card">
+      <div class="panel-top">
+        <div class="panel-label">YOUR RESPONSE — SELF-MARK</div>
+        <div class="panel-title">Highlight &amp; Tag</div>
+      </div>
+      <div class="panel-body-inner">
+        <div class="highlighter-toolbar">
+          <button class="hl-btn hl-green" id="hl-i-btn" onclick="setHighlighter('impact')" title="Tag as [I] Impact">
+            <span class="hl-dot hl-g-dot"></span>[I] IMPACT
+          </button>
+          <button class="hl-btn hl-amber-btn" id="hl-e-btn" onclick="setHighlighter('explain')" title="Tag as [E] Explain">
+            <span class="hl-dot hl-a-dot"></span>[E] EXPLAIN
+          </button>
+          <button class="hl-btn hl-red-btn" id="hl-n-btn" onclick="setHighlighter('name')" title="Tag as [N] Name">
+            <span class="hl-dot hl-r-dot"></span>[N] NAME
+          </button>
+        </div>
+        
+        <div class="student-response-area" id="student-response" onmouseup="applyHighlight()">
+          <em style="color:var(--muted);font-size:0.8rem;">[ Your submitted answer will appear here for marking. Select text and click a tag button. ]</em>
+        </div>
+
+        <div class="tagging-legend" style="margin-top:0.8rem;">
+          <span class="tag-explain">Select text, then tag it:</span>
+          <span class="tag-green-ex">✓ IMPACT = full marks</span>
+          <span class="tag-amber-ex">~ EXPLAIN = partial</span>
+          <span class="tag-red-ex">○ NAME = 1 mark only</span>
+        </div>
+
+        <!-- Vulnerability Alert -->
+        <div class="vuln-alert" id="vuln-alert">
+          <div class="vuln-header">
+            <span class="vuln-icon">⚠</span>
+            <span class="vuln-title">VULNERABILITY DETECTED</span>
+          </div>
+          <div class="vuln-msg">
+            System Check: You provided Data and Information, but missed the Knowledge (Impact). <strong>No impact = No 3rd mark.</strong>
+          </div>
+          <div class="vuln-tip">
+            "Ask yourself: what does this mean for the business's revenue, efficiency, or competitive advantage? That's your Impact mark."
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:flex-end;">
+          <button class="btn-submit" onclick="calibrateResult()">Calibrate Score →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Panel -->
+    <div class="score-panel" id="score-panel" style="display:none;">
+      <div class="score-header">
+        <div class="score-title">N·E·I Proficiency Breakdown</div>
+        <div class="score-chips">
+          <div class="score-chip chip-n"><span class="chip-dot"></span>NAME</div>
+          <div class="score-chip chip-e"><span class="chip-dot"></span>EXPLAIN</div>
+          <div class="score-chip chip-i"><span class="chip-dot"></span>IMPACT</div>
+        </div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[N] Name</div>
+        <div class="bar-track"><div class="bar-fill n-fill" id="bar-n"></div></div>
+        <div class="bar-pct" id="pct-n">—</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[E] Explain</div>
+        <div class="bar-track"><div class="bar-fill e-fill" id="bar-e"></div></div>
+        <div class="bar-pct" id="pct-e">—</div>
+      </div>
+      <div class="score-bar-row">
+        <div class="bar-label">[I] Impact</div>
+        <div class="bar-track"><div class="bar-fill i-fill" id="bar-i"></div></div>
+        <div class="bar-pct" id="pct-i">—</div>
+      </div>
+      <div style="margin-bottom:1.2rem;">
+        <button id="btn-show-ma" onclick="showModelAnswer()" style="display:none;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;padding:0.5rem 1.4rem;border-radius:6px;background:rgba(255,167,38,0.1);border:1px solid rgba(255,167,38,0.4);color:var(--gold);cursor:pointer;width:100%;">⭐ SHOW MODEL ANSWER</button>
+        <div class="pa-model-answer" id="ma-panel"></div>
+      </div>
+      <div style="text-align:center;margin-top:2rem;">
+        <button class="btn-primary" onclick="goToScene('e')">Complete Mission & Claim Badge →</button>
+      </div>
+    </div>
   </div>
 </section>
+
 <section id="scene-e" class="scene">
   <div class="completion-header">◈ FIELD TRAINING 6.1.2 // MISSION COMPLETE ◈</div>
   
@@ -1507,6 +1612,9 @@ body::after{
 </div>
 
 <script>
+
+const MODEL_ANSWERS=[{q:'E-commerce targeted marketing (3 marks)',n:'Customer purchase history data is used to feed a recommendation algorithm — a machine learning system that identifies correlations between products previously bought together.',e:'Each time the customer visits the site, the algorithm cross-references their purchase history against other customers with similar buying patterns and automatically surfaces relevant product suggestions without manual curation.',i:'This increases average order value by presenting relevant upsell opportunities at the point of purchase, generating additional revenue from the existing customer base without increasing acquisition costs.',full:'Customer purchase history feeds a recommendation algorithm that identifies correlations between products bought together. Each visit, the system cross-references purchase patterns across all customers and surfaces personalised suggestions automatically. This increases average order value — presenting relevant upsell opportunities at the point of purchase — generating additional revenue from existing customers without increasing acquisition costs.'}];
+function showModelAnswer(){const ma=MODEL_ANSWERS[0];const panel=document.getElementById('ma-panel');if(!panel)return;panel.innerHTML='<div class="pma-hdr"><div class="pma-hdr-title">&#x2748; EXAMINER\'S FULL-MARK RESPONSE</div><div class="pma-hdr-sub">'+ma.q+'</div></div><div class="pma-body"><div class="pma-label">N·E·I COMPONENTS</div><div class="pma-component"><span class="pma-badge n">N</span><div class="pma-text">'+ma.n+'</div></div><div class="pma-component"><span class="pma-badge e">E</span><div class="pma-text">'+ma.e+'</div></div><div class="pma-component"><span class="pma-badge i">I</span><div class="pma-text">'+ma.i+'</div></div><hr class="pma-divider"/><div class="pma-label">COMPLETE RESPONSE</div><div class="pma-full">'+ma.full+'</div></div>';panel.classList.add('vis');document.getElementById('btn-show-ma').style.display='none';panel.scrollIntoView({behavior:'smooth',block:'start'});}
 
 // ─── SCENE PERSISTENCE ──────────────────────────────────────────
 // Save scene to localStorage on every transition
@@ -1919,6 +2027,8 @@ function calibrateResult() {
   // Show score panel
   const panel = document.getElementById('score-panel');
   panel.style.display = 'block';
+  const maBtn=document.getElementById('btn-show-ma');
+  if(maBtn)maBtn.style.display='';
 
   setTimeout(() => {
     document.getElementById('bar-n').style.width = state.neiScore.n + '%';

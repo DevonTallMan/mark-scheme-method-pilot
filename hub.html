@@ -208,7 +208,11 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .skip-link:focus{left:0;}
 </style>
 <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}</style>
-<style id="msm-cornerstone-style">.msm-cornerstone-cta{margin:32px 20px 0;padding:18px 24px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);border-radius:4px;font-family:monospace;display:flex;align-items:center;justify-content:space-between;gap:16px;}.msm-cornerstone-cta .cc-text{font-size:12px;letter-spacing:0.08em;color:rgba(232,237,243,0.75);}.msm-cornerstone-cta .cc-link{color:#FFD700;text-decoration:none;font-size:13px;letter-spacing:0.1em;white-space:nowrap;}.msm-cornerstone-cta .cc-link:hover{text-decoration:underline;}</style><style id="msm-rm-style">.msm-rm-panel{margin:32px 20px 0;padding:18px 24px;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.15);border-radius:4px;font-family:monospace;}.msm-rm-panel .rm-title{font-size:10px;letter-spacing:0.1em;color:rgba(232,237,243,0.65);margin-bottom:12px;}.msm-rm-panel .rm-links{display:flex;flex-wrap:wrap;gap:10px;}.msm-rm-panel .rm-link{color:rgba(57,255,20,0.85);text-decoration:none;font-size:12px;letter-spacing:0.06em;padding:4px 10px;border:1px solid rgba(57,255,20,0.2);border-radius:3px;}.msm-rm-panel .rm-link:hover{background:rgba(57,255,20,0.08);}</style></head>
+<style id="msm-cornerstone-style">.msm-cornerstone-cta{margin:32px 20px 0;padding:18px 24px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);border-radius:4px;font-family:monospace;display:flex;align-items:center;justify-content:space-between;gap:16px;}.msm-cornerstone-cta .cc-text{font-size:12px;letter-spacing:0.08em;color:rgba(232,237,243,0.75);}.msm-cornerstone-cta .cc-link{color:#FFD700;text-decoration:none;font-size:13px;letter-spacing:0.1em;white-space:nowrap;}.msm-cornerstone-cta .cc-link:hover{text-decoration:underline;}</style>
+<div class="assign-nudge" id="assignNudge" onclick="window.location.href='dashboard.html'"></div>
+
+<style id="msm-rm-style">.msm-rm-panel{margin:32px 20px 0;padding:18px 24px;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.15);border-radius:4px;font-family:monospace;}.msm-rm-panel .rm-title{font-size:10px;letter-spacing:0.1em;color:rgba(232,237,243,0.65);margin-bottom:12px;}.msm-rm-panel .rm-links{display:flex;flex-wrap:wrap;gap:10px;}.msm-rm-panel .rm-link{color:rgba(57,255,20,0.85);text-decoration:none;font-size:12px;letter-spacing:0.06em;padding:4px 10px;border:1px solid rgba(57,255,20,0.2);border-radius:3px;}.msm-rm-panel .rm-link:hover{background:rgba(57,255,20,0.08);}</style><style>.assign-nudge{display:none;margin:8px 20px 0;padding:10px 16px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,215,0,0.8);letter-spacing:0.05em;cursor:pointer;}.assign-nudge.show{display:block;}.assign-nudge:hover{background:rgba(255,215,0,0.1);}</style>
+</head>
 <body style="background-color:#0a0a0f;background-color:#0a0a0f">
 <a class="skip-link" href="#main-content">Skip to main content</a>
 
@@ -611,7 +615,25 @@ window.addEventListener('beforeunload',()=>{
   })();
 </script>
 <script src="return-mission-scheduler.js"></script>
-<script src="hub-return-mission-panel.js"></script>
+<script src="hub-return-mission-panel.js">
+// ── Assignment nudge ──────────────────────────────────────
+(function(){
+  const a = localStorage.getItem('msm_active_assignment');
+  if (!a) return;
+  try {
+    const obj = JSON.parse(a);
+    const el = document.getElementById('assignNudge');
+    if (el && obj.title) {
+      const due = obj.dueDate
+        ? ' — Due ' + new Date(obj.dueDate).toLocaleDateString('en-GB', {day:'numeric', month:'short'})
+        : '';
+      el.textContent = '📋 ASSIGNMENT: ' + obj.title + due + ' — tap to view';
+      el.classList.add('show');
+    }
+  } catch(e) {}
+})();
+
+</script>
 
 <!-- Static anchors: Return Mission -->
 <div style="display:none;color:inherit" aria-hidden="true">

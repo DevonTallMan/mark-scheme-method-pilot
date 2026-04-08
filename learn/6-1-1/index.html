@@ -1730,6 +1730,10 @@ body::after{
         <div class="bar-track"><div class="bar-fill i-fill" id="bar-i"></div></div>
         <div class="bar-pct" id="pct-i">—</div>
       </div>
+      <div style="margin-bottom:1.2rem;">
+        <button id="btn-show-ma" onclick="showModelAnswer()" style="display:none;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;padding:0.5rem 1.4rem;border-radius:6px;background:rgba(255,167,38,0.1);border:1px solid rgba(255,167,38,0.4);color:var(--gold);cursor:pointer;width:100%;">⭐ SHOW MODEL ANSWER</button>
+        <div class="pa-model-answer" id="ma-panel"></div>
+      </div>
       <div style="text-align:center;margin-top:2rem;">
         <button class="btn-primary" onclick="goToScene('e')">Complete Mission & Claim Badge →</button>
       </div>
@@ -1786,6 +1790,9 @@ body::after{
 </div>
 
 <script>
+
+const MODEL_ANSWERS=[{q:'E-commerce targeted marketing (3 marks)',n:'Customer purchase history data is used to feed a recommendation algorithm — a machine learning system that identifies correlations between products previously bought together.',e:'Each time the customer visits the site, the algorithm cross-references their purchase history against other customers with similar buying patterns and automatically surfaces relevant product suggestions without manual curation.',i:'This increases average order value by presenting relevant upsell opportunities at the point of purchase, generating additional revenue from the existing customer base without increasing acquisition costs.',full:'Customer purchase history feeds a recommendation algorithm that identifies correlations between products bought together. Each visit, the system cross-references purchase patterns across all customers and surfaces personalised suggestions automatically. This increases average order value — presenting relevant upsell opportunities at the point of purchase — generating additional revenue from existing customers without increasing acquisition costs.'}];
+function showModelAnswer(){const ma=MODEL_ANSWERS[0];const panel=document.getElementById('ma-panel');if(!panel)return;panel.innerHTML='<div class="pma-hdr"><div class="pma-hdr-title">&#x2748; EXAMINER\'S FULL-MARK RESPONSE</div><div class="pma-hdr-sub">'+ma.q+'</div></div><div class="pma-body"><div class="pma-label">N·E·I COMPONENTS</div><div class="pma-component"><span class="pma-badge n">N</span><div class="pma-text">'+ma.n+'</div></div><div class="pma-component"><span class="pma-badge e">E</span><div class="pma-text">'+ma.e+'</div></div><div class="pma-component"><span class="pma-badge i">I</span><div class="pma-text">'+ma.i+'</div></div><hr class="pma-divider"/><div class="pma-label">COMPLETE RESPONSE</div><div class="pma-full">'+ma.full+'</div></div>';panel.classList.add('vis');document.getElementById('btn-show-ma').style.display='none';panel.scrollIntoView({behavior:'smooth',block:'start'});}
 
 // ─── SCENE PERSISTENCE ──────────────────────────────────────────
 // Save scene to localStorage on every transition
@@ -2229,6 +2236,8 @@ function calibrateResult() {
   // Show score panel
   const panel = document.getElementById('score-panel');
   panel.style.display = 'block';
+  const maBtn=document.getElementById('btn-show-ma');
+  if(maBtn)maBtn.style.display='';
 
   setTimeout(() => {
     document.getElementById('bar-n').style.width = state.neiScore.n + '%';
