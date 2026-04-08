@@ -1786,6 +1786,44 @@ body::after{
 </div>
 
 <script>
+
+// ─── SCENE PERSISTENCE ──────────────────────────────────────────
+// Save scene to localStorage on every transition
+const _SCENE_KEY = 'msm_ft_611_scene';
+const _FT_KEY    = 'msm_ft_611';
+const _sceneToStation = {a:0, b:1, c:2, d:3, e:4};
+
+function _saveScene(id) {
+  localStorage.setItem(_SCENE_KEY, id);
+  // Update FT station progress for hub.html progress strip
+  try {
+    const ft = JSON.parse(localStorage.getItem(_FT_KEY) || '{"stations":[]}');
+    if (!Array.isArray(ft.stations)) ft.stations = [false,false,false,false,false,false];
+    while (ft.stations.length < 6) ft.stations.push(false);
+    const idx = _sceneToStation[id];
+    if (idx !== undefined) {
+      ft.stations[idx] = true;
+      // Scene e = module complete, mark all done
+      if (id === 'e') ft.stations = [true,true,true,true,true,true];
+    }
+    localStorage.setItem(_FT_KEY, JSON.stringify(ft));
+  } catch(e) {}
+}
+
+function _resumeScene() {
+  // Check URL param first — allows SOLO MODULE deep-linking (?scene=d)
+  const urlScene = new URLSearchParams(location.search).get('scene');
+  if (urlScene && 'abcde'.includes(urlScene)) {
+    goToScene(urlScene);
+    return;
+  }
+  // Then check saved scene
+  const saved = localStorage.getItem(_SCENE_KEY);
+  if (saved && 'abcde'.includes(saved) && saved !== 'a') {
+    goToScene(saved);
+  }
+}
+
 // ─── STATE ────────────────────────────────────────────
 const state = {
   currentScene: 'a',
@@ -1803,6 +1841,7 @@ function goToScene(id) {
   document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
   document.getElementById('scene-' + id).classList.add('active');
   state.currentScene = id;
+  _saveScene(id);
   updateProgress();
   window.scrollTo(0,0);
   document.querySelectorAll('.nav-dot').forEach(d => {
@@ -2232,6 +2271,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildClassify();
   initDnD();
   updateProgress();
+  _resumeScene();
 });
 </script>
 
