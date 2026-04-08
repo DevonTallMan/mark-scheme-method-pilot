@@ -61,16 +61,16 @@
 window.AXIOM7_PROXY_URL="https://msm-axiom-proxy.morrischristopher675.workers.dev";
 var MID="ca-63",MN="How Data Supports Organisations";
 var QS=[
-  {t:"mcq",q:"Which of the following best describes a data warehouse?",
-   opts:["A system for real-time transactional processing","A centralised repository for historical, structured data used for analytics","A tool for capturing unstructured social media data","A NoSQL database for high-velocity data streams"],
+  {t:"mcq",q:"Which of the following best describes the primary purpose of a data warehouse?",
+   opts:["To store real-time transactional data for daily operations","To provide a centralised repository of historical, structured data optimised for analytical queries","To capture and store unstructured social media and sensor data","To replace EPOS systems in retail environments"],
    ans:1,
-   exp:"A data warehouse stores large volumes of structured, historical data optimised for analytical queries — not for live transactions."},
-  {t:"mcq",q:"A company is subject to GDPR. A customer requests deletion of their personal data. Under the 'right to erasure', which of the following is most accurate?",
-   opts:["The company must immediately delete all data held on the customer","The company must delete data unless retention is required for a legal obligation","The company only needs to delete data if it was collected without consent","GDPR does not apply to data held in a data warehouse"],
-   ans:1,
-   exp:"GDPR's right to erasure applies unless the data controller has a lawful basis to retain it, such as a legal obligation."},
-  {t:"nei",q:"A supermarket chain analyses five years of loyalty card transaction data to identify purchasing patterns and optimise stock levels. Explain one way this adds business value.",
-   ph:"Name the technique (e.g. predictive analytics, data mining), explain how it uses the historical data, and state the business impact..."}
+   exp:"A data warehouse stores historical structured data from multiple sources in a format optimised for analytical queries — not live transactions, which are handled by OLTP systems."},
+  {t:"mcq",q:"Under GDPR, which principle requires that personal data is only kept for as long as necessary for its stated purpose?",
+   opts:["Data minimisation","Accuracy","Storage limitation","Integrity and confidentiality"],
+   ans:2,
+   exp:"The storage limitation principle requires that personal data is kept no longer than necessary for the purposes for which it was collected."},
+  {t:"nei",q:"A supermarket chain holds five years of loyalty card transaction data in a centralised data warehouse. Explain one way this benefits the business.",
+   ph:"Name the storage technique, explain how the historical data is used, and state the business outcome..."}
 ];
 var curQ=0,score=0,totPts=0,tmr=null,tLeft=45,answered=false,neiBreakdown={n:0,e:0,i:0},qRes=[];
 function startTimer(){clearInterval(tmr);tLeft=45;updTimer();tmr=setInterval(function(){tLeft--;updTimer();if(tLeft<=0){clearInterval(tmr);autoSkip();}},1000);}

@@ -1370,13 +1370,13 @@ body::after{
       <div class="editor-header">
         <div class="question-block">
           <div class="q-label">EXAM QUESTION // 6.1.2</div>
-          <div class="q-text">An e-commerce company uses targeted marketing based on customer purchase history. Explain one way this adds value to the business.</div>
+          <div class="q-text">A large retail chain stores five years of transaction records from 3,000 stores in a centralised data warehouse. Explain one way this benefits the business.</div>
         </div>
         <div class="q-marks">3 MARKS</div>
       </div>
       <div class="editor-body">
         <div class="editor-label">YOUR RESPONSE</div>
-        <textarea id="answer-input" placeholder="Begin your answer here... Include the technique name, how it works, and the business impact." oninput="analyseAnswer(this.value)"></textarea>
+        <textarea id="answer-input" placeholder="Name the data storage technique, explain how it works with large-scale historical data, and state the business benefit..." oninput="analyseAnswer(this.value)"></textarea>
         <div class="word-counter">
           <span>WORDS: <span id="word-count">0</span></span>
           <span>CHARS: <span id="char-count">0</span></span>
@@ -1386,15 +1386,15 @@ body::after{
           <div class="hints-label">◈ N·E·I FRAMEWORK GUIDE</div>
           <div class="hint-row">
             <span class="hint-chip hint-n">N</span>
-            Name the technique — e.g. "Predictive modelling" or "Recommendation algorithms"
+            Name the technique — e.g. "Data warehouse" or "ETL pipeline" or "Data lake"
           </div>
           <div class="hint-row">
             <span class="hint-chip hint-e">E</span>
-            Explain the mechanism — how does the system use purchase history?
+            Explain the mechanism — how does it consolidate/process data from multiple sources?
           </div>
           <div class="hint-row">
             <span class="hint-chip hint-i">I</span>
-            State the impact — what measurable business value does this create?
+            State the impact — what measurable business value does this create at scale?
           </div>
         </div>
 
@@ -1664,7 +1664,7 @@ const state = {
   dndPlacements: {},
 };
 
-const MODEL_ANSWERS=[{q:'E-commerce targeted marketing (3 marks)',n:'Customer purchase history data is used to feed a recommendation algorithm — a machine learning system that identifies correlations between products previously bought together.',e:'Each time the customer visits the site, the algorithm cross-references their purchase history against other customers with similar buying patterns and automatically surfaces relevant product suggestions without manual curation.',i:'This increases average order value by presenting relevant upsell opportunities at the point of purchase, generating additional revenue from the existing customer base without increasing acquisition costs.',full:'Customer purchase history feeds a recommendation algorithm that identifies correlations between products bought together. Each visit, the system cross-references purchase patterns across all customers and surfaces personalised suggestions automatically. This increases average order value — presenting relevant upsell opportunities at the point of purchase — generating additional revenue from existing customers without increasing acquisition costs.'}];
+const MODEL_ANSWERS=[{q:'Data warehouse — retail transaction data (3 marks)',n:'The company uses a data warehouse — a centralised repository that consolidates structured historical data from multiple sources into a single queryable system, separate from live transactional databases.',e:'The warehouse aggregates five years of transaction records from all 3,000 stores using an ETL (Extract, Transform, Load) pipeline, enabling analysts to run complex queries across the full dataset using SQL without affecting live EPOS systems.',i:'This allows the business to identify long-term purchasing trends and optimise stock allocation across locations, reducing overstock costs and improving margins without increasing operational expenditure.',full:'A data warehouse consolidates five years of transaction data from 3,000 stores using an ETL pipeline into a single queryable system. Analysts can run complex SQL queries across the full historical dataset without disrupting live EPOS operations. This enables identification of long-term purchasing trends and stock optimisation across locations, reducing overstock costs and improving margins without increasing operational expenditure.'}];
 function showModelAnswer(){const ma=MODEL_ANSWERS[0];const panel=document.getElementById('ma-panel');if(!panel)return;panel.innerHTML='<div class="pma-hdr"><div class="pma-hdr-title">&#x2748; EXAMINER\'S FULL-MARK RESPONSE</div><div class="pma-hdr-sub">'+ma.q+'</div></div><div class="pma-body"><div class="pma-label">N·E·I COMPONENTS</div><div class="pma-component"><span class="pma-badge n">N</span><div class="pma-text">'+ma.n+'</div></div><div class="pma-component"><span class="pma-badge e">E</span><div class="pma-text">'+ma.e+'</div></div><div class="pma-component"><span class="pma-badge i">I</span><div class="pma-text">'+ma.i+'</div></div><hr class="pma-divider"/><div class="pma-label">COMPLETE RESPONSE</div><div class="pma-full">'+ma.full+'</div></div>';panel.classList.add('vis');document.getElementById('btn-show-ma').style.display='none';panel.scrollIntoView({behavior:'smooth',block:'start'});}
 
 // ─── SCENE NAVIGATION ────────────────────────────────
@@ -1910,9 +1910,9 @@ function checkDnD() {
 }
 
 // ─── SCENE C: HUD ANALYSIS ───────────────────────────
-const nKeywords = ['predictive model', 'recommendation', 'machine learning', 'algorithm', 'analytics', 'data mining', 'personalisation', 'segmentation', 'ai', 'targeting'];
-const eKeywords = ['analyses', 'processes', 'identifies', 'uses', 'tracks', 'monitors', 'examines', 'reviews', 'calculates', 'cross-references', 'patterns', 'history', 'behaviour'];
-const iKeywords = ['revenue', 'profit', 'sales', 'conversion', 'retention', 'cost', 'efficiency', 'competitive', 'loyalty', 'return', 'increase', 'reduce', 'improve', 'growth', 'value', 'saves'];
+const nKeywords = ['data warehouse', 'warehouse', 'etl', 'extract transform load', 'data lake', 'data mart', 'centralised', 'repository', 'structured data', 'historical data', 'olap', 'batch processing', 'data integration', 'schema'];
+const eKeywords = ['consolidates', 'aggregates', 'queries', 'stores', 'processes', 'integrates', 'transforms', 'loads', 'extracts', 'indexes', 'partitions', 'pipeline', 'sql', 'analyse', 'historical', 'batch'];
+const iKeywords = ['trend', 'insight', 'decision', 'margin', 'cost', 'efficiency', 'reduce', 'optimise', 'forecast', 'stock', 'revenue', 'improve', 'growth', 'competitive', 'saves', 'value', 'allocation'];
 
 function analyseAnswer(text) {
   const lower = text.toLowerCase();
