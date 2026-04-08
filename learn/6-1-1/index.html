@@ -1821,7 +1821,19 @@ function _saveScene(id) {
     if (idx !== undefined) {
       ft.stations[idx] = true;
       // Scene e = module complete, mark all done
-      if (id === 'e') ft.stations = [true,true,true,true,true,true];
+      if (id === 'e') {
+        ft.stations = [true,true,true,true,true,true];
+        // Award hub badge and XP on Field Training completion
+        try {
+          const _b = JSON.parse(localStorage.getItem('msm_badges') || '[]');
+          if (!_b.includes('raw_signal')) {
+            _b.push('raw_signal');
+            localStorage.setItem('msm_badges', JSON.stringify(_b));
+          }
+          const _xp = parseInt(localStorage.getItem('msm_xp') || '0');
+          localStorage.setItem('msm_xp', _xp + 150);
+        } catch(e2) {}
+      }
     }
     localStorage.setItem(_FT_KEY, JSON.stringify(ft));
   } catch(e) {}

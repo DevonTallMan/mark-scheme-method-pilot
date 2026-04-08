@@ -90,7 +90,9 @@ enNext();}catch(e){qRes.push({ok:false,pts:0});document.getElementById("fbp").in
 function showFB(ok){document.getElementById("fbp").innerHTML='<div class="fb-card"><div class="fb-lbl">'+(ok?"Correct":"Incorrect")+'</div><div class="fb-txt" style="color:'+(ok?"var(--green)":"var(--amber)")+'">'+( ok?"Good - solid recall.":"Review this before next session.")+'</div></div>';}
 function enNext(){var btn=document.getElementById("bn");btn.disabled=false;btn.textContent=curQ<QS.length-1?"Next":"Results";btn.onclick=adv;document.getElementById("bs").textContent=curQ<QS.length-1?"Ready":"Session complete";}
 function adv(){curQ++;if(curQ>=QS.length)showResults();else renderQ(curQ);}
-async function showResults(){clearInterval(tmr);var pct=totPts>0?Math.round(score/totPts*100):0;var cc=new URLSearchParams(window.location.search).get("class")||"5MFH4P";var nextRv=null,intDays=1,passed=false;
+async function showResults(){clearInterval(tmr);var pct=totPts>0?Math.round(score/totPts*100):0;
+  // Award XP for completing a return mission (25 base, +25 bonus if passed)
+  try{var _rmXP=25+(pct>=70?25:0);var _rmPlatXP=parseInt(localStorage.getItem('msm_xp')||'0');localStorage.setItem('msm_xp',_rmPlatXP+_rmXP);}catch(e){}var cc=new URLSearchParams(window.location.search).get("class")||"5MFH4P";var nextRv=null,intDays=1,passed=false;
 try{if(window.MSM_ReturnMission){var r=await window.MSM_ReturnMission.writeReviewResult(MID,pct,neiBreakdown);if(r){nextRv=r.nextReviewDate;intDays=r.intervalDays;passed=r.passed;}}}catch(e){console.warn(e);}
 var ds=nextRv?nextRv.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"}):"in "+intDays+" day"+(intDays!==1?"s":"");var pc=pct>=80?"g":pct>=60?"n":"r";var nei=neiBreakdown;
 var nRows=[{l:"N - NAME",v:nei.n,c:"var(--green)"},{l:"E - EXPLAIN",v:nei.e,c:"var(--gold)"},{l:"I - IMPACT",v:nei.i,c:"var(--amber)"}].map(function(x){return'<div class="nr"><span class="nl" style="color:'+x.c+'">'+x.l+'</span><div class="nt"><div class="nf" style="width:'+(x.v*100)+'%;background:'+x.c+'"></div></div><span class="np">'+(x.v?"Y":"N")+'</span></div>';}).join("");

@@ -141,6 +141,10 @@
 </style>
 <style id="msm-ae-firestore-css">
 #msm-assignment-engine{font-family:'Share Tech Mono','Courier New',monospace;margin:24px 0}
+
+.rec-panel{background:rgba(13,27,42,.85);border:1px solid rgba(57,255,20,.35);border-radius:8px;padding:24px;margin-bottom:20px;}
+.rec-panel-title{font-size:11px;letter-spacing:.15em;color:rgba(57,255,20,0.8);text-transform:uppercase;margin-bottom:16px;border-bottom:1px solid rgba(57,255,20,.2);padding-bottom:8px;}
+
 .ae-panel{background:rgba(13,27,42,.85);border:1px solid rgba(212,160,23,.35);border-radius:8px;padding:24px;margin-bottom:20px}
 .ae-panel-title{font-size:11px;letter-spacing:.15em;color:#d4a017;text-transform:uppercase;margin-bottom:16px;border-bottom:1px solid rgba(212,160,23,.2);padding-bottom:8px}
 .ae-form-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
@@ -167,6 +171,31 @@
 <body>
 <!-- MSM ASSIGNMENT ENGINE (Firestore) injected by Stage 1 workflow -->
 <section id="msm-assignment-engine">
+<div class="rec-panel">
+<div class="rec-panel-title">Recommend Focus Module</div>
+<div class="ae-form-row">
+  <label>Module to Recommend
+    <select id="rec-module">
+      <option value="">Select module</option>
+      <option value="CA6.1.1 — Data, Information &amp; Knowledge">6.1.1 Data, Information &amp; Knowledge</option>
+      <option value="CA6.1.2 — Why Organisations Need Data">6.1.2 Why Organisations Need Data</option>
+      <option value="CA6.1.3 — How Data Is Generated">6.1.3 How Data Is Generated</option>
+      <option value="CA6.2 — Data Formats">6.2 Data Formats</option>
+      <option value="CA6.3 — Data Systems">6.3 Data Systems</option>
+    </select>
+  </label>
+  <label>Reason (shown to students)
+    <input type="text" id="rec-reason" placeholder="e.g. Impact marks are your weak point" maxlength="80">
+  </label>
+</div>
+<div class="ae-form-row">
+  <label>Class Code<input type="text" id="rec-classcode" placeholder="5MFH4P" style="text-transform:uppercase" maxlength="12"></label>
+</div>
+<button class="ae-btn" onclick="window.sendRecommendation()" style="background:rgba(57,255,20,0.12);border-color:rgba(57,255,20,0.4);color:rgba(57,255,20,0.9);">📡 SEND RECOMMENDATION</button>
+<button class="ae-btn" onclick="window.clearRecommendation()" style="background:transparent;border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);margin-left:8px;">✕ Clear</button>
+<div id="rec-status" class="ae-status-msg"></div>
+</div>
+
 <div class="ae-panel">
 <div class="ae-panel-title">Create Assignment</div>
 <div class="ae-form-row">
