@@ -460,11 +460,13 @@ function _updatePill(user) {
       if (user) {
         await _loadFromCloud(user.uid);
         _updatePill(user); // refresh callsign after load
+        // Reveal auth-gated nav links on the homepage
+        document.querySelectorAll(
+          '#nav-explore, #nav-ft'
+        ).forEach(el => { el.style.display = ''; });
       } else {
-        // No authenticated user — wipe any stale progress from localStorage.
-        // Track whether any data was present; if so, reload the page so the
-        // DOM re-renders from the now-empty localStorage rather than showing
-        // stale data that was already painted before this module ran.
+        // ── No authenticated user ─────────────────────────────────────────
+        // 1. Clear any stale progress from localStorage
         let hadData = false;
         for (const key of PROGRESS_KEYS) {
           if (Object.getPrototypeOf(localStorage).getItem.call(localStorage, key) !== null) {
@@ -473,12 +475,25 @@ function _updatePill(user) {
           Object.getPrototypeOf(localStorage).removeItem.call(localStorage, key);
         }
         window.dispatchEvent(new CustomEvent('msm:progress-cleared'));
-        if (hadData) {
-          // Reload to re-render the page from clean localStorage.
-          // The reload will find no data and no auth, so this branch
-          // will run once more but hadData will be false — no loop.
-          window.location.reload();
+
+        // 2. Redirect guard — send unauthenticated users to the homepage
+        //    if they land on any protected page directly via URL.
+        const _path = window.location.pathname;
+        const _isPublic = /\/mark-scheme-method-pilot\/(index\.html)?$/.test(_path) ||
+                          _path.endsWith('/mark-scheme-method-pilot/');
+        if (!_isPublic) {
+          const _root = _path.split('/mark-scheme-method-pilot')[0] + '/mark-scheme-method-pilot/';
+          window.location.replace(_root + 'index.html');
+          return;
         }
+
+        // 3. On the homepage — hide nav links that require authentication
+        document.querySelectorAll(
+          '#nav-explore, #nav-ft'
+        ).forEach(el => { el.style.display = 'none'; });
+
+        // 4. Reload if stale data was present so the DOM re-renders clean
+        if (hadData) window.location.reload();
       }
     });
   } catch (e) {
