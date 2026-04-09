@@ -370,6 +370,9 @@ async function _doSignOut() {
   clearTimeout(_syncTimer);
   await _saveToCloud();
   await signOut(_auth);
+  // Return to homepage regardless of which page the user is on
+  const root = window.location.pathname.split('/mark-scheme-method-pilot')[0] + '/mark-scheme-method-pilot/';
+  window.location.href = root + 'index.html';
 }
 
 function _onPillClick() {
