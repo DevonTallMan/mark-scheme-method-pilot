@@ -14,7 +14,9 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  setPersistence,
+  browserSessionPersistence
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 import {
@@ -439,6 +441,10 @@ function _updatePill(user) {
   try {
     await _waitForApp();
     _auth = getAuth(window.MSM_APP);
+
+    // Session-only persistence — auth clears when browser is closed.
+    // Progress is still saved to Firestore and restored on next sign-in.
+    await setPersistence(_auth, browserSessionPersistence);
 
     _injectStyles();
     _buildPill();
