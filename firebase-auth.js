@@ -460,6 +460,13 @@ function _updatePill(user) {
       if (user) {
         await _loadFromCloud(user.uid);
         _updatePill(user); // refresh callsign after load
+      } else {
+        // No authenticated user — wipe any stale progress from localStorage
+        // so unauthenticated page loads always show a clean zero state
+        for (const key of PROGRESS_KEYS) {
+          Object.getPrototypeOf(localStorage).removeItem.call(localStorage, key);
+        }
+        window.dispatchEvent(new CustomEvent('msm:progress-cleared'));
       }
     });
   } catch (e) {
