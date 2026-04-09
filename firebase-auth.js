@@ -372,6 +372,8 @@ async function _doSignOut() {
   clearTimeout(_syncTimer);
   await _saveToCloud();
   await signOut(_auth);
+  // Clear local progress so unauthenticated access starts clean
+  for (const key of PROGRESS_KEYS) localStorage.removeItem(key);
   // Return to homepage regardless of which page the user is on
   const root = window.location.pathname.split('/mark-scheme-method-pilot')[0] + '/mark-scheme-method-pilot/';
   window.location.href = root + 'index.html';
