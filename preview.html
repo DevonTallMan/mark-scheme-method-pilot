@@ -6,292 +6,116 @@
 <title>Preview — The Mark Scheme Method®</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-/* ── Reset & base ─────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --void:#0D1117;--green:#39FF14;--gold:#FFD700;--red:#FF4444;
-  --dim:#6B7280;--muted:#374151;--border:rgba(255,255,255,0.07);
-  --text:#E8EDF3;
+  --blue:#60A5FA;--dim:#6B7280;--border:rgba(255,255,255,0.07);--text:#E8EDF3;
 }
 html{scroll-behavior:smooth}
-body{background:var(--void);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;}
+body{background:var(--void);color:var(--text);font-family:"Share Tech Mono",monospace;min-height:100vh;}
 
-/* ── Nav ──────────────────────────────────────────────── */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  background:rgba(13,17,23,0.94);backdrop-filter:blur(24px);
-  border-bottom:1px solid var(--border);
-  height:60px;display:flex;align-items:center;
-  justify-content:space-between;padding:0 32px;
+/* Placeholder */
+.ph{
+  background:repeating-linear-gradient(45deg,rgba(255,215,0,0.04),rgba(255,215,0,0.04) 8px,rgba(255,215,0,0.01) 8px,rgba(255,215,0,0.01) 16px);
+  border:1px dashed rgba(255,215,0,0.3);border-radius:8px;padding:20px 24px;position:relative;
 }
-.logo{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:#fff;}
+.ph::before{
+  content:"PLACEHOLDER";position:absolute;top:-10px;left:16px;
+  font-size:8px;letter-spacing:2px;color:var(--gold);background:var(--void);padding:0 8px;
+}
+.ph-title{font-family:"Orbitron",monospace;font-size:11px;font-weight:700;color:rgba(255,215,0,0.7);letter-spacing:1px;margin-bottom:6px;}
+.ph-desc{font-size:11px;color:rgba(255,215,0,0.4);line-height:1.7;}
+.ph-large{min-height:140px;display:flex;flex-direction:column;justify-content:center;}
+.ph-xl{min-height:220px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,17,23,0.94);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+.logo{font-family:"Orbitron",monospace;font-size:18px;font-weight:900;color:#fff;}
 .logo span{color:var(--green);}
-.nav-badge{
-  font-size:9px;letter-spacing:1.5px;color:var(--gold);
-  border:1px solid rgba(255,215,0,0.3);border-radius:10px;
-  padding:3px 10px;
-}
+.nav-badge{font-size:9px;letter-spacing:1.5px;color:var(--gold);border:1px solid rgba(255,215,0,0.3);border-radius:10px;padding:3px 10px;}
 .nav-right{display:flex;align-items:center;gap:14px;}
-.btn-nav{
-  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
-  letter-spacing:1.5px;color:var(--void);background:var(--green);
-  border:none;border-radius:6px;padding:8px 18px;cursor:pointer;
-  text-decoration:none;transition:opacity .15s;
-}
+.btn-nav{font-family:"Orbitron",monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--green);border:none;border-radius:6px;padding:8px 18px;cursor:pointer;text-decoration:none;transition:opacity .15s;}
 .btn-nav:hover{opacity:.88;}
 
-/* ── Layout ───────────────────────────────────────────── */
+/* Layout */
 .page{padding:100px 24px 80px;max-width:1000px;margin:0 auto;}
+.section{margin-bottom:64px;}
+.section-tag{display:inline-block;font-size:9px;letter-spacing:2px;border-radius:12px;padding:3px 12px;margin-bottom:14px;}
+.tag-green{color:var(--green);border:1px solid rgba(57,255,20,0.3);}
+.tag-gold{color:var(--gold);border:1px solid rgba(255,215,0,0.3);}
+.tag-blue{color:var(--blue);border:1px solid rgba(96,165,250,0.3);}
+.tag-red{color:var(--red);border:1px solid rgba(255,68,68,0.3);}
+.section-title{font-family:"Orbitron",monospace;font-size:clamp(20px,3.5vw,34px);font-weight:900;color:#fff;line-height:1.2;margin-bottom:12px;}
+.section-title .g{color:var(--green);}
+.section-title .b{color:var(--blue);}
+.section-title .y{color:var(--gold);}
+.section-sub{font-size:13px;color:var(--dim);max-width:560px;line-height:1.8;margin-bottom:28px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:680px){.two-col,.three-col{grid-template-columns:1fr;}}
+.divider{border:none;border-top:1px solid var(--border);margin:56px 0;}
 
-/* ── Preview banner ───────────────────────────────────── */
-.preview-banner{
-  text-align:center;margin-bottom:48px;
-}
-.preview-label{
-  display:inline-block;
-  font-size:9px;letter-spacing:2px;color:var(--gold);
-  border:1px solid rgba(255,215,0,0.3);border-radius:12px;
-  padding:4px 14px;margin-bottom:16px;
-}
-.preview-title{
-  font-family:'Orbitron',monospace;font-size:clamp(22px,4vw,38px);
-  font-weight:900;color:#fff;line-height:1.2;margin-bottom:12px;
-}
-.preview-title span{color:var(--green);}
-.preview-sub{
-  font-size:13px;color:var(--dim);max-width:560px;
-  margin:0 auto;line-height:1.8;
-}
+/* Hero */
+.hero{text-align:center;padding-bottom:56px;border-bottom:1px solid var(--border);margin-bottom:56px;}
+.hero-eyebrow{display:inline-block;font-size:9px;letter-spacing:2px;color:var(--gold);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:4px 14px;margin-bottom:20px;}
 
-/* ── NEI info strip ───────────────────────────────────── */
-.nei-strip{
-  display:flex;gap:12px;justify-content:center;
-  flex-wrap:wrap;margin-bottom:40px;
-}
-.nei-chip{
-  background:rgba(255,255,255,0.04);
-  border:1px solid var(--border);border-radius:8px;
-  padding:10px 18px;text-align:center;min-width:120px;
-}
-.nei-letter{
-  font-family:'Orbitron',monospace;font-size:22px;font-weight:900;
-  margin-bottom:4px;
-}
-.nei-chip:nth-child(1) .nei-letter{color:var(--green);}
-.nei-chip:nth-child(2) .nei-letter{color:#60A5FA;}
-.nei-chip:nth-child(3) .nei-letter{color:var(--gold);}
-.nei-label{font-size:9px;letter-spacing:1px;color:var(--dim);}
-.nei-desc{font-size:10px;color:rgba(232,237,243,0.55);margin-top:3px;line-height:1.5;}
-
-/* ── Practice zone ────────────────────────────────────── */
-.practice-zone{
-  background:rgba(255,255,255,0.02);
-  border:1px solid var(--border);border-radius:12px;
-  overflow:hidden;
-}
-.zone-header{
-  background:rgba(57,255,20,0.06);
-  border-bottom:1px solid var(--border);
-  padding:14px 20px;
-  display:flex;align-items:center;gap:10px;
-}
-.zone-label{
-  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
-  letter-spacing:2px;color:var(--green);
-}
-.zone-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--green);box-shadow:0 0 8px rgba(57,255,20,0.6);
-  margin-left:auto;
-}
-
-/* ── Question ─────────────────────────────────────────── */
-.question-block{
-  padding:24px 24px 0;
-}
-.q-marks{
-  font-size:9px;letter-spacing:1px;color:var(--gold);
-  margin-bottom:8px;
-}
-.q-text{
-  font-size:14px;color:var(--text);line-height:1.9;
-  border-left:3px solid var(--green);padding-left:16px;
-  margin-bottom:20px;
-}
-
-/* ── Live NEI ribbon ──────────────────────────────────── */
-.hud-grid{
-  display:grid;grid-template-columns:1fr 220px;gap:16px;
-  padding:0 24px 24px;
-}
+/* Practice zone */
+.practice-zone{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.zone-header{background:rgba(57,255,20,0.06);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:10px;}
+.zone-label{font-family:"Orbitron",monospace;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--green);}
+.zone-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(57,255,20,0.6);margin-left:auto;}
+.question-block{padding:24px 24px 0;}
+.q-marks{font-size:9px;letter-spacing:1px;color:var(--gold);margin-bottom:8px;}
+.q-text{font-size:14px;color:var(--text);line-height:1.9;border-left:3px solid var(--green);padding-left:16px;margin-bottom:20px;}
+.hud-grid{display:grid;grid-template-columns:1fr 220px;gap:16px;padding:0 24px 24px;}
 @media(max-width:680px){.hud-grid{grid-template-columns:1fr;}}
-
-.answer-col{}
 .answer-label{font-size:9px;letter-spacing:1px;color:var(--dim);margin-bottom:6px;}
-.answer-area{
-  width:100%;min-height:140px;
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.1);border-radius:6px;
-  color:var(--text);font-family:inherit;font-size:13px;
-  padding:12px;resize:vertical;outline:none;
-  transition:border-color .15s;line-height:1.8;
-}
+.answer-area{width:100%;min-height:140px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--text);font-family:inherit;font-size:13px;padding:12px;resize:vertical;outline:none;transition:border-color .15s;line-height:1.8;}
 .answer-area:focus{border-color:rgba(57,255,20,0.4);}
 .answer-area::placeholder{color:rgba(232,237,243,0.25);}
-.wc-row{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-top:8px;font-size:10px;color:var(--dim);
-}
+.wc-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:10px;color:var(--dim);}
 .wc-hint{font-size:9px;color:rgba(232,237,243,0.3);}
-
-/* ── NEI ribbon (right col) ───────────────────────────── */
-.nei-ribbon{
-  background:rgba(255,255,255,0.02);
-  border:1px solid var(--border);border-radius:8px;
-  overflow:hidden;
-}
-.ribbon-header{
-  padding:10px 14px;border-bottom:1px solid var(--border);
-  font-size:9px;letter-spacing:1.5px;color:var(--dim);
-}
-.nei-row{
-  padding:12px 14px;border-bottom:1px solid var(--border);
-  display:flex;align-items:flex-start;gap:10px;
-  transition:background .2s;
-}
+.nei-ribbon{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ribbon-header{padding:10px 14px;border-bottom:1px solid var(--border);font-size:9px;letter-spacing:1.5px;color:var(--dim);}
+.nei-row{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;transition:background .2s;}
 .nei-row:last-child{border-bottom:none;}
 .nei-row.detected{background:rgba(57,255,20,0.06);}
-.nei-pill{
-  font-family:'Orbitron',monospace;font-size:11px;font-weight:700;
-  width:22px;height:22px;border-radius:4px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  border:1px solid rgba(255,255,255,0.1);color:rgba(232,237,243,0.3);
-  transition:all .3s;
-}
+.nei-pill{font-family:"Orbitron",monospace;font-size:11px;font-weight:700;width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,0.1);color:rgba(232,237,243,0.3);transition:all .3s;}
 .nei-row.detected .nei-pill{color:#fff;border-color:currentColor;}
 .nei-row:nth-child(2).detected .nei-pill{color:var(--green);border-color:var(--green);box-shadow:0 0 8px rgba(57,255,20,0.3);}
 .nei-row:nth-child(3).detected .nei-pill{color:#60A5FA;border-color:#60A5FA;box-shadow:0 0 8px rgba(96,165,250,0.3);}
 .nei-row:nth-child(4).detected .nei-pill{color:var(--gold);border-color:var(--gold);box-shadow:0 0 8px rgba(255,215,0,0.3);}
-.nei-info{}
 .nei-row-label{font-size:9px;letter-spacing:1px;color:var(--dim);margin-bottom:2px;}
 .nei-status{font-size:11px;color:rgba(232,237,243,0.4);transition:color .3s;}
 .nei-row.detected .nei-status{color:var(--text);}
-
-/* ── Projected marks ──────────────────────────────────── */
-.marks-row{
-  padding:12px 14px;border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
-}
+.marks-row{padding:12px 14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .marks-label{font-size:9px;letter-spacing:1px;color:var(--dim);}
-.marks-val{
-  font-family:'Orbitron',monospace;font-size:18px;font-weight:900;
-  color:var(--green);transition:all .3s;
-}
+.marks-val{font-family:"Orbitron",monospace;font-size:18px;font-weight:900;color:var(--green);transition:all .3s;}
 .marks-denom{font-size:11px;color:var(--dim);}
-
-/* ── Submit row ───────────────────────────────────────── */
-.submit-row{
-  padding:16px 24px;border-top:1px solid var(--border);
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-}
-.btn-submit{
-  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
-  letter-spacing:1.5px;color:var(--void);background:var(--green);
-  border:none;border-radius:6px;padding:11px 28px;cursor:pointer;
-  transition:all .2s;
-}
+.submit-row{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.btn-submit{font-family:"Orbitron",monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--green);border:none;border-radius:6px;padding:11px 28px;cursor:pointer;transition:all .2s;}
 .btn-submit:hover{opacity:.88;box-shadow:0 0 18px rgba(57,255,20,0.3);}
 .submit-note{font-size:10px;color:var(--dim);}
-
-/* ── AXIOM-7 locked response ──────────────────────────── */
-.axiom-locked{
-  margin:0 24px 24px;
-  border:1px solid rgba(255,68,68,0.2);border-radius:8px;
-  overflow:hidden;position:relative;display:none;
-}
+.axiom-locked{margin:0 24px 24px;border:1px solid rgba(255,68,68,0.2);border-radius:8px;overflow:hidden;position:relative;display:none;}
 .axiom-locked.visible{display:block;}
-.axiom-header{
-  background:rgba(255,68,68,0.08);
-  border-bottom:1px solid rgba(255,68,68,0.15);
-  padding:10px 16px;
-  display:flex;align-items:center;gap:8px;
-}
-.axiom-label{
-  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;
-  letter-spacing:2px;color:#FF6B6B;
-}
-.axiom-body{
-  padding:16px;filter:blur(4px);user-select:none;
-  font-size:12px;line-height:1.8;color:rgba(232,237,243,0.6);
-  pointer-events:none;
-}
-.axiom-lock-overlay{
-  position:absolute;inset:0;
-  background:rgba(13,17,23,0.75);backdrop-filter:blur(2px);
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:12px;padding:24px;text-align:center;
-}
+.axiom-header{background:rgba(255,68,68,0.08);border-bottom:1px solid rgba(255,68,68,0.15);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+.axiom-label{font-family:"Orbitron",monospace;font-size:9px;font-weight:700;letter-spacing:2px;color:#FF6B6B;}
+.axiom-body{padding:16px;filter:blur(4px);user-select:none;font-size:12px;line-height:1.8;color:rgba(232,237,243,0.6);pointer-events:none;}
+.axiom-lock-overlay{position:absolute;inset:0;background:rgba(13,17,23,0.75);backdrop-filter:blur(2px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;}
 .lock-icon{font-size:28px;margin-bottom:4px;}
-.lock-msg{
-  font-family:'Orbitron',monospace;font-size:11px;font-weight:700;
-  color:#fff;letter-spacing:1px;line-height:1.6;
-}
+.lock-msg{font-family:"Orbitron",monospace;font-size:11px;font-weight:700;color:#fff;letter-spacing:1px;line-height:1.6;}
 .lock-sub{font-size:10px;color:var(--dim);max-width:320px;line-height:1.7;}
-.btn-unlock{
-  font-family:'Orbitron',monospace;font-size:10px;font-weight:700;
-  letter-spacing:1.5px;color:var(--void);background:var(--green);
-  border:none;border-radius:6px;padding:11px 26px;cursor:pointer;
-  transition:all .2s;margin-top:4px;
-}
+.btn-unlock{font-family:"Orbitron",monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--void);background:var(--green);border:none;border-radius:6px;padding:11px 26px;cursor:pointer;transition:all .2s;margin-top:4px;}
 .btn-unlock:hover{opacity:.88;box-shadow:0 0 18px rgba(57,255,20,0.3);}
 
-/* ── What you get section ─────────────────────────────── */
-.features{
-  margin-top:56px;
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
-}
-.feat-card{
-  background:rgba(255,255,255,0.02);
-  border:1px solid var(--border);border-radius:10px;
-  padding:20px;
-}
-.feat-icon{font-size:22px;margin-bottom:10px;}
-.feat-title{
-  font-family:'Orbitron',monospace;font-size:11px;font-weight:700;
-  color:#fff;margin-bottom:6px;letter-spacing:.5px;
-}
-.feat-body{font-size:11px;color:var(--dim);line-height:1.75;}
-
-/* ── Bottom CTA ───────────────────────────────────────── */
-.bottom-cta{
-  margin-top:56px;text-align:center;
-  background:rgba(57,255,20,0.04);
-  border:1px solid rgba(57,255,20,0.12);border-radius:12px;
-  padding:40px 32px;
-}
-.bottom-cta-title{
-  font-family:'Orbitron',monospace;font-size:clamp(18px,3vw,28px);
-  font-weight:900;color:#fff;margin-bottom:10px;
-}
-.bottom-cta-sub{
-  font-size:12px;color:var(--dim);max-width:460px;
-  margin:0 auto 24px;line-height:1.8;
-}
-.btn-big{
-  font-family:'Orbitron',monospace;font-size:11px;font-weight:700;
-  letter-spacing:2px;color:var(--void);background:var(--green);
-  border:none;border-radius:8px;padding:14px 36px;cursor:pointer;
-  transition:all .2s;text-decoration:none;display:inline-block;
-}
+/* Bottom CTA */
+.bottom-cta{text-align:center;background:rgba(57,255,20,0.04);border:1px solid rgba(57,255,20,0.12);border-radius:12px;padding:40px 32px;}
+.bottom-cta-title{font-family:"Orbitron",monospace;font-size:clamp(18px,3vw,28px);font-weight:900;color:#fff;margin-bottom:10px;}
+.bottom-cta-sub{font-size:12px;color:var(--dim);max-width:460px;margin:0 auto 24px;line-height:1.8;}
+.btn-big{font-family:"Orbitron",monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--void);background:var(--green);border:none;border-radius:8px;padding:14px 36px;cursor:pointer;transition:all .2s;display:inline-block;}
 .btn-big:hover{opacity:.88;box-shadow:0 0 24px rgba(57,255,20,0.35);}
-.back-link{
-  display:block;margin-top:16px;font-size:10px;color:var(--dim);
-  text-decoration:none;letter-spacing:.5px;transition:color .15s;
-}
+.back-link{display:block;margin-top:16px;font-size:10px;color:var(--dim);text-decoration:none;letter-spacing:.5px;transition:color .15s;}
 .back-link:hover{color:var(--text);}
-
-/* ── Scrollbar ────────────────────────────────────────── */
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px;}
@@ -299,249 +123,312 @@ body{background:var(--void);color:var(--text);font-family:'Share Tech Mono',mono
 </head>
 <body>
 
-<!-- ── Nav ── -->
 <nav class="nav">
   <div class="logo">MSM<span>®</span></div>
   <div class="nav-right">
     <span class="nav-badge">FREE PREVIEW</span>
-    <a href="index.html" class="btn-nav" id="preview-signin-btn">CREATE ACCOUNT</a>
+    <button class="btn-nav" id="preview-signin-btn">CREATE ACCOUNT</button>
   </div>
 </nav>
 
-<!-- ── Page ── -->
 <main class="page">
 
-  <!-- Banner -->
-  <div class="preview-banner">
-    <div class="preview-label">INTERACTIVE PREVIEW</div>
-    <h1 class="preview-title">Try the <span>N·E·I Method</span><br>for yourself</h1>
-    <p class="preview-sub">This is a real practice question using the same framework and AI marking engine as the full platform. Answer it below to see how the method works — then unlock your full feedback by creating a free account.</p>
-  </div>
-
-  <!-- NEI chips -->
-  <div class="nei-strip">
-    <div class="nei-chip">
-      <div class="nei-letter">N</div>
-      <div class="nei-label">NAME</div>
-      <div class="nei-desc">Identify the<br>concept directly</div>
-    </div>
-    <div class="nei-chip">
-      <div class="nei-letter">E</div>
-      <div class="nei-label">EXPLAIN</div>
-      <div class="nei-desc">Describe how<br>it works</div>
-    </div>
-    <div class="nei-chip">
-      <div class="nei-letter">I</div>
-      <div class="nei-label">IMPACT</div>
-      <div class="nei-desc">State the effect<br>on the business</div>
+  <!-- SECTION 1: HERO
+       Distinct from index.html. Different angle — examiner insight
+       rather than student problem. Placeholder until copy is written. -->
+  <div class="hero section">
+    <div class="hero-eyebrow">EXAMINER INSIGHT</div>
+    <div class="ph ph-xl" style="max-width:700px;margin:0 auto;">
+      <div class="ph-title">SECTION 1 — HERO HEADLINE &amp; INTRO COPY</div>
+      <div class="ph-desc">
+        Distinct from landing page hero ("think like the examiner").<br>
+        Suggested angle: "This is what the examiner sees when they read your answer."<br>
+        or "Here is what 3 marks actually looks like — and what earns 0."<br>
+        Include: main headline (1 line), subheadline (1 line), intro paragraph (2–3 sentences).
+      </div>
     </div>
   </div>
 
-  <!-- Practice zone -->
-  <div class="practice-zone">
-
-    <div class="zone-header">
-      <span class="zone-label">LIVE PRACTICE — CA 6.1.1</span>
-      <div class="zone-dot"></div>
-    </div>
-
-    <div class="question-block">
-      <div class="q-marks">[3 MARKS]</div>
-      <p class="q-text">An e-commerce company uses customer purchase history to make product recommendations. Explain one way in which using data in this way adds value to the business.</p>
-    </div>
-
-    <div class="hud-grid">
-
-      <!-- Answer textarea -->
-      <div class="answer-col">
-        <div class="answer-label">YOUR ANSWER</div>
-        <textarea class="answer-area" id="preview-answer" placeholder="Start typing your answer here. Watch the N·E·I indicators on the right light up as you structure your response..." oninput="analyseAnswer(this.value)"></textarea>
-        <div class="wc-row">
-          <span id="wc-display">0 words</span>
-          <span class="wc-hint">Aim for 40–80 words for a full 3-mark answer</span>
+  <!-- SECTION 2: WHAT EXAMINERS MARK AGAINST
+       Two-column. Annotated example + examiner commentary.
+       Not on landing page. -->
+  <div class="section">
+    <div class="section-tag tag-red">INSIDE THE MARK SCHEME</div>
+    <h2 class="section-title">What the examiner<br>actually marks against</h2>
+    <p class="section-sub">[Placeholder: 1–2 sentence intro describing the section — e.g. revealing the mark scheme logic students never see in the exam room.]</p>
+    <div class="two-col">
+      <div class="ph ph-large">
+        <div class="ph-title">ANNOTATED ANSWER EXAMPLE — LEFT PANEL</div>
+        <div class="ph-desc">
+          Visual: a student answer with colour-coded examiner annotations.<br>
+          Could be a styled HTML block or graphic.<br>
+          Shows exactly where each mark is awarded and why.
         </div>
       </div>
-
-      <!-- NEI ribbon -->
-      <div>
-        <div class="nei-ribbon">
-          <div class="ribbon-header">N·E·I METHOD RIBBON</div>
-          <div class="nei-row" id="nei-n">
-            <div class="nei-pill">N</div>
-            <div class="nei-info">
-              <div class="nei-row-label">NAME</div>
-              <div class="nei-status" id="nei-n-status">Not yet detected</div>
-            </div>
-          </div>
-          <div class="nei-row" id="nei-e">
-            <div class="nei-pill">E</div>
-            <div class="nei-info">
-              <div class="nei-row-label">EXPLAIN</div>
-              <div class="nei-status" id="nei-e-status">Not yet detected</div>
-            </div>
-          </div>
-          <div class="nei-row" id="nei-i">
-            <div class="nei-pill">I</div>
-            <div class="nei-info">
-              <div class="nei-row-label">IMPACT</div>
-              <div class="nei-status" id="nei-i-status">Not yet detected</div>
-            </div>
-          </div>
-          <div class="marks-row">
-            <span class="marks-label">PROJECTED MARKS</span>
-            <span><span class="marks-val" id="marks-val">0</span><span class="marks-denom"> / 3</span></span>
-          </div>
+      <div class="ph ph-large">
+        <div class="ph-title">EXAMINER COMMENTARY — RIGHT PANEL</div>
+        <div class="ph-desc">
+          3–5 short bullet points in the examiner's voice.<br>
+          e.g. "Here is what I look for in a 3-mark answer..."<br>
+          Source: publicly available examiner reports only.
         </div>
       </div>
-
-    </div>
-
-    <!-- Submit -->
-    <div class="submit-row">
-      <button class="btn-submit" id="submit-btn" onclick="submitAnswer()">SUBMIT FOR MARKING ⟶</button>
-      <span class="submit-note" id="submit-hint">Write at least 10 words to submit</span>
-    </div>
-
-    <!-- AXIOM-7 locked response -->
-    <div class="axiom-locked" id="axiom-locked">
-      <div class="axiom-header">
-        <span class="axiom-label">AXIOM-7 — EXAMINER FEEDBACK</span>
-      </div>
-      <div class="axiom-body">
-        Your answer demonstrates a good understanding of the concept. You have correctly identified the recommendation engine as the named concept and provided a clear explanation of how it processes purchase history data. However, the impact statement needs to be more specific — the examiner is looking for a measurable business outcome such as increased average order value or reduced customer acquisition cost. Try linking the explanation directly to a financial or operational benefit.
-      </div>
-      <div class="axiom-lock-overlay">
-        <div class="lock-icon">🔒</div>
-        <div class="lock-msg">Full examiner feedback<br>requires a free account</div>
-        <div class="lock-sub">Create your free account to unlock AXIOM-7 marking, see your N·E·I score breakdown, and access all six content areas.</div>
-        <button class="btn-unlock" id="axiom-unlock-btn">CREATE FREE ACCOUNT ⟶</button>
-      </div>
-    </div>
-
-  </div><!-- /practice-zone -->
-
-  <!-- Feature grid -->
-  <div class="features">
-    <div class="feat-card">
-      <div class="feat-icon">🤖</div>
-      <div class="feat-title">AXIOM-7 AI MARKING</div>
-      <div class="feat-body">Every answer marked in real time against the N·E·I framework by an AI trained on examiner marking criteria.</div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">📊</div>
-      <div class="feat-title">PROGRESS DASHBOARD</div>
-      <div class="feat-body">Track your N·E·I proficiency across all six content areas. See exactly where marks are being lost.</div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🎖</div>
-      <div class="feat-title">XP & BADGES</div>
-      <div class="feat-body">Earn XP and unlock badges as you complete modules. Compete on the class leaderboard.</div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">🔄</div>
-      <div class="feat-title">RETURN MISSIONS</div>
-      <div class="feat-body">Spaced retrieval practice built in. Return to each module at the right interval to lock in long-term recall.</div>
     </div>
   </div>
 
-  <!-- Bottom CTA -->
+  <hr class="divider">
+
+  <!-- SECTION 3: LIVE PRACTICE (FUNCTIONAL — DO NOT REPLACE)
+       Different question from landing page (CA 6.2 vs CA 6.1.1). -->
+  <div class="section">
+    <div class="section-tag tag-green">TRY IT NOW</div>
+    <h2 class="section-title">Answer a real<br><span class="g">exam question</span></h2>
+    <p class="section-sub">Use the N&middot;E&middot;I method below. The ribbon on the right lights up as each component is detected. Submit to see your projected mark, then create a free account to unlock full AXIOM-7 examiner feedback.</p>
+
+    <div class="practice-zone">
+      <div class="zone-header">
+        <span class="zone-label">LIVE PRACTICE — CA 6.2 DATA FORMATS</span>
+        <div class="zone-dot"></div>
+      </div>
+      <div class="question-block">
+        <div class="q-marks">[3 MARKS]</div>
+        <p class="q-text">A logistics company needs to share stock level data between its warehouse management system and its suppliers' ordering platforms. Explain one reason why using a standardised data format, such as JSON, would benefit this organisation.</p>
+      </div>
+      <div class="hud-grid">
+        <div>
+          <div class="answer-label">YOUR ANSWER</div>
+          <textarea class="answer-area" id="preview-answer" placeholder="Start typing your answer here. The N·E·I indicators will light up as you structure your response..." oninput="analyseAnswer(this.value)"></textarea>
+          <div class="wc-row">
+            <span id="wc-display">0 words</span>
+            <span class="wc-hint">Aim for 40–80 words for a full 3-mark answer</span>
+          </div>
+        </div>
+        <div>
+          <div class="nei-ribbon">
+            <div class="ribbon-header">N&middot;E&middot;I METHOD RIBBON</div>
+            <div class="nei-row" id="nei-n">
+              <div class="nei-pill">N</div>
+              <div class="nei-info">
+                <div class="nei-row-label">NAME</div>
+                <div class="nei-status" id="nei-n-status">Not yet detected</div>
+              </div>
+            </div>
+            <div class="nei-row" id="nei-e">
+              <div class="nei-pill">E</div>
+              <div class="nei-info">
+                <div class="nei-row-label">EXPLAIN</div>
+                <div class="nei-status" id="nei-e-status">Not yet detected</div>
+              </div>
+            </div>
+            <div class="nei-row" id="nei-i">
+              <div class="nei-pill">I</div>
+              <div class="nei-info">
+                <div class="nei-row-label">IMPACT</div>
+                <div class="nei-status" id="nei-i-status">Not yet detected</div>
+              </div>
+            </div>
+            <div class="marks-row">
+              <span class="marks-label">PROJECTED MARKS</span>
+              <span><span class="marks-val" id="marks-val">0</span><span class="marks-denom"> / 3</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="submit-row">
+        <button class="btn-submit" id="submit-btn" onclick="submitAnswer()">SUBMIT FOR MARKING &#8594;</button>
+        <span class="submit-note" id="submit-hint">Write at least 10 words to submit</span>
+      </div>
+      <div class="axiom-locked" id="axiom-locked">
+        <div class="axiom-header">
+          <span class="axiom-label">AXIOM-7 — EXAMINER FEEDBACK</span>
+        </div>
+        <div class="axiom-body">
+          Your answer identifies the concept correctly and provides a reasonable explanation of how standardised formats enable interoperability between systems. The impact statement needs to be more specific — the examiner is looking for a concrete operational benefit such as reduced integration errors, faster data exchange, or lower development cost when onboarding new suppliers. Try to name the measurable outcome rather than restating the explanation.
+        </div>
+        <div class="axiom-lock-overlay">
+          <div class="lock-icon">&#128274;</div>
+          <div class="lock-msg">Full examiner feedback<br>requires a free account</div>
+          <div class="lock-sub">Create your free account to unlock AXIOM-7 marking, your full N&middot;E&middot;I breakdown, and access to all six content areas.</div>
+          <button class="btn-unlock" id="axiom-unlock-btn">CREATE FREE ACCOUNT &#8594;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 4: DATA / STATS
+       Different from landing page stats (37/100 average).
+       Focus on mark distribution within question types. -->
+  <div class="section">
+    <div class="section-tag tag-blue">THE DATA</div>
+    <h2 class="section-title">Where the<br><span class="b">marks come from</span></h2>
+    <p class="section-sub">[Placeholder: 1–2 sentence intro — e.g. "Extended-answer questions account for X% of the total paper. Here is how marks are distributed across question types."]</p>
+    <div class="three-col">
+      <div class="ph ph-large">
+        <div class="ph-title">STAT 1</div>
+        <div class="ph-desc">
+          Key statistic from examiner report.<br>
+          Suggested: percentage of total marks from<br>
+          3-mark extended-answer questions.
+        </div>
+      </div>
+      <div class="ph ph-large">
+        <div class="ph-title">STAT 2</div>
+        <div class="ph-desc">
+          Second key statistic.<br>
+          Suggested: most commonly dropped mark band<br>
+          or percentage of answers that stop at NAME.
+        </div>
+      </div>
+      <div class="ph ph-large">
+        <div class="ph-title">STAT 3</div>
+        <div class="ph-desc">
+          Third key statistic.<br>
+          Suggested: improvement in projected mark<br>
+          after structured N&middot;E&middot;I practice.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 5: SOCIAL PROOF
+       Testimonials from pilot. Not on landing page at all. -->
+  <div class="section">
+    <div class="section-tag tag-gold">FROM THE PILOT CLASSROOM</div>
+    <h2 class="section-title">What students<br><span class="y">and teachers say</span></h2>
+    <p class="section-sub">[Placeholder: brief framing sentence — e.g. "Used by students at [College] during the 2025-26 academic year."]</p>
+    <div class="two-col" style="margin-bottom:20px;">
+      <div class="ph ph-large">
+        <div class="ph-title">STUDENT TESTIMONIAL 1</div>
+        <div class="ph-desc">
+          Pull quote from a pilot student.<br>
+          Format: quote in quotation marks + name and year group.<br>
+          Source: post-pilot feedback form.
+        </div>
+      </div>
+      <div class="ph ph-large">
+        <div class="ph-title">STUDENT TESTIMONIAL 2</div>
+        <div class="ph-desc">
+          Pull quote from a second pilot student.<br>
+          Ideally from a different content area<br>
+          than testimonial 1 for variety.
+        </div>
+      </div>
+    </div>
+    <div class="ph ph-large">
+      <div class="ph-title">TEACHER / EDUCATOR QUOTE</div>
+      <div class="ph-desc">
+        Quote from the pilot teacher or another educator.<br>
+        Suggested angle: classroom integration, student engagement, time saved.<br>
+        Source: post-pilot teacher debrief.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 6: GETTING STARTED
+       Step-by-step onboarding. Not on landing page. Practical. -->
+  <div class="section">
+    <div class="section-tag tag-green">GETTING STARTED</div>
+    <h2 class="section-title">Up and running<br><span class="g">in under 5 minutes</span></h2>
+    <p class="section-sub">[Placeholder: brief reassuring sentence about time commitment and ease of getting started.]</p>
+    <div class="three-col">
+      <div class="ph">
+        <div class="ph-title">STEP 1 — CREATE ACCOUNT</div>
+        <div class="ph-desc">
+          Copy: brief reassurance (no card, no commitment).<br>
+          Visual suggestion: screenshot of sign-up modal<br>
+          or simple account icon.
+        </div>
+      </div>
+      <div class="ph">
+        <div class="ph-title">STEP 2 — START WITH CA 6.1.1</div>
+        <div class="ph-desc">
+          Copy: why to start here, how long it takes.<br>
+          Visual suggestion: screenshot of the hub<br>
+          or the topic card at 0%.
+        </div>
+      </div>
+      <div class="ph">
+        <div class="ph-title">STEP 3 — COMPLETE YOUR FIRST ANSWER</div>
+        <div class="ph-desc">
+          Copy: what happens after submission.<br>
+          Key point: AXIOM-7 marks it immediately.<br>
+          Visual suggestion: HUD practice screenshot.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
   <div class="bottom-cta">
     <div class="bottom-cta-title">Ready to start scoring?</div>
-    <p class="bottom-cta-sub">Full access to all six content areas, AXIOM-7 marking, and your personal dashboard. Free to create an account.</p>
-    <button class="btn-big" id="bottom-create-btn">CREATE FREE ACCOUNT ⟶</button>
-    <a href="index.html" class="back-link">← Back to homepage</a>
+    <p class="bottom-cta-sub">Create your free account and get full access to all six content areas, AXIOM-7 AI marking, and your personal progress dashboard.</p>
+    <button class="btn-big" id="bottom-create-btn">CREATE FREE ACCOUNT &#8594;</button>
+    <a href="index.html" class="back-link">&#8592; Back to homepage</a>
   </div>
 
 </main>
 
-<!-- ── Firebase config + auth (for modal) ── -->
 <script type="module" src="firebase-config.js"></script>
 <!-- MSM Auth -->
 <script type="module" src="firebase-auth.js"></script>
 
 <script>
-// ── Word count & live NEI detection ─────────────────────
-const N_SIGNALS = ['recommendation','algorithm','machine learning','data mining','customer data','purchase history','personalisation','personaliz','predictive','profiling','segmentation','analytics'];
-const E_SIGNALS = ['analyses','processes','identifies','correlates','cross-references','uses','tracks','collects','compares','matches','filters','generates'];
-const I_SIGNALS = ['increases','revenue','profit','reduces cost','acquisition','retention','average order','conversion','sales','upsell','cross-sell','loyalty','value','income','spend','growth'];
+var N_SIGNALS = ['json','xml','csv','standardised','standard format','interoperab','protocol','api','schema','data format','structured data','common format'];
+var E_SIGNALS = ['allows','enables','ensures','means','so that','because','works by','functions','exchange','transfer','parse','read','interpret','communicate','compatible','integrate'];
+var I_SIGNALS = ['reduces','eliminates','saves','faster','efficient','cost','error','seamless','without','easier','automat','scalab','supplier','onboard','integration','benefit','improve','quickly'];
 
-function wordCount(s){ return s.trim() === '' ? 0 : s.trim().split(/\s+/).length; }
-
-function detect(text, signals){
-  const lower = text.toLowerCase();
-  return signals.some(s => lower.includes(s));
-}
+function wordCount(s){ return s.trim()==='' ? 0 : s.trim().split(/\s+/).length; }
+function detect(text,signals){ var l=text.toLowerCase(); return signals.some(function(s){return l.indexOf(s)>=0;}); }
 
 function analyseAnswer(text){
-  const wc = wordCount(text);
-  document.getElementById('wc-display').textContent = wc + ' word' + (wc !== 1 ? 's' : '');
-
-  const hasN = wc > 4 && detect(text, N_SIGNALS);
-  const hasE = wc > 12 && detect(text, E_SIGNALS);
-  const hasI = wc > 20 && detect(text, I_SIGNALS);
-
-  setNEI('nei-n', 'nei-n-status', hasN, 'Concept identified', 'Name the specific concept');
-  setNEI('nei-e', 'nei-e-status', hasE, 'Explanation detected', 'Explain how it works');
-  setNEI('nei-i', 'nei-i-status', hasI, 'Impact included', 'Add a business impact');
-
-  const marks = (hasN ? 1 : 0) + (hasE ? 1 : 0) + (hasI ? 1 : 0);
-  document.getElementById('marks-val').textContent = marks;
-
-  const hint = document.getElementById('submit-hint');
-  if(wc < 10){
-    hint.textContent = 'Write at least 10 words to submit';
-  } else {
-    hint.textContent = marks + '/3 marks projected — submit for full AXIOM-7 analysis';
-  }
+  var wc=wordCount(text);
+  document.getElementById('wc-display').textContent=wc+' word'+(wc!==1?'s':'');
+  var hasN=wc>4&&detect(text,N_SIGNALS);
+  var hasE=wc>12&&detect(text,E_SIGNALS);
+  var hasI=wc>20&&detect(text,I_SIGNALS);
+  setNEI('nei-n','nei-n-status',hasN,'Format identified','Name the specific format or concept');
+  setNEI('nei-e','nei-e-status',hasE,'Explanation detected','Explain how it works');
+  setNEI('nei-i','nei-i-status',hasI,'Impact included','Add a business benefit');
+  document.getElementById('marks-val').textContent=(hasN?1:0)+(hasE?1:0)+(hasI?1:0);
+  var hint=document.getElementById('submit-hint');
+  hint.textContent=wc<10?'Write at least 10 words to submit':((hasN?1:0)+(hasE?1:0)+(hasI?1:0))+'/3 marks projected — submit for full AXIOM-7 analysis';
 }
 
-function setNEI(rowId, statusId, detected, onMsg, offMsg){
-  const row = document.getElementById(rowId);
-  const st  = document.getElementById(statusId);
-  if(detected){
-    row.classList.add('detected');
-    st.textContent = '✓ ' + onMsg;
-  } else {
-    row.classList.remove('detected');
-    st.textContent = offMsg;
-  }
+function setNEI(rowId,statusId,detected,onMsg,offMsg){
+  var row=document.getElementById(rowId),st=document.getElementById(statusId);
+  if(detected){row.classList.add('detected');st.textContent='&#10003; '+onMsg;}
+  else{row.classList.remove('detected');st.textContent=offMsg;}
 }
 
 function submitAnswer(){
-  const text = document.getElementById('preview-answer').value;
-  const wc = wordCount(text);
-  if(wc < 10){
-    document.getElementById('submit-hint').style.color = '#FF4444';
-    setTimeout(() => document.getElementById('submit-hint').style.color = '', 1500);
+  if(wordCount(document.getElementById('preview-answer').value)<10){
+    document.getElementById('submit-hint').style.color='#FF4444';
+    setTimeout(function(){document.getElementById('submit-hint').style.color='';},1500);
     return;
   }
-  // Show locked AXIOM-7 panel
   document.getElementById('axiom-locked').classList.add('visible');
-  document.getElementById('submit-btn').disabled = true;
-  document.getElementById('submit-btn').textContent = 'SUBMITTED ✓';
-  document.getElementById('submit-btn').style.opacity = '.5';
-  document.getElementById('axiom-locked').scrollIntoView({behavior:'smooth', block:'center'});
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='SUBMITTED';btn.style.opacity='.5';
+  document.getElementById('axiom-locked').scrollIntoView({behavior:'smooth',block:'center'});
 }
 
-// ── Wire all CTAs to open the auth modal ────────────────
 function wireAuthBtns(){
-  const ids = ['preview-signin-btn','axiom-unlock-btn','bottom-create-btn'];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.addEventListener('click', (e) => {
+  ['preview-signin-btn','axiom-unlock-btn','bottom-create-btn'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('click',function(e){
       e.preventDefault();
-      if(window.MSM_AUTH){
-        window.MSM_AUTH.showModal();
-      } else {
-        window.location.href = 'index.html';
-      }
+      if(window.MSM_AUTH){window.MSM_AUTH.showModal();}
+      else{window.location.href='index.html';}
     });
   });
 }
-
-// Wait briefly for MSM_AUTH to initialise before wiring
-window.addEventListener('load', () => setTimeout(wireAuthBtns, 600));
+window.addEventListener('load',function(){setTimeout(wireAuthBtns,600);});
 </script>
-
 </body>
 </html>
