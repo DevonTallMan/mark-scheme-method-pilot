@@ -143,13 +143,14 @@ function _injectStyles() {
   s.textContent = `
 /* ── Auth pill ─────────────────────────────────────────────── */
 #msm-auth-pill{
-  position:fixed;top:10px;right:10px;z-index:9000;
+  position:fixed;top:0;right:48px;z-index:9000;
+  height:60px;
   display:flex;align-items:center;gap:8px;
-  background:rgba(13,17,23,0.90);
-  border:1px solid rgba(57,255,20,0.22);
-  border-radius:20px;padding:5px 12px 5px 10px;
+  background:transparent;
+  border:none;
+  border-radius:0;padding:0 0 0 10px;
   font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.07em;
-  backdrop-filter:blur(10px);
+  backdrop-filter:none;
   transition:opacity .2s;
 }
 #msm-auth-pill:hover{opacity:1 !important;}
