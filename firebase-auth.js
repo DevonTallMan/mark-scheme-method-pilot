@@ -480,7 +480,8 @@ function _updatePill(user) {
         //    if they land on any protected page directly via URL.
         const _path = window.location.pathname;
         const _isPublic = /\/mark-scheme-method-pilot\/(index\.html)?$/.test(_path) ||
-                          _path.endsWith('/mark-scheme-method-pilot/');
+                          _path.endsWith('/mark-scheme-method-pilot/') ||
+                          _path.endsWith('/mark-scheme-method-pilot/preview.html');
         if (!_isPublic) {
           const _root = _path.split('/mark-scheme-method-pilot')[0] + '/mark-scheme-method-pilot/';
           window.location.replace(_root + 'index.html');
