@@ -478,11 +478,11 @@ function _updatePill(user) {
 
         // 2. Redirect guard — send unauthenticated users to the homepage
         //    if they land on any protected page directly via URL.
-        const _path = window.location.pathname;
-        const _isPublic = /\/mark-scheme-method-pilot\/(index\.html)?$/.test(_path) ||
-                          _path.endsWith('/mark-scheme-method-pilot/') ||
-                          _path.endsWith('/mark-scheme-method-pilot/preview.html');
+        //    Pages declare themselves public via:
+        //    <meta name="msm-public" content="true">
+        const _isPublic = !!document.querySelector('meta[name="msm-public"]');
         if (!_isPublic) {
+          const _path = window.location.pathname;
           const _root = _path.split('/mark-scheme-method-pilot')[0] + '/mark-scheme-method-pilot/';
           window.location.replace(_root + 'index.html');
           return;
