@@ -1,0 +1,69 @@
+name: Homepage — Master Your T Levels section
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to deploy'
+        required: true
+        default: 'NO'
+
+jobs:
+  inject-section:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'YES'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Create feature branch
+        run: |
+          git checkout -b homepage-master-t-levels || git checkout homepage-master-t-levels
+
+      - name: Decode and run patch script
+        run: |
+          python3 -c "
+          import base64
+          data = 'aW1wb3J0IHN5cwoKRklMRU5BTUUgPSAnaW5kZXguaHRtbCcKTUFSS0VSID0gJzwhLS0gTUFTVEVSX1RfTEVWRUxTX1NFQ1RJT04gLS0+JwojIEFuY2hvciB0aGF0IGV4aXN0cyBpbiB0aGUgY3VycmVudCBmaWxlIOKAlCBpbmplY3QgbmV3IHNlY3Rpb24ganVzdCBiZWZvcmUgUFJPQkxFTQpBTkNIT1IgPSAnPCEtLSBQUk9CTEVNIC0tPicKCiMgT25seSBuZXcgQ1NTIG5lZWRlZCDigJQgcmV1c2VzIC5zZWN0aW9uLCAuc2VjdGlvbi1pbm5lciwgLnMtZXllYnJvdywgLnMtdGl0bGUsCiMgLnMtc3ViLCAuZmFkZS11cCwgLmJ0bi1wcmltYXJ5LCAuYnRuLXNlY29uZGFyeSBmcm9tIHRoZSBleGlzdGluZyBzdHlsZXNoZWV0ClNFQ1RJT05fQ1NTID0gIiIiCi8qID09PSBNQVNURVIgVCBMRVZFTFMgQkVORUZJVCBHUklEID09PSAqLwoubXNtLWJlbmVmaXQtZ3JpZHtkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOnJlcGVhdChhdXRvLWZpdCxtaW5tYXgoMjYwcHgsMWZyKSk7Z2FwOjE2cHg7bWFyZ2luOjQwcHggMCAzNnB4O30KLm1zbS1iZW5lZml0LWNhcmR7YmFja2dyb3VuZDp2YXIoLS1wYW5lbCk7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpO2JvcmRlci1yYWRpdXM6MTRweDtwYWRkaW5nOjI4cHggMjRweDt0cmFuc2l0aW9uOmFsbCAuMjVzO3Bvc2l0aW9uOnJlbGF0aXZlO292ZXJmbG93OmhpZGRlbjt9Ci5tc20tYmVuZWZpdC1jYXJkOjpiZWZvcmV7Y29udGVudDonJztwb3NpdGlvbjphYnNvbHV0ZTt0b3A6MDtsZWZ0OjA7cmlnaHQ6MDtoZWlnaHQ6MnB4O2JhY2tncm91bmQ6dmFyKC0tZ3JlZW4pO29wYWNpdHk6MC41O3RyYW5zaXRpb246b3BhY2l0eSAuM3M7fQoubXNtLWJlbmVmaXQtY2FyZDpob3Zlcjo6YmVmb3Jle29wYWNpdHk6MTt9Ci5tc20tYmVuZWZpdC1jYXJkOmhvdmVye2JvcmRlci1jb2xvcjpyZ2JhKDU3LDI1NSwyMCwwLjIpO2JveC1zaGFkb3c6MCAxMHB4IDMwcHggcmdiYSgwLDAsMCwwLjMpO30KLm1zbS1iZW5lZml0LWljb257Zm9udC1zaXplOjEuMnJlbTtjb2xvcjp2YXIoLS1ncmVlbik7bWFyZ2luLWJvdHRvbToxMHB4O2Rpc3BsYXk6YmxvY2s7fQoubXNtLWJlbmVmaXQtdGl0bGV7Zm9udC1mYW1pbHk6J09yYml0cm9uKyxtb25vc3BhY2U7Zm9udC1zaXplOjExcHg7Zm9udC13ZWlnaHQ6NzAwO2NvbG9yOnZhcigtLWdvbGQpO2xldHRlci1zcGFjaW5nOjEuNXB4O3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTttYXJnaW4tYm90dG9tOjhweDt9Ci5tc20tYmVuZWZpdC1kZXNje2ZvbnQtc2l6ZToxM3B4O2NvbG9yOnZhcigtLWRpbSk7bGluZS1oZWlnaHQ6MS42NTt9Ci5tc20tbGVhcm4tcm93e2Rpc3BsYXk6ZmxleDtnYXA6MTRweDtqdXN0aWZ5LWNvbnRlbnQ6ZmxleC1zdGFydDtmbGV4LXdyYXA6d3JhcDt9Ci8qID09PSBFTkQgTUFTVEVSIFQgTEVWRUxTID09PSAqLwoiIiIKClNFQ1RJT05fSFRNTCA9ICIiIjwhLS0gTUFTVEVSX1RfTEVWRUxTX1NFQ1RJT04gLS0+CjxzZWN0aW9uIGNsYXNzPSJzZWN0aW9uIiBpZD0ibWFzdGVyLXQtbGV2ZWxzIj4KICA8ZGl2IGNsYXNzPSJzZWN0aW9uLWlubmVyIj4KICAgIDxkaXYgY2xhc3M9InMtZXllYnJvdyBmYWRlLXVwIj5NQVNURVIgWU9VUiBUIExFVkVMUzwvZGl2PgogICAgPGgyIGNsYXNzPSJzLXRpdGxlIGZhZGUtdXAiPktub3cgZXhhY3RseSB3aGVyZSB5b3UmIzgyMTc7cmU4YnI+bG9zaW5nIG1hcmtzICYjODIxMjsgdGhlbiBmaXggaXQuPC9oMj4KICAgIDxwIGNsYXNzPSJzLXN1YiBmYWRlLXVwIj5UaGUgTWFyayBTY2hlbWUgTWV0aG9kJiMxNzQ7IG1hcHMgZXZlcnkgYW5zd2VyIHlvdSB3cml0ZSB0byB0aGUgbWFyayBzY2hlbWUgY3JpdGVyaWEuIFlvdSBzZWUgd2hpY2ggY29udGVudCBhcmVhcyBhcmUgY29zdGluZyB5b3UgbWFya3MgJiM4MjEyOyBub3QganVzdCBhIHNjb3JlLiBUaGVuIGEgc3RydWN0dXJlZCBOJiMxODM7RSYjMTgzO0kgcGF0aCBzaG93cyB5b3UgZXhhY3RseSBob3cgdG8gYWRkcmVzcyB0aGVtLjwvcD4KICAgIDxkaXYgY2xhc3M9Im1zbS1iZW5lZml0LWdyaWQgZmFkZS11cCI+CiAgICAgIDxkaXYgY2xhc3M9Im1zbS1iZW5lZml0LWNhcmQiPgogICAgICAgIDxzcGFuIGNsYXNzPSJtc20tYmVuZWZpdC1pY29uIj4mIzk2NzA7PC9zcGFuPgogICAgICAgIDxoMyBjbGFzcz0ibXNtLWJlbmVmaXQtdGl0bGUiPklkZW50aWZ5IFlvdXIgV2Vha25lc3NlczwvaDM+CiAgICAgICAgPHAgY2xhc3M9Im1zbS1iZW5lZml0LWRlc2MiPkV2ZXJ5IHByYWN0aWNlIGF0dGVtcHQgbWFwcyBkaXJlY3RseSB0byBtYXJrIHNjaGVtZSBjcml0ZXJpYS4gWW91IHNlZSB3aGljaCBjb250ZW50IGFyZWFzIGFyZSBjb3N0aW5nIHlvdSBtYXJrcyAmIzgyMTI7IG5vdCBqdXN0IGEgc2NvcmUgb3V0IG9mIHRlbi48L3A+CiAgICAgIDwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJtc20tYmVuZWZpdC1jYXJkIj4KICAgICAgICA8c3BhbiBjbGFzcz0ibXNtLWJlbmVmaXQtaWNvbiI+JiM5NjcwOzwvc3Bhbj4KICAgICAgICA8aDMgY2xhc3M9Im1zbS1iZW5lZml0LXRpdGxlIj5BZGRyZXNzIFRoZW0gU3lzdGVtYXRpY2FsbHk8L2gzPgogICAgICAgIDxwIGNsYXNzPSJtc20tYmVuZWZpdC1kZXNjIj5OJiMxODM7RSYjMTgzO0kgZ3VpZGVkIGZlZWRiYWNrIHNob3dzIHlvdSBob3cgdG8gYnVpbGQgYW5zd2VycyB0aGF0IGVhcm4gZXZlcnkgbWFyay4gTmFtZSwgRXhwbGFpbiwgSW1wYWN0ICYjODIxMjsgdGhlIHN0cnVjdHVyZSBleGFtaW5lcnMgYWN0dWFsbHkgcmV3YXJkLjwvcD4KICAgICAgPC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9Im1zbS1iZW5lZml0LWNhcmQiPgogICAgICAgIDxzcGFuIGNsYXNzPSJtc20tYmVuZWZpdC1pY29uIj4mIzk2NzA7PC9zcGFuPgogICAgICAgIDxoMyBjbGFzcz0ibXNtLWJlbmVmaXQtdGl0bGUiPlRyYWNrIFJlYWwgUHJvZ3Jlc3M8L2gzPgogICAgICAgIDxwIGNsYXNzPSJtc20tYmVuZWZpdC1kZXNjIj5Zb3VyIGRhc2hib2FyZCBzaG93cyBYUCBlYXJuZWQsIG1vZHVsZXMgY29tcGxldGVkLCBhbmQgd2hlcmUgdG8gZm9jdXMgbmV4dC4gRXZlcnkgc2Vzc2lvbiBoYXMgYSBjbGVhciBvYmplY3RpdmUuPC9wPgogICAgICA8L2Rpdj4KICAgIDwvZGl2PgogICAgPGRpdiBjbGFzcz0ibXNtLWxlYXJuLXJvdyBmYWRlLXVwIj4KICAgICAgPGEgaHJlZj0idG9waWNzLmh0bWwiIGNsYXNzPSJidG4tcHJpbWFyeSI+U1RBUlQgWU9VUiBGSVJTVCBNT0RVTEUgJiM4NTk0OzwvYT4KICAgICAgPGEgaHJlZj0iI2hvdy1pdC13b3JrcyIgY2xhc3M9ImJ0bi1zZWNvbmRhcnkiPkhPVyBJVCBXT1JLUyAmIzg1OTU7PC9hPgogICAgPC9kaXY+CiAgPC9kaXY+Cjwvc2VjdGlvbj4KPGRpdiBjbGFzcz0ic2VjdGlvbi1kaXZpZGVyIj48L2Rpdj4KIiIiCgp3aXRoIG9wZW4oRklMRU5BTUUsICdyJywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGNvbnRlbnQgPSBmLnJlYWQoKQoKaWYgTUFSS0VSIGluIGNvbnRlbnQ6CiAgICBwcmludCgnSU5GTzogTWFya2VyIGFscmVhZHkgcHJlc2VudCDigJQgc2tpcHBpbmcgKGlkZW1wb3RlbnQpLicpCiAgICBzeXMuZXhpdCgwKQoKaWYgQU5DSE9SIG5vdCBpbiBjb250ZW50OgogICAgcHJpbnQoZidFUlJPUjogQW5jaG9yICJ7QU5DSE9SfSIgbm90IGZvdW5kIGluIHtGSUxFTkFNRX0uJykKICAgIHN5cy5leGl0KDEpCgojIEluamVjdCBDU1MgYmVmb3JlIGZpcnN0IDwvc3R5bGU+CmlmICc8L3N0eWxlPicgaW4gY29udGVudDoKICAgIGNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoJzwvc3R5bGU+JywgU0VDVElPTl9DU1MgKyAnPC9zdHlsZT4nLCAxKQoKIyBJbmplY3Qgc2VjdGlvbiBpbW1lZGlhdGVseSBiZWZvcmUgdGhlIFBST0JMRU0gYW5jaG9yCmNvbnRlbnQgPSBjb250ZW50LnJlcGxhY2UoQU5DSE9SLCBTRUNUSU9OX0hUTUwgKyBBTkNIT1IsIDEpCgp3aXRoIG9wZW4oRklMRU5BTUUsICd3JywgZW5jb2Rpbmc9J3V0Zi04JykgYXMgZjoKICAgIGYud3JpdGUoY29udGVudCkKCnByaW50KGYnU1VDQ0VTUzogTWFzdGVyIFlvdXIgVCBMZXZlbHMgc2VjdGlvbiBpbmplY3RlZCBpbnRvIHtGSUxFTkFNRX0uJykK'
+          with open('patch_master_section.py', 'wb') as f:
+              f.write(base64.b64decode(data))
+          "
+          python3 patch_master_section.py
+
+      - name: Verify injection
+        run: |
+          if grep -q "MASTER_T_LEVELS_SECTION" index.html; then
+            echo "VERIFY PASS: Master Your T Levels section found in index.html"
+          else
+            echo "VERIFY FAIL: Section marker not present after patch"
+            exit 1
+          fi
+          if grep -q "msm-benefit-grid" index.html; then
+            echo "VERIFY PASS: Benefit grid CSS found"
+          else
+            echo "VERIFY FAIL: CSS missing"
+            exit 1
+          fi
+
+      - name: Commit and push feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "feat: add Master Your T Levels section to homepage
+
+          - Injected benefit grid (Identify / Address / Track) before PROBLEM section
+          - Reuses existing .section, .s-eyebrow, .s-title, .btn-primary CSS classes
+          - Only new CSS: .msm-benefit-* classes (prefixed, no collision risk)
+          - CTAs: Start Your First Module to topics.html, How It Works anchor
+          - Idempotent: skips if MASTER_T_LEVELS_SECTION marker already present
+          - Anchor: <!-- PROBLEM --> comment in index.html"
+          git push origin homepage-master-t-levels
