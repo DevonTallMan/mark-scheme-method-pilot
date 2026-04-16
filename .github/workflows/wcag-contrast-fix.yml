@@ -1,0 +1,57 @@
+name: WCAG Contrast Fix -- raise --text-ghost and --muted
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type YES to apply WCAG contrast fixes'
+        required: true
+
+jobs:
+  fix-contrast:
+    if: github.event.inputs.confirm == 'YES'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync with latest remote main
+        run: git fetch origin main && git merge origin/main --ff-only
+
+      - name: Apply contrast patches
+        env:
+          SCRIPT_B64: "aW1wb3J0IHJlLCBzeXMKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpSRVBPID0gUGF0aCgnLicpCmNoYW5nZXMgPSBbXQoKdGVhY2hlciA9IFJFUE8gLyAndGVhY2hlci5odG1sJwppZiB0ZWFjaGVyLmV4aXN0cygpOgogICAgc3JjID0gdGVhY2hlci5yZWFkX3RleHQoZW5jb2Rpbmc9J3V0Zi04JykKICAgIG9sZCA9ICctLXRleHQtZ2hvc3Q6IHJnYmEoMjMyLDIzNywyNDMsMC4xNSknCiAgICBuZXcgPSAnLS10ZXh0LWdob3N0OiByZ2JhKDIzMiwyMzcsMjQzLDAuNTApJwogICAgaWYgb2xkIGluIHNyYzoKICAgICAgICB0ZWFjaGVyLndyaXRlX3RleHQoc3JjLnJlcGxhY2Uob2xkLCBuZXcpLCBlbmNvZGluZz0ndXRmLTgnKQogICAgICAgIGNoYW5nZXMuYXBwZW5kKCd0ZWFjaGVyLmh0bWw6IC0tdGV4dC1naG9zdCByYWlzZWQgMC4xNSB0byAwLjUwICgxLjQ2OjEgdG8gNC42OToxKScpCiAgICBlbHNlOgogICAgICAgIGNoYW5nZXMuYXBwZW5kKCd0ZWFjaGVyLmh0bWw6IFdBUk5JTkcgcGF0dGVybiBub3QgZm91bmQ6ICcgKyBvbGQpCgpwYXR0ZXJuID0gcmUuY29tcGlsZShyJ2NvbG9yOlxzKnZhclwoLS1tdXRlZFwpJykKZm9yIGh0bWwgaW4gc29ydGVkKFJFUE8uZ2xvYignKiovKi5odG1sJykpOgogICAgdHJ5OgogICAgICAgIHNyYyA9IGh0bWwucmVhZF90ZXh0KGVuY29kaW5nPSd1dGYtOCcpCiAgICBleGNlcHQgRXhjZXB0aW9uIGFzIGU6CiAgICAgICAgY2hhbmdlcy5hcHBlbmQoaHRtbC5uYW1lICsgJzogcmVhZCBlcnJvciAnICsgc3RyKGUpKQogICAgICAgIGNvbnRpbnVlCiAgICBjb3VudCA9IGxlbihwYXR0ZXJuLmZpbmRhbGwoc3JjKSkKICAgIGlmIGNvdW50OgogICAgICAgIHBhdGNoZWQgPSBwYXR0ZXJuLnN1YignY29sb3I6IHZhcigtLWRpbSknLCBzcmMpCiAgICAgICAgaHRtbC53cml0ZV90ZXh0KHBhdGNoZWQsIGVuY29kaW5nPSd1dGYtOCcpCiAgICAgICAgY2hhbmdlcy5hcHBlbmQoaHRtbC5uYW1lICsgJzogLS1tdXRlZCByZXBsYWNlZCBpbiAnICsgc3RyKGNvdW50KSArICcgY29sb3IgZGVjbGFyYXRpb24ocyknKQoKaWYgbm90IGNoYW5nZXM6CiAgICBwcmludCgnTk9fQ0hBTkdFUzogbm8gdGFyZ2V0IHBhdHRlcm5zIGZvdW5kJykKICAgIHN5cy5leGl0KDEpCgpmb3IgYyBpbiBjaGFuZ2VzOgogICAgcHJpbnQoYykK"
+        run: python3 -c "import base64,os; exec(base64.b64decode(os.environ['SCRIPT_B64']).decode())"
+
+      - name: Verify -- teacher.html ghost raised
+        run: |
+          if grep -q 'text-ghost: rgba(232,237,243,0.50)' teacher.html; then
+            echo "PASS: --text-ghost now 0.50 in teacher.html"
+          else
+            echo "FAIL: --text-ghost not updated in teacher.html"
+            exit 1
+          fi
+          if grep -q 'text-ghost: rgba(232,237,243,0.15)' teacher.html; then
+            echo "FAIL: old 0.15 value still present in teacher.html"
+            exit 1
+          fi
+
+      - name: Verify -- no remaining muted text uses
+        run: |
+          HITS=$(grep -rl 'color:.*var(--muted)' --include='*.html' . 2>/dev/null | wc -l)
+          if [ "$HITS" -gt 0 ]; then
+            echo "FAIL: color:var(--muted) still present in $HITS file(s):"
+            grep -rl 'color:.*var(--muted)' --include='*.html' .
+            exit 1
+          else
+            echo "PASS: no color:var(--muted) text uses remaining"
+          fi
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "fix: WCAG AA contrast - raise --text-ghost 0.15->0.50, --muted->--dim"
+          git push origin main
